@@ -1,0 +1,80 @@
+CACHE MANIFEST
+
+CACHE:
+/pxt-microbit-test/semantic.js
+/pxt-microbit-test/main.js
+/pxt-microbit-test/pxtapp.js
+/pxt-microbit-test/typescript.js
+/pxt-microbit-test/marked/marked.min.js
+/pxt-microbit-test/highlight.js/highlight.pack.js
+/pxt-microbit-test/jquery.js
+/pxt-microbit-test/pxtlib.js
+/pxt-microbit-test/pxtcompiler.js
+/pxt-microbit-test/pxtpy.js
+/pxt-microbit-test/pxtblockly.js
+/pxt-microbit-test/pxtwinrt.js
+/pxt-microbit-test/pxteditor.js
+/pxt-microbit-test/pxtsim.js
+/pxt-microbit-test/pxtembed.js
+/pxt-microbit-test/pxtworker.js
+/pxt-microbit-test/pxtweb.js
+/pxt-microbit-test/blockly.css
+/pxt-microbit-test/semantic.css
+/pxt-microbit-test/rtlsemantic.css
+
+
+/pxt-microbit-test/editor.js
+/pxt-microbit-test/fieldeditors.js
+
+# blockly
+/pxt-microbit-test/blockly/media/sprites.png
+/pxt-microbit-test/blockly/media/click.mp3
+/pxt-microbit-test/blockly/media/disconnect.wav
+/pxt-microbit-test/blockly/media/delete.mp3
+
+# monaco; keep in sync with webapp/public/index.html
+/pxt-microbit-test/vs/loader.js
+/pxt-microbit-test/vs/base/worker/workerMain.js
+/pxt-microbit-test/vs/basic-languages/src/bat.js
+/pxt-microbit-test/vs/basic-languages/src/cpp.js
+/pxt-microbit-test/vs/basic-languages/src/python.js
+/pxt-microbit-test/vs/basic-languages/src/markdown.js
+/pxt-microbit-test/vs/editor/editor.main.css
+/pxt-microbit-test/vs/editor/editor.main.js
+/pxt-microbit-test/vs/editor/editor.main.nls.js
+/pxt-microbit-test/vs/language/json/jsonMode.js
+/pxt-microbit-test/vs/language/json/jsonWorker.js
+/pxt-microbit-test/vs/language/typescript/lib/typescriptServices.js
+/pxt-microbit-test/vs/language/typescript/src/mode.js
+/pxt-microbit-test/vs/language/typescript/src/worker.js
+
+# charts
+/pxt-microbit-test/smoothie/smoothie_compressed.js
+/pxt-microbit-test/images/Bars_black.gif
+
+# gifjs
+/pxt-microbit-test/gifjs/gif.js
+
+# ai
+/pxt-microbit-test/ai.0.js
+
+/pxt-microbit-test/worker.js
+/pxt-microbit-test/monacoworker.js
+
+# ver Sat Nov 16 2019 14:27:57 GMT+0800 (CST)
+
+# target
+/pxt-microbit-test/docs/static/logo.portrait.white.svg
+/pxt-microbit-test/docs/static/logo.square.white.svg
+/pxt-microbit-test/docs/static/logo.square.white.svg
+/pxt-microbit-test/docs/static/logo.portrait.black.svg
+/pxt-microbit-test/docs/static/icons/apple-touch-icon.png
+/pxt-microbit-test/docs/static/icons/apple-touch-icon.png
+/pxt-microbit-test/docs/static/Microsoft-logo_rgb_c-gray-square.png
+/pxt-microbit-test/docs/static/Microsoft-logo_rgb_c-white.png
+/pxt-microbit-test/docs/static/hero.png
+
+/pxt-microbit-test/target.js
+  
+NETWORK:
+*

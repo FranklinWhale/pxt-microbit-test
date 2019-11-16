@@ -1,0 +1,319 @@
+{
+  "id": "microbit",
+  "nickname": "microbit",
+  "name": "makecode.microbit.org",
+  "title": "Microsoft MakeCode for micro:bit",
+  "description": "A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode.",
+  "corepkg": "core",
+  "cloud": {
+    "workspace": false,
+    "packages": true,
+    "sharing": true,
+    "thumbnails": true,
+    "publishing": true,
+    "importing": true,
+    "preferredPackages": [
+      "Microsoft/pxt-neopixel"
+    ],
+    "githubPackages": true
+  },
+  "compile": {
+    "isNative": false,
+    "hasHex": true,
+    "deployDrives": "(MICROBIT|MBED)",
+    "driveName": "MICROBIT",
+    "hexMimeType": "application/x-microbit-hex",
+    "openocdScript": "source [find interface/cmsis-dap.cfg]; source [find target/nrf51.cfg]",
+    "flashUsableEnd": 242688,
+    "flashEnd": 242688,
+    "flashCodeAlign": 1024,
+    "floatingPoint": true,
+    "taggedInts": true,
+    "utf8": false,
+    "gc": true,
+    "imageRefTag": 9,
+    "patches": {
+      "0.0.0 - 1.0.0": [
+        {
+          "type": "package",
+          "map": {
+            "microbit": "core",
+            "microbit-bluetooth": "bluetooth",
+            "microbit-radio": "radio",
+            "microbit-devices": "devices",
+            "microbit-led": "",
+            "microbit-music": "",
+            "microbit-game": "",
+            "microbit-pins": "",
+            "microbit-serial": ""
+          }
+        },
+        {
+          "type": "missingPackage",
+          "map": {
+            "radio\\s*\\.": "radio",
+            "bluetooth\\s*\\.": "bluetooth",
+            "devices\\s*\\.": "devices"
+          }
+        },
+        {
+          "type": "api",
+          "map": {
+            "bluetooth\\s*\\.\\s*uartRead\\s*\\((.*?)\\)": "bluetooth.uartReadUntil($1)",
+            "bluetooth\\s*\\.\\s*uartWrite\\s*\\((.*?)\\)": "bluetooth.uartWriteUntil($1)",
+            "input\\s*\\.\\s*calibrate\\s*\\(": "input.calibrateCompass(",
+            "radio\\s*\\.\\s*onDataPacketReceived\\(\\s*\\(\\{\\s*receivedNumber\\s*\\}\\)\\s*=>\\s*\\{": "radio.onReceivedNumber(function (receivedNumber) {",
+            "radio\\s*\\.\\s*onDataPacketReceived\\(\\s*\\(\\{\\s*receivedString: name, receivedNumber: value\\s*\\}\\)\\s*=>\\s*\\{": "radio.onReceivedValue(function (name, value) {",
+            "radio\\s*\\.\\s*onDataPacketReceived\\(\\s*\\(\\{\\s*receivedString\\s*\\}\\)\\s*=>\\s*\\{": "radio.onReceivedString(function (receivedString) {",
+            "Math\\s*\\.\\s*random\\s*\\(": "Math.randomRange(0, "
+          }
+        },
+        {
+          "type": "blockId",
+          "map": {
+            "device_get_acceleration": "device_acceleration"
+          }
+        },
+        {
+          "type": "blockValue",
+          "map": {
+            "device_print_message.message": "text"
+          }
+        }
+      ],
+      "0.0.0 - 1.4.12": [
+        {
+          "type": "api",
+          "map": {
+            "DisplayMode\\s*\\.\\s*BackAndWhite": "DisplayMode.BlackAndWhite"
+          }
+        }
+      ]
+    },
+    "hidSelectors": [
+      {
+        "usagePage": "0xFF00",
+        "usageId": "0x0001",
+        "vid": "0x0d28",
+        "pid": "0x0204"
+      }
+    ],
+    "webUSB": true,
+    "useNewFunctions": true,
+    "nativeType": "thumb",
+    "switches": {},
+    "jsRefCounting": false,
+    "vtableShift": 2,
+    "noSourceInFlash": true
+  },
+  "runtime": {
+    "mathBlocks": true,
+    "loopsBlocks": true,
+    "logicBlocks": true,
+    "variablesBlocks": true,
+    "textBlocks": true,
+    "listsBlocks": true,
+    "functionBlocks": true,
+    "functionsOptions": {
+      "useNewFunctions": true,
+      "extraFunctionEditorTypes": [
+        {
+          "typeName": "game.LedSprite",
+          "label": "LedSprite",
+          "icon": "send",
+          "defaultName": "sprite"
+        }
+      ]
+    },
+    "onStartColor": "#1E90FF",
+    "onStartNamespace": "basic",
+    "onStartWeight": 54
+  },
+  "simulator": {
+    "autoRun": true,
+    "streams": false,
+    "aspectRatio": 1.22,
+    "parts": true,
+    "partsAspectRatio": 0.69,
+    "boardDefinition": {
+      "visual": "microbit",
+      "gpioPinBlocks": [
+        [
+          "P0"
+        ],
+        [
+          "P1"
+        ],
+        [
+          "P2"
+        ],
+        [
+          "P3"
+        ],
+        [
+          "P4",
+          "P5",
+          "P6",
+          "P7"
+        ],
+        [
+          "P8",
+          "P9",
+          "P10",
+          "P11",
+          "P12"
+        ],
+        [
+          "P16"
+        ]
+      ],
+      "gpioPinMap": {
+        "P0": "P0",
+        "P1": "P1",
+        "P2": "P2",
+        "P3": "P3",
+        "P4": "P4",
+        "P5": "P5",
+        "P6": "P6",
+        "P7": "P7",
+        "P8": "P8",
+        "P9": "P9",
+        "P10": "P10",
+        "P11": "P11",
+        "P12": "P12",
+        "P13": "P13",
+        "P14": "P14",
+        "P15": "P15",
+        "P16": "P16",
+        "P19": "P19",
+        "P20": "P20"
+      },
+      "spiPins": {
+        "MOSI": "P15",
+        "MISO": "P14",
+        "SCK": "P13"
+      },
+      "i2cPins": {
+        "SDA": "P20",
+        "SCL": "P19"
+      },
+      "analogInPins": [
+        "P0",
+        "P1",
+        "P2",
+        "P3",
+        "P10"
+      ],
+      "groundPins": [
+        "GND"
+      ],
+      "threeVoltPins": [
+        "+3v3"
+      ],
+      "attachPowerOnRight": true,
+      "onboardComponents": [
+        "accelerometer",
+        "buttonpair",
+        "ledmatrix",
+        "speaker",
+        "bluetooth",
+        "thermometer",
+        "compass"
+      ],
+      "pinStyles": {
+        "P0": "croc",
+        "P1": "croc",
+        "P2": "croc",
+        "GND": "croc",
+        "+3v3": "croc"
+      },
+      "marginWhenBreadboarding": [
+        0,
+        0,
+        80,
+        0
+      ]
+    }
+  },
+  "compileService": {
+    "yottaTarget": "bbc-microbit-classic-gcc",
+    "yottaCorePackage": "microbit",
+    "githubCorePackage": "lancaster-university/microbit",
+    "gittag": "pxtgc-0",
+    "serviceId": "microbit",
+    "dockerImage": "pext/yotta:latest",
+    "yottaBinary": "pxt-microbit-app-combined.hex"
+  },
+  "serial": {
+    "nameFilter": "^(mbed Serial Port|DAPLink CMSIS-DAP)",
+    "log": true,
+    "useEditor": true,
+    "editorTheme": {
+      "graphBackground": "#d9d9d9",
+      "lineColors": [
+        "#6633cc",
+        "#3891A6",
+        "#3454D1",
+        "#EF767A",
+        "#F46197",
+        "#107C10"
+      ]
+    },
+    "vendorId": "0x0d28",
+    "productId": "0x0204",
+    "rawHID": true
+  },
+  "queryVariants": {
+    "hidemenu": {
+      "appTheme": {
+        "hideMenuBar": true
+      }
+    }
+  },
+  "versions": {
+    "target": "2.1.27",
+    "pxt": "5.28.23"
+  },
+  "blocksprj": {
+    "id": "blocksprj",
+    "config": {
+      "name": "{0} block",
+      "dependencies": {
+        "core": "*",
+        "radio": "*"
+      },
+      "description": "",
+      "files": [
+        "main.blocks",
+        "main.ts",
+        "README.md"
+      ],
+      "additionalFilePaths": []
+    },
+    "files": {
+      "README.md": "",
+      "main.blocks": "<xml xmlns=\"http://www.w3.org/1999/xhtml\">\n  <block type=\"pxt-on-start\"></block>\n  <block type=\"device_forever\"></block>\n</xml>",
+      "main.ts": "\n"
+    }
+  },
+  "tsprj": {
+    "id": "tsprj",
+    "config": {
+      "name": "{0} bit",
+      "dependencies": {
+        "core": "*",
+        "radio": "*"
+      },
+      "description": "",
+      "files": [
+        "main.ts",
+        "README.md"
+      ],
+      "additionalFilePaths": []
+    },
+    "files": {
+      "README.md": "",
+      "main.ts": "basic.showLeds(`\n    . . . . .\n    . # . # .\n    . . . . .\n    # . . . #\n    . # # # .\n    `);"
+    }
+  }
+}
