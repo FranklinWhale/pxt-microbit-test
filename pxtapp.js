@@ -1939,7 +1939,8 @@ var pxt;
                         initializer: p.initializer,
                         default: p.default,
                         options: p.options || {},
-                        isEnum: !!p.isEnum
+                        isEnum: !!p.isEnum,
+                        handlerParameters: p.handlerParameters
                     }); }) : null,
                     extendsTypes: sym.extendsTypes,
                     snippet: sym.kind && sym.kind < 0 ? null : undefined,
