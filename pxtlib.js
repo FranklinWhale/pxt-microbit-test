@@ -9913,6 +9913,8 @@ var pxt;
             });
         };
         Package.prototype.loadConfig = function () {
+            if (this.level != 0 && this.invalid())
+                return; // don't try load invalid dependency
             var confStr = this.readFile(pxt.CONFIG_NAME);
             if (!confStr)
                 pxt.U.userError("extension " + this.id + " is missing " + pxt.CONFIG_NAME);

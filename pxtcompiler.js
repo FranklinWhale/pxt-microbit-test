@@ -5390,7 +5390,7 @@ var ts;
                     if (isAutoDeclaration(n, env)) {
                         return undefined;
                     }
-                    if (n.type && !isBlocklyType(n.type)) {
+                    if (n.type && isAdvancedType(n.type)) {
                         return pxtc.Util.lf("Variable type is not supported by Blockly");
                     }
                     return checkExpression(n.initializer, env);
@@ -5877,14 +5877,13 @@ var ts;
                     return true;
                 }
             }
-            function isBlocklyType(n) {
+            function isAdvancedType(n) {
                 switch (n.kind) {
-                    case SK.BooleanKeyword:
-                    case SK.NumberKeyword:
-                    case SK.StringKeyword:
+                    case SK.TupleType:
+                    case SK.UnionType:
+                    case SK.IntersectionType:
+                    case SK.ParenthesizedType:
                         return true;
-                    case SK.ArrayType:
-                        return isBlocklyType(n.elementType);
                     default:
                         return false;
                 }

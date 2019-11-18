@@ -271,8 +271,8 @@
     }
   },
   "versions": {
-    "target": "2.1.28",
-    "pxt": "5.28.24"
+    "target": "2.1.29",
+    "pxt": "5.28.26"
   },
   "blocksprj": {
     "id": "blocksprj",
