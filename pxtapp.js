@@ -4849,6 +4849,17 @@ var pxt;
                     delete optSettings[k];
                 }
             });
+            // fix keys - ==> _
+            Object.keys(optSettings)
+                .filter(function (k) { return /-/.test(k); }).forEach(function (k) {
+                var v = optSettings[k];
+                delete optSettings[k];
+                optSettings[k.replace(/-/g, '_')] = v;
+            });
+            if (!isYotta && compileService.yottaConfigCompatibility) {
+                Object.keys(optSettings)
+                    .forEach(function (k) { return optSettings["YOTTA_CFG_" + k] = optSettings[k]; });
+            }
             var configJson = U.jsonUnFlatten(optSettings);
             if (isDockerMake) {
                 var packageJson = {
@@ -5418,10 +5429,31 @@ var pxt;
     var crowdin;
     (function (crowdin) {
         crowdin.KEY_VARIABLE = "CROWDIN_KEY";
+        crowdin.testMode = false;
+        crowdin.TEST_KEY = "!!!testmode!!!";
+        function setTestMode() {
+            pxt.crowdin.testMode = true;
+            pxt.log("CROWDIN TEST MODE - files will NOT be uploaded");
+        }
+        crowdin.setTestMode = setTestMode;
+        function multipartPostAsync(key, uri, data, filename, filecontents) {
+            if (data === void 0) { data = {}; }
+            if (filename === void 0) { filename = null; }
+            if (filecontents === void 0) { filecontents = null; }
+            if (crowdin.testMode || key == crowdin.TEST_KEY) {
+                var resp = {
+                    success: true
+                };
+                return Promise.resolve({ statusCode: 200, headers: {}, text: JSON.stringify(resp), json: resp });
+            }
+            return pxt.Util.multipartPostAsync(uri, data, filename, filecontents);
+        }
         function apiUri(branch, prj, key, cmd, args) {
             pxt.Util.assert(!!prj && !!key && !!cmd);
             var apiRoot = "https://api.crowdin.com/api/project/" + prj + "/";
-            var suff = "?key=" + key;
+            var suff = "?";
+            if (!crowdin.testMode)
+                suff = "key=" + key;
             if (branch) {
                 if (!args)
                     args = {};
@@ -5485,7 +5517,7 @@ var pxt;
             pxt.debug("create directory " + (branch || "") + "/" + name);
             if (!incr)
                 incr = mkIncr(name);
-            return pxt.Util.multipartPostAsync(apiUri(branch, prj, key, "add-directory"), { json: "true", name: name })
+            return multipartPostAsync(key, apiUri(branch, prj, key, "add-directory"), { json: "true", name: name })
                 .then(function (resp) {
                 pxt.debug("crowdin resp: " + resp.statusCode);
                 // 400 returned by folder already exists
@@ -5527,7 +5559,7 @@ var pxt;
                 opts["json"] = "";
                 opts["escape_quotes"] = "0";
                 incr();
-                return pxt.Util.multipartPostAsync(apiUri(branch, prj, key, op), opts, filename, data)
+                return multipartPostAsync(key, apiUri(branch, prj, key, op), opts, filename, data)
                     .then(function (resp) { return handleResponseAsync(resp); });
             }
             function handleResponseAsync(resp) {

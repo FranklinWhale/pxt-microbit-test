@@ -8,7 +8,7 @@
     "workerjs": "/pxt-microbit-test/worker.js",
     "monacoworkerjs": "/pxt-microbit-test/monacoworker.js",
     "gifworkerjs": "/pxt-microbit-test/gifjs/gif.worker.js",
-    "pxtVersion": "5.28.26",
+    "pxtVersion": "5.28.29",
     "pxtRelId": "",
     "pxtCdnUrl": "/pxt-microbit-test/",
     "commitCdnUrl": "/pxt-microbit-test/",
