@@ -1832,8 +1832,9 @@ input.onGesture(Gesture.Shake, () =&gt; {
 <li>Make 3 copies of this last <code>||variables:set to||</code> using the <strong>Duplicate</strong> option in the menu when you right click on the block. Put the copies underneath each other so that all 4 are stacked together.</li>
 <li>In the first <code>||variables:set to||</code>, replace the second <code>&quot;&quot;</code> in the <code>||text:join||</code> with the <code>adjust</code> variable.</li>
 <li>With the second copy, change the first <code>&quot;&quot;</code> in the <code>||text:join||</code> to the variable <code>time</code>. Change the second string in the <code>||text:join||</code> to <code>&quot;:&quot;</code>.</li>
-<li>In the third copy, change the first <code>&quot;&quot;</code> in the <code>||text:join||</code> to the variable <code>time</code>. Change the second string in the <code>||text:join||</code> to division operator from <strong>Math</strong>. Set the left <code>0</code> to the <code>minutes</code> variable and the right <code>0</code> to <code>10</code>.</li>
-<li>In the fourth copy, change the first <code>&quot;&quot;</code> in the <code>||text:join||</code> to the variable <code>time</code>. Change the second string in the <code>||text:join||</code> to a <code>||Math:remainder of||</code> in <strong>Math</strong>. Set the left <code>0</code> to the <code>minutes</code> variable and the right <code>0</code> to <code>10</code>.</li>
+<li>For the third copy, change the first <code>&quot;&quot;</code> in the <code>||text:join||</code> to the variable <code>time</code>. Change the second string in the <code>||text:join||</code> to <code>&quot;0&quot;</code>.</li>
+<li>Surround that third copy with an <code>||logic:if then||</code> block. Put a <code>||logic:0 &lt; 0||</code> in as the condition for the <code>||logic:if then||</code> . Pull a <code>minutes</code> variable in where the first <code>0</code> is. Change the second <code>0</code> to be a <code>9</code>.</li>
+<li>In the fourth copy, change the first <code>&quot;&quot;</code> in the <code>||text:join||</code> to the variable <code>time</code>. Change the second string in the <code>||text:join||</code> to a <code>minutes</code>.</li>
 </ol>
 <pre><code class="lang-blocks">let minutes = 0;
 let hours = 0;
@@ -1853,8 +1854,10 @@ input.onGesture(Gesture.Shake, () =&gt; {
     }
     time = &quot;&quot; + adjust;
     time = time + &quot;:&quot;;
-    time = time + minutes / 10;
-    time = time + minutes % 10;
+    if (minutes &lt; 10) {
+        time = time + &quot;0&quot;
+    }
+    time = time + minutes
 })</code></pre>
 <p><strong>Keep on coding…</strong></p>
 <p>Ok, we’re getting close to finishing now. Here we need to add the ‘AM’ or ‘PM’ if we are in 12 hour format. Then, finally, display the complete time string.</p>
@@ -1883,8 +1886,11 @@ input.onGesture(Gesture.Shake, () =&gt; {
     }
     time = &quot;&quot; + adjust;
     time = time + &quot;:&quot;
-    time = time + minutes / 10
-    time = time + minutes % 10
+    if (minutes &lt; 10)
+    {
+        time = time + &quot;0&quot;
+    }
+    time = time + minutes
     if (ampm) {
         if (hours &gt; 11) {
             time = time + &quot;PM&quot;
