@@ -124,6 +124,9 @@
     <a class="item " href="/pxt-microbit-test/docs/projects.html" role="menuitem">Projects</a>
 
 
+    <a class="item " href="/pxt-microbit-test/docs/github.html" role="menuitem">GitHub</a>
+
+
     <a class="item " href="https://support.microbit.org/" role="menuitem">Support</a>
 
 
@@ -1680,17 +1683,19 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="magnetic-force">Magnetic Force</h1><p>Find the amount of magnetic force (the strength of a magnet) in the direction you say.</p>
+        <h1 id="magnetic-force">Magnetic Force</h1><p>Find the amount of magnetic force (the strength of a magnet) in one of the three directions.</p>
 <pre><code class="lang-sig">input.magneticForce(Dimension.X);</code></pre>
 
     <div class="ui info message">
         <div class="content">
             <p>The micro:bit measures magnetic force with <strong>microteslas</strong>.</p>
+<p>You are asked to <a target="_blank" rel="nofollow noopener" href="https://support.microbit.org/support/solutions/articles/19000008874-calibrating-the-micro-bit-compass">calibrate</a> the compass the first time run a program
+that uses the compass.</p>
 
         </div>
     </div>
 <h2 id="parameters">Parameters</h2><ul>
-<li><code>dimension</code> means which direction the micro:bit should measure
+<li><strong>dimension</strong>: this is the direction the micro:bit should measure
 magnetic force in: either <code>Dimension.X</code> (the left-right direction),
 <code>Dimension.Y</code> (the forward/backward direction), or <code>Dimension.Z</code>
 (the up/down direction)</li>
@@ -1698,12 +1703,10 @@ magnetic force in: either <code>Dimension.X</code> (the left-right direction),
 <h2 id="returns">Returns</h2><ul>
 <li>a <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/types/number.html">number</a> of microteslas that means the strength of the magnet</li>
 </ul>
-<h2 id="example-metal-detector">Example: metal detector</h2><p>This program makes the center LED of the micro:bit get brighter when
-the magnetic force is stronger, and dimmer when it is weaker.</p>
-<pre><code class="lang-blocks">led.plot(2, 2)
-basic.forever(() =&gt; {
-    let f = input.magneticForce(Dimension.X)
-    led.setBrightness(f / 2000)
+<h2 id="example">Example</h2><p>Create a metal detector my measuring the strength of magnetic force in the <code>X</code> direction.
+Display a bar graph to show the current level of magnetic force measured by the magnetometer.</p>
+<pre><code class="lang-blocks">basic.forever(function() {
+    led.plotBarGraph(input.magneticForce(Dimension.X) / 2000, 0)
 })</code></pre>
 <h2 id="see-also">See also</h2><p><a  rel="nofollow noopener" href="/pxt-microbit-test/docs/reference/input/compass-heading.html">compass heading</a></p>
 

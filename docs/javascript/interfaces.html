@@ -124,6 +124,9 @@
     <a class="item " href="/pxt-microbit-test/docs/projects.html" role="menuitem">Projects</a>
 
 
+    <a class="item " href="/pxt-microbit-test/docs/github.html" role="menuitem">GitHub</a>
+
+
     <a class="item " href="https://support.microbit.org/" role="menuitem">Support</a>
 
 
@@ -1798,9 +1801,9 @@ mySearch = function (src: string, i: number): string {
     return src.substr(i)
 }</code></pre>
 <p>Function parameters are checked one at a time, with the type in each corresponding parameter position checked against each other.
-If you do not want to specify types at all, TypeScript’s contextual typing can infer the argument types since the function value is assigned directly to a variable of type <code>SearchFunc</code>.
+If you do not want to specify types at all, TypeScript’s contextual typing can infer the argument types since the function value is assigned directly to a variable of type <code>SubstrFunc</code>.
 Here, also, the return type of our function expression is implied by the values it returns (here <code>false</code> and <code>true</code>).
-Had the function expression returned numbers or strings, the type-checker would have warned us that return type doesn’t match the return type described in the <code>SearchFunc</code> interface.</p>
+Had the function expression returned numbers or strings, the type-checker would have warned us that return type doesn’t match the return type described in the <code>SubstrFunc</code> interface.</p>
 <pre><code class="lang-ts">let mySearch: SubstrFunc;
 mySearch = function (src, i): string {
     return src.substr(i)
