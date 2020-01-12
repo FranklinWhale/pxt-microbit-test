@@ -1693,7 +1693,16 @@ A quick solution is take screenshots of the snippets but that approach can quick
 <li>screenshots don’t play well with source control system - you can’t diff changes efficiently.</li>
 </ul>
 <h2 id="rendering-blocks-on-the-spot">Rendering blocks on the spot</h2><p>The MakeCode approach to solving this issue is to render the <strong>JavaScript</strong> code snippets on the client using the same block rendering engine as the editor. Under the hood, an <code>iframe</code> from the MakeCode editor will render the blocks for you.</p>
-<h2 id="plugins">Plugins</h2><p>Here is an integration sample:</p>
+<h2 id="githubpages">GitHub pages </h2><p>You can use <a target="_blank" rel="nofollow noopener" href="https://help.github.com/en/github/working-with-github-pages">GitHub pages</a> to render your README.md file as a web site.</p>
+<ul>
+<li>enable <a target="_blank" rel="nofollow noopener" href="https://help.github.com/en/github/working-with-github-pages/creating-a-github-pages-site#creating-your-site">GitHub pages</a> on your repository</li>
+<li>add the following entry in the <code>_config.yml</code></li>
+</ul>
+<pre><code>  makecode:
+    home_url: https://makecode.microbit.org/</code></pre><ul>
+<li>copy the following text at the bottom of your <code>README.md</code> file<pre><code>&lt;script src=&quot;https://makecode.com/gh-pages-embed.js&quot;&gt;&lt;/script&gt;&lt;script&gt;makeCodeRender(&quot;{{ site.makecode.home_url }}&quot;, &quot;{{ site.github.owner_name }}/{{ site.github.repository_name }}&quot;);&lt;/script&gt;</code></pre></li>
+</ul>
+<h2 id="other-plugins">Other Plugins</h2><p>Here is an integration sample:</p>
 <ul>
 <li><a target="_blank" rel="nofollow noopener" href="https://github.com/microsoft/pxt-react-extension-template/blob/master/src/components/snippet.tsx">React component</a></li>
 <li><a target="_blank" rel="nofollow noopener" href="https://jsfiddle.net/L8msdjpu/2/">HTML only</a></li>
@@ -1703,7 +1712,7 @@ A quick solution is take screenshots of the snippets but that approach can quick
 
     <div class="ui info message">
         <div class="content">
-            <p>Try this <a target="_blank" rel="nofollow noopener" href="https://jsfiddle.net/L8msdjpu/2/">fiddle</a> to see an embedded blocks rendering example.</p>
+            <p>Try this <a target="_blank" rel="nofollow noopener" href="https://jsfiddle.net/nq0hyz97/">fiddle</a> to see an embedded blocks rendering example.</p>
 
         </div>
     </div>

@@ -38,10 +38,21 @@ Check out [microbit.org](http://microbit.org/resellers/) for more information on
   "cardType": "package"
 },
 {
+  "name": "4tronix Servo:Bit",
+  "url":"/pkg/4tronix/ServoBit",
+  "cardType": "package"
+},
+{
   "name": "4tronix MiniBit",
   "url":"/pkg/4tronix/MiniBit",
   "cardType": "package"
-}, {
+},
+{
+  "name": "DF Robot Maqueen",
+  "url":"/pkg/DFRobot/pxt-maqueen",
+  "cardType": "package"
+},
+{
   "name": "Sunfounder Sloth",
   "url":"/pkg/sunfounder/pxt-sloth",
   "cardType": "package"
@@ -214,6 +225,11 @@ Check out [microbit.org](http://microbit.org/resellers/) for more information on
 [{
   "name": "Inksmith Climate Action Kit",
   "url":"/pkg/dugbraden/pxt-climate-action-kit",
+  "cardType": "package"
+},
+{
+  "name": "DFRobot Natural Science Board",
+  "url":"/pkg/DFRobot/pxt-DFRobot-NaturalScience",
   "cardType": "package"
 },
 {
@@ -442,6 +458,10 @@ Check out [microbit.org](http://microbit.org/resellers/) for more information on
 }, {
     "name": "HTS221 Humidity and temperature",
     "url": "/pkg/makecode-extensions/HTS221",
+    "cardType": "package"
+}, {
+    "name": "Kitronik clip detector",
+    "url": "/pkg/KitronikLtd/pxt-kitronik-clip-detector",
     "cardType": "package"
 }]
 ```

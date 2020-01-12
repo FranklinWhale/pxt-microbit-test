@@ -1698,10 +1698,8 @@ pi = (area ratio) * 4</code></pre><p>One problem though. We know the area of the
 <p>Of course, we can’t completely fill the area of both shapes with dots but we could get enough of them in there to give a useful ratio between the circle and the square.</p>
 <h3 id="making-and-counting-dots">Making and counting dots</h3><p>To make the “dots” we can randomly make a value and see if it would fit as a coordinate within the shape we’re trying to fill. If it fits, increase the count of dots and try to make more for some amount of time. The more dots created, the better the accuracy of our value for <code>area ratio</code>.</p>
 <h3 id="monte-carlo-method">Monte Carlo method</h3><p>This method of filling coordinate points, counting them, and using the difference or ratio of the counts is called the <em>Monte Carlo</em> method or approximation.</p>
-<h2 id="monte-carlo-approximation-of-_pi_">Monte Carlo approximation of _pi_</h2><pre><code class="lang-blocks">let pir = 0
-let pid = 0
+<h2 id="monte-carlo-approximation-of-_pi_">Monte Carlo approximation of _pi_</h2><pre><code class="lang-blocks">let pi = 0
 let y = 0
-let pin = 0
 let x = 0
 let r2 = 0
 let r = 0
@@ -1735,10 +1733,7 @@ basic.forever(() =&gt; {
     // r * r * pi =&gt; inside / n ~= (r*r*pi) / (4*r*r) ~=
     // pi / 4 pi = inside / n * 4
     //
-    pin = inside * 4
-    // only integer arithmetic here...
-    pid = pin / n
-    pir = pin % n
+    pi = (inside * 4) / n
     // show results
     basic.showLeds(`
         # # # # #
@@ -1747,7 +1742,7 @@ basic.forever(() =&gt; {
         . # . # .
         . # . . #
         `)
-    basic.showString(&quot; &quot; + pid + &quot;.&quot; + pir)
+    basic.showString(&quot; &quot; + pi)
 })</code></pre>
 
     </div>
