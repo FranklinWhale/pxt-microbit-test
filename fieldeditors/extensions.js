@@ -1,1 +1,15 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var field_gestures_1=require("./field_gestures");pxt.editor.initFieldExtensionsAsync=function(e){pxt.debug("loading pxt-microbit field editors...");var r={fieldEditors:[{selector:"gestures",editor:field_gestures_1.FieldGestures}]};return Promise.resolve(r)};
+"use strict";
+/// <reference path="../node_modules/pxt-core/built/pxteditor.d.ts"/>
+/// <reference path="../node_modules/pxt-core/built/pxtsim.d.ts"/>
+Object.defineProperty(exports, "__esModule", { value: true });
+var field_gestures_1 = require("./field_gestures");
+pxt.editor.initFieldExtensionsAsync = function (opts) {
+    pxt.debug('loading pxt-microbit field editors...');
+    var res = {
+        fieldEditors: [{
+                selector: "gestures",
+                editor: field_gestures_1.FieldGestures
+            }]
+    };
+    return Promise.resolve(res);
+};

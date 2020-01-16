@@ -1,1 +1,5782 @@
-var pxt;!function(e){var n,t;n=e.py||(e.py={}),(t=n.VarModifier||(n.VarModifier={}))[t.NonLocal=0]="NonLocal",t[t.Global=1]="Global"}(pxt||(pxt={})),function($e){!function(D){var R,M,b,B,q,G,z,Q=$e.blocks,x=0,t=0,W=0,s="???",r=!1,u=void 0,j=void 0;function o(e){return null==e}function f(e){return null!=e}function p(e){return $e.tickEvent("python.todo",{kind:e.kind}),Q.mkStmt(Q.mkText("TODO: "+e.kind))}function i(e){return $e.tickEvent("python.todo",{kind:e.kind}),Q.mkText(" {TODO: "+e.kind+"} ")}var a=k({primType:"string"}),l=k({primType:"number"}),c=k({primType:"boolean"}),m=k({primType:"void"}),d=k({primType:"any"}),V=void 0,y={string:a,number:l,boolean:c,void:m,any:d};function $(e){var n=$e.U.flatClone(e);return delete n.pyAST,delete n.pyInstanceType,delete n.pyRetType,delete n.pySymbolType,delete n.moduleTypeMarker,delete n.declared,n.parameters&&(n.parameters=n.parameters.map(function(e){return delete(e=$e.U.flatClone(e)).pyType,e})),n}function H(e){if("("==e[0]&&$e.U.endsWith(e,")"))return H(e.slice(1,-1));var n=e.indexOf(" => ");if(0<n){var t=e.slice(n+4);if(-1==t.indexOf(")[]")){var r=H(t),i=e.slice(1,n-1);return h(r,(i?i.split(/, /):[]).map(function(e){return H(e.replace(/\w+\??: /,""))}))}}if($e.U.endsWith(e,"[]"))return g(H(e.slice(0,-2)));if("_py.Array"===e)return g(d);var a=$e.U.lookup(y,e);if(a)return a;if(!!e&&!isNaN(e))return l;if("T"==e||"U"==e)return k({primType:"'"+e});var o=v(e+"@type")||v(e);return o?7==o.kind?l:8==o.kind||9==o.kind?o.pyInstanceType||k({classType:o}):6==o.kind?l:(J(null,9502,$e.U.lf("'{0}' is not a type near '{1}'",e,s||"???")),k({primType:e})):(J(null,9501,$e.U.lf("unknown type '{0}' near '{1}'",e,s||"???")),k({primType:e}))}function N(e){return e.attributes.shim&&"@"==e.attributes.shim[0]}function T(e){if(!e.pySymbolType){if(s=e.pyQName,e.parameters){N(e)&&(e.parameters=[{name:"literal",description:"",type:"string",options:{}}]);for(var n=0,t=e.parameters;n<t.length;n++){var r=t[n];r.pyType||(r.pyType=H(r.type))}}var i=e.pyRetType;if(le(e)?e.pyRetType=k({moduleType:e}):e.retType?e.pyRetType=H(e.retType):e.pyRetType||($e.U.oops("no type for: "+e.pyQName),e.pyRetType=k({})),i&&X(e.pyAST,i,e.pyRetType),3==e.kind||1==e.kind){var a=e.parameters.map(function(e){return e.pyType});if(a.some(o))return J(null,9526,$e.U.lf("function symbol is missing parameter types near '{1}'",s||"???")),k({});e.pySymbolType=h(e.pyRetType,a.filter(f))}else e.pySymbolType=e.pyRetType;8!=e.kind&&9!=e.kind||(e.pyInstanceType=k({classType:e})),s=void 0}return e.pySymbolType}function v(e){return $e.U.lookup(M,e)||$e.U.lookup(R,e)}function E(e){if(e){var n=v(e);return n&&T(n),n}}function k(e){void 0===e&&(e={});var n=$e.U.flatClone(e);return n.tid=++t,n}function g(e){return k({primType:"@array",typeArgs:[e]})}function h(e,n){return k({primType:"@fn"+n.length,typeArgs:[e].concat(n)})}function C(){return b.currFun||b.currClass||b.currModule}function S(){for(var e=C();e&&e.parent;)e=e.parent;return e}function U(){return"main"==b.currModule.name&&!b.currFun&&!b.currClass}function I(e,n,t){t||(t=C());var r=t.vars[e];if(!r){var i=A(t);i&&(i+=".");var a=i+e;r=ee(t)?Y(4,e):Z(4,a),t.vars[e]=r}for(var o=0,s=Object.keys(n);o<s.length;o++){var u=s[o];r[u]=n[u]}return r}function w(e){return e.union?(e.union=w(e.union),e.union):e}function A(e){var n=e,t="";n.parent&&"FunctionDef"!==n.parent.kind&&"AsyncFunctionDef"!==n.parent.kind&&((t=A(n.parent))?t+=".":t="");var r=e;return"Module"==e.kind&&"main"==r.name?"":r.name?t+r.name:t+"?"+e.kind}function P(e){var n=$e.U.lookup(ke,e);if(n)return n;for(var t=0,r=$e.U.values(b.currModule.vars);t<r.length;t++){var i=r[t];if(i.isImport){if(i.expandsTo==e)return i.pyName||J(null,9553,lf("missing pyName")),i.pyName;if(i.isImport&&$e.U.startsWith(e,(i.expandsTo||"")+"."))return i.pyName+e.slice(i.expandsTo.length)}}return e}function _(e){var n=function(e){return r?e:""};return(e=w(e)).primType?e.typeArgs&&"@array"==e.primType?_(e.typeArgs[0])+"[]":$e.U.startsWith(e.primType,"@fn")&&e.typeArgs?"("+e.typeArgs.slice(1).map(function(e){return"_: "+_(e)}).join(", ")+") => "+_(e.typeArgs[0]):e.primType+n("/P"):e.classType&&e.classType.pyQName?P(e.classType.pyQName)+n("/C"):e.moduleType&&e.moduleType.pyQName?P(e.moduleType.pyQName)+n("/M"):"?"+e.tid}function J(e,n,t){var r,i,a,o;q.push((r=e,i=pxtc.DiagnosticCategory.Error,a=n,o=t,r||(r=u),r&&b&&b.currModule?{fileName:B,start:r.startPos,length:r.endPos-r.startPos,line:void 0,column:void 0,code:a,category:i,messageText:o}:{fileName:B,start:0,length:0,line:void 0,column:void 0,code:a,category:i,messageText:o}))}function K(e){return e.primType?e.primType:e.classType?e.classType:e.moduleType?(e.moduleType.moduleTypeMarker||(e.moduleType.moduleTypeMarker={}),e.moduleType.moduleTypeMarker):null}function L(e){return!K(w(e))}function F(e,n,t){var r;(n=w(n)).classType!=t&&(L(n)?n.classType=t:X(e,n,(T(r=t),r.pyInstanceType||J(null,9527,$e.U.lf("Instance type symbol '{0}' is missing pyInstanceType",r)),r.pyInstanceType)))}function O(e,n){X(e,ue(e),n)}function X(e,n,t){if(n!==t&&(n=w(n))!==(t=w(t)))if("any"!==n.primType){var r,i,a=K(n),o=K(t);if(a&&o)if(a===o){if(n.union=t,n.typeArgs&&t.typeArgs)for(var s=0;s<Math.min(n.typeArgs.length,t.typeArgs.length);++s)X(e,n.typeArgs[s],t.typeArgs[s]);n.union=t}else r=n,i=t,J(e,9500,$e.U.lf("types not compatible: {0} and {1}",_(r),_(i)));else a&&!o?X(e,t,n):(W++,n.union=t)}else n.union=t}function Y(e,n){var t=/(.*)\.(.*)/.exec(n),r=t?t[2]:n;return{kind:e,name:r,pyName:r,qName:n,pyQName:n,namespace:t?t[1]:"",attributes:{},pyRetType:k()}}function Z(e,n){var t=M[n];return t?(t.kind=e,t):((t=Y(e,n)).pyQName||J(null,9527,$e.U.lf("Symbol '{0}' is missing pyQName",n)),M[t.pyQName]=t)}function ee(e){for(var n=e;n;){if("FunctionDef"==n.kind)return!0;n=n.parent}return!1}function ne(e,n,t){if(!n.symInfo){var r=A(n);$e.U.endsWith(r,".__init__")&&(r=r.slice(0,-9)+".__constructor"),ee(t=t||C())?n.symInfo=Y(e,r):n.symInfo=Z(e,r);var i=n.symInfo;i.pyAST=n,i.pyName||J(null,9528,$e.U.lf("Symbol '{0}' is missing pyName",i.qName||i.name)),t.vars[i.pyName]=i}return n.symInfo}function te(e){var n=e.symInfo.qName;return $e.U.values(M).filter(function(e){return e.namespace==n&&2==e.kind})}function re(e,n,t,r){void 0===t&&(t=!1),void 0===r&&(r=!1);var i=e.pyQName+"."+n,a=E(i);if(a)return a;if(!r)for(var o=0,s=e.extendsTypes||[];o<s.length;o++){var u;if(u=E(s[o])){u==e&&$e.U.userError("field lookup loop on: "+u.qName+" / "+n);var l=re(u,n,!0);if(l)return l}}return!t&&e.pyAST&&"ClassDef"==e.pyAST.kind?((u=Z(2,i)).isInstance=!0,u):null}function ie(e,n,t){void 0===t&&(t=!1);for(var r,i,a,o=ue(e),s=0,u=[(r=w(o)).classType].concat(ae(r.primType),[r.moduleType]).filter(f);s<u.length;s++){var l=u[s],c=re(l,n,t);if(c)return!!l.moduleTypeMarker?c.isInstance&&J(null,9505,$e.U.lf("the field '{0}' of '{1}' is not static",n,l.pyQName)):(c.isInstance||J(null,9504,$e.U.lf("the field '{0}' of '{1}' is static",n,l.pyQName)),Ie(a=e,"super")&&0==a.args.length?c.isProtected=!0:"Name"==(i=e).kind&&"self"==i.id&&(b.currClass||J(null,9529,$e.U.lf("no class context found for {0}",c.pyQName)),c.namespace!=b.currClass.symInfo.qName&&(c.isProtected=!0))),c}return null}function ae(e){var n=[];return"@array"==e?n=[v("_py.Array"),v("Array")]:"string"==e&&(n=[v("_py.String"),v("String")]),n.filter(function(e){return!!e})}function oe(e){var n=C(),t=$e.U.lookup(n.vars,e);return t||null}function se(e){if(!e)return null;var n,t=e.indexOf(".");if(0<t)(n=oe(e.slice(0,t)))&&n.pyQName!=n.pyName&&(e=n.pyQName+e.slice(t));else if(n=oe(e))return n;return E(e)}function ue(e){return e.tsType?w(e.tsType):(e.tsType=k(),e.tsType)}function le(e){if(!e)return!1;switch(e.kind){case 5:case 9:case 8:case 6:return!0;default:return!1}}function ce(e){var n,t=$e.U.flatClone(b);try{n=e()}finally{b=t}return n}function fe(e,n){return 0==n.length?Q.mkText(""):Q.mkGroup([Q.mkText("/* TODO: "+e+" "),Q.mkGroup(n),Q.mkText(" */"),Q.mkNewLine()])}function pe(e){var n=Be(e.value);return e.arg?Q.mkInfix(Q.mkText(e.arg),"=",n):Q.mkGroup([Q.mkText("**"),n])}function me(e){if(!e)return k();var n=Ce(e);if(n){var t=v(n+"@type")||v(n);if(t){if(T(t),6==t.kind)return l;if(t.pyInstanceType)return t.pyInstanceType}else if(y[n])return y[n];J(e,9506,$e.U.lf("cannot find type '{0}'",n))}return J(e,9507,$e.U.lf("invalid type syntax")),k({})}var de={Sub:1,Div:1,Pow:1,LShift:1,RShift:1,BitOr:1,BitXor:1,BitAnd:1,FloorDiv:1,Mult:1},ye={Add:"+",Sub:"-",Mult:"*",MatMult:"Math.matrixMult",Div:"/",Mod:"%",Pow:"**",LShift:"<<",RShift:">>",BitOr:"|",BitXor:"^",BitAnd:"&",FloorDiv:"Math.idiv",And:"&&",Or:"||",Eq:"==",NotEq:"!=",Lt:"<",LtE:"<=",Gt:">",GtE:">=",Is:"===",IsNot:"!==",In:"py.In",NotIn:"py.NotIn"},ve={Invert:"~",Not:"!",UAdd:"P+",USub:"P-"},ke={"adafruit_bus_device.i2c_device.I2CDevice":"pins.I2CDevice"};function ge(e){b.blockDepth++;var n=Q.mkBlock(e.map(qe));return b.blockDepth--,n}function xe(e){e.vars||(e.vars={},e.parent=C(),e.blockDepth=b.blockDepth)}function Te(e,n){return void 0===n&&(n=!1),"?"==_(e)[0]?n?Q.mkText(": any"):Q.mkText(""):Q.mkText(": "+_(e))}function e(n,e){try{return ce(e)}catch(e){return console.log(e),Q.mkStmt(fe("conversion failed for "+(n.name||n.kind),[]))}}function he(e){if(!e||!e.pyAST)return!1;if("FunctionDef"!=e.pyAST.kind)return!1;var n=e.pyAST;return!(!n.callers||1!=n.callers.length)&&!n.callers[0].inCalledPosition}function Se(k,g){return void 0===g&&(g=!1),e(k,function(){var e=!!b.currClass&&!b.currFun,n=U(),t=!!b.currFun;xe(k);var r=se(A(k)),i=ne(e?1:3,k);if(!g&&(r&&r.declared===x&&J(k,9520,lf("Duplicate function declaration")),i.declared=x,he(i)))return Q.mkText("");e&&(i.isInstance=!0),b.currFun=k;var a="",o=k.name,s=[fe("decorators",k.decorator_list.filter(function(e){return"property"==Ce(e)?!(a="get"):"Attribute"!=e.kind||"setter"!=e.attr||"Name"!=e.value.kind||(o=e.value.id,!(a="set"))}).map(Be))];if(1<=k.body.length&&"Raise"==k.body[0].kind&&(k.alwaysThrows=!0),e)if(b.currClass||J(k,9531,lf("method '{0}' is missing current class context",i.pyQName)),i.pyRetType||J(k,9532,lf("method '{0}' is missing a return type",i.pyQName)),"__init__"==k.name)s.push(Q.mkText("constructor")),F(k,i.pyRetType,b.currClass.symInfo);else{if("__get__"==o||"__set__"==o){var u=k.vars.value;if("__set__"==o&&u){var l=re(b.currClass.symInfo,"__get__");l&&l.pyAST&&"FunctionDef"==l.pyAST.kind&&X(k,u.pyRetType,l.pyRetType)}o=o.replace(/_/g,"")}a||(a="_"==o[0]?i.isProtected?"protected":"private":"public"),s.push(Q.mkText(a+" "),Ue(o))}else $e.U.assert(!a),"_"==k.name[0]||n||g||t?s.push(Q.mkText("function "),Ue(o)):s.push(Q.mkText("export function "),Ue(o));s.push(function(r,e){var i=r.args;i.kwonlyargs.length&&J(r,9517,$e.U.lf("keyword-only arguments not supported yet"));var n=i.args.slice();if(e?("self"!=n[0].arg&&J(r,9518,$e.U.lf("first argument of method has to be called 'self'")),n.shift()):n.some(function(e){return"self"==e.arg})&&J(r,9519,$e.U.lf("non-methods cannot have an argument called 'self'")),!r.symInfo.parameters){var a=i.defaults.length-n.length;r.symInfo.parameters=n.map(function(e){e.annotation||J(r,9519,$e.U.lf("Arg '{0}' missing annotation",e.arg));var n=me(e.annotation),t="";return 0<=a&&(t=Q.flattenNode([Be(i.defaults[a])]).output,X(e,n,ue(i.defaults[a]))),a++,{name:e.arg,description:"",type:"",initializer:t,default:t,pyType:n}})}var t=r.symInfo.parameters.map(function(e){var n=I(e.name,{isParam:!0});e.pyType||J(r,9530,$e.U.lf("parameter '{0}' missing pyType",e.name)),X(r,T(n),e.pyType);var t=[Ue(e.name),Te(e.pyType,!0)];return e.default&&t.push(Q.mkText(" = "+e.default)),Q.mkGroup(t)});return i.vararg&&t.push(Q.mkText("TODO *"+i.vararg.arg)),i.kwarg&&t.push(Q.mkText("TODO **"+i.kwarg.arg)),Q.H.mkParenthesizedExpression(Q.mkCommaSep(t))}(k,e),k.returns?Te(me(k.returns)):Q.mkText("")),T(i);var c=k.body.map(qe);if("__init__"==k.name){b.currClass||J(k,9533,lf("__init__ method '{0}' is missing current class context",i.pyQName));for(var f=0,p=te(b.currClass);f<p.length;f++){var m=p[f],d=m.pyAST;d&&d.value&&c.push(Q.mkStmt(Q.mkText("this."+Ee(m.pyName)+" = "),Be(d.value)))}}var y=Qe(k);s.push(Q.mkBlock(y.concat(c)));var v=Q.mkGroup(s);return g?s[s.length-1].noFinalNewline=!0:v=Q.mkStmt(v),v})}var be={FunctionDef:function(e){return Se(e)},ClassDef:function(u){return e(u,function(){xe(u);var e=ne(8,u);$e.U.assert(!b.currClass);var n=U();(b.currClass=u).isNamespace=u.decorator_list.some(function(e){return"Name"==e.kind&&"namespace"==e.id});var t,r,i=u.isNamespace?[Q.mkText("namespace "),Ue(u.name)]:[fe("keywords",u.keywords.map(pe)),fe("decorators",u.decorator_list.map(Be)),Q.mkText(n?"class ":"export class "),Ue(u.name)];if(!u.isNamespace&&0<u.bases.length)if("Enum"==Ce(u.bases[0]))u.isEnum=!0;else{i.push(Q.mkText(" extends ")),i.push(Q.mkCommaSep(u.bases.map(Be)));var a=(t=u.bases[0],(r=se(Ce(t)))&&r.pyAST&&"ClassDef"==r.pyAST.kind?r.pyAST:null);a&&(u.baseClass=a,e.extendsTypes=[a.symInfo.pyQName])}var o=ge(u.body);i.push(o);var s=te(u).filter(function(e){return 2==e.kind&&e.isInstance}).map(function(e){return e.pyName&&e.pyRetType||J(u,9535,lf("field definition missing py name or ret type",e.qName)),e}).map(function(e){return Q.mkStmt((n=e).pyName&&"_"==n.pyName[0]?n.isProtected?Q.mkText("protected "):Q.mkText("private "):Q.mkText(""),Ue(e.pyName),Te(e.pyRetType));var n});return o.children=s.concat(o.children),Q.mkStmt(Q.mkGroup(i))})},Return:function(e){if(e.value){var n=b.currFun;return n&&(n.symInfo.pyRetType||J(e,9536,lf("function '{0}' missing return type",n.symInfo.pyQName)),O(e.value,n.symInfo.pyRetType)),Q.mkStmt(Q.mkText("return "),Be(e.value))}return Q.mkStmt(Q.mkText("return"))},AugAssign:function(e){var n=ye[e.op];return 3<n.length?Q.mkStmt(Q.mkInfix(Be(e.target),"=",Q.H.mkCall(n,[Be(e.target),Be(e.value)]))):Q.mkStmt(Be(e.target),Q.mkText(" "+n+"= "),Be(e.value))},Assign:function(e){return n(e)},AnnAssign:function(e){return n(e)},For:function(e){if($e.U.assert(0==e.orelse.length),Ie(e.iter,"range")){var n=e.iter,t=Be(e.target),r=Ue(Ce(e.target));O(e.target,l);var i=1==n.args.length?Q.mkText("0"):Be(n.args[0]),a=Be(n.args[1==n.args.length?0:1]);return Q.mkStmt(Q.mkText("for ("),Q.mkInfix(t,"=",i),Q.mkText("; "),Q.mkInfix(r,"<",a),Q.mkText("; "),3<=n.args.length?Q.mkInfix(r,"+=",Be(n.args[2])):Q.mkPostfix([r],"++"),Q.mkText(")"),ge(e.body))}return O(e.iter,g(ue(e.target))),Q.mkStmt(Q.mkText("for ("),Be(e.target),Q.mkText(" of "),Be(e.iter),Q.mkText(")"),ge(e.body))},While:function(e){return $e.U.assert(0==e.orelse.length),Q.mkStmt(Q.mkText("while ("),Be(e.test),Q.mkText(")"),ge(e.body))},If:function(e){var t=function(e){var n=[Q.mkText("if ("),Be(e.test),Q.mkText(")"),ge(e.body)];return e.orelse.length&&(n[n.length-1].noFinalNewline=!0,1==e.orelse.length&&"If"==e.orelse[0].kind?(n.push(Q.mkText(" else ")),$e.U.pushRange(n,t(e.orelse[0]))):n.push(Q.mkText(" else"),ge(e.orelse))),n};return Q.mkStmt(Q.mkGroup(t(e)))},With:function(e){if(1==e.items.length&&(o=e.items[0].context_expr,s="pins.I2CDevice",(u=ue(o)).classType&&u.classType.pyQName==s||_(u)==s)){var n=e.items[0],t=[],r=Be(n.context_expr);if(n.optional_vars){var i=Ce(n.optional_vars);if(i){var a=I(i,{isLocal:!0});i=Ee(i),t.push(Q.mkStmt(Q.mkText("const "+i+" = "),r)),a.pyRetType||J(e,9537,lf("function '{0}' missing return type",a.pyQName)),O(n.context_expr,a.pyRetType),r=Q.mkText(i)}}return t.push(Q.mkStmt(Q.mkInfix(r,".",Q.mkText("begin()")))),$e.U.pushRange(t,e.body.map(qe)),t.push(Q.mkStmt(Q.mkInfix(r,".",Q.mkText("end()")))),Q.mkGroup(t)}var o,s,u,l=[],c=e.items.map(function(e,n){var t="with"+n;if(e.optional_vars){var r=Ce(e.optional_vars);$e.U.assert(null!=r),I(r,{isLocal:!0}),t=Ee(r)}return l.push(Q.mkStmt(Q.mkText(t+".end()"))),Q.mkStmt(Q.mkText("const "+t+" = "),Q.mkInfix(Be(e.context_expr),".",Q.mkText("begin()")))});return $e.U.pushRange(c,e.body.map(qe)),$e.U.pushRange(c,l),Q.mkBlock(c)},Raise:function(e){var n=e.exc||e.cause;if(!n)return Q.mkStmt(Q.mkText("throw"));var t=void 0;if(n&&"Call"==n.kind){var r=n;1==r.args.length&&(t=Be(r.args[0]))}return t||(t=Q.mkGroup([Q.mkText("`"),Be(n),Q.mkText("`")])),Q.mkStmt(Q.H.mkCall("control.fail",[t]))},Assert:function(e){return e.msg||J(e,9537,lf("assert missing message")),Q.mkStmt(Q.H.mkCall("control.assert",[e.test,e.msg].filter(function(e){return!!e}).map(Be)))},Import:function(e){for(var n=0,t=e.names;n<t.length;n++){var r=t[n];r.asname&&I(r.asname,{expandsTo:r.name}),i=e,a=r.name,void 0,E(a)||J(i,9503,$e.U.lf("No module named '{0}'",a))}var i,a;return Q.mkText("")},ImportFrom:function(e){for(var n=[],t=0,r=e.names;t<r.length;t++){var i=r[t];if("*"==i.name)e.module||J(e,9538,lf("import missing module name")),I(e.module,{isImportStar:!0});else{var a=e.module+"."+i.name,o=E(a),s=i.asname||i.name;le(o)?(I(s,{isImport:o,expandsTo:a}),n.push(Q.mkStmt(Q.mkText("import "+Ee(s)+" = "+a)))):I(s,{expandsTo:a})}}return Q.mkGroup(n)},ExprStmt:function(e){return"Str"==e.value.kind?((n=e.value.s).trim().split(/\n/).length<=1?n=n.trim():n+="\n",Q.mkStmt(Q.mkText("/** "+n+" */"))):Q.mkStmt(Be(e.value));var n},Pass:function(e){return Q.mkStmt(Q.mkText(""))},Break:function(e){return Q.mkStmt(Q.mkText("break"))},Continue:function(e){return Q.mkStmt(Q.mkText("continue"))},Delete:function(e){return J(e,9550,$e.U.lf("delete statements are unsupported")),p(e)},Try:function(e){for(var n=[Q.mkText("try"),ge(e.body.concat(e.orelse))],t=0,r=e.handlers;t<r.length;t++){var i=r[t];n.push(Q.mkText("catch ("),i.name?Ue(i.name):Q.mkText("_")),i.type&&n.push(Q.mkText("/* instanceof "),Be(i.type),Q.mkText(" */")),n.push(Q.mkText(")"),ge(i.body))}return e.finalbody.length&&n.push(Q.mkText("finally"),ge(e.finalbody)),Q.mkStmt(Q.mkGroup(n))},AsyncFunctionDef:function(e){return J(e,9551,$e.U.lf("async function definitions are unsupported")),p(e)},AsyncFor:function(e){return J(e,9552,$e.U.lf("async for statements are unsupported")),p(e)},AsyncWith:function(e){return J(e,9553,$e.U.lf("async with statements are unsupported")),p(e)},Global:function(e){for(var n=S(),t=(C(),0),r=e.names;t<r.length;t++){var i=r[t];$e.U.lookup(n.vars,i)||J(e,9521,$e.U.lf("No binding found for global variable")),I(i,{modifier:D.VarModifier.Global}).firstRefPos<e.startPos&&J(e,9522,$e.U.lf("Variable referenced before global declaration"))}return Q.mkStmt(Q.mkText(""))},Nonlocal:function(e){for(var n=S(),t=C(),r=0,i=e.names;r<i.length;r++){var a=i[r],o=ze(a,t);o&&o!==n&&o.vars[a].modifier!==D.VarModifier.Global||J(e,9523,$e.U.lf("No binding found for nonlocal variable")),I(a,{modifier:D.VarModifier.NonLocal}).firstRefPos<e.startPos&&J(e,9524,$e.U.lf("Variable referenced before nonlocal declaration"))}return Q.mkStmt(Q.mkText(""))}};function n(e){var n,t;if("Assign"===e.kind){if(1!=e.targets.length)return J(e,9553,$e.U.lf("multi-target assignment statements are unsupported")),p(e);t=e.targets[0],n=e.value,null}else{if("AnnAssign"!==e.kind)return e;t=e.target,n=e.value||null,e.annotation}var r="",i=!!n&&Ie(n,"const"),a=Ce(t)||"";if(U()||b.currClass||b.currFun||"_"==a[0]||(r="export "),a&&b.currClass&&!b.currFun){i=!(!n||!b.currClass.isNamespace);var o=re(b.currClass.symInfo,a);if(o||J(e,9544,lf("cannot get class field")),0==x)return Q.mkText("/* skip for now */");o.pyRetType||J(e,9539,lf("function '{0}' missing return type",o.pyQName)),O(t,o.pyRetType),o.isInstance=!1,r=b.currClass.isNamespace?"export "+(i?"const":"let")+" ":"static "}if(!n)return J(e,9555,$e.U.lf("unable to determine value of assignment")),p(e);if(O(t,ue(n)),i)return I(Ce(t),{}),/^static /.test(r)||/const/.test(r)||(r+="const "),Q.mkStmt(Q.mkText(r),Q.mkInfix(Be(t),"=",Be(n)));if(!r&&"Tuple"==t.kind){var s=t,u=[Q.mkText("let "),Q.mkText("[")];if(s.elts.filter(function(e){return"Name"!==e.kind}).length)return J(e,9556,$e.U.lf("non-trivial tuple assignment unsupported")),p(e);var l=s.elts.map(function(e){return e}).map(function(e){Le(e,"identifierCompletion"),ue(e);De(e);return Ne(e,!0)});return u.push(Q.mkCommaSep(l)),u.push(Q.mkText("]")),Q.mkStmt(Q.mkInfix(Q.mkGroup(u),"=",Be(n)))}if("Name"===t.kind){var c=C().vars[a];c&&4===c.kind&&void 0===c.modifier&&(void 0===c.firstAssignPos||c.firstAssignPos>t.startPos)&&(c.firstAssignPos=t.startPos,c.firstAssignDepth=b.blockDepth)}return Q.mkStmt(Q.mkText(r),Q.mkInfix(Be(t),"=",Be(n)))}function Ne(e,n){void 0===n&&(n=!1);var t=e.id,r=se(t),i=C().vars[t];return void 0===e.isdef&&(!r||4===r.kind&&r!==i?b.currClass&&!b.currFun?(e.isdef=!1,r=I(t,{})):r=I(t,{isLocal:e.isdef=!0}):e.isdef=!1,e.symbolInfo=r,e.tsType||J(e,9540,lf("definition missing ts type")),r.pyRetType||J(e,9568,lf("missing py return type")),X(e,e.tsType,r.pyRetType)),e.isdef&&We(r,C())&&(e.isdef=!1),Re(r,e),e.isdef&&!n?Q.mkGroup([Q.mkText("let "),Ue(t)]):Ue(t)}function Ee(e){return Q.isReservedWord(e)?e+"_":e||e}function Ce(e){if("Name"==e.kind){var n=e.id,t=oe(n);return t&&t.expandsTo?t.expandsTo:n}if("Attribute"==e.kind){var r=Ce(e.value);if(r)return r+"."+e.attr}J(null,9542,lf("Cannot get name of unknown expression kind '{0}'",e.kind))}function Ue(e){return"self"==e?Q.mkText("this"):Q.mkText(Ee(e))}function Ie(e,n){return"Call"==e.kind&&Ce(e.func)===n}function we(e,n,t){var r=ye[n];return $e.U.assert(!!r),3<r.length?Q.H.mkCall(r,[e,t]):Q.mkInfix(e,r,t)}var Ae={memoryview:{n:"",t:V},const:{n:"",t:l},"micropython.const":{n:"",t:l}};var Pe,_e=(Pe={},Object.keys(pxtc.ts2PyFunNameMap).forEach(function(e){var n=pxtc.ts2PyFunNameMap[e];if(n&&n.n){var t={n:e,t:function(e){switch(e){case ts.SyntaxKind.StringKeyword:return a;case ts.SyntaxKind.NumberKeyword:return l;case ts.SyntaxKind.BooleanKeyword:return c;case ts.SyntaxKind.VoidKeyword:return m;case ts.SyntaxKind.AnyKeyword:return d;default:return V}}(n.t),scale:n.scale};Pe[n.n]=t}}),Object.keys(Ae).forEach(function(e){Pe[e]=Ae[e]}),Pe);function Ke(e){return G&&e.startPos<=G.position&&G.position<=e.endPos}function Le(e,n){100<x&&G&&null==j&&(G.type==n||"symbol"==G.type)&&Ke(e)&&(j=e,z=C())}function Fe(e,n){if(n&&n.pyAST&&"FunctionDef"==n.pyAST.kind){var t=n.pyAST;t.callers||(t.callers=[]),t.callers.indexOf(e)<0&&t.callers.push(e)}}var Oe={BoolOp:function(e){for(var n=Be(e.values[0]),t=1;t<e.values.length;++t)n=we(n,e.op,Be(e.values[t]));return n},BinOp:function(e){var n=function(e){if("Mod"==e.op&&"Str"==e.left.kind&&("Tuple"==e.right.kind||"List"==e.right.kind)){var n=e.left.s,o=e.right.elts;o=o.slice();var s=[Q.mkText("`")];return n.replace(/([^%]+)|(%[\d\.]*([a-zA-Z%]))/g,function(e,n,t,r){if(n)s.push(Q.mkText(n.replace(/[`\\$]/g,function(e){return"\\"+e})));else{var i=o.shift(),a=i?Be(i):Q.mkText("???");s.push(Q.mkText("${"),a,Q.mkText("}"))}return""}),s.push(Q.mkText("`")),Q.mkGroup(s)}return null}(e);return n||(n=we(Be(e.left),e.op,Be(e.right)),de[e.op]&&(O(e.left,l),O(e.right,l),e.tsType||J(e,9570,lf("binary op missing ts type")),X(e,e.tsType,l)),n)},UnaryOp:function(e){var n=ve[e.op];return $e.U.assert(!!n),Q.mkInfix(null,n,Be(e.operand))},Lambda:function(e){return i(e)},IfExp:function(e){return Q.mkInfix(Q.mkInfix(Be(e.test),"?",Be(e.body)),":",Be(e.orelse))},Dict:function(e){return i(e)},Set:function(e){return i(e)},ListComp:function(e){return i(e)},SetComp:function(e){return i(e)},DictComp:function(e){return i(e)},GeneratorExp:function(n){if(1==n.generators.length&&"Comprehension"==n.generators[0].kind){var t=n.generators[0];if(0==t.ifs.length)return ce(function(){var e=Ce(t.target);return I(e,{isParam:!0}),Q.mkInfix(Be(t.iter),".",Q.H.mkCall("map",[Q.mkGroup([Ue(e),Q.mkText(" => "),Be(n.elt)])]))})}return i(n)},Await:function(e){return i(e)},Yield:function(e){return i(e)},YieldFrom:function(e){return i(e)},Compare:function(e){if(1==e.ops.length&&("In"==e.ops[0]||"NotIn"==e.ops[0])){w(ue(e.comparators[0]))==a&&O(e.left,a);var n=Q.mkInfix(Be(e.comparators[0]),".",Q.H.mkCall("indexOf",[Be(e.left)]));return Q.mkInfix(n,"In"==e.ops[0]?">=":"<",Q.mkText("0"))}for(var t=we(Be(e.left),e.ops[0],Be(e.comparators[0])),r=1;r<e.ops.length;++r)t=we(t,"And",we(Be(e.comparators[r-1]),e.ops[r],Be(e.comparators[r])));return t},Call:function(e){e.func.inCalledPosition=!0;var n,t=Ce(e.func),r=se(t),i=r&&8==r.kind,a=r,o=void 0,s="";if(i)a=se(r.pyQName+".__constructor");else if("Attribute"==e.func.kind){var u=e.func;((n=ue(o=u.value)).classType||n.primType)&&(s=u.attr,(a=ie(o,s,!0))&&(s=a.name))}var l=e.args.slice();if("super"==t&&0==l.length)return b.currClass&&b.currClass.baseClass&&(e.tsType||J(e,9543,lf("call expr missing ts type")),F(e,e.tsType,b.currClass.baseClass.symInfo)),Q.mkText("super");if(!a){var c=$e.U.lookup(_e,t);if(c&&(s=""),s&&(t=_(n)+"."+s,(c=$e.U.lookup(_e,t))||"@array"!=K(w(n))||(t="Array."+s,c=$e.U.lookup(_e,t))),s="",c)if("."==c.n[0]&&l.length){if(n=ue(o=l.shift()),s=c.n.slice(1),(a=ie(o,s))&&2==a.kind)return Q.mkInfix(Be(o),".",Q.mkText(s))}else a=E(c.n)}if(Ie(e,"str"))return Q.mkInfix(Q.mkText('""'),"+",Be(e.args[0]));a||J(e,9508,$e.U.lf("can't find called function \""+t+'"'));var f=a?a.parameters:null,p=[];if(f){for(l.length>f.length&&J(e,9510,$e.U.lf("too many arguments in call to '{0}'",a.pyQName));l.length<f.length;)l.push(null);l=l.slice(0,f.length);for(var m=function(n){var e=f.findIndex(function(e){return e.name==n.arg});e<0?J(n,9511,$e.U.lf("'{0}' doesn't have argument named '{1}'",a.pyQName,n.arg)):null!=l[e]?J(n,9512,$e.U.lf("argument '{0} already specified in call to '{1}'",n.arg,a.pyQName)):l[e]=n.value},d=0,y=e.keywords;d<y.length;d++){m(y[d])}for(var v=l.length-1;0<=v&&("undefined"==f[v].initializer&&null==l[v]);v--)l.pop();for(v=0;v<l.length;++v){null!=(k=l[v])||f[v].initializer?k?(f[v].pyType||J(e,9545,lf("formal arg missing py type")),"any"!==f[v].pyType.primType&&O(k,f[v].pyType),"Name"==k.kind&&he(k.symbolInfo)?p.push(Se(k.symbolInfo.pyAST,!0)):p.push(Be(k))):(f[v].initializer||J(e,9547,lf("formal arg missing initializer")),p.push(Q.mkText(f[v].initializer))):(J(e,9513,$e.U.lf("missing argument '{0}' in call to '{1}'",f[v].name,a.pyQName)),p.push(Q.mkText("null")))}}else a&&J(e,9509,$e.U.lf("calling non-function")),p=l.map(Be);if(!j&&G&&"signature"==G.type&&Ke(e)){j=e,z=C();for(v=G.auxResult=0;v<l.length;++v){var k;if(G.auxResult=v,!(k=l[v]))break;if(k.startPos<=G.position&&G.position<=k.endPos)break}}if(a)if(a.pyRetType||J(e,9549,lf("function missing pyRetType")),O(e,a.pyRetType),(e.symbolInfo=a).attributes.py2tsOverride){var g=function(e){var n,t=new RegExp(/([^\$]*\()?([^\$\(]*)\$(\d)(?:(?:(?:=(\d+|'[a-zA-Z0-9_]*'|false|true|null|undefined))|(\?)|))/,"y"),r=[],i=0;for(;i=t.lastIndex,(n=t.exec(e))&&(n[1]&&r.push({kind:"text",text:n[1]}),r.push({kind:"arg",prefix:n[2],index:parseInt(n[3]),default:n[4],isOptional:!!n[5]})),n;);null!=i?r.push({kind:"text",text:e.substr(i)}):r.push({kind:"text",text:e});return{parts:r}}(a.attributes.py2tsOverride);if(g){s&&!o&&J(e,9550,lf("missing recv"));var x=function(e,n,t){for(var r=[],i=0,a=e.parts;i<a.length;i++){var o=a[i];if("text"===o.kind)r.push(Q.mkText(o.text));else if(n[o.index]||o.default)o.prefix&&r.push(Q.mkText(o.prefix)),n[o.index]?r.push(n[o.index]):r.push(Q.mkText(o.default));else if(!o.isOptional)return}if(t)return Q.mkInfix(t,".",Q.mkGroup(r));return Q.mkGroup(r)}(g,p,s?Be(o):void 0);return x||J(e,9555,lf("buildOverride failed unexpectedly")),x}}else if(a.attributes.pyHelper)return Q.mkGroup([Q.mkInfix(Q.mkText("_py"),".",Q.mkText(a.attributes.pyHelper)),Q.mkText("("),Q.mkCommaSep(o?[Be(o)].concat(p):p),Q.mkText(")")]);var T,h=s?Q.mkInfix(Be(o),".",Q.mkText(s)):Be(e.func),S=[h,Q.mkText("("),Q.mkCommaSep(p),Q.mkText(")")];return a&&1==p.length&&N(a)&&(S=[h,(T=p[0],T.type==Q.NT.Prefix&&'"'==T.op[0]?Q.mkText(Q.backtickLit(JSON.parse(T.op))):T)]),i&&(r&&r.pyQName||J(e,9551,lf("missing namedSymbol or pyQName")),S[0]=Q.mkText(P(r.pyQName)),S.unshift(Q.mkText("new "))),Q.mkGroup(S)},Num:function(e){return e.tsType||J(e,9556,lf("tsType missing")),X(e,e.tsType,l),Q.mkText(e.ns)},Str:function(e){return e.tsType||J(e,9557,lf("tsType missing")),X(e,e.tsType,a),Q.mkText(Q.stringLit(e.s))},FormattedValue:function(e){return i(e)},JoinedStr:function(e){return i(e)},Bytes:function(e){return Q.mkText("hex`"+$e.U.toHex(new Uint8Array(e.s))+"`")},NameConstant:function(e){return null!=e.value&&(e.tsType||J(e,9558,lf("tsType missing")),X(e,e.tsType,c)),Q.mkText(JSON.stringify(e.value))},Ellipsis:function(e){return i(e)},Constant:function(e){return i(e)},Attribute:function(e){var n=Be(e.value),t=ue(e.value),r=ie(e.value,e.attr),i=e.attr;if(Le(e,"memberCompletion"),r)e.symbolInfo=r,Fe(e,r),e.tsType&&r.pyRetType||J(e,9559,lf("tsType or pyRetType missing")),X(e,e.tsType,r.pyRetType),i=r.name;else if(t.moduleType){var a=E(t.moduleType.pyQName+"."+e.attr);a?(e.symbolInfo=a,Fe(e,a),O(e,T(a)),i=a.name):J(e,9514,$e.U.lf("module '{0}' has no attribute '{1}'",t.moduleType.pyQName,e.attr))}else 2<x&&J(e,9515,$e.U.lf("unknown object type; cannot lookup attribute '{0}'",e.attr));return Q.mkInfix(n,".",Q.mkText(Ee(i)))},Subscript:function(e){if("Index"==e.slice.kind){var n=e.slice.value;return 2<x&&L(ue(n))&&O(n,l),Q.mkGroup([Be(e.value),Q.mkText("["),Be(n),Q.mkText("]")])}if("Slice"==e.slice.kind){var t=e.slice;return Q.mkInfix(Be(e.value),".",Q.H.mkCall("slice",[t.lower?Be(t.lower):Q.mkText("0"),t.upper?Be(t.upper):null].filter(f)))}return i(e)},Starred:function(e){return Q.mkGroup([Q.mkText("... "),Be(e.value)])},Name:function(e){if(Le(e,"identifierCompletion"),"self"==e.id&&b.currClass)return e.tsType||J(e,9560,lf("missing tsType")),F(e,e.tsType,b.currClass.symInfo),Q.mkText("this");var n=De(e);return n&&n.isImport?Ue(n.name):(Re(n,e),0<=e.ctx.indexOf("Load")?(n&&!n.qName&&J(e,9561,lf("missing qName")),Ue(n?n.qName:Ce(e))):Ne(e))},List:Me,Tuple:Me};function De(e){var n=se(e.id);if(!n){var t=$e.U.lookup(_e,e.id);t&&(n=se(t.n))}if(n){if(e.symbolInfo=n,e.tsType||J(e,9562,lf("missing tsType")),X(e,e.tsType,T(n)),n.isImport)return n;Fe(e,n)}else 0<x&&J(e,9516,$e.U.lf("name '{0}' is not defined",e.id));return n}function Re(e,n){if(e){if(e.modifier===D.VarModifier.Global)(t=S())&&t.vars[e.name]&&(e=t.vars[e.name]);else if(e.modifier===D.VarModifier.NonLocal){var t;(t=ze(e.name,C()))&&(e=t.vars[e.name])}(void 0===e.firstRefPos||e.firstRefPos>n.startPos)&&(e.firstRefPos=n.startPos)}}function Me(e){return e.tsType||J(e,9563,lf("missing tsType")),X(e,e.tsType,g(e.elts[0]?ue(e.elts[0]):k())),Q.mkGroup([Q.mkText("["),Q.mkCommaSep(e.elts.map(Be)),Q.mkText("]")])}function Be(e){var n=Oe[(u=e).kind];return n||$e.U.oops(e.kind+" - unknown expr"),ue(e),n(e)}function qe(e){var n=be[(u=e).kind];n||$e.U.oops(e.kind+" - unknown stmt");var t=(e._comments||[]).map(function(e){return e.value}),r=n(e);return t.length&&(r=Q.mkGroup(t.map(function(e){return Q.mkStmt(Q.H.mkComment(e))}).concat(r))),r}function Ge(e){return!e||(e.type==Q.NT.Prefix&&""==e.op?e.children.every(Ge):e.type==Q.NT.NewLine)}function ze(e,n){if(n){var t=n.vars&&n.vars[e];return t&&t.modifier!=D.VarModifier.NonLocal?n:ze(e,n.parent)}}function Qe(e){for(var n,t,r,i,a=[],o=0,s=Object.keys(e.vars);o<s.length;o++){var u=s[o];We(n=e.vars[u],e)&&a.push((void 0,r=Ue((t=n).name),i=_(T(t)),Q.mkStmt(Q.mkGroup([Q.mkText("let "),r,Q.mkText(": "+i+";")]))))}return a}function We(e,n){return!!(4===e.kind&&!e.isParam&&void 0===e.modifier&&(e.firstRefPos<e.firstAssignPos||e.firstAssignDepth>n.blockDepth))}function je(e){if($e.U.assert("Module"==e.kind),!e.tsBody){var n;b={currClass:void 0,currFun:void 0,currModule:n=e,blockDepth:0},B=n.tsFilename.replace(/\.ts$/,".py"),e.vars||(e.vars={});var t=Qe(e).concat(e.body.map(qe));if(!t.every(Ge))return"main"==e.name?t:[Q.mkText("namespace "+e.name+" "),Q.mkBlock(t)]}}function Ve(e){x=e,q=[],u=void(W=0)}D.py2ts=function(r){var e=[],n={};q=[],$e.U.assert(!!r.sourceFiles,"missing sourceFiles! Cannot convert py to ts");var t=r.sourceFiles.filter(function(e){return $e.U.endsWith(e,".py")});if(0==t.length)return{outfiles:n,diagnostics:q,success:0===q.length};var i=function(e,n){return e.substr(0,e.length-n.length)},a=$e.U.toDictionary(t,function(e){return i(e,".py")}),o=r.sourceFiles.filter(function(e){return $e.U.endsWith(e,".ts")}).filter(function(e){return i(e,".ts")in a});$e.U.assert(!!r.apisInfo,"missing apisInfo! Cannot convert py to ts"),B=t[0],function(e,n){M={},R={};for(var t=$e.U.toDictionary(n,function(e){return e}),r=function(e){if(t.hasOwnProperty(e.fileName))return"continue";var n=e;n.extendsTypes&&(n.extendsTypes=n.extendsTypes.filter(function(e){return e!=n.qName})),n.pyQName&&n.qName||J(null,9526,$e.U.lf("Symbol '{0}' is missing qName for '{1}'",n.name,n.pyQName?"ts":"py")),R[n.pyQName]=n,R[n.qName]=n},i=0,a=$e.U.values(e.byQName);i<a.length;i++)r(a[i]);V=H("Buffer")}(r.apisInfo,o),G=void 0,r.generatedFiles||(r.generatedFiles=[]);for(var s=0,u=t;s<u.length;s++){var l=u[s],c=l,f=l.replace(/\.py$/,"").replace(/.*\//,""),p=r.fileSystem[l];try{B=l;var m=$e.py.lex(p),d=$e.py.parse(p,c,m);$e.U.pushRange(q,d.diagnostics),e.push({kind:"Module",body:d.stmts,blockDepth:0,name:f,source:p,tsFilename:c.replace(/\.py$/,".ts")})}catch(e){console.log("Parse error",e)}}for(var y=q,v=0;v<5;++v){Ve(v);for(var k=0,g=e;k<g.length;k++){var x=g[k];try{je(x)}catch(e){console.log("Conv pass error",e)}}if(0==W)break}Ve(1e3),j=void 0,G=r.syntaxInfo;for(var T=0,h=e;T<h.length;T++){x=h[T];try{var S=je(x);if(!S)continue;d=Q.flattenNode(S),r.sourceFiles.push(x.tsFilename),r.generatedFiles.push(x.tsFilename),r.fileSystem[x.tsFilename]=d.output,n[x.tsFilename]=d.output}catch(e){console.log("Conv error",e)}}if(q=y.concat(q),G&&(G.symbols=[]),j&&J(null,9569,lf("type annotation error; this should be unreachable")),G&&j){j=j;var b=$e.U.values(R).concat($e.U.values(M));G.beginPos=j.startPos,G.endPos=j.endPos,G.symbols||(G.symbols=[]),G.globalNames=G.globalNames||{};var N=[],E=function(e){if(function(e){switch(e.kind){case 6:case 7:case 4:case 3:case 5:return!0;case 2:case 1:return!e.isInstance;default:return!1}}(e)&&N.indexOf(e)<0){var n=$(e);G.globalNames[n.qName||n.name]=n}};N=G.symbols.slice();for(var C=z;C;C=C.parent)C&&C.vars&&$e.U.values(C.vars).forEach(E);if(b.forEach(E),"memberCompletion"==G.type&&"Attribute"==j.kind){var U=ue(j.value);if(U.moduleType)for(var I=0,w=b;I<w.length;I++)(L=w[I]).isInstance||L.namespace!=U.moduleType.qName||G.symbols.push(L);else if(U.classType||U.primType){var A=U.classType||ae(U.primType).reduce(function(e,n){return e||n},null);if(A){A.extendsTypes&&A.qName||J(null,9567,lf("missing extendsTypes or qName"));for(var P=A.extendsTypes.concat(A.qName),_=0,K=b;_<K.length;_++){var L;(L=K[_]).isInstance&&0<=P.indexOf(L.namespace)&&G.symbols.push(L)}}}}else if("identifierCompletion"==G.type)G.symbols=$e.U.values(G.globalNames);else{var F=j.symbolInfo;F&&G.symbols.push(F)}G.symbols=G.symbols.map($)}var O=function(){for(var e=0,n=q;e<n.length;e++){var t=n[e];D.patchPosition(t,r.fileSystem[t.fileName])}return q}();return{outfiles:n,success:0===O.length,diagnostics:O,syntaxInfo:G}}}($e.py||($e.py={}))}(pxt||(pxt={})),function(K){!function(h){var S,e;(e=S=h.TokenType||(h.TokenType={}))[e.Id=0]="Id",e[e.Op=1]="Op",e[e.Keyword=2]="Keyword",e[e.Number=3]="Number",e[e.String=4]="String",e[e.NewLine=5]="NewLine",e[e.Comment=6]="Comment",e[e.Indent=7]="Indent",e[e.Dedent=8]="Dedent",e[e.EOF=9]="EOF",e[e.Error=10]="Error";var b,N,i,E,a={False:!0,None:!0,True:!0,and:!0,as:!0,assert:!0,async:!0,await:!0,break:!0,class:!0,continue:!0,def:!0,del:!0,elif:!0,else:!0,except:!0,finally:!0,for:!0,from:!0,global:!0,if:!0,import:!0,in:!0,is:!0,lambda:!0,nonlocal:!0,not:!0,or:!0,pass:!0,raise:!0,return:!0,try:!0,while:!0,with:!0,yield:!0},C=[],U={"%":"Mod","&":"BitAnd","*":"Mult","**":"Pow","+":"Add","-":"Sub","/":"Div","//":"FloorDiv","<<":"LShift",">>":"RShift","@":"MatMult","^":"BitXor","|":"BitOr"},I={"!":"Bang","!=":"NotEq","(":"LParen",")":"RParen",",":"Comma","->":"Arrow",".":"Dot",":":"Colon",";":"Semicolon","<":"Lt","<=":"LtE","=":"Assign","==":"Eq",">":"Gt",">=":"GtE","[":"LSquare","]":"RSquare","{":"LBracket","}":"RBracket","~":"Invert"},w={b:/^[_0-1]$/,B:/^[_0-1]$/,o:/^[_0-7]$/,O:/^[_0-7]$/,x:/^[_0-9a-fA-F]$/,X:/^[_0-9a-fA-F]$/},A={b:2,B:2,o:8,O:8,x:16,X:16},P=0,_=0;function r(e,n){for(var t=0,r=0,i=0;i<e;++i)10==n.charCodeAt(i)&&(t++,r=i);return{line:t,column:e-r-1}}function s(e){switch(e.type){case S.Id:return"id("+e.value+")";case S.Op:return"'"+N[e.value]+"'";case S.Keyword:return e.value;case S.Number:return"num("+e.value+")";case S.String:return e.stringPrefix+JSON.stringify(e.value);case S.NewLine:return"<nl>";case S.Comment:return"/* "+e.value+" */";case S.Indent:return"indent"+e.value;case S.Dedent:return"dedent";case S.Error:return"[ERR: "+e.value+"]";case S.EOF:return"End of file";default:return"???"}}h.position=r,h.patchPosition=function(e,n){if(!e.start&&!e.length)return e.start=0,e.length=0,e.line=0,void(e.column=0);var t=r(e.start,n);e.line=t.line,e.column=t.column,0<e.length&&(t=r(e.start+e.length-1,n),e.endLine=t.line,e.endColumn=t.column+2)},h.tokenToString=s,h.friendlyTokenToString=function(e,n){var t=e.endPos-e.startPos;return(0==t?s(e):20<t?"`"+n.slice(e.startPos,e.startPos+20)+"`...":"`"+n.slice(e.startPos,e.endPos)+"`").replace(/\r/g,"").replace(/\n/g,"\\n").replace(/\t/g,"\\t")},h.tokensToString=function(e){for(var n="",t=0,r=0,i=e;r<i.length;r++){var a=i[r],o=s(a);70<t+o.length&&(t=0,n+="\n"),0!=t&&(n+=" "),n+=o,t+=o.length,a.type!=S.NewLine&&a.type!=S.Comment||(t=0,n+="\n")}return n},h.lex=function(e){for(0==C.length&&function(){var s={'"':c,"'":c,"#":v,"\\":y,".":g};b=K.U.clone(I);for(var e=0,n=Object.keys(U);e<n.length;e++){var t=n[e];b[t]=U[t],b[t+"="]=U[t]+"Assign"}N={};for(var r=0,i=Object.keys(b);r<i.length;r++){var t=i[r];N[b[t]]=t}for(var a=function(e){if(h.rx.isIdentifierStart(e))C[e]=u;else{var n=String.fromCharCode(e);if(s.hasOwnProperty(n))C[e]=s[n];else if(b.hasOwnProperty(n)){for(var t=!1,r=b[n],i=0,a=Object.keys(b);i<a.length;i++){var o=a[i];o!=n&&o.startsWith(n)&&(t=!0)}C[e]=t?function(){return function(e){var n=E.slice(_,P+1);if(2==n.length&&b.hasOwnProperty(n)){var t=E.slice(_,P+2);3==t.length&&b.hasOwnProperty(t)?(P+=2,e=b[t]):(P++,e=b[n])}l(e)}(r)}:function(){return l(r)}}else h.rx.isSpace(e)?C[e]=function(){}:13==e?C[e]=function(){10==E.charCodeAt(P)&&P++,f()}:h.rx.isNewline(e)?C[e]=f:x(e)?C[e]=k:C[e]=T}},o=0;o<128;++o)a(o)}(),E=e,i=[],_=P=0,r();P<E.length;){_=P;var n=E.charCodeAt(P++);n<128?C[n]():h.rx.isIdentifierStart(n)?u():h.rx.isSpace(n)||(h.rx.isNewline(n)?f():T())}return _=P,f(),p(S.EOF,""),i;function p(e,n,t){var r={type:e,value:n,startPos:_,endPos:P,auxValue:t};return i.push(r),r}function m(e){p(S.Error,e)}function u(){for(;h.rx.isIdentifierChar(E.charCodeAt(P));)P++;var e=E.slice(_,P),n=E.charCodeAt(P);a.hasOwnProperty(e)?p(S.Keyword,e):34==n||39==n?t(e):p(S.Id,e)}function l(e){p(S.Op,e)}function d(e){switch(e){case 97:return 7;case 98:return 8;case 102:return 12;case 110:return 10;case 114:return 13;case 116:return 9;case 118:return 11;default:return 0}}function t(e){var n=E.charCodeAt(P++),t=!1;E.charCodeAt(P)==n&&E.charCodeAt(P+1)==n&&(P+=2,t=!0);for(var r=0<=(e=e.toLowerCase()).indexOf("r"),i="",a="";;){var o=E.charCodeAt(P++);if(o==n){if(!t)break;if(E.charCodeAt(P)==n&&E.charCodeAt(P+1)==n){P+=2;break}a+="\\"+String.fromCharCode(n),i+=String.fromCharCode(n)}else if(92==o){var s=E.charCodeAt(P++);if(13==s&&10==E.charCodeAt(P)&&(s=10,P++),34==s||39==s||92==s)r&&(a+="\\",i+="\\"),a+="\\"+String.fromCharCode(s),i+=String.fromCharCode(s);else if(!r&&d(s))a+="\\"+String.fromCharCode(s),i+=String.fromCharCode(d(s));else if(h.rx.isNewline(s))r&&(i+="\\"+String.fromCharCode(s),a+="\\\\",a+=10==s?"\\n":"\\u"+("0000"+s.toString(16)).slice(-4));else if(r||48!=s)if(r||117!=s&&120!=s)a+="\\\\"+String.fromCharCode(s),i+="\\"+String.fromCharCode(s);else{var u=117==s?4:2,l=E.slice(P,P+u);P+=u;var c=parseInt(l,16);isNaN(c)&&m(K.U.lf("invalid unicode or hex escape")),a+="\\"+String.fromCharCode(s)+l,i+=String.fromCharCode(c)}else a+="\\\\x00",i+="\0"}else{if(isNaN(o)){m(K.U.lf("end of file in a string"));break}if(h.rx.isNewline(o)&&!t){m(K.U.lf("new line in a string"));break}i+=String.fromCharCode(o),a+=String.fromCharCode(o)}}var f=p(S.String,i);f.quoted=a,f.stringPrefix=e}function c(){P--,t("")}function f(){p(S.NewLine,""),r()}function r(){for(var e=0;;){var n=E.charCodeAt(P);if(9!=n){if(32!=n)break;e++,P++}else e=e+8&-8,P++}p(S.Indent,""+e)}function y(){var e=E.charCodeAt(P);h.rx.isNewline(e)?(P++,13==e&&10==E.charCodeAt(P)&&P++):m(K.U.lf("unexpected character after line continuation character"))}function v(){for(p(S.NewLine,"");P<E.length&&!h.rx.isNewline(E.charCodeAt(P));)P++;p(S.Comment,E.slice(_+1,P)),13==E.charCodeAt(P)&&10==E.charCodeAt(P+1)&&P++,P++,r()}function k(){var e=E[_],n="";if("0"==e){var t=E[P],r=w[t];if(r){for(P++;;){var i=E[P];if(!r.test(i))break;n+=i,P++}if(n){var a=parseInt(n,A[t]);isNaN(a)&&m(K.U.lf("invalid number")),p(S.Number,e+t+n,a)}else m(K.U.lf("expecting numbers to follow 0b, 0o, 0x"));return}}var o=!1,s=!1,u=!1;for(P=_;;){if(i=E.charCodeAt(P),!u||43!=i&&45!=i)if(u=!1,95==i||x(i));else if(s||o||46!=i){if(s||69!=i&&101!=i)break;u=s=!0}else o=!0;n+=String.fromCharCode(i),P++}!o&&!s&&"0"==e&&1<n.length&&!/^0+/.test(n)&&m(K.U.lf("unexpected leading zero"));var l=parseFloat(n);isNaN(l)&&m(K.U.lf("invalid number")),p(S.Number,n,l)}function g(){x(E.charCodeAt(P))?k():p(S.Op,"Dot")}function x(e){return 48<=e&&e<=57}function T(){m(K.U.lf("invalid token"))}}}(K.py||(K.py={}))}(pxt||(pxt={})),function(Ie){!function(m){var d,a,i,o,s,y,u,v,k,g=!1,x="";function T(){return a[s]}function l(){for(;a[s];s++){var e=a[s];if(e.type!=m.TokenType.Comment){if(0<=d&&e.type==m.TokenType.Op)switch(e.value){case"LParen":case"LSquare":case"LBracket":d++;break;case"RParen":case"RSquare":case"RBracket":d--}if(e.type!=m.TokenType.Error){if(0<d){if(e.type==m.TokenType.NewLine||e.type==m.TokenType.Indent)continue}else if(e.type==m.TokenType.Indent){if(a[s+1].type==m.TokenType.NewLine){s++;continue}var n=parseInt(e.value),t=u[u.length-1];if(n==t)continue;if(t<n)return void u.push(n);e.type=m.TokenType.Dedent;for(var r=0;u.length;){var i=u[u.length-1];if(!(n<i)){for(i!=n&&S(9552,Ie.U.lf("inconsitent indentation"));1<r;)a.splice(s,0,e),r--;return}u.pop(),r++}}return}S(9551,e.value)}else y.push(e)}}function h(){(v=T()).type!=m.TokenType.EOF&&(s++,l())}function S(e,n){n||(n=Ie.U.lf("invalid syntax")),e||(e=9550);var t=T(),r={code:e,category:pxtc.DiagnosticCategory.Error,messageText:Ie.U.lf("{0} near {1}",n,m.friendlyTokenToString(t,i)),fileName:o,start:t.startPos,length:t.endPos?t.endPos-t.startPos:0,line:0,column:0};m.patchPosition(r,i),g&&Ie.log(x+"TS"+e+" "+r.messageText+" at "+(r.line+1)+","+(r.column+1)),k.push(r),9572!=e&&100<k.length&&Ie.U.userError(Ie.U.lf("too many parse errors"))}function n(e,n){var t=T();(t.type==e&&t.value==n||(S(9553,Ie.U.lf("expecting {0}",m.tokenToString({type:e,value:n,startPos:0,endPos:0}))),t.type!=m.TokenType.NewLine))&&h()}function b(){n(m.TokenType.NewLine,"")}function c(e){n(m.TokenType.Keyword,e)}function f(e){n(m.TokenType.Op,e)}function N(){var e=T();return e.type==m.TokenType.Keyword?e.value:""}function E(){var e=T();return e.type==m.TokenType.Op?e.value:""}var C={if:function e(){var n=p("If");h();n.test=j();n.body=r();"elif"==N()?n.orelse=[e()]:n.orelse=I();return U(n)},while:function(){var e=p("While");return c("while"),e.test=j(),e.body=r(),e.orelse=I(),U(e)},for:function(){var e=p("For");return c("for"),e.target=M(),B(e.target),c("in"),e.iter=R(),e.body=r(),e.orelse=I(),U(e)},try:function(){var e=p("Try");c("try"),e.body=r(),e.handlers=[];for(var n=!1;"except"==N();){var t=p("ExceptHandler");e.handlers.push(t),h(),"Colon"!=E()?(n&&S(),t.type=j(),"as"==N()?(h(),t.name=xe()):t.name=void 0):(n=!0,t.type=void 0,t.name=void 0),t.body=r()}e.orelse=I(),0==e.handlers.length&&e.orelse.length&&S();"finally"==N()?(h(),e.finalbody=r()):e.finalbody=[];return U(e)},with:function(){var e=p("With");return c("with"),e.items=ve(Ie.U.lf("with item"),w),e.body=r(),U(e)},def:function(){var e=p("FunctionDef");c("def"),e.name=xe(),f("LParen"),e.args=Q(!0),f("RParen"),e.returns=void 0,"Arrow"==E()&&(h(),e.returns=j());return e.body=r(),U(e)},class:function(){var e=p("ClassDef");if(c("class"),e.name=xe(),"LParen"==E()){var n=Te();e.bases=n.args,e.keywords=n.keywords}else e.bases=[],e.keywords=[];return e.body=r(),U(e)}},t={del:function(){var e=p("Delete");return c("del"),e.targets=ye(Ie.U.lf("expression"),oe),U(e)},pass:function(){var e=p("Pass");return c("pass"),U(e)},break:function(){var e=p("Break");return h(),U(e)},continue:function(){var e=p("Continue");return h(),U(e)},return:function(){var e=p("Return");h(),P()?e.value=void 0:e.value=R();return U(e)},raise:function(){var e=p("Raise");c("raise"),e.exc=void 0,e.cause=void 0,P()||(e.exc=j(),"from"==N()&&(h(),e.cause=j()));return U(e)},global:_,nonlocal:function(){var e=_();return e.kind="Nonlocal",e},import:function(){var e=p("Import");return h(),e.names=ve(Ie.U.lf("import name"),L),U(e)},from:function(){var e=p("ImportFrom");h(),e.level=function(){for(var e=0;;)if("Dot"==E())e+=1,h();else{if("Ellipsis"!=E())return e;e+=3,h()}}(),T().type==m.TokenType.Id?e.module=K():e.module=void 0;e.level||e.module||S();if(c("import"),"Mult"==E()){h();var n=p("Alias");n.name="*",e.names=[n]}else"LParen"==E()?(h(),e.names=ye(Ie.U.lf("import name"),F),f("RParen")):e.names=ye(Ie.U.lf("import name"),F);return U(e)},assert:function(){var e=p("Assert");h(),e.test=j(),"Comma"==E()?(h(),e.msg=j()):e.msg=void 0;return U(e)},yield:function(){T();if(h(),"from"==N()){var e=p("YieldFrom");return e.value=j(),A(U(e))}var n=p("Yield");P()||(n.value=R());return A(U(n))}};function r(){return f("Colon"),function(){{if(T().type==m.TokenType.NewLine){var e=x;g&&(Ie.log(x+"{"),x+="  "),h();var n=void 0;if(T().type!=m.TokenType.Indent)S(9554,Ie.U.lf("expected an indented block")),n=z();else{var t=parseInt(T().value);for(h(),n=z();;){if(T().type==m.TokenType.Dedent){var r=isNaN(t)||parseInt(T().value)<t;if(h(),r)break}Ie.U.pushRange(n,z())}}return g&&(x=e,Ie.log(x+"}")),n}return G()}}()}function p(e,n){var t=n||T();return{startPos:t.startPos,endPos:t.endPos,kind:e}}function U(e){return e.endPos=v.endPos,e}function I(){return"else"==N()?(h(),r()):[]}function w(){var e=p("WithItem");return e.context_expr=j(),e.optional_vars=void 0,"as"==N()&&(h(),e.optional_vars=oe()),U(e)}function A(e){var n=p("ExprStmt");return n.startPos=e.startPos,n.endPos=e.endPos,n.value=e,n}function P(){var e=T();return e.type==m.TokenType.NewLine||e.type==m.TokenType.Op&&"Semicolon"==e.value}function _(){var e=p("Global");for(h(),e.names=[];e.names.push(xe()),"Comma"==E();)h();return U(e)}function K(){for(var e="";;){if(e+=xe(),"Dot"!=E())return e;e+=".",h()}}function L(){var e=p("Alias");return e.name=K(),"as"==N()?(h(),e.asname=xe()):e.asname=void 0,U(e)}function F(){var e=p("Alias");return e.name=xe(),"as"==N()?(h(),e.asname=xe()):e.asname=void 0,U(e)}function O(e,n){var t=p("Tuple",e);return t.elts=n,U(t)}function e(e){var n=T(),t=ye(Ie.U.lf("expression"),e),r=t[0];return 1!=t.length?O(n,t):r}function D(){return e(ue)}function R(){return e(j)}function M(){return e(oe)}function B(e){"Tuple"==e.kind?e.elts.forEach(B):e.ctx="Store"}function q(){var e=Ie.U.lookup(t,N());return e?e():function(){var e=T(),n=D(),t=E();if("Assign"==t){var r=p("Assign");for(r.targets=[n];;){if(h(),n=D(),"Assign"!=(t=E())){r.value=n;break}r.targets.push(n)}return r.targets.forEach(B),U(r)}if("Colon"==t){var i=p("AnnAssign");return i.target=n,h(),i.annotation=j(),"Assign"==E()&&(h(),i.value=j()),i.simple=e.type==m.TokenType.Id&&"Name"==n.kind?1:0,B(i.target),U(i)}if(Ie.U.endsWith(t,"Assign")){var a=p("AugAssign");return a.target=n,a.op=t.replace("Assign",""),h(),a.value=R(),B(a.target),U(a)}if("Semicolon"==t||T().type==m.TokenType.NewLine){var o=p("ExprStmt");return o.value=n,U(o)}return S(9555,Ie.U.lf("unexpected token")),h(),null}()}function G(){for(var e=[q()];"Semicolon"==E()&&(h(),T().type!=m.TokenType.NewLine);)e.push(q());return b(),e.filter(function(e){return!!e})}function z(){var e=k.length,n=T().type==m.TokenType.Indent;n&&(h(),S(9573,Ie.U.lf("unexpected indent")));for(var t=[];"MatMult"==E();)h(),t.push(Se()),b();var r=N(),i=Ie.U.lookup(C,N()),a=[],o=y;(y=[],"class"==r||"def"==r)?((p=i()).decorator_list=t,a=[p]):t.length?S(9556,Ie.U.lf("decorators not allowed here")):a=i?[i()]:G();o.length&&a.length&&(a[0]._comments=o);var s,u,l=[];if(k.length>e){for(d=-1;v.type!=m.TokenType.Dedent&&v.type!=m.TokenType.NewLine&&(h(),g&&l.push(m.tokenToString(T())),T().type!=m.TokenType.EOF););n&&T().type===m.TokenType.Dedent&&h(),d=0,g&&Ie.log(x+"skip: "+l.join(", "))}if(g)for(var c=0,f=a;c<f.length;c++){var p=f[c];s="stmt",u=p,g&&Ie.log(x+s+": "+u.kind)}return a}function Q(n){var e=p("Arguments");for(e.args=[],e.defaults=[],e.kwonlyargs=[],e.kw_defaults=[],e.vararg=void 0;;){var t=E();if("Colon"==t||"RParen"==t)break;if("Mult"==t)e.vararg&&S(9557,Ie.U.lf("multiple *arg")),h(),T().type==m.TokenType.Id?e.vararg=a():e.vararg=void 0;else if("Pow"==t)e.kwarg&&S(9558,Ie.U.lf("multiple **arg")),h(),e.kwarg=a();else{e.kwarg&&S(9559,Ie.U.lf("arguments after **"));var r=a(),i=void 0;"Assign"==E()&&(h(),i=j()),void 0!==e.vararg&&i?(e.kwonlyargs.push(r),e.kw_defaults.push(i)):(e.args.push(r),i?e.defaults.push(i):e.defaults.length&&S(9560,Ie.U.lf("non-default argument follows default argument")))}if("Comma"!=E())break;h()}return e.kwarg||(e.kwarg=void 0),e.vararg||(e.vararg=void 0),U(e);function a(){var e=p("Arg");return e.arg=xe(),e.annotation=void 0,n&&"Colon"==E()&&(h(),e.annotation=j()),e}}function W(e){var n=p("Lambda");return h(),n.args=Q(!1),f("Colon"),n.body=e?le():j(),U(n)}function j(){if("lambda"==N())return W();var e=T(),n=H();if("if"==N()){var t=p("IfExp",e);return t.body=n,c("if"),t.test=H(),c("else"),t.orelse=j(),U(t)}return n}function V(e,n){var t=T(),r=n();if(N()==e){var i=p("BoolOp",t);for(i.op="or"==e?"Or":"And",i.values=[r];N()==e;)c(e),i.values.push(n());return U(i)}return r}function $(){return V("and",J)}function H(){return V("or",$)}function J(){if("not"==N()){var e=p("UnaryOp");return h(),e.op="Not",e.operand=J(),U(e)}return function(){var e=T(),n=oe();if(!Y())return n;var t=p("Compare",e);t.left=n,t.comparators=[],t.ops=[];for(;;){var r=Y();if(!r)break;h(),"NotIn"==r?c("in"):"Is"==r&&"not"==N()&&(h(),r="IsNot"),t.ops.push(r),t.comparators.push(oe())}return U(t)}()}var X={Lt:"Lt",Gt:"Gt",Eq:"Eq",GtE:"GtE",LtE:"LtE",NotEq:"NotEq",in:"In",not:"NotIn",is:"Is"};function Y(){return X[E()]||X[N()]||null}var Z={Invert:"Invert",Sub:"USub",Add:"UAdd"};function ee(e,n){for(var t=T(),r=e();;){var i=E();if(!(i&&0<=n.indexOf(","+i+",")))return r;var a=p("BinOp",t);a.left=r,a.op=i,h(),a.right=e(),r=a}}function ne(){return ee(be,",Mult,MatMult,Div,Mod,FloorDiv,")}function te(){return ee(ne,",Add,Sub,")}function re(){return ee(te,",LShift,RShift,")}function ie(){return ee(re,",BitAnd,")}function ae(){return ee(ie,",BitXor,")}function oe(){return ee(ae,",BitOr,")}function se(){var e=T(),n=void 0;if("Colon"!=E()&&(n=j()),"Colon"==E()){var t;(t=p("Slice",e)).lower=n,h();var r=E();return t.upper="Colon"!=r&&"Comma"!=r&&"RSquare"!=r?j():void 0,t.step=void 0,"Colon"==E()&&(h(),"Comma"!=(r=E())&&"RSquare"!=r&&(t.step=j())),U(t)}return n||S(9570,Ie.U.lf("unable to parse lower subscript")),(t=p("Index")).value=n,U(t)}function ue(){if("Mult"==E()){var e=p("Starred");return e.value=oe(),U(e)}return j()}function le(){return"lambda"==N()?W(!0):H()}function ce(){for(var e=[];;){var n=p("Comprehension");for(n.is_async=0,e.push(n),c("for"),n.target=M(),B(n.target),c("in"),n.iter=H(),n.ifs=[];"if"==N();)h(),n.ifs.push(le());if("for"!=N())return e}}function fe(){var e=T();if("Mult"==E()){var n=p("Starred");return h(),n.value=j(),U(n)}if("Pow"==E()){n=p("Keyword");return h(),n.arg=void 0,n.value=j(),U(n)}var t=j();return"Assign"==E()?("Name"!=t.kind&&S(9561,Ie.U.lf("invalid keyword argument; did you mean ==?")),h(),(n=p("Keyword",e)).arg=t.id||"???",n.value=j(),U(n)):"for"==N()?((n=p("GeneratorExp",e)).elt=t,n.generators=ce(),U(n)):t}function pe(){var e=p("NameConstant");return e.value=void 0,h(),U(e)}function me(){var e=T();if(e.type==m.TokenType.Id){var n=p("Name");return h(),n.id=e.value,n.ctx="Load",U(n)}if(e.type==m.TokenType.Number){n=p("Num");return h(),n.ns=e.value,n.n=e.auxValue,U(n)}if(e.type==m.TokenType.String){h();for(var t=e.value;T().type==m.TokenType.String;)t+=T().value,h();return"b"==e.stringPrefix?(n=p("Bytes",e)).s=Ie.U.toArray(Ie.U.stringToUint8Array(t)):(n=p("Str",e)).s=t,U(n)}if(e.type==m.TokenType.Keyword){if("None"==e.value||"True"==e.value||"False"==e.value){n=p("NameConstant");return h(),n.value="True"==e.value||"False"!=e.value&&void 0,U(n)}return S(9564,Ie.U.lf("expecting atom")),pe()}if(e.type==m.TokenType.Op){var r=e.value;return"LParen"==r?ge("RParen","Tuple","GeneratorExp"):"LSquare"==r?ge("RSquare","List","ListComp"):"LBracket"==r?function(){var s=T();if(h(),"Pow"==E())return h(),t(void 0,oe());if("RBracket"==E()){var e=p("Dict",s);return h(),e.keys=[],e.values=[],U(e)}var n=ue();return"Starred"!=n.kind&&"Colon"==E()?(h(),t(n,j())):function(e){if("for"==N()){"Starred"==e.kind&&S(9562,Ie.U.lf("iterable unpacking cannot be used in comprehension"));var n=p("SetComp",s);return n.elt=e,n.generators=ce(),U(n)}var t=p("Set",s);if(t.elts=[e],"Comma"==E()){var r=ke("RBracket",Ie.U.lf("set element"),ue);t.elts=[e].concat(r)}else f("RBracket");return U(t)}(n);function u(){if("Pow"==E())return h(),[null,oe()];var e=j();return f("Colon"),[e,j()]}function t(e,n){if("for"==N()){e||S(9563,Ie.U.lf("dict unpacking cannot be used in dict comprehension"));var t=p("DictComp",s);return t.key=e,t.value=n,t.generators=ce(),U(t)}var r=p("Dict",s);if(r.keys=[e],r.values=[n],"Comma"==E())for(var i=0,a=ke("RBracket",Ie.U.lf("dict element"),u);i<a.length;i++){var o=a[i];2<=o.length&&o[0]&&o[1]&&(r.keys.push(o[0]),r.values.push(o[1]))}else f("RBracket");return U(r)}}():(S(9565,Ie.U.lf("unexpected operator")),pe())}return S(9566,Ie.U.lf("unexpected token")),pe()}function de(){var e=E();return"RParen"==e||"RSquare"==e||"RBracket"==e||"Colon"==e||"Semicolon"==e||(!!Ie.U.endsWith(e,"Assign")||("in"==N()||T().type==m.TokenType.NewLine))}function ye(e,n){var t=[];if(de())return t;for(;;){t.push(n());var r="Comma"==E();if(r&&h(),de())return t;if(!r)return S(9567,Ie.U.lf("expecting {0}",e)),t}}function ve(e,n){for(var t=[];t.push(n()),"Comma"==E();)h();return t}function ke(e,n,t){h();var r=[];if(E()!=e)for(;;){r.push(t());var i="Comma"==E();if(i&&h(),E()==e)break;if(!i){S(9568,Ie.U.lf("expecting {0}",n));break}}return f(e),r}function ge(e,n,t){var r=T();if(h(),E()==e)return h(),(a=p(n,r)).elts=[],U(a);var i=ue();if("for"==N())return(a=p(t,r)).elt=i,a.generators=ce(),f(e),U(a);if("Comma"==E()){var a=p(n,r);return h(),a.elts=ye(Ie.U.lf("expression"),ue),a.elts.unshift(i),f(e),U(a)}return f(e),"List"==n?((a=p(n,r)).elts=[i],U(a)):i}function xe(){var e=T();return e.type!=m.TokenType.Id&&S(9569,Ie.U.lf("expecting identifier")),h(),e.value}function Te(){for(var e=[],n=[],t=0,r=ke("RParen",Ie.U.lf("argument"),fe);t<r.length;t++){var i=r[t];"Keyword"==i.kind?n.push(i):(n.length&&S(9570,Ie.U.lf("positional argument follows keyword argument")),e.push(i))}return{args:e,keywords:n}}function he(e,n){var t=E();if("LParen"==t){(i=p("Call",e)).func=n;var r=Te();return i.args=r.args,i.keywords=r.keywords,U(i)}if("LSquare"==t){var i,a=T();(i=p("Subscript",e)).value=n;var o=ke("RSquare",Ie.U.lf("subscript"),se);if(0==o.length)S(9571,Ie.U.lf("need non-empty index list"));else if(1==o.length)i.slice=o[0];else if(o.every(function(e){return"Index"==e.kind})){var s=o[0];s.value=O(a,o.map(function(e){return e.value})),i.slice=s}else{var u=p("ExtSlice",a);u.dims=o,i.slice=U(u)}return U(i)}return"Dot"==t?((i=p("Attribute",e)).value=n,h(),i.attr=xe(),U(i)):n}function Se(){for(var e=T(),n=me();;){var t=he(e,n);if(t===n)return n;n=t}}function be(){if(Z[E()]){var e=p("UnaryOp");return e.op=Z[E()],h(),e.operand=be(),U(e)}return function(){T();var e=Se();if("Pow"==E()){var n=p("BinOp");return h(),n.left=e,n.op="Pow",n.right=be(),U(n)}return e}()}var Ne={kind:1,id:2,n:3,s:4,func:5,key:6,elt:7,elts:8,keys:9,left:10,ops:11,comparators:12,names:13,items:14,test:15,targets:16,dims:17,context_expr:18,name:19,bases:20,type:21,inClass:22,target:23,annotation:24,simple:25,op:26,operand:27,right:28,values:29,iter:30,ifs:31,is_async:32,value:33,slice:34,attr:35,generators:36,args:37,keywords:38,body:39,handlers:40,orelse:41,finalbody:42,decorator_list:43,kwonlyargs:44,kw_defaults:45,defaults:46,arg:47},Ee={lineno:1,col_offset:1,startPos:1,endPos:1,kind:1},Ce={body:1,orelse:1,finalbody:1},Ue={_comments:1,ctx:1,ns:1};m.dump=function(e,y){void 0===y&&(y=!1);for(var v=function(e,n){if(Array.isArray(n)){for(var t="",r=0;r<n.length;++r)0<r&&(t+=", "),t+=v(e,n[r]);return"["+t+"]"}if(!n||!n.kind)return JSON.stringify(n);var i="",a=Object.keys(n);a.sort(function(e,n){return(Ne[e]||100)-(Ne[n]||100)||Ie.U.strcmp(e,n)});for(var o=0,s=a;o<s.length;o++){var u=s[o];if(!(Ie.U.lookup(Ee,u)||y&&Ie.U.lookup(Ue,u)))if(i&&(i+=", "),i+=u+"=",Array.isArray(n[u])&&n[u].length&&Ie.U.lookup(Ce,u)){i+="[\n";for(var l=e+"  ",c=0,f=n[u];c<f.length;c++){var p=f[c];i+=l+v(l,p)+"\n"}i+=e+"]"}else if("_comments"==u){i+="[\n",l=e+"  ";for(var m=0,d=n[u];m<d.length;m++)p=d[m],i+=l+JSON.stringify(p.value)+"\n";i+=e+"]"}else i+=v(e,n[u])}return n.kind+"("+i+")"},n="",t=0,r=e;t<r.length;t++){var i=r[t];n+=v("",i)+"\n"}return n},m.parse=function(e,n,t){i=e,o=n,a=t,y=[],u=[s=d=0],k=[];var r=[];try{if(v=a[0],l(),T().type!=m.TokenType.EOF)for(r=z();T().type!=m.TokenType.EOF;)Ie.U.pushRange(r,z())}catch(e){S(9572,Ie.U.lf("exception: {0}",e.message))}return{stmts:r,diagnostics:k}}}(Ie.py||(Ie.py={}))}(pxt||(pxt={})),function(W){!function(n){function z(e,n,t){var r={fileName:e.getSourceFile().fileName,start:e.getStart(),length:e.getEnd()-e.getStart(),line:void 0,column:void 0,code:n,category:pxtc.DiagnosticCategory.Error,messageText:t},i=new Error(t);throw i.pyDiagnostic=r,i}n.decompileToPython=function(e,n){var t={blocksInfo:void 0,outfiles:{},diagnostics:[],success:!0,times:{}};try{var r=function(e,t){var y=[{vars:{}}],v=e.getTypeChecker(),n=(new ts.pxtc.LSHost(e),e.getSourceFile(t)),r=W.U.toSet(["ArithmeticError","AssertionError","AttributeError","BaseException","BlockingIOError","BrokenPipeError","BufferError","BytesWarning","ChildProcessError","ConnectionAbortedError","ConnectionError","ConnectionRefusedError","ConnectionResetError","DeprecationWarning","EOFError","Ellipsis","EnvironmentError","Exception","False","FileExistsError","FileNotFoundError","FloatingPointError","FutureWarning","GeneratorExit","IOError","ImportError","ImportWarning","IndentationError","IndexError","InterruptedError","IsADirectoryError","KeyError","KeyboardInterrupt","LookupError","MemoryError","NameError","None","NotADirectoryError","NotImplemented","NotImplementedError","OSError","OverflowError","PendingDeprecationWarning","PermissionError","ProcessLookupError","RecursionError","ReferenceError","ResourceWarning","RuntimeError","RuntimeWarning","StopAsyncIteration","StopIteration","SyntaxError","SyntaxWarning","SystemError","SystemExit","TabError","TimeoutError","True","TypeError","UnboundLocalError","UnicodeDecodeError","UnicodeEncodeError","UnicodeError","UnicodeTranslateError","UnicodeWarning","UserWarning","ValueError","Warning","ZeroDivisionError","_","__build_class__","__debug__","__doc__","__import__","__loader__","__name__","__package__","__spec__","abs","all","any","ascii","bin","bool","bytearray","bytes","callable","chr","classmethod","compile","complex","copyright","credits","delattr","dict","dir","divmod","enumerate","eval","exec","exit","filter","float","format","frozenset","getattr","globals","hasattr","hash","help","hex","id","input","int","isinstance","issubclass","iter","len","license","list","locals","map","max","memoryview","min","next","object","oct","open","ord","pow","print","property","quit","range","repr","reversed","round","set","setattr","slice","sorted","staticmethod","str","sum","super","tuple","type","vars","zip"],function(e){return e}),i=ts.pxtc.decompiler.buildRenameMap(e,n,r),a=i[0],m=i[1],o=pxtc.getApiInfo(e),s=W.U.mapMap(o.byQName,function(e,n){return n.fileName==t?void 0:n});return n.getChildren().map(g).reduce(function(e,n){return e.concat(n)},[]).join("\n");function A(e){if(!e.getSourceFile())return null;var n=e.getText(),t=s[n];return t&&t.pyQName?t.pyQName:n in pxtc.ts2PyFunNameMap?pxtc.ts2PyFunNameMap[n].n:null}function P(e){var n=A(e);if(n)return n;if(!ts.isIdentifier(e))return z(e,3001,"Unsupported advanced name format: "+e.getText());var t=e.text,r=e.getSourceFile();if(a&&r){var i=a.getRenameForPosition(e.getStart());i&&(t=i.name)}return t}function k(e,n){return 0!=(e.flags&n)}function u(e,n){var t=v.getTypeAtLocation(e);return k(t,n)}function _(e){return u(e,ts.TypeFlags.StringLike)}function S(e){return u(e,ts.TypeFlags.NumberLike)}function g(e){switch(e.kind){case ts.SyntaxKind.SyntaxList:return e._children.map(g).reduce(function(e,n){return e.concat(n)},[]);case ts.SyntaxKind.EndOfFileToken:case ts.SyntaxKind.OpenBraceToken:case ts.SyntaxKind.CloseBraceToken:return[];default:return function(e){var n=[];if(0<e.getLeadingTriviaWidth()){var t=e.getFullText().slice(0,e.getLeadingTriviaWidth()),r=t.split("\n"),i=r.map(function(e){var n=e.trim();return n?n.startsWith("//")?["comment","#"+n.slice(2,n.length)]:"unknown":"blank"}).filter(function(e){return"unknown"!==e}).map(function(e){return"blank"===e?"":e[1]});i&&!i[0]&&i.shift(),i&&!i[i.length-1]&&i.pop(),n=n.concat(i)}return n=n.concat(b(e))}(e)}}function b(e){return ts.isVariableStatement(e)?e.declarationList.declarations.map(I).reduce(function(e,n){return e.concat(n)},[]):ts.isClassDeclaration(e)?function(e){var n=[];if(!e.name)return z(e,3011,"Unsupported: anonymous class");var t=e.members.every(x),r=P(e.name);t?n.push("class "+r+"(Enum):"):n.push("class "+r+":");var i=e.members.map(T).reduce(function(e,n){return e.concat(n)},[]).filter(function(e){return e});return i.length&&(n=n.concat(i.map(Q))),n}(e):ts.isEnumDeclaration(e)?function(e){var n=[];n.push("class "+P(e.name)+"(Enum):");var t=e.members.every(function(e){return!!e.initializer}),r=!e.members.every(function(e){return!!e.initializer});if(!t&&!r)return z(e,3005,"Unsupported enum decleration: has mixture of explicit and implicit initialization");if(t)return z(e,3006,"Unsupported: explicit enum initialization");for(var i=0,a=0,o=e.members;a<o.length;a++){var s=o[a];n.push(Q(P(s.name)+" = "+i++))}return n}(e):ts.isExpressionStatement(e)?function(e){var n=E(e.expression);if(n)return n;var t=G(e.expression),r=t[0];return t[1].concat(r)}(e):ts.isFunctionDeclaration(e)?C(e):ts.isIfStatement(e)?(p=function e(n){var t=[],r=G(n.expression),i=r[0],a=r[1];t=t.concat(a);var o="if "+L(i)+":",s=[],u=N(n.thenStatement);if(s=s.concat(u),n.elseStatement)if(ts.isIfStatement(n.elseStatement)){var l=e(n.elseStatement),c=l.supportStmts,f=l.ifStmt,p=l.rest,m="el"+f;t=t.concat(c),s.push(m),s=s.concat(p)}else{s.push("else:");var d=N(n.elseStatement);s=s.concat(d)}return{supportStmts:t,ifStmt:o,rest:s}}(e),m=p.supportStmts,d=p.ifStmt,y=p.rest,m.concat([d]).concat(y)):ts.isForStatement(e)?function(e){var n=function(e){if(!e.initializer)return null;if(e.initializer.kind!==ts.SyntaxKind.VariableDeclarationList)return null;var n=e.initializer;if(1!==n.declarations.length)return null;var t=n.declarations[0],r=P(t.name);if(!t.initializer||!function n(e,t){var r=function(e){return n(e,t)};return ts.isBinaryExpression(e)?r(e.left)&&r(e.right):ts.isPropertyAccessExpression(e)?r(e.expression):ts.isPrefixUnaryExpression(e)||ts.isPostfixUnaryExpression(e)?e.operator!==ts.SyntaxKind.PlusPlusToken&&e.operator!==ts.SyntaxKind.MinusMinusToken&&r(e.operand):ts.isParenthesizedExpression(e)?r(e.expression):ts.isArrayLiteralExpression(e)?e.elements.map(r).reduce(function(e,n){return e&&n},!0):ts.isElementAccessExpression(e)?r(e.expression)&&(!e.argumentExpression||r(e.argumentExpression)):t(e)}(t.initializer,function(e){switch(e.kind){case ts.SyntaxKind.PropertyAccessExpression:case ts.SyntaxKind.BinaryExpression:case ts.SyntaxKind.ParenthesizedExpression:case ts.SyntaxKind.ArrayLiteralExpression:case ts.SyntaxKind.ElementAccessExpression:case ts.SyntaxKind.TrueKeyword:case ts.SyntaxKind.FalseKeyword:case ts.SyntaxKind.NullKeyword:case ts.SyntaxKind.UndefinedKeyword:case ts.SyntaxKind.NumericLiteral:case ts.SyntaxKind.StringLiteral:case ts.SyntaxKind.NoSubstitutionTemplateLiteral:return!0;case ts.SyntaxKind.CallExpression:case ts.SyntaxKind.NewExpression:case ts.SyntaxKind.FunctionExpression:case ts.SyntaxKind.ArrowFunction:case ts.SyntaxKind.Identifier:case ts.SyntaxKind.ThisKeyword:return!1;case ts.SyntaxKind.PrefixUnaryExpression:case ts.SyntaxKind.PostfixUnaryExpression:var n=e;return n.operator!==ts.SyntaxKind.PlusPlusToken&&n.operator!==ts.SyntaxKind.MinusMinusToken}return!1})||!S(t.initializer))return null;var i=G(t.initializer),a=i[0];if(i[1].length)return null;var o=L(a);if(!e.condition)return null;if(!ts.isBinaryExpression(e.condition))return null;if(!ts.isIdentifier(e.condition.left))return null;if(P(e.condition.left)!=r)return null;if(!S(e.condition.right))return null;var s=G(e.condition.right),u=s[0];if(s[1].length)return null;var l,c,f=L(u),p=f;if(e.condition.operatorToken.kind===ts.SyntaxKind.LessThanEqualsToken&&(l=f,(c=Math.floor(Number(l)))!==1/0&&String(c)===l))p=""+(Number(f)+1);else if(e.condition.operatorToken.kind!==ts.SyntaxKind.LessThanToken)return null;return e.incrementor&&(ts.isPostfixUnaryExpression(e.incrementor)||ts.isPrefixUnaryExpression(e.incrementor))?e.incrementor.operator!==ts.SyntaxKind.PlusPlusToken?null:o<p?{name:r,fromIncl:o,toExcl:p}:null:null}(e);if(n){var t=n.name,r=n.fromIncl,i=n.toExcl,a="0"===r?"for "+t+" in range("+i+"):":"for "+t+" in range("+r+", "+i+"):",o=N(e.statement);return[a].concat(o)}var s,u=[];if(e.initializer)if(ts.isVariableDeclarationList(e.initializer)){var l=e.initializer.declarations.map(I).reduce(function(e,n){return e.concat(n)},[]);u=u.concat(l)}else{var c=G(e.initializer),f=c[0],p=c[1];u=u.concat(p).concat(f)}if(e.condition){var m=G(e.condition),d=m[0],y=m[1];u=u.concat(y),s=L(d)}else s="True";var v="while "+s+":";u.push(v);var k=b(e.statement).map(Q);if(0!==k.length||e.incrementor||(k=[Q("pass")]),u=u.concat(k),e.incrementor){var g=E(e.incrementor);if(g)u=u.concat(g.map(Q));else{var x=G(e.incrementor),T=x[0],h=x[1];u=u.concat(h).concat(T.map(Q))}}return u}(e):ts.isForOfStatement(e)?function(e){if(!ts.isVariableDeclarationList(e.initializer))return z(e,3003,"Unsupported expression in for..of initializer: "+e.initializer.getText());var n=e.initializer.declarations.map(function(e){return P(e.name)});if(1!==n.length)return z(e,3004,"Unsupported multiple declerations in for..of: "+e.initializer.getText());var t=n[0],r=G(e.expression),i=r[0],a=r[1];a=a.concat(F("for "+t+" in ",i,":"));var o=N(e.statement);return a=a.concat(o)}(e):ts.isWhileStatement(e)?(s=G((o=e).expression),u=s[0],l=s[1],c=N(o.statement),f=F("while ",u),l.concat(f).concat(c)):ts.isReturnStatement(e)?function(e){if(!e.expression)return["return"];var n=G(e.expression),t=n[0],r=n[1],i=F("return ",t);return r.concat(i)}(e):ts.isBlock(e)?h(e):ts.isTypeAliasDeclaration(e)?(i=e,a=pxtc.emitType(i.type),[P(i.name)+" = "+a]):ts.isEmptyStatement(e)?[]:ts.isModuleDeclaration(e)?(t=P((n=e).name),r=n.body&&n.body.getChildren().map(g).reduce(function(e,n){return e.concat(n)},[]).map(function(e){return Q(e)}),["@namespace","class "+t+":"].concat(r||[])):ts.isBreakStatement(e)?["break"]:ts.isContinueStatement(e)?["continue"]:z(e,3002,"Not implemented: "+ts.SyntaxKind[e.kind]+" ("+e.kind+")");var n,t,r,i,a,o,s,u,l,c,f,p,m,d,y}function N(e){var n=b(e).map(Q);return n.length<1&&(n=[Q("pass")]),n}function x(e){if(e.kind!==ts.SyntaxKind.PropertyDeclaration)return!1;var n=e;if(!n.modifiers||1!==n.modifiers.length)return!1;for(var t=0,r=n.modifiers;t<r.length;t++){var i=r[t];if(i.kind!==ts.SyntaxKind.StaticKeyword)return!1}return!!n.initializer&&n.initializer.kind===ts.SyntaxKind.NumericLiteral}function T(e){switch(e.kind){case ts.SyntaxKind.PropertyDeclaration:return function(e){var n=P(e.name);if(e.initializer){var t=G(e.initializer),r=t[0],i=t[1];return i.concat([n+" = "+L(r)])}return[]}(e);case ts.SyntaxKind.MethodDeclaration:case ts.SyntaxKind.Constructor:return C(e);default:return["# unknown ClassElement "+e.kind]}}function E(e){if(n=e,!ts.isPrefixUnaryExpression(n)&&!ts.isPostfixUnaryExpression(n)||n.operator!==ts.SyntaxKind.MinusMinusToken&&n.operator!==ts.SyntaxKind.PlusPlusToken)return null;var n,t=G(e.operand),r=t[0],i=t[1],a=e.operator===ts.SyntaxKind.MinusMinusToken?" -= 1":" += 1",o=i;return o.push(""+L(r)+a),o}function h(e){var n=e.getChildren().map(g).reduce(function(e,n){return e.concat(n)},[]);return n}function C(e,n,t,r){var i=[];e.kind!==ts.SyntaxKind.MethodDeclaration&&e.kind!==ts.SyntaxKind.Constructor||i.push("self");var a,o,s=t?M(e.parameters,t):e.parameters,u=s.map(function(e){return U(e,!r)}),l=(i=i.concat(u)).join(", "),c=[];if(e.kind===ts.SyntaxKind.Constructor)a="__init__";else if(n)a=n;else{if(!e.name)return z(e,3012,"Unsupported: anonymous function decleration");a=P(e.name)}if(c.push("def "+a+"("+l+"):"),o={vars:{}},y.unshift(o),!e.body)return z(e,3013,"Unsupported: function decleration without body");var f=[];if(ts.isBlock(e.body))f=h(e.body);else{var p=G(e.body),m=p[0],d=p[1];(f=f.concat(d)).concat(m)}return f.length?c=c.concat(f.map(Q)):c.push(Q("pass")),y.shift(),c}function U(e,n){void 0===n&&(n=!0);var t=e.altName||P(e.name),r="";if(e.type&&n){var i=pxtc.emitType(e.type);i&&-1===i.indexOf("(TODO")&&(r=": "+i)}var a="";if(e.initializer){var o=G(e.initializer),s=o[0],u=o[1];if(u.length)return z(e,3007,"TODO: complex expression in parameter default value not supported. Expression: "+e.initializer.getText());a=" = "+L(s)}return""+t+r+a}function I(e){var n=[],t=P(e.name);if(e.initializer){var r=G(e.initializer),i=r[0],a=r[1];n=n.concat(a);var o=void 0;if(e.type){var s=pxtc.emitType(e.type);o=t+": "+s+" = "+L(i)}else o=t+" = "+L(i);return n.push(o),n}return n}function K(e,n){return[[e],n||[]]}function L(e,n){return void 0===n&&(n="\n"),e.join(n)}function F(e,n,t){return void 0===e&&(e=""),void 0===t&&(t=""),n[0]=e+n[0],n[n.length-1]=n[n.length-1]+t,n}function O(e,n){switch(e){case ts.SyntaxKind.BarBarToken:return"or";case ts.SyntaxKind.AmpersandAmpersandToken:return"and";case ts.SyntaxKind.ExclamationToken:return"not";case ts.SyntaxKind.LessThanToken:return"<";case ts.SyntaxKind.LessThanEqualsToken:return"<=";case ts.SyntaxKind.GreaterThanToken:return">";case ts.SyntaxKind.GreaterThanEqualsToken:return">=";case ts.SyntaxKind.EqualsEqualsEqualsToken:case ts.SyntaxKind.EqualsEqualsToken:return"==";case ts.SyntaxKind.ExclamationEqualsEqualsToken:case ts.SyntaxKind.ExclamationEqualsToken:return"!=";case ts.SyntaxKind.EqualsToken:return"=";case ts.SyntaxKind.PlusToken:return"+";case ts.SyntaxKind.MinusToken:return"-";case ts.SyntaxKind.AsteriskToken:return"*";case ts.SyntaxKind.PlusEqualsToken:return"+=";case ts.SyntaxKind.MinusEqualsToken:return"-=";case ts.SyntaxKind.PercentToken:return"%";case ts.SyntaxKind.SlashToken:return"/";case ts.SyntaxKind.PlusPlusToken:case ts.SyntaxKind.MinusMinusToken:return z(n,3008,"Unsupported ++ and -- in an expression (not a statement or for loop)");case ts.SyntaxKind.AmpersandToken:return"&";case ts.SyntaxKind.CaretToken:return"^";case ts.SyntaxKind.LessThanLessThanToken:return"<<";case ts.SyntaxKind.GreaterThanGreaterThanToken:return">>";case ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken:return z(n,3009,"Unsupported operator: >>>");case ts.SyntaxKind.AsteriskAsteriskToken:return"**";case ts.SyntaxKind.AsteriskAsteriskEqualsToken:return"**=";case ts.SyntaxKind.PercentEqualsToken:return"%=";case ts.SyntaxKind.AsteriskEqualsToken:return"*=";case ts.SyntaxKind.SlashEqualsToken:return"/=";default:return W.tickEvent("depython.todo",{op:e}),z(n,3008,"Unsupported Python operator (code: "+e+")")}}function w(e,n){if(void 0===n&&(n=!1),ts.isPropertyAccessExpression(e)){var t=[P(e.name)];return n&&ts.isIdentifier(e.expression)?t:w(e.expression,n).concat(t)}return ts.isIdentifier(e)?[P(e)]:[]}function D(r){var e=r.join(", ");return 60<e.length?r.map(function(e,n){var t=","==e.charAt(e.length-1)?"":",";return 0==n?e+t:n==r.length-1?Q(e):Q(e+t)}):[e]}function d(e,n,t,r,i){if((ts.isFunctionExpression(e)||ts.isArrowFunction(e))&&n&&n.type&&ts.isFunctionTypeNode(n.type)){var a=void 0,o=function(e,n,t,r){var i="";n&&(i=w(n,!0).map(pxtc.snakify).join("_"));var a=[];if(t&&1<t.length&&r&&1<r.length)for(var o=0;o<t.length&&o<r.length;o++){var s=r[o],u=v.getTypeAtLocation(s);if(k(u,ts.TypeFlags.EnumLike)){var l=w(s,!0).map(pxtc.snakify);a=a.concat(l)}}var c=a.join("_"),f="";i||c||!e||(f=P(e.name));var p=([i,c,f].filter(function(e){return e}).map(pxtc.snakify).map(function(e){return e.toLowerCase()}).join("_")||"my_callback").split("_");4<p.length&&(p=function(e){for(var n={},t=[],r=0,i=e;r<i.length;r++){var a=i[r];a in n||(n[a]=!0,t.push(a))}return t}(p));for(var m=W.U.toDictionary(["any","on","event"],function(e){return e});2<p.length;){var d=y(p,m);if(d.length==p.length)break;p=d}return 1==p.length&&(p=["on",p[0]]),p.join("_");function y(e,n){for(var t=[],r=!1,i=0,a=e;i<a.length;i++){var o=a[i];o in n&&!r?r=!0:t.push(o)}return t}}(n,t,r,i);return B(e,o,a,!0)}return G(e)}function R(r){var e=v.getTypeAtLocation(r.expression),n=v.typeToTypeNode(e),i=ts.createNodeArray([]);if(ts.isFunctionTypeNode(n)&&(i=n.parameters,r.arguments&&i.length<r.arguments.length))return W.tickEvent("depython.todo",{kind:r.kind}),z(r,3010,"TODO: Unsupported call site where caller the arguments outnumber the callee parameters: "+r.getText());var t=G(r.expression),a=t[0],o=t[1],s=L(a),u=r.arguments||ts.createNodeArray(),l=u.map(function(e,n,t){return d(e,i[n],r.expression,i,t)}),c=l.map(function(e){e[0];var n=e[1];return n}).reduce(function(e,n){return e.concat(n)},o);if(0===s.indexOf("_py.py_")){if(l.length<=0)return z(r,3014,"Unsupported: call expression has no arguments for _py.py_ fn");s=s.substr(7).split("_").filter(function(e,n){return 0!==n}).join("_");var f=l.shift()[0],p=D(l.map(function(e){var n=e[0];return e[1],n}).reduce(function(e,n){return e.concat(n)},[]));return[F(f+"."+s+"(",p,")"),c]}var m=D(l.map(function(e){var n=e[0];return e[1],n}).reduce(function(e,n){return e.concat(n)},[]));return[F(s+"(",m,")"),c]}function M(e,n){for(var t=[],r={},i=0;i<Math.max(e.length,n.length);i++){var a=void 0;if(e[i])a=e[i],r[P(a.name)]=!0;else{var o=P((a=n[i]).name);r[o]&&(o=pxtc.decompiler.getNewName(o,r),a=Object.assign({altName:o},n[i]))}t.push(a)}return ts.createNodeArray(t,!1)}function B(e,n,t,r){if(!ts.isBlock(e.body)){var i=G(e.body),a=i[0],o=i[1];if(0===o.length){var s=t?M(e.parameters,t):e.parameters,u=s.map(function(e){return U(e,!1)}).join(", "),l=u.length?"lambda "+u+": "+L(a):"lambda: "+L(a);return K(l)}}var c,f=e.name?P(e.name):("string"!=typeof(c=n||"my_function")&&(c=P(c)),m[c]?pxtc.decompiler.getNewName(c,m):(m[c]=!0,c)),p=C(e,f,t,r);return K(f,p)}function q(e){switch(e){case ts.SyntaxKind.ExclamationToken:return" ";case ts.SyntaxKind.PlusToken:case ts.SyntaxKind.MinusToken:return"";default:return" "}}function G(e){switch(e.kind){case ts.SyntaxKind.BinaryExpression:return function(e){var n=_(e.left),t=_(e.right),r=e.operatorToken.kind===ts.SyntaxKind.PlusToken&&(n||t),i=G(e.left),a=i[0],o=i[1];r&&!n&&(a=F("str(",a,")"));var s=O(e.operatorToken.kind,e),u=G(e.right),l=u[0],c=u[1];r&&!t&&(l=F("str(",l,")"));var f=o.concat(c);return[F(L(a)+" "+s+" ",l),f]}(e);case ts.SyntaxKind.PropertyAccessExpression:return function(e){var n=A(e);if(n)return K(n);var t=G(e.expression),r=t[0],i=t[1],a=P(e.name);return K("length"===a?"len("+L(r)+")":L(r)+"."+a,i)}(e);case ts.SyntaxKind.CallExpression:case ts.SyntaxKind.NewExpression:return R(e);case ts.SyntaxKind.FunctionExpression:case ts.SyntaxKind.ArrowFunction:return B(e);case ts.SyntaxKind.PrefixUnaryExpression:return E=O((N=e).operator,N),C=G(N.operand),U=C[0],I=C[1],w=q(N.operator),K(""+E+w+L(U),I);case ts.SyntaxKind.PostfixUnaryExpression:return x=O((g=e).operator,g),T=G(g.operand),h=T[0],S=T[1],b=q(g.operator),K(""+L(h)+b+x,S);case ts.SyntaxKind.ParenthesizedExpression:return y=G(e.expression),v=y[0],k=y[1],K("("+L(v)+")",k);case ts.SyntaxKind.ArrayLiteralExpression:return m=e.elements.map(G),d=m.map(function(e){e[0];var n=e[1];return n}).reduce(function(e,n){return e.concat(n)},[]),[F("[",D(m.map(function(e){var n=e[0];return e[1],n}).reduce(function(e,n){return e.concat(n)},[])),"]"),d];case ts.SyntaxKind.ElementAccessExpression:return function(e){if(!e.argumentExpression)return z(e,3015,"Unsupported: element access expression without an argument expression");var n=G(e.expression),t=n[0],r=n[1],i=G(e.argumentExpression),a=i[0],o=i[1],s=r.concat(o);return K(L(t)+"["+L(a)+"]",s)}(e);case ts.SyntaxKind.NoSubstitutionTemplateLiteral:case ts.SyntaxKind.TaggedTemplateExpression:return function(e){if(ts.isNoSubstitutionTemplateLiteral(e))return K('"""'+e.text+'"""');var n=G(e.tag),t=n[0],r=n[1],i=G(e.template),a=i[0],o=i[1],s=r.concat(o);return K(L(t)+"("+L(a)+")",s)}(e);case ts.SyntaxKind.TrueKeyword:return K("True");case ts.SyntaxKind.FalseKeyword:return K("False");case ts.SyntaxKind.ThisKeyword:return K("self");case ts.SyntaxKind.NullKeyword:case ts.SyntaxKind.UndefinedKeyword:return K("None");case ts.SyntaxKind.Identifier:return"undefined"==(p=e).text?K("None"):K(P(p));case ts.SyntaxKind.NumericLiteral:case ts.SyntaxKind.StringLiteral:return K(e.getText());case ts.SyntaxKind.ConditionalExpression:return t=G((n=e).condition),r=t[0],i=t[1],a=G(n.whenTrue),o=a[0],s=a[1],u=G(n.whenFalse),l=u[0],c=u[1],f=i.concat(s).concat(c),K(o+" if "+L(r)+" else "+L(l),f);default:return K(e.getText(),["# unknown expression:  "+e.kind])}var n,t,r,i,a,o,s,u,l,c,f,p,m,d,y,v,k,g,x,T,h,S,b,N,E,C,U,I,w}}(e,n),i=n.replace(/(\.py)?\.\w*$/i,"")+".py";t.outfiles[i]=r}catch(e){e.pyDiagnostic?t.diagnostics=[e.pyDiagnostic]:W.reportException(e),t.success=!1}return t},n.INDENT="    ";var t,Q=(t=1,function(e){return""+n.INDENT.repeat(t)+e})}(W.py||(W.py={}))}(pxt||(pxt={})),function(e){var n,t,r;n=e.py||(e.py={}),t=n.rx||(n.rx={}),r=/[\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/,t.isIdentifierStart=function(e){return ts.pxtc.isIdentifierStart(e,ts.pxtc.ScriptTarget.ES5)},t.isIdentifierChar=function(e){return ts.pxtc.isIdentifierPart(e,ts.pxtc.ScriptTarget.ES5)},t.isSpace=function(e){return!!(32===e||9===e||11===e||12===e||160===e||5760<=e&&r.test(String.fromCharCode(e)))},t.isNewline=function(e){return 10===e||13===e||8232===e||8233===e}}(pxt||(pxt={}));
+/// <reference path='../built/pxtlib.d.ts' />
+/// <reference path='../built/pxtcompiler.d.ts' />
+var pxt;
+(function (pxt) {
+    var py;
+    (function (py) {
+        var VarModifier;
+        (function (VarModifier) {
+            VarModifier[VarModifier["NonLocal"] = 0] = "NonLocal";
+            VarModifier[VarModifier["Global"] = 1] = "Global";
+        })(VarModifier = py.VarModifier || (py.VarModifier = {}));
+    })(py = pxt.py || (pxt.py = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var py;
+    (function (py) {
+        var B = pxt.blocks;
+        // global state
+        var externalApis; // slurped from libraries
+        var internalApis; // defined in Python
+        var ctx;
+        var currIteration = 0;
+        var typeId = 0;
+        // this measures if we gained additional information about type state
+        // we run conversion several times, until we have all information possible
+        var numUnifies = 0;
+        var autoImport = true;
+        var currErrorCtx = "???";
+        var verboseTypes = false;
+        var lastAST = undefined;
+        var lastFile;
+        var diagnostics;
+        var compileOptions;
+        var syntaxInfo;
+        var infoNode = undefined;
+        var infoScope;
+        // TODO: move to utils
+        function isFalsy(t) {
+            return t === null || t === undefined;
+        }
+        function isTruthy(t) {
+            return t !== null && t !== undefined;
+        }
+        function stmtTODO(v) {
+            pxt.tickEvent("python.todo", { kind: v.kind });
+            return B.mkStmt(B.mkText("TODO: " + v.kind));
+        }
+        function exprTODO(v) {
+            pxt.tickEvent("python.todo", { kind: v.kind });
+            return B.mkText(" {TODO: " + v.kind + "} ");
+        }
+        function docComment(cmt) {
+            if (cmt.trim().split(/\n/).length <= 1)
+                cmt = cmt.trim();
+            else
+                cmt = cmt + "\n";
+            return B.mkStmt(B.mkText("/** " + cmt + " */"));
+        }
+        function defName(n, tp) {
+            return {
+                kind: "Name",
+                id: n,
+                isdef: true,
+                ctx: "Store",
+                tsType: tp
+            };
+        }
+        var tpString = mkType({ primType: "string" });
+        var tpNumber = mkType({ primType: "number" });
+        var tpBoolean = mkType({ primType: "boolean" });
+        var tpVoid = mkType({ primType: "void" });
+        var tpAny = mkType({ primType: "any" });
+        var tpBuffer = undefined;
+        var builtInTypes = {
+            "string": tpString,
+            "number": tpNumber,
+            "boolean": tpBoolean,
+            "void": tpVoid,
+            "any": tpAny,
+        };
+        function ts2PyType(syntaxKind) {
+            switch (syntaxKind) {
+                case ts.SyntaxKind.StringKeyword:
+                    return tpString;
+                case ts.SyntaxKind.NumberKeyword:
+                    return tpNumber;
+                case ts.SyntaxKind.BooleanKeyword:
+                    return tpBoolean;
+                case ts.SyntaxKind.VoidKeyword:
+                    return tpVoid;
+                case ts.SyntaxKind.AnyKeyword:
+                    return tpAny;
+                default: {
+                    // TODO: this could be null
+                    return tpBuffer;
+                }
+            }
+        }
+        function cleanSymbol(s) {
+            var r = pxt.U.flatClone(s);
+            delete r.pyAST;
+            delete r.pyInstanceType;
+            delete r.pyRetType;
+            delete r.pySymbolType;
+            delete r.moduleTypeMarker;
+            delete r.declared;
+            if (r.parameters)
+                r.parameters = r.parameters.map(function (p) {
+                    p = pxt.U.flatClone(p);
+                    delete p.pyType;
+                    return p;
+                });
+            return r;
+        }
+        function mapTsType(tp) {
+            // TODO handle specifc generic types like: SparseArray<number[]>
+            // TODO handle union types like: Sprite | particles.ParticleAnchor
+            // wrapped in (...)
+            if (tp[0] == "(" && pxt.U.endsWith(tp, ")")) {
+                return mapTsType(tp.slice(1, -1));
+            }
+            // lambda (...) => ...
+            var arrowIdx = tp.indexOf(" => ");
+            if (arrowIdx > 0) {
+                var retTypeStr = tp.slice(arrowIdx + 4);
+                if (retTypeStr.indexOf(")[]") == -1) {
+                    var retType = mapTsType(retTypeStr);
+                    var argsStr = tp.slice(1, arrowIdx - 1);
+                    var argsWords = argsStr ? argsStr.split(/, /) : [];
+                    var argTypes = argsWords.map(function (a) { return mapTsType(a.replace(/\w+\??: /, "")); });
+                    return mkFunType(retType, argTypes);
+                }
+            }
+            // array ...[]
+            if (pxt.U.endsWith(tp, "[]")) {
+                return mkArrayType(mapTsType(tp.slice(0, -2)));
+            }
+            if (tp === "_py.Array") {
+                return mkArrayType(tpAny);
+            }
+            // builtin
+            var t = pxt.U.lookup(builtInTypes, tp);
+            if (t)
+                return t;
+            // handle number litterals like "-20" (b/c TS loves to give specific types to const's)
+            var isNum = !!tp && !isNaN(tp); // https://stackoverflow.com/questions/175739
+            if (isNum)
+                return tpNumber;
+            // generic
+            if (tp == "T" || tp == "U")
+                return mkType({ primType: "'" + tp });
+            // defined by a symbol,
+            //  either in external (non-py) APIs (like default/common packages)
+            //  or in internal (py) APIs (probably main.py)
+            var sym = lookupApi(tp + "@type") || lookupApi(tp);
+            if (!sym) {
+                error(null, 9501, pxt.U.lf("unknown type '{0}' near '{1}'", tp, currErrorCtx || "???"));
+                return mkType({ primType: tp });
+            }
+            if (sym.kind == 7 /* EnumMember */)
+                return tpNumber;
+            // sym.pyInstanceType might not be initialized yet and we don't want to call symbolType() here to avoid infinite recursion
+            if (sym.kind == 8 /* Class */ || sym.kind == 9 /* Interface */)
+                return sym.pyInstanceType || mkType({ classType: sym });
+            if (sym.kind == 6 /* Enum */)
+                return tpNumber;
+            error(null, 9502, pxt.U.lf("'{0}' is not a type near '{1}'", tp, currErrorCtx || "???"));
+            return mkType({ primType: tp });
+        }
+        // img/hex literal
+        function isTaggedTemplate(sym) {
+            return sym.attributes.shim && sym.attributes.shim[0] == "@";
+        }
+        function getOrSetSymbolType(sym) {
+            if (!sym.pySymbolType) {
+                currErrorCtx = sym.pyQName;
+                if (sym.parameters) {
+                    if (isTaggedTemplate(sym)) {
+                        sym.parameters = [{
+                                "name": "literal",
+                                "description": "",
+                                "type": "string",
+                                "options": {}
+                            }];
+                    }
+                    for (var _i = 0, _a = sym.parameters; _i < _a.length; _i++) {
+                        var p = _a[_i];
+                        if (!p.pyType)
+                            p.pyType = mapTsType(p.type);
+                    }
+                }
+                var prevRetType = sym.pyRetType;
+                if (isModule(sym)) {
+                    sym.pyRetType = mkType({ moduleType: sym });
+                }
+                else {
+                    if (sym.retType)
+                        sym.pyRetType = mapTsType(sym.retType);
+                    else if (sym.pyRetType) {
+                        // nothing to do
+                    }
+                    else {
+                        pxt.U.oops("no type for: " + sym.pyQName);
+                        sym.pyRetType = mkType({});
+                    }
+                }
+                if (prevRetType) {
+                    unify(sym.pyAST, prevRetType, sym.pyRetType);
+                }
+                if (sym.kind == 3 /* Function */ || sym.kind == 1 /* Method */) {
+                    var paramTypes = sym.parameters.map(function (p) { return p.pyType; });
+                    if (paramTypes.some(isFalsy)) {
+                        error(null, 9526, pxt.U.lf("function symbol is missing parameter types near '{1}'", currErrorCtx || "???"));
+                        return mkType({});
+                    }
+                    sym.pySymbolType = mkFunType(sym.pyRetType, paramTypes.filter(isTruthy));
+                }
+                else
+                    sym.pySymbolType = sym.pyRetType;
+                if (sym.kind == 8 /* Class */ || sym.kind == 9 /* Interface */) {
+                    sym.pyInstanceType = mkType({ classType: sym });
+                }
+                currErrorCtx = undefined;
+            }
+            return sym.pySymbolType;
+        }
+        function lookupApi(name) {
+            return pxt.U.lookup(internalApis, name) || pxt.U.lookup(externalApis, name);
+        }
+        function lookupGlobalSymbol(name) {
+            if (!name)
+                return undefined;
+            var sym = lookupApi(name);
+            if (sym)
+                getOrSetSymbolType(sym);
+            return sym;
+        }
+        function initApis(apisInfo, tsShadowFiles) {
+            internalApis = {};
+            externalApis = {};
+            var tsShadowFilesSet = pxt.U.toDictionary(tsShadowFiles, function (t) { return t; });
+            var _loop_1 = function (sym) {
+                if (tsShadowFilesSet.hasOwnProperty(sym.fileName)) {
+                    return "continue";
+                }
+                var sym2 = sym;
+                if (sym2.extendsTypes)
+                    sym2.extendsTypes = sym2.extendsTypes.filter(function (e) { return e != sym2.qName; });
+                if (!sym2.pyQName || !sym2.qName) {
+                    error(null, 9526, pxt.U.lf("Symbol '{0}' is missing qName for '{1}'", sym2.name, !sym2.pyQName ? "py" : "ts"));
+                }
+                externalApis[sym2.pyQName] = sym2;
+                externalApis[sym2.qName] = sym2;
+            };
+            for (var _i = 0, _a = pxt.U.values(apisInfo.byQName); _i < _a.length; _i++) {
+                var sym = _a[_i];
+                _loop_1(sym);
+            }
+            // TODO this is for testing mostly; we can do this lazily
+            // for (let sym of U.values(externalApis)) {
+            //     if (sym)
+            //         getOrSetSymbolType(sym)
+            // }
+            tpBuffer = mapTsType("Buffer");
+        }
+        function mkType(o) {
+            if (o === void 0) { o = {}; }
+            var r = pxt.U.flatClone(o);
+            r.tid = ++typeId;
+            return r;
+        }
+        function mkArrayType(eltTp) {
+            return mkType({ primType: "@array", typeArgs: [eltTp] });
+        }
+        function mkFunType(retTp, argTypes) {
+            return mkType({ primType: "@fn" + argTypes.length, typeArgs: [retTp].concat(argTypes) });
+        }
+        function instanceType(sym) {
+            getOrSetSymbolType(sym);
+            if (!sym.pyInstanceType)
+                error(null, 9527, pxt.U.lf("Instance type symbol '{0}' is missing pyInstanceType", sym));
+            return sym.pyInstanceType;
+        }
+        function currentScope() {
+            return ctx.currFun || ctx.currClass || ctx.currModule;
+        }
+        function topScope() {
+            var current = currentScope();
+            while (current && current.parent) {
+                current = current.parent;
+            }
+            return current;
+        }
+        function isTopLevel() {
+            return ctx.currModule.name == "main" && !ctx.currFun && !ctx.currClass;
+        }
+        function addImport(a, name, scope) {
+            var sym = lookupGlobalSymbol(name);
+            if (!sym)
+                error(a, 9503, pxt.U.lf("No module named '{0}'", name));
+            return sym;
+        }
+        function defvar(n, opts, scope) {
+            if (!scope)
+                scope = currentScope();
+            var v = scope.vars[n];
+            if (!v) {
+                var pref = getFullName(scope);
+                if (pref)
+                    pref += ".";
+                var qn = pref + n;
+                if (isLocalScope(scope))
+                    v = mkSymbol(4 /* Variable */, n);
+                else
+                    v = addSymbol(4 /* Variable */, qn);
+                scope.vars[n] = v;
+            }
+            for (var _i = 0, _a = Object.keys(opts); _i < _a.length; _i++) {
+                var k = _a[_i];
+                v[k] = opts[k];
+            }
+            return v;
+        }
+        function find(t) {
+            if (t.union) {
+                t.union = find(t.union);
+                return t.union;
+            }
+            return t;
+        }
+        // TODO cache it?
+        function getFullName(n) {
+            var s = n;
+            var pref = "";
+            if (s.parent && s.parent.kind !== "FunctionDef" && s.parent.kind !== "AsyncFunctionDef") {
+                pref = getFullName(s.parent);
+                if (!pref)
+                    pref = "";
+                else
+                    pref += ".";
+            }
+            var nn = n;
+            if (n.kind == "Module" && nn.name == "main")
+                return "";
+            if (nn.name)
+                return pref + nn.name;
+            else
+                return pref + "?" + n.kind;
+        }
+        function applyTypeMap(s) {
+            var over = pxt.U.lookup(typeMap, s);
+            if (over)
+                return over;
+            for (var _i = 0, _a = pxt.U.values(ctx.currModule.vars); _i < _a.length; _i++) {
+                var v = _a[_i];
+                if (!v.isImport)
+                    continue;
+                if (v.expandsTo == s) {
+                    if (!v.pyName)
+                        error(null, 9553, lf("missing pyName"));
+                    return v.pyName;
+                }
+                if (v.isImport && pxt.U.startsWith(s, (v.expandsTo || "") + ".")) {
+                    return v.pyName + s.slice(v.expandsTo.length);
+                }
+            }
+            return s;
+        }
+        function t2s(t) {
+            t = find(t);
+            var suff = function (s) { return verboseTypes ? s : ""; };
+            if (t.primType) {
+                if (t.typeArgs && t.primType == "@array") {
+                    return t2s(t.typeArgs[0]) + "[]";
+                }
+                if (pxt.U.startsWith(t.primType, "@fn") && t.typeArgs)
+                    return "(" + t.typeArgs.slice(1).map(function (t) { return "_: " + t2s(t); }).join(", ") + ") => " + t2s(t.typeArgs[0]);
+                return t.primType + suff("/P");
+            }
+            if (t.classType && t.classType.pyQName)
+                return applyTypeMap(t.classType.pyQName) + suff("/C");
+            else if (t.moduleType && t.moduleType.pyQName)
+                return applyTypeMap(t.moduleType.pyQName) + suff("/M");
+            else
+                return "?" + t.tid;
+        }
+        function mkDiag(astNode, category, code, messageText) {
+            if (!astNode)
+                astNode = lastAST;
+            if (!astNode || !ctx || !ctx.currModule) {
+                return {
+                    fileName: lastFile,
+                    start: 0,
+                    length: 0,
+                    line: undefined,
+                    column: undefined,
+                    code: code,
+                    category: category,
+                    messageText: messageText,
+                };
+            }
+            else {
+                return {
+                    fileName: lastFile,
+                    start: astNode.startPos,
+                    length: astNode.endPos - astNode.startPos,
+                    line: undefined,
+                    column: undefined,
+                    code: code,
+                    category: category,
+                    messageText: messageText,
+                };
+            }
+        }
+        // next free error 9572; 9550-9599 reserved for parser
+        function error(astNode, code, msg) {
+            diagnostics.push(mkDiag(astNode, pxtc.DiagnosticCategory.Error, code, msg));
+            //const pos = position(astNode ? astNode.startPos || 0 : 0, mod.source)
+            //currErrs += U.lf("{0} near {1}{2}", msg, mod.tsFilename.replace(/\.ts/, ".py"), pos) + "\n"
+        }
+        function typeError(a, t0, t1) {
+            error(a, 9500, pxt.U.lf("types not compatible: {0} and {1}", t2s(t0), t2s(t1)));
+        }
+        function typeCtor(t) {
+            if (t.primType)
+                return t.primType;
+            else if (t.classType)
+                return t.classType;
+            else if (t.moduleType) {
+                // a class SymbolInfo can be used as both classType and moduleType
+                // but these are different constructors (one is instance, one is class itself)
+                if (!t.moduleType.moduleTypeMarker)
+                    t.moduleType.moduleTypeMarker = {};
+                return t.moduleType.moduleTypeMarker;
+            }
+            return null;
+        }
+        function isFree(t) {
+            return !typeCtor(find(t));
+        }
+        function canUnify(t0, t1) {
+            t0 = find(t0);
+            t1 = find(t1);
+            if (t0 === t1)
+                return true;
+            var c0 = typeCtor(t0);
+            var c1 = typeCtor(t1);
+            if (!c0 || !c1)
+                return true;
+            if (c0 !== c1)
+                return false;
+            if (t0.typeArgs && t1.typeArgs) {
+                for (var i = 0; i < Math.min(t0.typeArgs.length, t1.typeArgs.length); ++i)
+                    if (!canUnify(t0.typeArgs[i], t1.typeArgs[i]))
+                        return false;
+            }
+            return true;
+        }
+        function unifyClass(a, t, cd) {
+            t = find(t);
+            if (t.classType == cd)
+                return;
+            if (isFree(t)) {
+                t.classType = cd;
+                return;
+            }
+            unify(a, t, instanceType(cd));
+        }
+        function unifyTypeOf(e, t1) {
+            unify(e, typeOf(e), t1);
+        }
+        function unify(a, t0, t1) {
+            if (t0 === t1)
+                return;
+            t0 = find(t0);
+            t1 = find(t1);
+            if (t0 === t1)
+                return;
+            if (t0.primType === "any") {
+                t0.union = t1;
+                return;
+            }
+            var c0 = typeCtor(t0);
+            var c1 = typeCtor(t1);
+            if (c0 && c1) {
+                if (c0 === c1) {
+                    t0.union = t1; // no type-state change here - actual change would be in arguments only
+                    if (t0.typeArgs && t1.typeArgs) {
+                        for (var i = 0; i < Math.min(t0.typeArgs.length, t1.typeArgs.length); ++i)
+                            unify(a, t0.typeArgs[i], t1.typeArgs[i]);
+                    }
+                    t0.union = t1;
+                }
+                else {
+                    typeError(a, t0, t1);
+                }
+            }
+            else if (c0 && !c1) {
+                unify(a, t1, t0);
+            }
+            else {
+                // the type state actually changes here
+                numUnifies++;
+                t0.union = t1;
+                // detect late unifications
+                // if (currIteration > 2) error(a, `unify ${t2s(t0)} ${t2s(t1)}`)
+            }
+        }
+        function mkSymbol(kind, qname) {
+            var m = /(.*)\.(.*)/.exec(qname);
+            var name = m ? m[2] : qname;
+            var ns = m ? m[1] : "";
+            return {
+                kind: kind,
+                name: name,
+                pyName: name,
+                qName: qname,
+                pyQName: qname,
+                namespace: ns,
+                attributes: {},
+                pyRetType: mkType()
+            };
+        }
+        function addSymbol(kind, qname) {
+            var sym = internalApis[qname];
+            if (sym) {
+                sym.kind = kind;
+                return sym;
+            }
+            sym = mkSymbol(kind, qname);
+            if (!sym.pyQName)
+                error(null, 9527, pxt.U.lf("Symbol '{0}' is missing pyQName", qname));
+            internalApis[sym.pyQName] = sym;
+            return sym;
+        }
+        function isLocalScope(scope) {
+            var s = scope;
+            while (s) {
+                if (s.kind == "FunctionDef")
+                    return true;
+                s = s.parent;
+            }
+            return false;
+        }
+        function addSymbolFor(k, n, scope) {
+            if (!n.symInfo) {
+                var qn = getFullName(n);
+                if (pxt.U.endsWith(qn, ".__init__"))
+                    qn = qn.slice(0, -9) + ".__constructor";
+                scope = scope || currentScope();
+                if (isLocalScope(scope))
+                    n.symInfo = mkSymbol(k, qn);
+                else
+                    n.symInfo = addSymbol(k, qn);
+                var sym = n.symInfo;
+                sym.pyAST = n;
+                if (!sym.pyName)
+                    error(null, 9528, pxt.U.lf("Symbol '{0}' is missing pyName", sym.qName || sym.name));
+                scope.vars[sym.pyName] = sym;
+            }
+            return n.symInfo;
+        }
+        // TODO optimize ?
+        function listClassFields(cd) {
+            var qn = cd.symInfo.qName;
+            return pxt.U.values(internalApis).filter(function (e) { return e.namespace == qn && e.kind == 2 /* Property */; });
+        }
+        function getClassField(ct, n, checkOnly, skipBases) {
+            if (checkOnly === void 0) { checkOnly = false; }
+            if (skipBases === void 0) { skipBases = false; }
+            var qid = ct.pyQName + "." + n;
+            var f = lookupGlobalSymbol(qid);
+            if (f)
+                return f;
+            if (!skipBases) {
+                for (var _i = 0, _a = ct.extendsTypes || []; _i < _a.length; _i++) {
+                    var b = _a[_i];
+                    var sym = lookupGlobalSymbol(b);
+                    if (sym) {
+                        if (sym == ct)
+                            pxt.U.userError("field lookup loop on: " + sym.qName + " / " + n);
+                        var classF = getClassField(sym, n, true);
+                        if (classF)
+                            return classF;
+                    }
+                }
+            }
+            if (!checkOnly && ct.pyAST && ct.pyAST.kind == "ClassDef") {
+                var sym = addSymbol(2 /* Property */, qid);
+                sym.isInstance = true;
+                return sym;
+            }
+            return null;
+        }
+        function getTypesForFieldLookup(recvType) {
+            var t = find(recvType);
+            return [
+                t.classType
+            ].concat(resolvePrimTypes(t.primType), [
+                t.moduleType
+            ]).filter(isTruthy);
+        }
+        function getTypeField(recv, n, checkOnly) {
+            if (checkOnly === void 0) { checkOnly = false; }
+            var recvType = typeOf(recv);
+            var constructorTypes = getTypesForFieldLookup(recvType);
+            for (var _i = 0, constructorTypes_1 = constructorTypes; _i < constructorTypes_1.length; _i++) {
+                var ct = constructorTypes_1[_i];
+                var f = getClassField(ct, n, checkOnly);
+                if (f) {
+                    var isModule_1 = !!ct.moduleTypeMarker;
+                    if (isModule_1) {
+                        if (f.isInstance)
+                            error(null, 9505, pxt.U.lf("the field '{0}' of '{1}' is not static", n, ct.pyQName));
+                    }
+                    else {
+                        if (!f.isInstance)
+                            error(null, 9504, pxt.U.lf("the field '{0}' of '{1}' is static", n, ct.pyQName));
+                        if (isSuper(recv))
+                            f.isProtected = true;
+                        else if (isThis(recv)) {
+                            if (!ctx.currClass)
+                                error(null, 9529, pxt.U.lf("no class context found for {0}", f.pyQName));
+                            if (f.namespace != ctx.currClass.symInfo.qName) {
+                                f.isProtected = true;
+                            }
+                        }
+                    }
+                    return f;
+                }
+            }
+            return null;
+        }
+        function resolvePrimTypes(primType) {
+            var res = [];
+            if (primType == "@array") {
+                res = [lookupApi("_py.Array"), lookupApi("Array")];
+            }
+            else if (primType == "string") {
+                // we need to check both the special "_py" namespace and the typescript "String"
+                // class because for example ".length" is only defined in the latter
+                res = [lookupApi("_py.String"), lookupApi("String")];
+            }
+            return res.filter(function (a) { return !!a; });
+        }
+        function lookupVar(n) {
+            var s = currentScope();
+            var v = pxt.U.lookup(s.vars, n);
+            if (v)
+                return v;
+            // while (s) {
+            //     let v = U.lookup(s.vars, n)
+            //     if (v) return v
+            //     // go to parent, excluding class scopes
+            //     do {
+            //         s = s.parent
+            //     } while (s && s.kind == "ClassDef")
+            // }
+            //if (autoImport && lookupGlobalSymbol(n)) {
+            //    return addImport(currentScope(), n, ctx.currModule)
+            //}
+            return null;
+        }
+        function lookupSymbol(n) {
+            if (!n)
+                return null;
+            var firstDot = n.indexOf(".");
+            if (firstDot > 0) {
+                var v = lookupVar(n.slice(0, firstDot));
+                // expand name if needed
+                if (v && v.pyQName != v.pyName)
+                    n = v.pyQName + n.slice(firstDot);
+            }
+            else {
+                var v = lookupVar(n);
+                if (v)
+                    return v;
+            }
+            return lookupGlobalSymbol(n);
+        }
+        function getClassDef(e) {
+            var n = getName(e);
+            var s = lookupSymbol(n);
+            if (s && s.pyAST && s.pyAST.kind == "ClassDef")
+                return s.pyAST;
+            return null;
+        }
+        function typeOf(e) {
+            if (e.tsType) {
+                return find(e.tsType);
+            }
+            else {
+                e.tsType = mkType();
+                return e.tsType;
+            }
+        }
+        function isOfType(e, name) {
+            var t = typeOf(e);
+            if (t.classType && t.classType.pyQName == name)
+                return true;
+            if (t2s(t) == name)
+                return true;
+            return false;
+        }
+        function resetCtx(m) {
+            ctx = {
+                currClass: undefined,
+                currFun: undefined,
+                currModule: m,
+                blockDepth: 0
+            };
+            lastFile = m.tsFilename.replace(/\.ts$/, ".py");
+        }
+        function isModule(s) {
+            if (!s)
+                return false;
+            switch (s.kind) {
+                case 5 /* Module */:
+                case 9 /* Interface */:
+                case 8 /* Class */:
+                case 6 /* Enum */:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        function scope(f) {
+            var prevCtx = pxt.U.flatClone(ctx);
+            var r;
+            try {
+                r = f();
+            }
+            finally {
+                ctx = prevCtx;
+            }
+            return r;
+        }
+        function todoExpr(name, e) {
+            if (!e)
+                return B.mkText("");
+            return B.mkGroup([B.mkText("/* TODO: " + name + " "), e, B.mkText(" */")]);
+        }
+        function todoComment(name, n) {
+            if (n.length == 0)
+                return B.mkText("");
+            return B.mkGroup([B.mkText("/* TODO: " + name + " "), B.mkGroup(n), B.mkText(" */"), B.mkNewLine()]);
+        }
+        function doKeyword(k) {
+            var t = expr(k.value);
+            if (k.arg)
+                return B.mkInfix(B.mkText(k.arg), "=", t);
+            else
+                return B.mkGroup([B.mkText("**"), t]);
+        }
+        function compileType(e) {
+            if (!e)
+                return mkType();
+            var tpName = getName(e);
+            if (tpName) {
+                var sym = lookupApi(tpName + "@type") || lookupApi(tpName);
+                if (sym) {
+                    getOrSetSymbolType(sym);
+                    if (sym.kind == 6 /* Enum */)
+                        return tpNumber;
+                    if (sym.pyInstanceType)
+                        return sym.pyInstanceType;
+                }
+                else if (builtInTypes[tpName])
+                    return builtInTypes[tpName];
+                error(e, 9506, pxt.U.lf("cannot find type '{0}'", tpName));
+            }
+            error(e, 9507, pxt.U.lf("invalid type syntax"));
+            return mkType({});
+        }
+        function doArgs(n, isMethod) {
+            var args = n.args;
+            if (args.kwonlyargs.length)
+                error(n, 9517, pxt.U.lf("keyword-only arguments not supported yet"));
+            var nargs = args.args.slice();
+            if (isMethod) {
+                if (nargs[0].arg != "self")
+                    error(n, 9518, pxt.U.lf("first argument of method has to be called 'self'"));
+                nargs.shift();
+            }
+            else {
+                if (nargs.some(function (a) { return a.arg == "self"; }))
+                    error(n, 9519, pxt.U.lf("non-methods cannot have an argument called 'self'"));
+            }
+            if (!n.symInfo.parameters) {
+                var didx_1 = args.defaults.length - nargs.length;
+                n.symInfo.parameters = nargs.map(function (a) {
+                    if (!a.annotation)
+                        error(n, 9519, pxt.U.lf("Arg '{0}' missing annotation", a.arg));
+                    var tp = compileType(a.annotation);
+                    var defl = "";
+                    if (didx_1 >= 0) {
+                        defl = B.flattenNode([expr(args.defaults[didx_1])]).output;
+                        unify(a, tp, typeOf(args.defaults[didx_1]));
+                    }
+                    didx_1++;
+                    return {
+                        name: a.arg,
+                        description: "",
+                        type: "",
+                        initializer: defl,
+                        default: defl,
+                        pyType: tp
+                    };
+                });
+            }
+            var lst = n.symInfo.parameters.map(function (p) {
+                var v = defvar(p.name, { isParam: true });
+                if (!p.pyType)
+                    error(n, 9530, pxt.U.lf("parameter '{0}' missing pyType", p.name));
+                unify(n, getOrSetSymbolType(v), p.pyType);
+                var res = [quote(p.name), typeAnnot(p.pyType, true)];
+                if (p.default) {
+                    res.push(B.mkText(" = " + p.default));
+                }
+                return B.mkGroup(res);
+            });
+            if (args.vararg)
+                lst.push(B.mkText("TODO *" + args.vararg.arg));
+            if (args.kwarg)
+                lst.push(B.mkText("TODO **" + args.kwarg.arg));
+            return B.H.mkParenthesizedExpression(B.mkCommaSep(lst));
+        }
+        function accessAnnot(f) {
+            if (!f.pyName || f.pyName[0] != "_")
+                return B.mkText("");
+            return f.isProtected ? B.mkText("protected ") : B.mkText("private ");
+        }
+        var numOps = {
+            Sub: 1,
+            Div: 1,
+            Pow: 1,
+            LShift: 1,
+            RShift: 1,
+            BitOr: 1,
+            BitXor: 1,
+            BitAnd: 1,
+            FloorDiv: 1,
+            Mult: 1,
+        };
+        var opMapping = {
+            Add: "+",
+            Sub: "-",
+            Mult: "*",
+            MatMult: "Math.matrixMult",
+            Div: "/",
+            Mod: "%",
+            Pow: "**",
+            LShift: "<<",
+            RShift: ">>",
+            BitOr: "|",
+            BitXor: "^",
+            BitAnd: "&",
+            FloorDiv: "Math.idiv",
+            And: "&&",
+            Or: "||",
+            Eq: "==",
+            NotEq: "!=",
+            Lt: "<",
+            LtE: "<=",
+            Gt: ">",
+            GtE: ">=",
+            Is: "===",
+            IsNot: "!==",
+            In: "py.In",
+            NotIn: "py.NotIn",
+        };
+        var prefixOps = {
+            Invert: "~",
+            Not: "!",
+            UAdd: "P+",
+            USub: "P-",
+        };
+        var typeMap = {
+            "adafruit_bus_device.i2c_device.I2CDevice": "pins.I2CDevice"
+        };
+        function stmts(ss) {
+            ctx.blockDepth++;
+            var res = B.mkBlock(ss.map(stmt));
+            ctx.blockDepth--;
+            return res;
+        }
+        function exprs0(ee) {
+            ee = ee.filter(function (e) { return !!e; });
+            return ee.map(expr);
+        }
+        function setupScope(n) {
+            if (!n.vars) {
+                n.vars = {};
+                n.parent = currentScope();
+                n.blockDepth = ctx.blockDepth;
+            }
+        }
+        function typeAnnot(t, defaultToAny) {
+            if (defaultToAny === void 0) { defaultToAny = false; }
+            var s = t2s(t);
+            if (s[0] == "?") {
+                // TODO:
+                // example from minecraft doc snippet:
+                // player.onChat("while",function(num1){while(num1<10){}})
+                // -> py -> ts ->
+                // player.onChat("while",function(num1:any;/**TODO:type**/){while(num1<10){;}})
+                // work around using any:
+                // return B.mkText(": any /** TODO: type **/")
+                // but for now we can just omit the type and most of the type it'll be inferable
+                return defaultToAny ? B.mkText(": any") : B.mkText("");
+            }
+            return B.mkText(": " + t2s(t));
+        }
+        function guardedScope(v, f) {
+            try {
+                return scope(f);
+            }
+            catch (e) {
+                console.log(e);
+                return B.mkStmt(todoComment("conversion failed for " + (v.name || v.kind), []));
+            }
+        }
+        function shouldInlineFunction(si) {
+            if (!si || !si.pyAST)
+                return false;
+            if (si.pyAST.kind != "FunctionDef")
+                return false;
+            var fn = si.pyAST;
+            if (!fn.callers || fn.callers.length != 1)
+                return false;
+            if (fn.callers[0].inCalledPosition)
+                return false;
+            return true;
+        }
+        function emitFunctionDef(n, inline) {
+            if (inline === void 0) { inline = false; }
+            return guardedScope(n, function () {
+                var isMethod = !!ctx.currClass && !ctx.currFun;
+                var topLev = isTopLevel();
+                var nested = !!ctx.currFun;
+                setupScope(n);
+                var existing = lookupSymbol(getFullName(n));
+                var sym = addSymbolFor(isMethod ? 1 /* Method */ : 3 /* Function */, n);
+                if (!inline) {
+                    if (existing && existing.declared === currIteration) {
+                        error(n, 9520, lf("Duplicate function declaration"));
+                    }
+                    sym.declared = currIteration;
+                    if (shouldInlineFunction(sym)) {
+                        return B.mkText("");
+                    }
+                }
+                if (isMethod)
+                    sym.isInstance = true;
+                ctx.currFun = n;
+                var prefix = "";
+                var funname = n.name;
+                var remainingDecorators = n.decorator_list.filter(function (d) {
+                    if (getName(d) == "property") {
+                        prefix = "get";
+                        return false;
+                    }
+                    if (d.kind == "Attribute" && d.attr == "setter" &&
+                        d.value.kind == "Name") {
+                        funname = d.value.id;
+                        prefix = "set";
+                        return false;
+                    }
+                    return true;
+                });
+                var nodes = [
+                    todoComment("decorators", remainingDecorators.map(expr))
+                ];
+                if (n.body.length >= 1 && n.body[0].kind == "Raise")
+                    n.alwaysThrows = true;
+                if (isMethod) {
+                    if (!ctx.currClass)
+                        error(n, 9531, lf("method '{0}' is missing current class context", sym.pyQName));
+                    if (!sym.pyRetType)
+                        error(n, 9532, lf("method '{0}' is missing a return type", sym.pyQName));
+                    if (n.name == "__init__") {
+                        nodes.push(B.mkText("constructor"));
+                        unifyClass(n, sym.pyRetType, ctx.currClass.symInfo);
+                    }
+                    else {
+                        if (funname == "__get__" || funname == "__set__") {
+                            var vv = n.vars["value"];
+                            if (funname == "__set__" && vv) {
+                                var cf = getClassField(ctx.currClass.symInfo, "__get__");
+                                if (cf && cf.pyAST && cf.pyAST.kind == "FunctionDef")
+                                    unify(n, vv.pyRetType, cf.pyRetType);
+                            }
+                            funname = funname.replace(/_/g, "");
+                        }
+                        if (!prefix) {
+                            prefix = funname[0] == "_" ? (sym.isProtected ? "protected" : "private") : "public";
+                        }
+                        nodes.push(B.mkText(prefix + " "), quote(funname));
+                    }
+                }
+                else {
+                    pxt.U.assert(!prefix);
+                    if (n.name[0] == "_" || topLev || inline || nested)
+                        nodes.push(B.mkText("function "), quote(funname));
+                    else
+                        nodes.push(B.mkText("export function "), quote(funname));
+                }
+                nodes.push(doArgs(n, isMethod), n.returns ? typeAnnot(compileType(n.returns)) : B.mkText(""));
+                // make sure type is initialized
+                getOrSetSymbolType(sym);
+                var body = n.body.map(stmt);
+                if (n.name == "__init__") {
+                    if (!ctx.currClass)
+                        error(n, 9533, lf("__init__ method '{0}' is missing current class context", sym.pyQName));
+                    for (var _i = 0, _a = listClassFields(ctx.currClass); _i < _a.length; _i++) {
+                        var f = _a[_i];
+                        var p = f.pyAST;
+                        if (p && p.value) {
+                            body.push(B.mkStmt(B.mkText("this." + quoteStr(f.pyName) + " = "), expr(p.value)));
+                        }
+                    }
+                }
+                var hoisted = collectHoistedDeclarations(n);
+                nodes.push(B.mkBlock(hoisted.concat(body)));
+                var ret = B.mkGroup(nodes);
+                if (inline)
+                    nodes[nodes.length - 1].noFinalNewline = true;
+                else
+                    ret = B.mkStmt(ret);
+                return ret;
+            });
+        }
+        var stmtMap = {
+            FunctionDef: function (n) { return emitFunctionDef(n); },
+            ClassDef: function (n) { return guardedScope(n, function () {
+                setupScope(n);
+                var sym = addSymbolFor(8 /* Class */, n);
+                pxt.U.assert(!ctx.currClass);
+                var topLev = isTopLevel();
+                ctx.currClass = n;
+                n.isNamespace = n.decorator_list.some(function (d) { return d.kind == "Name" && d.id == "namespace"; });
+                var nodes = n.isNamespace ?
+                    [B.mkText("namespace "), quote(n.name)]
+                    : [
+                        todoComment("keywords", n.keywords.map(doKeyword)),
+                        todoComment("decorators", n.decorator_list.map(expr)),
+                        B.mkText(topLev ? "class " : "export class "),
+                        quote(n.name)
+                    ];
+                if (!n.isNamespace && n.bases.length > 0) {
+                    if (getName(n.bases[0]) == "Enum") {
+                        n.isEnum = true;
+                    }
+                    else {
+                        nodes.push(B.mkText(" extends "));
+                        nodes.push(B.mkCommaSep(n.bases.map(expr)));
+                        var b = getClassDef(n.bases[0]);
+                        if (b) {
+                            n.baseClass = b;
+                            sym.extendsTypes = [b.symInfo.pyQName];
+                        }
+                    }
+                }
+                var body = stmts(n.body);
+                nodes.push(body);
+                var fieldDefs = listClassFields(n)
+                    .filter(function (f) { return f.kind == 2 /* Property */ && f.isInstance; })
+                    .map(function (f) {
+                    if (!f.pyName || !f.pyRetType)
+                        error(n, 9535, lf("field definition missing py name or ret type", f.qName));
+                    return f;
+                })
+                    .map(function (f) { return B.mkStmt(accessAnnot(f), quote(f.pyName), typeAnnot(f.pyRetType)); });
+                body.children = fieldDefs.concat(body.children);
+                return B.mkStmt(B.mkGroup(nodes));
+            }); },
+            Return: function (n) {
+                if (n.value) {
+                    var f = ctx.currFun;
+                    if (f) {
+                        if (!f.symInfo.pyRetType)
+                            error(n, 9536, lf("function '{0}' missing return type", f.symInfo.pyQName));
+                        unifyTypeOf(n.value, f.symInfo.pyRetType);
+                    }
+                    return B.mkStmt(B.mkText("return "), expr(n.value));
+                }
+                else {
+                    return B.mkStmt(B.mkText("return"));
+                }
+            },
+            AugAssign: function (n) {
+                var op = opMapping[n.op];
+                if (op.length > 3)
+                    return B.mkStmt(B.mkInfix(expr(n.target), "=", B.H.mkCall(op, [expr(n.target), expr(n.value)])));
+                else
+                    return B.mkStmt(expr(n.target), B.mkText(" " + op + "= "), expr(n.value));
+            },
+            Assign: function (n) {
+                return convertAssign(n);
+            },
+            AnnAssign: function (n) {
+                return convertAssign(n);
+            },
+            For: function (n) {
+                pxt.U.assert(n.orelse.length == 0);
+                if (isCallTo(n.iter, "range")) {
+                    var r = n.iter;
+                    var def = expr(n.target);
+                    var ref = quote(getName(n.target));
+                    unifyTypeOf(n.target, tpNumber);
+                    var start = r.args.length == 1 ? B.mkText("0") : expr(r.args[0]);
+                    var stop_1 = expr(r.args[r.args.length == 1 ? 0 : 1]);
+                    return B.mkStmt(B.mkText("for ("), B.mkInfix(def, "=", start), B.mkText("; "), B.mkInfix(ref, "<", stop_1), B.mkText("; "), r.args.length >= 3 ?
+                        B.mkInfix(ref, "+=", expr(r.args[2])) :
+                        B.mkPostfix([ref], "++"), B.mkText(")"), stmts(n.body));
+                }
+                unifyTypeOf(n.iter, mkArrayType(typeOf(n.target)));
+                return B.mkStmt(B.mkText("for ("), expr(n.target), B.mkText(" of "), expr(n.iter), B.mkText(")"), stmts(n.body));
+            },
+            While: function (n) {
+                pxt.U.assert(n.orelse.length == 0);
+                return B.mkStmt(B.mkText("while ("), expr(n.test), B.mkText(")"), stmts(n.body));
+            },
+            If: function (n) {
+                var innerIf = function (n) {
+                    var nodes = [
+                        B.mkText("if ("),
+                        expr(n.test),
+                        B.mkText(")"),
+                        stmts(n.body)
+                    ];
+                    if (n.orelse.length) {
+                        nodes[nodes.length - 1].noFinalNewline = true;
+                        if (n.orelse.length == 1 && n.orelse[0].kind == "If") {
+                            // else if
+                            nodes.push(B.mkText(" else "));
+                            pxt.U.pushRange(nodes, innerIf(n.orelse[0]));
+                        }
+                        else {
+                            nodes.push(B.mkText(" else"), stmts(n.orelse));
+                        }
+                    }
+                    return nodes;
+                };
+                return B.mkStmt(B.mkGroup(innerIf(n)));
+            },
+            With: function (n) {
+                if (n.items.length == 1 && isOfType(n.items[0].context_expr, "pins.I2CDevice")) {
+                    var it = n.items[0];
+                    var res = [];
+                    var devRef = expr(it.context_expr);
+                    if (it.optional_vars) {
+                        var id = getName(it.optional_vars);
+                        if (id) {
+                            var v = defvar(id, { isLocal: true });
+                            id = quoteStr(id);
+                            res.push(B.mkStmt(B.mkText("const " + id + " = "), devRef));
+                            if (!v.pyRetType)
+                                error(n, 9537, lf("function '{0}' missing return type", v.pyQName));
+                            unifyTypeOf(it.context_expr, v.pyRetType);
+                            devRef = B.mkText(id);
+                        }
+                    }
+                    res.push(B.mkStmt(B.mkInfix(devRef, ".", B.mkText("begin()"))));
+                    pxt.U.pushRange(res, n.body.map(stmt));
+                    res.push(B.mkStmt(B.mkInfix(devRef, ".", B.mkText("end()"))));
+                    return B.mkGroup(res);
+                }
+                var cleanup = [];
+                var stmts = n.items.map(function (it, idx) {
+                    var varName = "with" + idx;
+                    if (it.optional_vars) {
+                        var id = getName(it.optional_vars);
+                        pxt.U.assert(id != null);
+                        defvar(id, { isLocal: true });
+                        varName = quoteStr(id);
+                    }
+                    cleanup.push(B.mkStmt(B.mkText(varName + ".end()")));
+                    return B.mkStmt(B.mkText("const " + varName + " = "), B.mkInfix(expr(it.context_expr), ".", B.mkText("begin()")));
+                });
+                pxt.U.pushRange(stmts, n.body.map(stmt));
+                pxt.U.pushRange(stmts, cleanup);
+                return B.mkBlock(stmts);
+            },
+            Raise: function (n) {
+                var ex = n.exc || n.cause;
+                if (!ex)
+                    return B.mkStmt(B.mkText("throw"));
+                var msg = undefined;
+                if (ex && ex.kind == "Call") {
+                    var cex = ex;
+                    if (cex.args.length == 1) {
+                        msg = expr(cex.args[0]);
+                    }
+                }
+                // didn't find string - just compile and quote; and hope for the best
+                if (!msg)
+                    msg = B.mkGroup([B.mkText("`"), expr(ex), B.mkText("`")]);
+                return B.mkStmt(B.H.mkCall("control.fail", [msg]));
+            },
+            Assert: function (n) {
+                if (!n.msg)
+                    error(n, 9537, lf("assert missing message"));
+                return B.mkStmt(B.H.mkCall("control.assert", exprs0([n.test, n.msg])));
+            },
+            Import: function (n) {
+                for (var _i = 0, _a = n.names; _i < _a.length; _i++) {
+                    var nm = _a[_i];
+                    if (nm.asname)
+                        defvar(nm.asname, {
+                            expandsTo: nm.name
+                        });
+                    addImport(n, nm.name);
+                }
+                return B.mkText("");
+            },
+            ImportFrom: function (n) {
+                var res = [];
+                for (var _i = 0, _a = n.names; _i < _a.length; _i++) {
+                    var nn = _a[_i];
+                    if (nn.name == "*") {
+                        if (!n.module)
+                            error(n, 9538, lf("import missing module name"));
+                        defvar(n.module, {
+                            isImportStar: true
+                        });
+                    }
+                    else {
+                        var fullname = n.module + "." + nn.name;
+                        var sym = lookupGlobalSymbol(fullname);
+                        var currname = nn.asname || nn.name;
+                        if (isModule(sym)) {
+                            defvar(currname, {
+                                isImport: sym,
+                                expandsTo: fullname
+                            });
+                            res.push(B.mkStmt(B.mkText("import " + quoteStr(currname) + " = " + fullname)));
+                        }
+                        else {
+                            defvar(currname, {
+                                expandsTo: fullname
+                            });
+                        }
+                    }
+                }
+                return B.mkGroup(res);
+            },
+            ExprStmt: function (n) {
+                return n.value.kind == "Str" ?
+                    docComment(n.value.s) :
+                    B.mkStmt(expr(n.value));
+            },
+            Pass: function (n) { return B.mkStmt(B.mkText("")); },
+            Break: function (n) { return B.mkStmt(B.mkText("break")); },
+            Continue: function (n) { return B.mkStmt(B.mkText("continue")); },
+            Delete: function (n) {
+                error(n, 9550, pxt.U.lf("delete statements are unsupported"));
+                return stmtTODO(n);
+            },
+            Try: function (n) {
+                var r = [
+                    B.mkText("try"),
+                    stmts(n.body.concat(n.orelse)),
+                ];
+                for (var _i = 0, _a = n.handlers; _i < _a.length; _i++) {
+                    var e = _a[_i];
+                    r.push(B.mkText("catch ("), e.name ? quote(e.name) : B.mkText("_"));
+                    // This isn't JS syntax, but PXT doesn't support try at all anyway
+                    if (e.type)
+                        r.push(B.mkText("/* instanceof "), expr(e.type), B.mkText(" */"));
+                    r.push(B.mkText(")"), stmts(e.body));
+                }
+                if (n.finalbody.length)
+                    r.push(B.mkText("finally"), stmts(n.finalbody));
+                return B.mkStmt(B.mkGroup(r));
+            },
+            AsyncFunctionDef: function (n) {
+                error(n, 9551, pxt.U.lf("async function definitions are unsupported"));
+                return stmtTODO(n);
+            },
+            AsyncFor: function (n) {
+                error(n, 9552, pxt.U.lf("async for statements are unsupported"));
+                return stmtTODO(n);
+            },
+            AsyncWith: function (n) {
+                error(n, 9553, pxt.U.lf("async with statements are unsupported"));
+                return stmtTODO(n);
+            },
+            Global: function (n) {
+                var globalScope = topScope();
+                var current = currentScope();
+                for (var _i = 0, _a = n.names; _i < _a.length; _i++) {
+                    var name_1 = _a[_i];
+                    var existing = pxt.U.lookup(globalScope.vars, name_1);
+                    if (!existing) {
+                        error(n, 9521, pxt.U.lf("No binding found for global variable"));
+                    }
+                    var sym = defvar(name_1, { modifier: py.VarModifier.Global });
+                    if (sym.firstRefPos < n.startPos) {
+                        error(n, 9522, pxt.U.lf("Variable referenced before global declaration"));
+                    }
+                }
+                return B.mkStmt(B.mkText(""));
+            },
+            Nonlocal: function (n) {
+                var globalScope = topScope();
+                var current = currentScope();
+                for (var _i = 0, _a = n.names; _i < _a.length; _i++) {
+                    var name_2 = _a[_i];
+                    var declaringScope = findNonlocalDeclaration(name_2, current);
+                    // Python nonlocal variables cannot refer to globals
+                    if (!declaringScope || declaringScope === globalScope || declaringScope.vars[name_2].modifier === py.VarModifier.Global) {
+                        error(n, 9523, pxt.U.lf("No binding found for nonlocal variable"));
+                    }
+                    var sym = defvar(name_2, { modifier: py.VarModifier.NonLocal });
+                    if (sym.firstRefPos < n.startPos) {
+                        error(n, 9524, pxt.U.lf("Variable referenced before nonlocal declaration"));
+                    }
+                }
+                return B.mkStmt(B.mkText(""));
+            }
+        };
+        function convertAssign(n) {
+            var annotation;
+            var value;
+            var target;
+            // TODO handle more than 1 target
+            if (n.kind === "Assign") {
+                if (n.targets.length != 1) {
+                    error(n, 9553, pxt.U.lf("multi-target assignment statements are unsupported"));
+                    return stmtTODO(n);
+                }
+                target = n.targets[0];
+                value = n.value;
+                annotation = null;
+            }
+            else if (n.kind === "AnnAssign") {
+                target = n.target;
+                value = n.value || null;
+                annotation = n.annotation;
+            }
+            else {
+                return n;
+            }
+            var pref = "";
+            var isConstCall = value ? isCallTo(value, "const") : false;
+            var nm = getName(target) || "";
+            if (!isTopLevel() && !ctx.currClass && !ctx.currFun && nm[0] != "_")
+                pref = "export ";
+            if (nm && ctx.currClass && !ctx.currFun) {
+                // class fields can't be const
+                // hack: value in @namespace should always be const
+                isConstCall = !!(value && ctx.currClass.isNamespace);
+                var fd = getClassField(ctx.currClass.symInfo, nm);
+                if (!fd)
+                    error(n, 9544, lf("cannot get class field"));
+                // TODO: use or remove this code
+                /*
+                let src = expr(value)
+                let attrTp = typeOf(value)
+                let getter = getTypeField(value, "__get__", true)
+                if (getter) {
+                    unify(n, fd.pyRetType, getter.pyRetType)
+                    let implNm = "_" + nm
+                    let fdBack = getClassField(ctx.currClass.symInfo, implNm)
+                    unify(n, fdBack.pyRetType, attrTp)
+                    let setter = getTypeField(attrTp, "__set__", true)
+                    let res = [
+                        B.mkNewLine(),
+                        B.mkStmt(B.mkText("private "), quote(implNm), typeAnnot(attrTp))
+                    ]
+                    if (!getter.fundef.alwaysThrows)
+                        res.push(B.mkStmt(B.mkText(`get ${quoteStr(nm)}()`), typeAnnot(fd.type), B.mkBlock([
+                            B.mkText(`return this.${quoteStr(implNm)}.get(this.i2c_device)`),
+                            B.mkNewLine()
+                        ])))
+                    if (!setter.fundef.alwaysThrows)
+                        res.push(B.mkStmt(B.mkText(`set ${quoteStr(nm)}(value`), typeAnnot(fd.type),
+                            B.mkText(`) `), B.mkBlock([
+                                B.mkText(`this.${quoteStr(implNm)}.set(this.i2c_device, value)`),
+                                B.mkNewLine()
+                            ])))
+                    fdBack.initializer = value
+                    fd.isGetSet = true
+                    fdBack.isGetSet = true
+                    return B.mkGroup(res)
+                } else
+                */
+                if (currIteration == 0) {
+                    return B.mkText("/* skip for now */");
+                }
+                if (!fd.pyRetType)
+                    error(n, 9539, lf("function '{0}' missing return type", fd.pyQName));
+                unifyTypeOf(target, fd.pyRetType);
+                fd.isInstance = false;
+                pref = ctx.currClass.isNamespace ? "export " + (isConstCall ? "const" : "let") + " " : "static ";
+            }
+            if (value)
+                unifyTypeOf(target, typeOf(value));
+            else {
+                error(n, 9555, pxt.U.lf("unable to determine value of assignment"));
+                return stmtTODO(n);
+            }
+            if (isConstCall) {
+                // first run would have "let" in it
+                defvar(getName(target), {});
+                if (!/^static /.test(pref) && !/const/.test(pref))
+                    pref += "const ";
+                return B.mkStmt(B.mkText(pref), B.mkInfix(expr(target), "=", expr(value)));
+            }
+            if (!pref && target.kind == "Tuple") {
+                var tup = target;
+                var targs = [B.mkText("let "), B.mkText("[")];
+                var nonNames = tup.elts.filter(function (e) { return e.kind !== "Name"; });
+                if (nonNames.length) {
+                    error(n, 9556, pxt.U.lf("non-trivial tuple assignment unsupported"));
+                    return stmtTODO(n);
+                }
+                var tupNames = tup.elts
+                    .map(function (e) { return e; })
+                    .map(convertName);
+                targs.push(B.mkCommaSep(tupNames));
+                targs.push(B.mkText("]"));
+                var res = B.mkStmt(B.mkInfix(B.mkGroup(targs), "=", expr(value)));
+                return res;
+            }
+            if (target.kind === "Name") {
+                var sym = currentScope().vars[nm];
+                // Mark the assignment only if the variable is declared in this scope
+                if (sym && sym.kind === 4 /* Variable */ && sym.modifier === undefined) {
+                    if (sym.firstAssignPos === undefined || sym.firstAssignPos > target.startPos) {
+                        sym.firstAssignPos = target.startPos;
+                        sym.firstAssignDepth = ctx.blockDepth;
+                    }
+                }
+            }
+            return B.mkStmt(B.mkText(pref), B.mkInfix(expr(target), "=", expr(value)));
+            function convertName(n) {
+                // TODO resuse with Name expr
+                markInfoNode(n, "identifierCompletion");
+                typeOf(n);
+                var v = lookupName(n);
+                return possibleDef(n, /*excludeLet*/ true);
+            }
+        }
+        function possibleDef(n, excludeLet) {
+            if (excludeLet === void 0) { excludeLet = false; }
+            var id = n.id;
+            var curr = lookupSymbol(id);
+            var local = currentScope().vars[id];
+            if (n.isdef === undefined) {
+                if (!curr || (curr.kind === 4 /* Variable */ && curr !== local)) {
+                    if (ctx.currClass && !ctx.currFun) {
+                        n.isdef = false; // field
+                        curr = defvar(id, {});
+                    }
+                    else {
+                        n.isdef = true;
+                        curr = defvar(id, { isLocal: true });
+                    }
+                }
+                else {
+                    n.isdef = false;
+                }
+                n.symbolInfo = curr;
+                if (!n.tsType)
+                    error(n, 9540, lf("definition missing ts type"));
+                if (!curr.pyRetType)
+                    error(n, 9568, lf("missing py return type"));
+                unify(n, n.tsType, curr.pyRetType);
+            }
+            if (n.isdef && shouldHoist(curr, currentScope())) {
+                n.isdef = false;
+            }
+            markUsage(curr, n);
+            if (n.isdef && !excludeLet) {
+                return B.mkGroup([B.mkText("let "), quote(id)]);
+            }
+            else
+                return quote(id);
+        }
+        function quoteStr(id) {
+            if (B.isReservedWord(id))
+                return id + "_";
+            else if (!id)
+                return id;
+            else
+                return id;
+            //return id.replace(/([a-z0-9])_([a-zA-Z0-9])/g, (f: string, x: string, y: string) => x + y.toUpperCase())
+        }
+        function getName(e) {
+            if (e.kind == "Name") {
+                var s = e.id;
+                var v = lookupVar(s);
+                if (v && v.expandsTo)
+                    return v.expandsTo;
+                else
+                    return s;
+            }
+            if (e.kind == "Attribute") {
+                var pref = getName(e.value);
+                if (pref)
+                    return pref + "." + e.attr;
+            }
+            error(null, 9542, lf("Cannot get name of unknown expression kind '{0}'", e.kind));
+            return undefined;
+        }
+        function quote(id) {
+            if (id == "self")
+                return B.mkText("this");
+            return B.mkText(quoteStr(id));
+        }
+        function isCallTo(n, fn) {
+            if (n.kind != "Call")
+                return false;
+            var c = n;
+            return getName(c.func) === fn;
+        }
+        function binop(left, pyName, right) {
+            var op = opMapping[pyName];
+            pxt.U.assert(!!op);
+            if (op.length > 3)
+                return B.H.mkCall(op, [left, right]);
+            else
+                return B.mkInfix(left, op, right);
+        }
+        var funMapExtension = {
+            "memoryview": { n: "", t: tpBuffer },
+            "const": { n: "", t: tpNumber },
+            "micropython.const": { n: "", t: tpNumber }
+        };
+        function getPy2TsFunMap() {
+            var funMap = {};
+            Object.keys(pxtc.ts2PyFunNameMap).forEach(function (k) {
+                var tsOverride = pxtc.ts2PyFunNameMap[k];
+                if (tsOverride && tsOverride.n) {
+                    var py2TsOverride = {
+                        n: k,
+                        t: ts2PyType(tsOverride.t),
+                        scale: tsOverride.scale
+                    };
+                    funMap[tsOverride.n] = py2TsOverride;
+                }
+            });
+            Object.keys(funMapExtension).forEach(function (k) {
+                funMap[k] = funMapExtension[k];
+            });
+            return funMap;
+        }
+        var py2TsFunMap = getPy2TsFunMap();
+        function isSuper(v) {
+            return isCallTo(v, "super") && v.args.length == 0;
+        }
+        function isThis(v) {
+            return v.kind == "Name" && v.id == "self";
+        }
+        function handleFmt(n) {
+            if (n.op == "Mod" && n.left.kind == "Str" &&
+                (n.right.kind == "Tuple" || n.right.kind == "List")) {
+                var fmt = n.left.s;
+                var elts_1 = n.right.elts;
+                elts_1 = elts_1.slice();
+                var res_1 = [B.mkText("`")];
+                fmt.replace(/([^%]+)|(%[\d\.]*([a-zA-Z%]))/g, function (f, reg, f2, flet) {
+                    if (reg)
+                        res_1.push(B.mkText(reg.replace(/[`\\$]/g, function (f) { return "\\" + f; })));
+                    else {
+                        var ee = elts_1.shift();
+                        var et = ee ? expr(ee) : B.mkText("???");
+                        /* tslint:disable:no-invalid-template-strings */
+                        res_1.push(B.mkText("${"), et, B.mkText("}"));
+                        /* tslint:enable:no-invalid-template-strings */
+                    }
+                    return "";
+                });
+                res_1.push(B.mkText("`"));
+                return B.mkGroup(res_1);
+            }
+            return null;
+        }
+        function forceBackticks(n) {
+            if (n.type == B.NT.Prefix && n.op[0] == "\"") {
+                return B.mkText(B.backtickLit(JSON.parse(n.op)));
+            }
+            return n;
+        }
+        function nodeInInfoRange(n) {
+            return syntaxInfo && n.startPos <= syntaxInfo.position && syntaxInfo.position <= n.endPos;
+        }
+        function markInfoNode(n, tp) {
+            if (currIteration > 100 && syntaxInfo &&
+                infoNode == null && (syntaxInfo.type == tp || syntaxInfo.type == "symbol") &&
+                nodeInInfoRange(n)) {
+                infoNode = n;
+                infoScope = currentScope();
+            }
+        }
+        function addCaller(e, v) {
+            if (v && v.pyAST && v.pyAST.kind == "FunctionDef") {
+                var fn = v.pyAST;
+                if (!fn.callers)
+                    fn.callers = [];
+                if (fn.callers.indexOf(e) < 0)
+                    fn.callers.push(e);
+            }
+        }
+        var exprMap = {
+            BoolOp: function (n) {
+                var r = expr(n.values[0]);
+                for (var i = 1; i < n.values.length; ++i) {
+                    r = binop(r, n.op, expr(n.values[i]));
+                }
+                return r;
+            },
+            BinOp: function (n) {
+                var r = handleFmt(n);
+                if (r)
+                    return r;
+                r = binop(expr(n.left), n.op, expr(n.right));
+                if (numOps[n.op]) {
+                    unifyTypeOf(n.left, tpNumber);
+                    unifyTypeOf(n.right, tpNumber);
+                    if (!n.tsType)
+                        error(n, 9570, lf("binary op missing ts type"));
+                    unify(n, n.tsType, tpNumber);
+                }
+                return r;
+            },
+            UnaryOp: function (n) {
+                var op = prefixOps[n.op];
+                pxt.U.assert(!!op);
+                return B.mkInfix(null, op, expr(n.operand));
+            },
+            Lambda: function (n) { return exprTODO(n); },
+            IfExp: function (n) {
+                return B.mkInfix(B.mkInfix(expr(n.test), "?", expr(n.body)), ":", expr(n.orelse));
+            },
+            Dict: function (n) { return exprTODO(n); },
+            Set: function (n) { return exprTODO(n); },
+            ListComp: function (n) { return exprTODO(n); },
+            SetComp: function (n) { return exprTODO(n); },
+            DictComp: function (n) { return exprTODO(n); },
+            GeneratorExp: function (n) {
+                if (n.generators.length == 1 && n.generators[0].kind == "Comprehension") {
+                    var comp_1 = n.generators[0];
+                    if (comp_1.ifs.length == 0) {
+                        return scope(function () {
+                            var v = getName(comp_1.target);
+                            defvar(v, { isParam: true }); // TODO this leaks the scope...
+                            return B.mkInfix(expr(comp_1.iter), ".", B.H.mkCall("map", [
+                                B.mkGroup([quote(v), B.mkText(" => "), expr(n.elt)])
+                            ]));
+                        });
+                    }
+                }
+                return exprTODO(n);
+            },
+            Await: function (n) { return exprTODO(n); },
+            Yield: function (n) { return exprTODO(n); },
+            YieldFrom: function (n) { return exprTODO(n); },
+            Compare: function (n) {
+                if (n.ops.length == 1 && (n.ops[0] == "In" || n.ops[0] == "NotIn")) {
+                    if (find(typeOf(n.comparators[0])) == tpString)
+                        unifyTypeOf(n.left, tpString);
+                    var idx = B.mkInfix(expr(n.comparators[0]), ".", B.H.mkCall("indexOf", [expr(n.left)]));
+                    return B.mkInfix(idx, n.ops[0] == "In" ? ">=" : "<", B.mkText("0"));
+                }
+                var r = binop(expr(n.left), n.ops[0], expr(n.comparators[0]));
+                for (var i = 1; i < n.ops.length; ++i) {
+                    r = binop(r, "And", binop(expr(n.comparators[i - 1]), n.ops[i], expr(n.comparators[i])));
+                }
+                return r;
+            },
+            Call: function (n) {
+                // TODO(dz): move body out; needs seperate PR that doesn't touch content
+                n.func.inCalledPosition = true;
+                var nm = getName(n.func);
+                var namedSymbol = lookupSymbol(nm);
+                var isClass = namedSymbol && namedSymbol.kind == 8 /* Class */;
+                var fun = namedSymbol;
+                var recvTp;
+                var recv = undefined;
+                var methName = "";
+                if (isClass) {
+                    fun = lookupSymbol(namedSymbol.pyQName + ".__constructor");
+                }
+                else {
+                    if (n.func.kind == "Attribute") {
+                        var attr = n.func;
+                        recv = attr.value;
+                        recvTp = typeOf(recv);
+                        if (recvTp.classType || recvTp.primType) {
+                            methName = attr.attr;
+                            fun = getTypeField(recv, methName, true);
+                            if (fun)
+                                methName = fun.name;
+                        }
+                    }
+                }
+                var orderedArgs = n.args.slice();
+                if (nm == "super" && orderedArgs.length == 0) {
+                    if (ctx.currClass && ctx.currClass.baseClass) {
+                        if (!n.tsType)
+                            error(n, 9543, lf("call expr missing ts type"));
+                        unifyClass(n, n.tsType, ctx.currClass.baseClass.symInfo);
+                    }
+                    return B.mkText("super");
+                }
+                if (!fun) {
+                    var over = pxt.U.lookup(py2TsFunMap, nm);
+                    if (over)
+                        methName = "";
+                    if (methName) {
+                        nm = t2s(recvTp) + "." + methName;
+                        over = pxt.U.lookup(py2TsFunMap, nm);
+                        if (!over && typeCtor(find(recvTp)) == "@array") {
+                            nm = "Array." + methName;
+                            over = pxt.U.lookup(py2TsFunMap, nm);
+                        }
+                    }
+                    methName = "";
+                    if (over) {
+                        if (over.n[0] == "." && orderedArgs.length) {
+                            recv = orderedArgs.shift();
+                            recvTp = typeOf(recv);
+                            methName = over.n.slice(1);
+                            fun = getTypeField(recv, methName);
+                            if (fun && fun.kind == 2 /* Property */)
+                                return B.mkInfix(expr(recv), ".", B.mkText(methName));
+                        }
+                        else {
+                            fun = lookupGlobalSymbol(over.n);
+                        }
+                    }
+                }
+                if (isCallTo(n, "str")) {
+                    // Our standard method of toString in TypeScript is to concatenate with the empty string
+                    return B.mkInfix(B.mkText("\"\""), "+", expr(n.args[0]));
+                }
+                if (!fun) {
+                    error(n, 9508, pxt.U.lf("can't find called function \"" + nm + "\""));
+                }
+                var formals = fun ? fun.parameters : null;
+                var allargs = [];
+                if (!formals) {
+                    if (fun)
+                        error(n, 9509, pxt.U.lf("calling non-function"));
+                    allargs = orderedArgs.map(expr);
+                }
+                else {
+                    if (orderedArgs.length > formals.length)
+                        error(n, 9510, pxt.U.lf("too many arguments in call to '{0}'", fun.pyQName));
+                    while (orderedArgs.length < formals.length)
+                        orderedArgs.push(null);
+                    orderedArgs = orderedArgs.slice(0, formals.length);
+                    var _loop_2 = function (kw) {
+                        var idx = formals.findIndex(function (f) { return f.name == kw.arg; });
+                        if (idx < 0)
+                            error(kw, 9511, pxt.U.lf("'{0}' doesn't have argument named '{1}'", fun.pyQName, kw.arg));
+                        else if (orderedArgs[idx] != null)
+                            error(kw, 9512, pxt.U.lf("argument '{0} already specified in call to '{1}'", kw.arg, fun.pyQName));
+                        else
+                            orderedArgs[idx] = kw.value;
+                    };
+                    for (var _i = 0, _a = n.keywords; _i < _a.length; _i++) {
+                        var kw = _a[_i];
+                        _loop_2(kw);
+                    }
+                    // skip optional args
+                    for (var i = orderedArgs.length - 1; i >= 0; i--) {
+                        if (formals[i].initializer == "undefined" && orderedArgs[i] == null)
+                            orderedArgs.pop();
+                        else
+                            break;
+                    }
+                    for (var i = 0; i < orderedArgs.length; ++i) {
+                        var arg = orderedArgs[i];
+                        if (arg == null && !formals[i].initializer) {
+                            error(n, 9513, pxt.U.lf("missing argument '{0}' in call to '{1}'", formals[i].name, fun.pyQName));
+                            allargs.push(B.mkText("null"));
+                        }
+                        else if (arg) {
+                            if (!formals[i].pyType)
+                                error(n, 9545, lf("formal arg missing py type"));
+                            if (formals[i].pyType.primType !== "any") {
+                                unifyTypeOf(arg, formals[i].pyType);
+                            }
+                            if (arg.kind == "Name" && shouldInlineFunction(arg.symbolInfo)) {
+                                allargs.push(emitFunctionDef(arg.symbolInfo.pyAST, true));
+                            }
+                            else {
+                                allargs.push(expr(arg));
+                            }
+                        }
+                        else {
+                            if (!formals[i].initializer)
+                                error(n, 9547, lf("formal arg missing initializer"));
+                            allargs.push(B.mkText(formals[i].initializer));
+                        }
+                    }
+                }
+                if (!infoNode && syntaxInfo && syntaxInfo.type == "signature" && nodeInInfoRange(n)) {
+                    infoNode = n;
+                    infoScope = currentScope();
+                    syntaxInfo.auxResult = 0;
+                    // foo, bar
+                    for (var i = 0; i < orderedArgs.length; ++i) {
+                        syntaxInfo.auxResult = i;
+                        var arg = orderedArgs[i];
+                        if (!arg) {
+                            // if we can't parse this next argument, but the cursor is beyond the
+                            // previous arguments, assume it's here
+                            break;
+                        }
+                        if (arg.startPos <= syntaxInfo.position && syntaxInfo.position <= arg.endPos) {
+                            break;
+                        }
+                    }
+                }
+                if (fun) {
+                    if (!fun.pyRetType)
+                        error(n, 9549, lf("function missing pyRetType"));
+                    unifyTypeOf(n, fun.pyRetType);
+                    n.symbolInfo = fun;
+                    if (fun.attributes.py2tsOverride) {
+                        var override = parseTypeScriptOverride(fun.attributes.py2tsOverride);
+                        if (override) {
+                            if (methName && !recv)
+                                error(n, 9550, lf("missing recv"));
+                            var res = buildOverride(override, allargs, methName ? expr(recv) : undefined);
+                            if (!res)
+                                error(n, 9555, lf("buildOverride failed unexpectedly"));
+                            return res;
+                        }
+                    }
+                    else if (fun.attributes.pyHelper) {
+                        return B.mkGroup([
+                            B.mkInfix(B.mkText("_py"), ".", B.mkText(fun.attributes.pyHelper)),
+                            B.mkText("("),
+                            B.mkCommaSep(recv ? [expr(recv)].concat(allargs) : allargs),
+                            B.mkText(")")
+                        ]);
+                    }
+                }
+                var fn = methName ? B.mkInfix(expr(recv), ".", B.mkText(methName)) : expr(n.func);
+                var nodes = [
+                    fn,
+                    B.mkText("("),
+                    B.mkCommaSep(allargs),
+                    B.mkText(")")
+                ];
+                if (fun && allargs.length == 1 && isTaggedTemplate(fun))
+                    nodes = [fn, forceBackticks(allargs[0])];
+                if (isClass) {
+                    if (!namedSymbol || !namedSymbol.pyQName)
+                        error(n, 9551, lf("missing namedSymbol or pyQName"));
+                    nodes[0] = B.mkText(applyTypeMap(namedSymbol.pyQName));
+                    nodes.unshift(B.mkText("new "));
+                }
+                return B.mkGroup(nodes);
+            },
+            Num: function (n) {
+                if (!n.tsType)
+                    error(n, 9556, lf("tsType missing"));
+                unify(n, n.tsType, tpNumber);
+                return B.mkText(n.ns);
+            },
+            Str: function (n) {
+                if (!n.tsType)
+                    error(n, 9557, lf("tsType missing"));
+                unify(n, n.tsType, tpString);
+                return B.mkText(B.stringLit(n.s));
+            },
+            FormattedValue: function (n) { return exprTODO(n); },
+            JoinedStr: function (n) { return exprTODO(n); },
+            Bytes: function (n) {
+                return B.mkText("hex`" + pxt.U.toHex(new Uint8Array(n.s)) + "`");
+            },
+            NameConstant: function (n) {
+                if (n.value != null) {
+                    if (!n.tsType)
+                        error(n, 9558, lf("tsType missing"));
+                    unify(n, n.tsType, tpBoolean);
+                }
+                return B.mkText(JSON.stringify(n.value));
+            },
+            Ellipsis: function (n) { return exprTODO(n); },
+            Constant: function (n) { return exprTODO(n); },
+            Attribute: function (n) {
+                var lhs = expr(n.value); // run it first, in case it wants to capture infoNode
+                var part = typeOf(n.value);
+                var fd = getTypeField(n.value, n.attr);
+                var nm = n.attr;
+                markInfoNode(n, "memberCompletion");
+                if (fd) {
+                    n.symbolInfo = fd;
+                    addCaller(n, fd);
+                    if (!n.tsType || !fd.pyRetType)
+                        error(n, 9559, lf("tsType or pyRetType missing"));
+                    unify(n, n.tsType, fd.pyRetType);
+                    nm = fd.name;
+                }
+                else if (part.moduleType) {
+                    var sym = lookupGlobalSymbol(part.moduleType.pyQName + "." + n.attr);
+                    if (sym) {
+                        n.symbolInfo = sym;
+                        addCaller(n, sym);
+                        unifyTypeOf(n, getOrSetSymbolType(sym));
+                        nm = sym.name;
+                    }
+                    else
+                        error(n, 9514, pxt.U.lf("module '{0}' has no attribute '{1}'", part.moduleType.pyQName, n.attr));
+                }
+                else {
+                    if (currIteration > 2)
+                        error(n, 9515, pxt.U.lf("unknown object type; cannot lookup attribute '{0}'", n.attr));
+                }
+                return B.mkInfix(lhs, ".", B.mkText(quoteStr(nm)));
+            },
+            Subscript: function (n) {
+                if (n.slice.kind == "Index") {
+                    var idx = n.slice.value;
+                    if (currIteration > 2 && isFree(typeOf(idx))) {
+                        unifyTypeOf(idx, tpNumber);
+                    }
+                    return B.mkGroup([
+                        expr(n.value),
+                        B.mkText("["),
+                        expr(idx),
+                        B.mkText("]"),
+                    ]);
+                }
+                else if (n.slice.kind == "Slice") {
+                    var s = n.slice;
+                    return B.mkInfix(expr(n.value), ".", B.H.mkCall("slice", [s.lower ? expr(s.lower) : B.mkText("0"),
+                        s.upper ? expr(s.upper) : null].filter(isTruthy)));
+                }
+                else {
+                    return exprTODO(n);
+                }
+            },
+            Starred: function (n) { return B.mkGroup([B.mkText("... "), expr(n.value)]); },
+            Name: function (n) {
+                markInfoNode(n, "identifierCompletion");
+                // shortcut, but should work
+                if (n.id == "self" && ctx.currClass) {
+                    if (!n.tsType)
+                        error(n, 9560, lf("missing tsType"));
+                    unifyClass(n, n.tsType, ctx.currClass.symInfo);
+                    return B.mkText("this");
+                }
+                var v = lookupName(n);
+                if (v && v.isImport) {
+                    return quote(v.name); // it's import X = Y.Z.X, use X not Y.Z.X
+                }
+                markUsage(v, n);
+                if (n.ctx.indexOf("Load") >= 0) {
+                    if (v && !v.qName)
+                        error(n, 9561, lf("missing qName"));
+                    return quote(v ? v.qName : getName(n));
+                }
+                else
+                    return possibleDef(n);
+            },
+            List: mkArrayExpr,
+            Tuple: mkArrayExpr,
+        };
+        function lookupName(n) {
+            var v = lookupSymbol(n.id);
+            if (!v) {
+                // check if the symbol has an override py<->ts mapping
+                var over = pxt.U.lookup(py2TsFunMap, n.id);
+                if (over) {
+                    v = lookupSymbol(over.n);
+                }
+            }
+            if (v) {
+                n.symbolInfo = v;
+                if (!n.tsType)
+                    error(n, 9562, lf("missing tsType"));
+                unify(n, n.tsType, getOrSetSymbolType(v));
+                if (v.isImport)
+                    return v;
+                addCaller(n, v);
+            }
+            else if (currIteration > 0) {
+                error(n, 9516, pxt.U.lf("name '{0}' is not defined", n.id));
+            }
+            return v;
+        }
+        function markUsage(s, location) {
+            if (s) {
+                if (s.modifier === py.VarModifier.Global) {
+                    var declaringScope = topScope();
+                    if (declaringScope && declaringScope.vars[s.name]) {
+                        s = declaringScope.vars[s.name];
+                    }
+                }
+                else if (s.modifier === py.VarModifier.NonLocal) {
+                    var declaringScope = findNonlocalDeclaration(s.name, currentScope());
+                    if (declaringScope) {
+                        s = declaringScope.vars[s.name];
+                    }
+                }
+                if (s.firstRefPos === undefined || s.firstRefPos > location.startPos) {
+                    s.firstRefPos = location.startPos;
+                }
+            }
+        }
+        function mkArrayExpr(n) {
+            if (!n.tsType)
+                error(n, 9563, lf("missing tsType"));
+            unify(n, n.tsType, mkArrayType(n.elts[0] ? typeOf(n.elts[0]) : mkType()));
+            return B.mkGroup([
+                B.mkText("["),
+                B.mkCommaSep(n.elts.map(expr)),
+                B.mkText("]"),
+            ]);
+        }
+        function expr(e) {
+            lastAST = e;
+            var f = exprMap[e.kind];
+            if (!f) {
+                pxt.U.oops(e.kind + " - unknown expr");
+            }
+            typeOf(e);
+            return f(e);
+        }
+        function stmt(e) {
+            lastAST = e;
+            var f = stmtMap[e.kind];
+            if (!f) {
+                pxt.U.oops(e.kind + " - unknown stmt");
+            }
+            var cmts = (e._comments || []).map(function (c) { return c.value; });
+            var r = f(e);
+            if (cmts.length) {
+                r = B.mkGroup(cmts.map(function (c) { return B.mkStmt(B.H.mkComment(c)); }).concat(r));
+            }
+            return r;
+        }
+        function isEmpty(b) {
+            if (!b)
+                return true;
+            if (b.type == B.NT.Prefix && b.op == "")
+                return b.children.every(isEmpty);
+            if (b.type == B.NT.NewLine)
+                return true;
+            return false;
+        }
+        function declareVariable(s) {
+            var name = quote(s.name);
+            var type = t2s(getOrSetSymbolType(s));
+            return B.mkStmt(B.mkGroup([B.mkText("let "), name, B.mkText(": " + type + ";")]));
+        }
+        function findNonlocalDeclaration(name, scope) {
+            if (!scope)
+                return undefined;
+            var symbolInfo = scope.vars && scope.vars[name];
+            if (symbolInfo && symbolInfo.modifier != py.VarModifier.NonLocal) {
+                return scope;
+            }
+            else {
+                return findNonlocalDeclaration(name, scope.parent);
+            }
+        }
+        function collectHoistedDeclarations(scope) {
+            var hoisted = [];
+            var current;
+            for (var _i = 0, _a = Object.keys(scope.vars); _i < _a.length; _i++) {
+                var varName = _a[_i];
+                current = scope.vars[varName];
+                if (shouldHoist(current, scope)) {
+                    hoisted.push(declareVariable(current));
+                }
+            }
+            return hoisted;
+        }
+        function shouldHoist(sym, scope) {
+            var result = sym.kind === 4 /* Variable */
+                && !sym.isParam
+                && sym.modifier === undefined
+                && (sym.firstRefPos < sym.firstAssignPos
+                    || sym.firstAssignDepth > scope.blockDepth);
+            return !!result;
+        }
+        // TODO look at scopes of let
+        function toTS(mod) {
+            pxt.U.assert(mod.kind == "Module");
+            if (mod.tsBody)
+                return undefined;
+            resetCtx(mod);
+            if (!mod.vars)
+                mod.vars = {};
+            var hoisted = collectHoistedDeclarations(mod);
+            var res = hoisted.concat(mod.body.map(stmt));
+            if (res.every(isEmpty))
+                return undefined;
+            else if (mod.name == "main")
+                return res;
+            return [
+                B.mkText("namespace " + mod.name + " "),
+                B.mkBlock(res)
+            ];
+        }
+        function iterPy(e, f) {
+            if (!e)
+                return;
+            f(e);
+            pxt.U.iterMap(e, function (k, v) {
+                if (!v || k == "parent")
+                    return;
+                if (v && v.kind)
+                    iterPy(v, f);
+                else if (Array.isArray(v))
+                    v.forEach(function (x) { return iterPy(x, f); });
+            });
+        }
+        function resetPass(iter) {
+            currIteration = iter;
+            diagnostics = [];
+            numUnifies = 0;
+            lastAST = undefined;
+        }
+        function py2ts(opts) {
+            var modules = [];
+            var outfiles = {};
+            diagnostics = [];
+            pxt.U.assert(!!opts.sourceFiles, "missing sourceFiles! Cannot convert py to ts");
+            // find .ts files that are copies of / shadowed by the .py files
+            var pyFiles = opts.sourceFiles.filter(function (fn) { return pxt.U.endsWith(fn, ".py"); });
+            if (pyFiles.length == 0)
+                return { outfiles: outfiles, diagnostics: diagnostics, success: diagnostics.length === 0 };
+            var removeEnd = function (file, ext) { return file.substr(0, file.length - ext.length); };
+            var pyFilesSet = pxt.U.toDictionary(pyFiles, function (p) { return removeEnd(p, ".py"); });
+            var tsFiles = opts.sourceFiles
+                .filter(function (fn) { return pxt.U.endsWith(fn, ".ts"); });
+            var tsShadowFiles = tsFiles
+                .filter(function (fn) { return removeEnd(fn, ".ts") in pyFilesSet; });
+            pxt.U.assert(!!opts.apisInfo, "missing apisInfo! Cannot convert py to ts");
+            lastFile = pyFiles[0]; // make sure there's some location info for errors from API init
+            initApis(opts.apisInfo, tsShadowFiles);
+            compileOptions = opts;
+            syntaxInfo = undefined;
+            if (!opts.generatedFiles)
+                opts.generatedFiles = [];
+            for (var _i = 0, pyFiles_1 = pyFiles; _i < pyFiles_1.length; _i++) {
+                var fn = pyFiles_1[_i];
+                var sn = fn;
+                var modname = fn.replace(/\.py$/, "").replace(/.*\//, "");
+                var src = opts.fileSystem[fn];
+                try {
+                    lastFile = fn;
+                    var tokens = pxt.py.lex(src);
+                    //console.log(pxt.py.tokensToString(tokens))
+                    var res = pxt.py.parse(src, sn, tokens);
+                    //console.log(pxt.py.dump(stmts))
+                    pxt.U.pushRange(diagnostics, res.diagnostics);
+                    modules.push({
+                        kind: "Module",
+                        body: res.stmts,
+                        blockDepth: 0,
+                        name: modname,
+                        source: src,
+                        tsFilename: sn.replace(/\.py$/, ".ts")
+                    });
+                }
+                catch (e) {
+                    // TODO
+                    console.log("Parse error", e);
+                }
+            }
+            var parseDiags = diagnostics;
+            for (var i = 0; i < 5; ++i) {
+                resetPass(i);
+                for (var _a = 0, modules_1 = modules; _a < modules_1.length; _a++) {
+                    var m = modules_1[_a];
+                    try {
+                        toTS(m);
+                        // console.log(`after ${currIteration} - ${numUnifies}`)
+                    }
+                    catch (e) {
+                        console.log("Conv pass error", e);
+                    }
+                }
+                if (numUnifies == 0)
+                    break;
+            }
+            resetPass(1000);
+            infoNode = undefined;
+            syntaxInfo = opts.syntaxInfo;
+            for (var _b = 0, modules_2 = modules; _b < modules_2.length; _b++) {
+                var m = modules_2[_b];
+                try {
+                    var nodes = toTS(m);
+                    if (!nodes)
+                        continue;
+                    var res = B.flattenNode(nodes);
+                    opts.sourceFiles.push(m.tsFilename);
+                    opts.generatedFiles.push(m.tsFilename);
+                    opts.fileSystem[m.tsFilename] = res.output;
+                    outfiles[m.tsFilename] = res.output;
+                }
+                catch (e) {
+                    console.log("Conv error", e);
+                }
+            }
+            diagnostics = parseDiags.concat(diagnostics);
+            var isGlobalSymbol = function (si) {
+                switch (si.kind) {
+                    case 6 /* Enum */:
+                    case 7 /* EnumMember */:
+                    case 4 /* Variable */:
+                    case 3 /* Function */:
+                    case 5 /* Module */:
+                        return true;
+                    case 2 /* Property */:
+                    case 1 /* Method */:
+                        return !si.isInstance;
+                    default:
+                        return false;
+                }
+            };
+            if (syntaxInfo)
+                syntaxInfo.symbols = [];
+            if (infoNode)
+                error(null, 9569, lf("type annotation error; this should be unreachable"));
+            if (syntaxInfo && infoNode) {
+                // TODO: unreachable since infoNode is always undefined here
+                infoNode = infoNode;
+                var apis = pxt.U.values(externalApis).concat(pxt.U.values(internalApis));
+                syntaxInfo.beginPos = infoNode.startPos;
+                syntaxInfo.endPos = infoNode.endPos;
+                if (!syntaxInfo.symbols)
+                    syntaxInfo.symbols = [];
+                // always return global symbols because we might need to check for
+                // name collisions downstream
+                syntaxInfo.globalNames = syntaxInfo.globalNames || {};
+                var existing_1 = [];
+                var addSym = function (v) {
+                    if (isGlobalSymbol(v) && existing_1.indexOf(v) < 0) {
+                        var s = cleanSymbol(v);
+                        syntaxInfo.globalNames[s.qName || s.name] = s;
+                    }
+                };
+                existing_1 = syntaxInfo.symbols.slice();
+                for (var s = infoScope; !!s; s = s.parent) {
+                    if (s && s.vars)
+                        pxt.U.values(s.vars).forEach(addSym);
+                }
+                apis.forEach(addSym);
+                if (syntaxInfo.type == "memberCompletion" && infoNode.kind == "Attribute") {
+                    var attr = infoNode;
+                    var tp = typeOf(attr.value);
+                    if (tp.moduleType) {
+                        for (var _c = 0, apis_1 = apis; _c < apis_1.length; _c++) {
+                            var v = apis_1[_c];
+                            if (!v.isInstance && v.namespace == tp.moduleType.qName) {
+                                syntaxInfo.symbols.push(v);
+                            }
+                        }
+                    }
+                    else if (tp.classType || tp.primType) {
+                        var ct = tp.classType
+                            || resolvePrimTypes(tp.primType).reduce(function (p, n) { return p || n; }, null);
+                        if (ct) {
+                            if (!ct.extendsTypes || !ct.qName)
+                                error(null, 9567, lf("missing extendsTypes or qName"));
+                            var types = ct.extendsTypes.concat(ct.qName);
+                            for (var _d = 0, apis_2 = apis; _d < apis_2.length; _d++) {
+                                var v = apis_2[_d];
+                                if (v.isInstance && types.indexOf(v.namespace) >= 0) {
+                                    syntaxInfo.symbols.push(v);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (syntaxInfo.type == "identifierCompletion") {
+                    syntaxInfo.symbols = pxt.U.values(syntaxInfo.globalNames);
+                }
+                else {
+                    var sym = infoNode.symbolInfo;
+                    if (sym)
+                        syntaxInfo.symbols.push(sym);
+                }
+                syntaxInfo.symbols = syntaxInfo.symbols.map(cleanSymbol);
+            }
+            var outDiag = patchedDiags();
+            return {
+                outfiles: outfiles,
+                success: outDiag.length === 0,
+                diagnostics: outDiag,
+                syntaxInfo: syntaxInfo
+            };
+            function patchedDiags() {
+                for (var _i = 0, diagnostics_1 = diagnostics; _i < diagnostics_1.length; _i++) {
+                    var d = diagnostics_1[_i];
+                    py.patchPosition(d, opts.fileSystem[d.fileName]);
+                }
+                return diagnostics;
+            }
+        }
+        py.py2ts = py2ts;
+        /**
+         * Override example syntax:
+         *      indexOf()       (no arguments)
+         *      indexOf($1, $0) (arguments in different order)
+         *      indexOf($0?)    (optional argument)
+         *      indexOf($0=0)   (default value; can be numbers, single quoted strings, false, true, null, undefined)
+         */
+        function parseTypeScriptOverride(src) {
+            var regex = new RegExp(/([^\$]*\()?([^\$\(]*)\$(\d)(?:(?:(?:=(\d+|'[a-zA-Z0-9_]*'|false|true|null|undefined))|(\?)|))/, 'y');
+            var parts = [];
+            var match;
+            var lastIndex = 0;
+            do {
+                lastIndex = regex.lastIndex;
+                match = regex.exec(src);
+                if (match) {
+                    if (match[1]) {
+                        parts.push({
+                            kind: "text",
+                            text: match[1]
+                        });
+                    }
+                    parts.push({
+                        kind: "arg",
+                        prefix: match[2],
+                        index: parseInt(match[3]),
+                        default: match[4],
+                        isOptional: !!match[5]
+                    });
+                }
+            } while (match);
+            if (lastIndex != undefined) {
+                parts.push({
+                    kind: "text",
+                    text: src.substr(lastIndex)
+                });
+            }
+            else {
+                parts.push({
+                    kind: "text",
+                    text: src
+                });
+            }
+            return {
+                parts: parts
+            };
+        }
+        function buildOverride(override, args, recv) {
+            var result = [];
+            for (var _i = 0, _a = override.parts; _i < _a.length; _i++) {
+                var part = _a[_i];
+                if (part.kind === "text") {
+                    result.push(B.mkText(part.text));
+                }
+                else if (args[part.index] || part.default) {
+                    if (part.prefix)
+                        result.push(B.mkText(part.prefix));
+                    if (args[part.index]) {
+                        result.push(args[part.index]);
+                    }
+                    else {
+                        result.push(B.mkText(part.default));
+                    }
+                }
+                else if (part.isOptional) {
+                    // do nothing
+                }
+                else {
+                    return undefined;
+                }
+            }
+            if (recv) {
+                return B.mkInfix(recv, ".", B.mkGroup(result));
+            }
+            return B.mkGroup(result);
+        }
+    })(py = pxt.py || (pxt.py = {}));
+})(pxt || (pxt = {}));
+// Lexer spec: https://docs.python.org/3/reference/lexical_analysis.html
+var pxt;
+(function (pxt) {
+    var py;
+    (function (py) {
+        var TokenType;
+        (function (TokenType) {
+            TokenType[TokenType["Id"] = 0] = "Id";
+            TokenType[TokenType["Op"] = 1] = "Op";
+            TokenType[TokenType["Keyword"] = 2] = "Keyword";
+            TokenType[TokenType["Number"] = 3] = "Number";
+            TokenType[TokenType["String"] = 4] = "String";
+            TokenType[TokenType["NewLine"] = 5] = "NewLine";
+            TokenType[TokenType["Comment"] = 6] = "Comment";
+            TokenType[TokenType["Indent"] = 7] = "Indent";
+            TokenType[TokenType["Dedent"] = 8] = "Dedent";
+            TokenType[TokenType["EOF"] = 9] = "EOF";
+            TokenType[TokenType["Error"] = 10] = "Error";
+        })(TokenType = py.TokenType || (py.TokenType = {}));
+        var keywords = {
+            "False": true, "None": true, "True": true, "and": true, "as": true, "assert": true,
+            "async": true, "await": true, "break": true, "class": true, "continue": true,
+            "def": true, "del": true, "elif": true, "else": true, "except": true, "finally": true,
+            "for": true, "from": true, "global": true, "if": true, "import": true, "in": true,
+            "is": true, "lambda": true, "nonlocal": true, "not": true, "or": true, "pass": true,
+            "raise": true, "return": true, "try": true, "while": true, "with": true, "yield": true,
+        };
+        var asciiParse = [];
+        var allOps;
+        var revOps;
+        var eqOps = {
+            "%": "Mod",
+            "&": "BitAnd",
+            "*": "Mult",
+            "**": "Pow",
+            "+": "Add",
+            "-": "Sub",
+            "/": "Div",
+            "//": "FloorDiv",
+            "<<": "LShift",
+            ">>": "RShift",
+            "@": "MatMult",
+            "^": "BitXor",
+            "|": "BitOr",
+        };
+        var nonEqOps = {
+            "!": "Bang",
+            "!=": "NotEq",
+            "(": "LParen",
+            ")": "RParen",
+            ",": "Comma",
+            "->": "Arrow",
+            ".": "Dot",
+            ":": "Colon",
+            ";": "Semicolon",
+            "<": "Lt",
+            "<=": "LtE",
+            "=": "Assign",
+            "==": "Eq",
+            ">": "Gt",
+            ">=": "GtE",
+            "[": "LSquare",
+            "]": "RSquare",
+            "{": "LBracket",
+            "}": "RBracket",
+            "~": "Invert",
+        };
+        var numBases = {
+            "b": /^[_0-1]$/,
+            "B": /^[_0-1]$/,
+            "o": /^[_0-7]$/,
+            "O": /^[_0-7]$/,
+            "x": /^[_0-9a-fA-F]$/,
+            "X": /^[_0-9a-fA-F]$/,
+        };
+        var numBasesRadix = {
+            "b": 2,
+            "B": 2,
+            "o": 8,
+            "O": 8,
+            "x": 16,
+            "X": 16,
+        };
+        // resettable lexer state
+        var res;
+        var source;
+        var pos = 0, pos0 = 0;
+        function position(startPos, source) {
+            var lineno = 0;
+            var lastnl = 0;
+            for (var i = 0; i < startPos; ++i) {
+                if (source.charCodeAt(i) == 10) {
+                    lineno++;
+                    lastnl = i;
+                }
+            }
+            return { line: lineno, column: startPos - lastnl - 1 };
+        }
+        py.position = position;
+        function patchPosition(d, src) {
+            if (!d.start && !d.length) {
+                d.start = 0;
+                d.length = 0;
+                d.line = 0;
+                d.column = 0;
+                return;
+            }
+            var p = position(d.start, src);
+            d.line = p.line;
+            d.column = p.column;
+            if (d.length > 0) {
+                p = position(d.start + d.length - 1, src);
+                d.endLine = p.line;
+                d.endColumn = p.column + 2; // not sure where the +2 is coming from, but it works out in monaco
+            }
+        }
+        py.patchPosition = patchPosition;
+        function tokenToString(t) {
+            switch (t.type) {
+                case TokenType.Id:
+                    return "id(" + t.value + ")";
+                case TokenType.Op:
+                    return "'" + revOps[t.value] + "'";
+                case TokenType.Keyword:
+                    return t.value;
+                case TokenType.Number:
+                    return "num(" + t.value + ")";
+                case TokenType.String:
+                    return t.stringPrefix + JSON.stringify(t.value);
+                case TokenType.NewLine:
+                    return "<nl>";
+                case TokenType.Comment:
+                    return "/* " + t.value + " */";
+                case TokenType.Indent:
+                    return "indent" + t.value;
+                case TokenType.Dedent:
+                    return "dedent";
+                case TokenType.Error:
+                    return "[ERR: " + t.value + "]";
+                case TokenType.EOF:
+                    return "End of file";
+                default:
+                    return "???";
+            }
+        }
+        py.tokenToString = tokenToString;
+        function friendlyTokenToString(t, source) {
+            var len = t.endPos - t.startPos;
+            var s = "";
+            if (len == 0) {
+                s = tokenToString(t);
+            }
+            else if (len > 20) {
+                s = "`" + source.slice(t.startPos, t.startPos + 20) + "`...";
+            }
+            else {
+                s = "`" + source.slice(t.startPos, t.endPos) + "`";
+            }
+            s = s.replace(/\r/g, "")
+                .replace(/\n/g, "\\n")
+                .replace(/\t/g, "\\t");
+            return s;
+        }
+        py.friendlyTokenToString = friendlyTokenToString;
+        function tokensToString(ts) {
+            var r = "";
+            var lineLen = 0;
+            for (var _i = 0, ts_1 = ts; _i < ts_1.length; _i++) {
+                var t = ts_1[_i];
+                var tmp = tokenToString(t);
+                if (lineLen + tmp.length > 70) {
+                    lineLen = 0;
+                    r += "\n";
+                }
+                if (lineLen != 0)
+                    r += " ";
+                r += tmp;
+                lineLen += tmp.length;
+                if (t.type == TokenType.NewLine || t.type == TokenType.Comment) {
+                    lineLen = 0;
+                    r += "\n";
+                }
+            }
+            return r;
+        }
+        py.tokensToString = tokensToString;
+        function lex(_source) {
+            if (asciiParse.length == 0)
+                initAsciiParse();
+            // these can't be local, since we capture lambdas from the first execution
+            source = _source;
+            res = [];
+            pos = 0;
+            pos0 = 0;
+            checkIndent();
+            while (pos < source.length) {
+                pos0 = pos;
+                var ch = source.charCodeAt(pos++);
+                if (ch < 128) {
+                    asciiParse[ch]();
+                }
+                else if (py.rx.isIdentifierStart(ch)) {
+                    parseId();
+                }
+                else if (py.rx.isSpace(ch)) {
+                    // skip
+                }
+                else if (py.rx.isNewline(ch)) {
+                    singleNewline();
+                }
+                else {
+                    invalidToken();
+                }
+            }
+            pos0 = pos;
+            singleNewline();
+            addToken(TokenType.EOF, "");
+            return res;
+            function addToken(type, val, aux) {
+                var t = {
+                    type: type,
+                    value: val,
+                    startPos: pos0,
+                    endPos: pos,
+                    auxValue: aux
+                };
+                res.push(t);
+                return t;
+            }
+            function addError(msg) {
+                addToken(TokenType.Error, msg);
+            }
+            function parseId() {
+                while (py.rx.isIdentifierChar(source.charCodeAt(pos)))
+                    pos++;
+                var id = source.slice(pos0, pos);
+                var ch = source.charCodeAt(pos);
+                if (keywords.hasOwnProperty(id))
+                    addToken(TokenType.Keyword, id);
+                else if (ch == 34 || ch == 39)
+                    parseStringPref(id);
+                else
+                    addToken(TokenType.Id, id);
+            }
+            function singleOp(name) {
+                addToken(TokenType.Op, name);
+            }
+            function multiOp(name) {
+                var ch2 = source.slice(pos0, pos + 1);
+                if (ch2.length == 2 && allOps.hasOwnProperty(ch2)) {
+                    var ch3 = source.slice(pos0, pos + 2);
+                    if (ch3.length == 3 && allOps.hasOwnProperty(ch3)) {
+                        pos += 2;
+                        name = allOps[ch3];
+                    }
+                    else {
+                        pos++;
+                        name = allOps[ch2];
+                    }
+                }
+                singleOp(name);
+            }
+            function asciiEsc(code) {
+                switch (code) {
+                    case 97: return 7; // \a
+                    case 98: return 8; // \b
+                    case 102: return 12; // \f
+                    case 110: return 10; // \n
+                    case 114: return 13; // \r
+                    case 116: return 9; // \t
+                    case 118: return 11; // \v
+                    default: return 0;
+                }
+            }
+            function unicode(c) {
+                return ("0000" + c.toString(16)).slice(-4);
+            }
+            function parseStringPref(pref) {
+                var delim = source.charCodeAt(pos++);
+                var tripleMode = false;
+                if (source.charCodeAt(pos) == delim && source.charCodeAt(pos + 1) == delim) {
+                    pos += 2;
+                    tripleMode = true;
+                }
+                pref = pref.toLowerCase();
+                var rawMode = pref.indexOf("r") >= 0;
+                var value = "";
+                var quoted = "";
+                while (true) {
+                    var ch = source.charCodeAt(pos++);
+                    if (ch == delim) {
+                        if (tripleMode) {
+                            if (source.charCodeAt(pos) == delim &&
+                                source.charCodeAt(pos + 1) == delim) {
+                                pos += 2;
+                                break;
+                            }
+                            else {
+                                quoted += "\\" + String.fromCharCode(delim);
+                                value += String.fromCharCode(delim);
+                            }
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    else if (ch == 92) {
+                        var ch2 = source.charCodeAt(pos++);
+                        if (ch2 == 13 && source.charCodeAt(pos) == 10) {
+                            ch2 = 10;
+                            pos++;
+                        }
+                        if (ch2 == 34 || ch2 == 39 || ch2 == 92) {
+                            if (rawMode) {
+                                quoted += "\\";
+                                value += "\\";
+                            }
+                            quoted += "\\" + String.fromCharCode(ch2);
+                            value += String.fromCharCode(ch2);
+                        }
+                        else if (!rawMode && asciiEsc(ch2)) {
+                            quoted += "\\" + String.fromCharCode(ch2);
+                            value += String.fromCharCode(asciiEsc(ch2));
+                        }
+                        else if (py.rx.isNewline(ch2)) {
+                            if (rawMode) {
+                                value += "\\" + String.fromCharCode(ch2);
+                                quoted += "\\\\";
+                                if (ch2 == 10)
+                                    quoted += "\\n";
+                                else
+                                    quoted += "\\u" + unicode(ch2);
+                            }
+                            else {
+                                // skip
+                            }
+                        }
+                        else if (!rawMode && ch2 == 48) {
+                            // handle \0 as special case
+                            quoted += "\\\\x00";
+                            value += "\x00";
+                        }
+                        else if (!rawMode && (ch2 == 117 || ch2 == 120)) {
+                            // We pass as is
+                            // TODO add support for octal (\123)
+                            var len = ch2 == 117 ? 4 : 2;
+                            var num = source.slice(pos, pos + len);
+                            pos += len;
+                            var v = parseInt(num, 16);
+                            if (isNaN(v))
+                                addError(pxt.U.lf("invalid unicode or hex escape"));
+                            quoted += "\\" + String.fromCharCode(ch2) + num;
+                            value += String.fromCharCode(v);
+                        }
+                        else {
+                            quoted += "\\\\" + String.fromCharCode(ch2);
+                            value += "\\" + String.fromCharCode(ch2);
+                        }
+                    }
+                    else if (isNaN(ch)) {
+                        addError(pxt.U.lf("end of file in a string"));
+                        break;
+                    }
+                    else {
+                        if (py.rx.isNewline(ch)) {
+                            if (!tripleMode) {
+                                addError(pxt.U.lf("new line in a string"));
+                                break;
+                            }
+                        }
+                        value += String.fromCharCode(ch);
+                        quoted += String.fromCharCode(ch);
+                    }
+                }
+                var t = addToken(TokenType.String, value);
+                t.quoted = quoted;
+                t.stringPrefix = pref;
+            }
+            function parseString() {
+                pos--;
+                parseStringPref("");
+            }
+            function singleNewline() {
+                addToken(TokenType.NewLine, "");
+                checkIndent();
+            }
+            function checkIndent() {
+                var ind = 0;
+                while (true) {
+                    var ch = source.charCodeAt(pos);
+                    if (ch == 9) {
+                        // addError(U.lf("TAB indentaion not supported"))
+                        ind = (ind + 8) & ~7;
+                        pos++;
+                        continue;
+                    }
+                    if (ch != 32)
+                        break;
+                    ind++;
+                    pos++;
+                }
+                addToken(TokenType.Indent, "" + ind);
+            }
+            function parseBackslash() {
+                var ch2 = source.charCodeAt(pos);
+                if (py.rx.isNewline(ch2)) {
+                    pos++;
+                    if (ch2 == 13 && source.charCodeAt(pos) == 10)
+                        pos++;
+                }
+                else {
+                    addError(pxt.U.lf("unexpected character after line continuation character"));
+                }
+            }
+            function parseComment() {
+                addToken(TokenType.NewLine, "");
+                while (pos < source.length) {
+                    if (py.rx.isNewline(source.charCodeAt(pos)))
+                        break;
+                    pos++;
+                }
+                addToken(TokenType.Comment, source.slice(pos0 + 1, pos));
+                if (source.charCodeAt(pos) == 13 && source.charCodeAt(pos + 1) == 10)
+                    pos++;
+                pos++; // skip newline
+                checkIndent();
+            }
+            function parseNumber() {
+                var c1 = source[pos0];
+                var num = "";
+                // TypeScript supports 0x, 0o, 0b, as well as _ in numbers,
+                // so we just pass them as is
+                if (c1 == "0") {
+                    var c2 = source[pos];
+                    var rx_1 = numBases[c2];
+                    if (rx_1) {
+                        pos++;
+                        while (true) {
+                            var ch = source[pos];
+                            if (!rx_1.test(ch))
+                                break;
+                            num += ch;
+                            pos++;
+                        }
+                        if (num) {
+                            var p_1 = parseInt(num, numBasesRadix[c2]);
+                            if (isNaN(p_1))
+                                addError(pxt.U.lf("invalid number"));
+                            addToken(TokenType.Number, c1 + c2 + num, p_1);
+                        }
+                        else
+                            addError(pxt.U.lf("expecting numbers to follow 0b, 0o, 0x"));
+                        return;
+                    }
+                }
+                // decimal, possibly float
+                var seenDot = false;
+                var seenE = false;
+                var minusAllowed = false;
+                pos = pos0;
+                while (true) {
+                    var ch = source.charCodeAt(pos);
+                    if (minusAllowed && (ch == 43 || ch == 45)) {
+                        // ok
+                    }
+                    else {
+                        minusAllowed = false;
+                        if (ch == 95 || isDigit(ch)) {
+                            // OK
+                        }
+                        else if (!seenE && !seenDot && ch == 46) {
+                            seenDot = true;
+                        }
+                        else if (!seenE && (ch == 69 || ch == 101)) {
+                            seenE = true;
+                            minusAllowed = true;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                    num += String.fromCharCode(ch);
+                    pos++;
+                }
+                if (!seenDot && !seenE && c1 == "0" && num.length > 1 && !/^0+/.test(num))
+                    addError(pxt.U.lf("unexpected leading zero"));
+                var p = parseFloat(num);
+                if (isNaN(p))
+                    addError(pxt.U.lf("invalid number"));
+                addToken(TokenType.Number, num, p);
+            }
+            function parseDot() {
+                if (isDigit(source.charCodeAt(pos)))
+                    parseNumber();
+                else
+                    addToken(TokenType.Op, "Dot");
+            }
+            function isDigit(ch) {
+                return (48 <= ch && ch <= 57);
+            }
+            function invalidToken() {
+                addError(pxt.U.lf("invalid token"));
+            }
+            function initAsciiParse() {
+                var specialParse = {
+                    "\"": parseString,
+                    "'": parseString,
+                    "#": parseComment,
+                    "\\": parseBackslash,
+                    ".": parseDot,
+                };
+                allOps = pxt.U.clone(nonEqOps);
+                for (var _i = 0, _a = Object.keys(eqOps); _i < _a.length; _i++) {
+                    var k = _a[_i];
+                    allOps[k] = eqOps[k];
+                    allOps[k + "="] = eqOps[k] + "Assign";
+                }
+                revOps = {};
+                for (var _b = 0, _c = Object.keys(allOps); _b < _c.length; _b++) {
+                    var k = _c[_b];
+                    revOps[allOps[k]] = k;
+                }
+                var _loop_3 = function (i) {
+                    if (py.rx.isIdentifierStart(i))
+                        asciiParse[i] = parseId;
+                    else {
+                        var s = String.fromCharCode(i);
+                        if (specialParse.hasOwnProperty(s)) {
+                            asciiParse[i] = specialParse[s];
+                        }
+                        else if (allOps.hasOwnProperty(s)) {
+                            var canBeLengthened = false;
+                            var op_1 = allOps[s];
+                            for (var _i = 0, _a = Object.keys(allOps); _i < _a.length; _i++) {
+                                var kk = _a[_i];
+                                if (kk != s && kk.startsWith(s)) {
+                                    canBeLengthened = true;
+                                }
+                            }
+                            if (canBeLengthened) {
+                                asciiParse[i] = function () { return multiOp(op_1); };
+                            }
+                            else {
+                                asciiParse[i] = function () { return singleOp(op_1); };
+                            }
+                        }
+                        else if (py.rx.isSpace(i)) {
+                            asciiParse[i] = function () { };
+                        }
+                        else if (i == 13) {
+                            asciiParse[i] = function () {
+                                if (source.charCodeAt(pos) == 10)
+                                    pos++;
+                                singleNewline();
+                            };
+                        }
+                        else if (py.rx.isNewline(i)) {
+                            asciiParse[i] = singleNewline;
+                        }
+                        else if (isDigit(i)) {
+                            asciiParse[i] = parseNumber;
+                        }
+                        else {
+                            asciiParse[i] = invalidToken;
+                        }
+                    }
+                };
+                for (var i = 0; i < 128; ++i) {
+                    _loop_3(i);
+                }
+            }
+        }
+        py.lex = lex;
+    })(py = pxt.py || (pxt.py = {}));
+})(pxt || (pxt = {}));
+// Grammar is here: https://docs.python.org/3/reference/grammar.html
+var pxt;
+(function (pxt) {
+    var py;
+    (function (py) {
+        var inParens;
+        var tokens;
+        var source;
+        var filename;
+        var nextToken;
+        var currComments;
+        var indentStack;
+        var prevToken;
+        var diags;
+        var traceParser = false;
+        var traceLev = "";
+        function fakeToken(tp, val) {
+            return {
+                type: tp,
+                value: val,
+                startPos: 0,
+                endPos: 0
+            };
+        }
+        function traceAST(tp, r) {
+            if (traceParser) {
+                pxt.log(traceLev + tp + ": " + r.kind);
+            }
+        }
+        function peekToken() {
+            return tokens[nextToken];
+        }
+        function skipTokens() {
+            for (; tokens[nextToken]; nextToken++) {
+                var t = tokens[nextToken];
+                if (t.type == py.TokenType.Comment) {
+                    currComments.push(t);
+                    continue;
+                }
+                if (inParens >= 0 && t.type == py.TokenType.Op)
+                    switch (t.value) {
+                        case "LParen":
+                        case "LSquare":
+                        case "LBracket":
+                            inParens++;
+                            break;
+                        case "RParen":
+                        case "RSquare":
+                        case "RBracket":
+                            inParens--;
+                            break;
+                    }
+                if (t.type == py.TokenType.Error) {
+                    error(9551, t.value);
+                    continue;
+                }
+                if (inParens > 0) {
+                    if (t.type == py.TokenType.NewLine || t.type == py.TokenType.Indent)
+                        continue;
+                }
+                else {
+                    if (t.type == py.TokenType.Indent) {
+                        if (tokens[nextToken + 1].type == py.TokenType.NewLine) {
+                            nextToken++;
+                            continue; // skip empty lines
+                        }
+                        var curr = parseInt(t.value);
+                        var top_1 = indentStack[indentStack.length - 1];
+                        if (curr == top_1)
+                            continue;
+                        else if (curr > top_1) {
+                            indentStack.push(curr);
+                            return;
+                        }
+                        else {
+                            t.type = py.TokenType.Dedent;
+                            var numPop = 0;
+                            while (indentStack.length) {
+                                var top_2 = indentStack[indentStack.length - 1];
+                                if (top_2 > curr) {
+                                    indentStack.pop();
+                                    numPop++;
+                                }
+                                else {
+                                    if (top_2 != curr)
+                                        error(9552, pxt.U.lf("inconsitent indentation"));
+                                    // in case there is more than one dedent, replicate current dedent token
+                                    while (numPop > 1) {
+                                        tokens.splice(nextToken, 0, t);
+                                        numPop--;
+                                    }
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                return;
+            }
+        }
+        function shiftToken() {
+            prevToken = peekToken();
+            if (prevToken.type == py.TokenType.EOF)
+                return;
+            nextToken++;
+            skipTokens();
+            // console.log(`TOK: ${tokenToString(peekToken())}`)
+        }
+        // next error 9574 (limit 9599)
+        function error(code, msg) {
+            if (!msg)
+                msg = pxt.U.lf("invalid syntax");
+            if (!code)
+                code = 9550;
+            var tok = peekToken();
+            var d = {
+                code: code,
+                category: pxtc.DiagnosticCategory.Error,
+                messageText: pxt.U.lf("{0} near {1}", msg, py.friendlyTokenToString(tok, source)),
+                fileName: filename,
+                start: tok.startPos,
+                length: tok.endPos ? tok.endPos - tok.startPos : 0,
+                line: 0,
+                column: 0
+            };
+            py.patchPosition(d, source);
+            if (traceParser)
+                pxt.log(traceLev + "TS" + code + " " + d.messageText + " at " + (d.line + 1) + "," + (d.column + 1));
+            diags.push(d);
+            if (code != 9572 && diags.length > 100)
+                pxt.U.userError(pxt.U.lf("too many parse errors"));
+        }
+        function expect(tp, val) {
+            var t = peekToken();
+            if (t.type != tp || t.value != val) {
+                error(9553, pxt.U.lf("expecting {0}", py.tokenToString(fakeToken(tp, val))));
+                if (t.type == py.TokenType.NewLine)
+                    return; // don't shift
+            }
+            shiftToken();
+        }
+        function expectNewline() {
+            expect(py.TokenType.NewLine, "");
+        }
+        function expectKw(kw) {
+            expect(py.TokenType.Keyword, kw);
+        }
+        function expectOp(op) {
+            expect(py.TokenType.Op, op);
+        }
+        function currentKw() {
+            var t = peekToken();
+            if (t.type == py.TokenType.Keyword)
+                return t.value;
+            return "";
+        }
+        function currentOp() {
+            var t = peekToken();
+            if (t.type == py.TokenType.Op)
+                return t.value;
+            return "";
+        }
+        var compound_stmt_map = {
+            "if": if_stmt,
+            "while": while_stmt,
+            "for": for_stmt,
+            "try": try_stmt,
+            "with": with_stmt,
+            "def": funcdef,
+            "class": classdef,
+        };
+        var small_stmt_map = {
+            "del": del_stmt,
+            "pass": pass_stmt,
+            "break": break_stmt,
+            "continue": continue_stmt,
+            "return": return_stmt,
+            "raise": raise_stmt,
+            "global": global_stmt,
+            "nonlocal": nonlocal_stmt,
+            "import": import_name,
+            "from": import_from,
+            "assert": assert_stmt,
+            "yield": yield_stmt,
+        };
+        function colon_suite() {
+            expectOp("Colon");
+            return suite();
+        }
+        function suite() {
+            if (peekToken().type == py.TokenType.NewLine) {
+                var prevTr = traceLev;
+                if (traceParser) {
+                    pxt.log(traceLev + "{");
+                    traceLev += "  ";
+                }
+                shiftToken();
+                var outputRange = void 0;
+                if (peekToken().type != py.TokenType.Indent) {
+                    error(9554, pxt.U.lf("expected an indented block"));
+                    outputRange = stmt();
+                }
+                else {
+                    var level = parseInt(peekToken().value);
+                    shiftToken();
+                    outputRange = stmt();
+                    for (;;) {
+                        if (peekToken().type == py.TokenType.Dedent) {
+                            var isFinal = (isNaN(level) || parseInt(peekToken().value) < level);
+                            shiftToken();
+                            if (isFinal)
+                                break;
+                        }
+                        pxt.U.pushRange(outputRange, stmt());
+                    }
+                }
+                if (traceParser) {
+                    traceLev = prevTr;
+                    pxt.log(traceLev + "}");
+                }
+                return outputRange;
+            }
+            else {
+                return simple_stmt();
+            }
+        }
+        function mkAST(kind, beg) {
+            var t = beg || peekToken();
+            return {
+                startPos: t.startPos,
+                endPos: t.endPos,
+                kind: kind
+            };
+        }
+        function finish(v) {
+            v.endPos = prevToken.endPos;
+            return v;
+        }
+        function orelse() {
+            if (currentKw() == "else") {
+                shiftToken();
+                return colon_suite();
+            }
+            return [];
+        }
+        function while_stmt() {
+            var r = mkAST("While");
+            expectKw("while");
+            r.test = test();
+            r.body = colon_suite();
+            r.orelse = orelse();
+            return finish(r);
+        }
+        function if_stmt() {
+            var r = mkAST("If");
+            shiftToken();
+            r.test = test();
+            r.body = colon_suite();
+            if (currentKw() == "elif") {
+                r.orelse = [if_stmt()];
+            }
+            else {
+                r.orelse = orelse();
+            }
+            return finish(r);
+        }
+        function for_stmt() {
+            var r = mkAST("For");
+            expectKw("for");
+            r.target = exprlist();
+            setStoreCtx(r.target);
+            expectKw("in");
+            r.iter = testlist();
+            r.body = colon_suite();
+            r.orelse = orelse();
+            return finish(r);
+        }
+        function try_stmt() {
+            var r = mkAST("Try");
+            expectKw("try");
+            r.body = colon_suite();
+            r.handlers = [];
+            var sawDefault = false;
+            for (;;) {
+                if (currentKw() == "except") {
+                    var eh = mkAST("ExceptHandler");
+                    r.handlers.push(eh);
+                    shiftToken();
+                    if (currentOp() != "Colon") {
+                        if (sawDefault)
+                            error();
+                        eh.type = test();
+                        if (currentKw() == "as") {
+                            shiftToken();
+                            eh.name = name();
+                        }
+                        else {
+                            eh.name = undefined;
+                        }
+                    }
+                    else {
+                        sawDefault = true;
+                        eh.type = undefined;
+                        eh.name = undefined;
+                    }
+                    eh.body = colon_suite();
+                }
+                else {
+                    break;
+                }
+            }
+            r.orelse = orelse();
+            if (r.handlers.length == 0 && r.orelse.length)
+                error();
+            if (currentKw() == "finally") {
+                shiftToken();
+                r.finalbody = colon_suite();
+            }
+            else {
+                r.finalbody = [];
+            }
+            return finish(r);
+        }
+        function raise_stmt() {
+            var r = mkAST("Raise");
+            expectKw("raise");
+            r.exc = undefined;
+            r.cause = undefined;
+            if (!atStmtEnd()) {
+                r.exc = test();
+                if (currentKw() == "from") {
+                    shiftToken();
+                    r.cause = test();
+                }
+            }
+            return finish(r);
+        }
+        function with_item() {
+            var r = mkAST("WithItem");
+            r.context_expr = test();
+            r.optional_vars = undefined;
+            if (currentKw() == "as") {
+                shiftToken();
+                r.optional_vars = expr();
+            }
+            return finish(r);
+        }
+        function with_stmt() {
+            var r = mkAST("With");
+            expectKw("with");
+            r.items = parseSepList(pxt.U.lf("with item"), with_item);
+            r.body = colon_suite();
+            return finish(r);
+        }
+        function funcdef() {
+            var r = mkAST("FunctionDef");
+            expectKw("def");
+            r.name = name();
+            expectOp("LParen");
+            r.args = parse_arguments(true);
+            expectOp("RParen");
+            r.returns = undefined;
+            if (currentOp() == "Arrow") {
+                shiftToken();
+                r.returns = test();
+            }
+            r.body = colon_suite();
+            return finish(r);
+        }
+        function classdef() {
+            var r = mkAST("ClassDef");
+            expectKw("class");
+            r.name = name();
+            if (currentOp() == "LParen") {
+                var rr = parseArgs();
+                r.bases = rr.args;
+                r.keywords = rr.keywords;
+            }
+            else {
+                r.bases = [];
+                r.keywords = [];
+            }
+            r.body = colon_suite();
+            return finish(r);
+        }
+        function del_stmt() {
+            var r = mkAST("Delete");
+            expectKw("del");
+            r.targets = parseList(pxt.U.lf("expression"), expr);
+            return finish(r);
+        }
+        function wrap_expr_stmt(e) {
+            var r = mkAST("ExprStmt");
+            r.startPos = e.startPos;
+            r.endPos = e.endPos;
+            r.value = e;
+            return r;
+        }
+        function yield_stmt() {
+            var t0 = peekToken();
+            shiftToken();
+            if (currentKw() == "from") {
+                var r_1 = mkAST("YieldFrom");
+                r_1.value = test();
+                return wrap_expr_stmt(finish(r_1));
+            }
+            var r = mkAST("Yield");
+            if (!atStmtEnd())
+                r.value = testlist();
+            return wrap_expr_stmt(finish(r));
+        }
+        function pass_stmt() {
+            var r = mkAST("Pass");
+            expectKw("pass");
+            return finish(r);
+        }
+        function atStmtEnd() {
+            var t = peekToken();
+            return t.type == py.TokenType.NewLine || (t.type == py.TokenType.Op && t.value == "Semicolon");
+        }
+        function break_stmt() {
+            var r = mkAST("Break");
+            shiftToken();
+            return finish(r);
+        }
+        function continue_stmt() {
+            var r = mkAST("Continue");
+            shiftToken();
+            return finish(r);
+        }
+        function return_stmt() {
+            var r = mkAST("Return");
+            shiftToken();
+            if (!atStmtEnd()) {
+                r.value = testlist();
+            }
+            else {
+                r.value = undefined;
+            }
+            return finish(r);
+        }
+        function global_stmt() {
+            var r = mkAST("Global");
+            shiftToken();
+            r.names = [];
+            for (;;) {
+                r.names.push(name());
+                if (currentOp() == "Comma") {
+                    shiftToken();
+                }
+                else {
+                    break;
+                }
+            }
+            return finish(r);
+        }
+        function nonlocal_stmt() {
+            var r = global_stmt();
+            r.kind = "Nonlocal";
+            return r;
+        }
+        function dotted_name() {
+            var s = "";
+            for (;;) {
+                s += name();
+                if (currentOp() == "Dot") {
+                    s += ".";
+                    shiftToken();
+                }
+                else {
+                    return s;
+                }
+            }
+        }
+        function dotted_as_name() {
+            var r = mkAST("Alias");
+            r.name = dotted_name();
+            if (currentKw() == "as") {
+                shiftToken();
+                r.asname = name();
+            }
+            else {
+                r.asname = undefined;
+            }
+            return finish(r);
+        }
+        function import_as_name() {
+            var r = mkAST("Alias");
+            r.name = name();
+            if (currentKw() == "as") {
+                shiftToken();
+                r.asname = name();
+            }
+            else {
+                r.asname = undefined;
+            }
+            return finish(r);
+        }
+        function dots() {
+            var r = 0;
+            for (;;) {
+                if (currentOp() == "Dot") {
+                    r += 1;
+                    shiftToken();
+                }
+                else if (currentOp() == "Ellipsis") {
+                    // not currently generated by lexer anyways
+                    r += 3;
+                    shiftToken();
+                }
+                else {
+                    return r;
+                }
+            }
+        }
+        function import_name() {
+            var r = mkAST("Import");
+            shiftToken();
+            r.names = parseSepList(pxt.U.lf("import name"), dotted_as_name);
+            return finish(r);
+        }
+        function import_from() {
+            var r = mkAST("ImportFrom");
+            shiftToken();
+            r.level = dots();
+            if (peekToken().type == py.TokenType.Id)
+                r.module = dotted_name();
+            else
+                r.module = undefined;
+            if (!r.level && !r.module)
+                error();
+            expectKw("import");
+            if (currentOp() == "Mult") {
+                shiftToken();
+                var star = mkAST("Alias");
+                star.name = "*";
+                r.names = [star];
+            }
+            else if (currentOp() == "LParen") {
+                shiftToken();
+                r.names = parseList(pxt.U.lf("import name"), import_as_name);
+                expectOp("RParen");
+            }
+            else {
+                r.names = parseList(pxt.U.lf("import name"), import_as_name);
+            }
+            return finish(r);
+        }
+        function assert_stmt() {
+            var r = mkAST("Assert");
+            shiftToken();
+            r.test = test();
+            if (currentOp() == "Comma") {
+                shiftToken();
+                r.msg = test();
+            }
+            else
+                r.msg = undefined;
+            return finish(r);
+        }
+        function tuple(t0, exprs) {
+            var tupl = mkAST("Tuple", t0);
+            tupl.elts = exprs;
+            return finish(tupl);
+        }
+        function testlist_core(f) {
+            var t0 = peekToken();
+            var exprs = parseList(pxt.U.lf("expression"), f);
+            var expr = exprs[0];
+            if (exprs.length != 1)
+                return tuple(t0, exprs);
+            return expr;
+        }
+        function testlist_star_expr() { return testlist_core(star_or_test); }
+        function testlist() { return testlist_core(test); }
+        function exprlist() { return testlist_core(expr); }
+        // somewhat approximate
+        function setStoreCtx(e) {
+            if (e.kind == "Tuple") {
+                var t = e;
+                t.elts.forEach(setStoreCtx);
+            }
+            else {
+                e.ctx = "Store";
+            }
+        }
+        function expr_stmt() {
+            var t0 = peekToken();
+            var expr = testlist_star_expr();
+            var op = currentOp();
+            if (op == "Assign") {
+                var assign = mkAST("Assign");
+                assign.targets = [expr];
+                for (;;) {
+                    shiftToken();
+                    expr = testlist_star_expr();
+                    op = currentOp();
+                    if (op == "Assign") {
+                        assign.targets.push(expr);
+                    }
+                    else {
+                        assign.value = expr;
+                        break;
+                    }
+                }
+                assign.targets.forEach(setStoreCtx);
+                return finish(assign);
+            }
+            if (op == "Colon") {
+                var annAssign = mkAST("AnnAssign");
+                annAssign.target = expr;
+                shiftToken();
+                annAssign.annotation = test();
+                if (currentOp() == "Assign") {
+                    shiftToken();
+                    annAssign.value = test();
+                }
+                annAssign.simple = t0.type == py.TokenType.Id && expr.kind == "Name" ? 1 : 0;
+                setStoreCtx(annAssign.target);
+                return finish(annAssign);
+            }
+            if (pxt.U.endsWith(op, "Assign")) {
+                var augAssign = mkAST("AugAssign");
+                augAssign.target = expr;
+                augAssign.op = op.replace("Assign", "");
+                shiftToken();
+                augAssign.value = testlist();
+                setStoreCtx(augAssign.target);
+                return finish(augAssign);
+            }
+            if (op == "Semicolon" || peekToken().type == py.TokenType.NewLine) {
+                var exprStmt = mkAST("ExprStmt");
+                exprStmt.value = expr;
+                return finish(exprStmt);
+            }
+            error(9555, pxt.U.lf("unexpected token"));
+            shiftToken();
+            return null;
+        }
+        function small_stmt() {
+            var fn = pxt.U.lookup(small_stmt_map, currentKw());
+            if (fn)
+                return fn();
+            else
+                return expr_stmt();
+        }
+        function simple_stmt() {
+            var res = [small_stmt()];
+            while (currentOp() == "Semicolon") {
+                shiftToken();
+                if (peekToken().type == py.TokenType.NewLine)
+                    break;
+                res.push(small_stmt());
+            }
+            expectNewline();
+            return res.filter(function (s) { return !!s; });
+        }
+        function stmt() {
+            var prevErr = diags.length;
+            var hasIndentationError = peekToken().type == py.TokenType.Indent;
+            if (hasIndentationError) {
+                shiftToken();
+                error(9573, pxt.U.lf("unexpected indent"));
+            }
+            var decorators = [];
+            while (currentOp() == "MatMult") {
+                shiftToken();
+                decorators.push(atom_expr());
+                expectNewline();
+            }
+            var kw = currentKw();
+            var fn = pxt.U.lookup(compound_stmt_map, currentKw());
+            var rr = [];
+            var comments = currComments;
+            currComments = [];
+            if (kw == "class" || kw == "def") {
+                var r = fn();
+                r.decorator_list = decorators;
+                rr = [r];
+            }
+            else if (decorators.length) {
+                error(9556, pxt.U.lf("decorators not allowed here"));
+            }
+            else if (fn)
+                rr = [fn()];
+            else
+                rr = simple_stmt();
+            if (comments.length && rr.length)
+                rr[0]._comments = comments;
+            // there were errors in this stmt; skip tokens until newline to resync
+            var skp = [];
+            if (diags.length > prevErr) {
+                inParens = -1;
+                while (prevToken.type != py.TokenType.Dedent && prevToken.type != py.TokenType.NewLine) {
+                    shiftToken();
+                    if (traceParser)
+                        skp.push(py.tokenToString(peekToken()));
+                    if (peekToken().type == py.TokenType.EOF)
+                        break;
+                }
+                if (hasIndentationError && peekToken().type === py.TokenType.Dedent) {
+                    shiftToken();
+                }
+                inParens = 0;
+                if (traceParser)
+                    pxt.log(traceLev + "skip: " + skp.join(", "));
+            }
+            if (traceParser)
+                for (var _i = 0, rr_1 = rr; _i < rr_1.length; _i++) {
+                    var r = rr_1[_i];
+                    traceAST("stmt", r);
+                }
+            return rr;
+        }
+        function parse_arguments(allowTypes) {
+            var r = mkAST("Arguments");
+            r.args = [];
+            r.defaults = [];
+            r.kwonlyargs = [];
+            r.kw_defaults = [];
+            r.vararg = undefined;
+            for (;;) {
+                var o = currentOp();
+                if (o == "Colon" || o == "RParen")
+                    break;
+                if (o == "Mult") {
+                    if (r.vararg)
+                        error(9557, pxt.U.lf("multiple *arg"));
+                    shiftToken();
+                    if (peekToken().type == py.TokenType.Id)
+                        r.vararg = pdef();
+                    else
+                        r.vararg = undefined;
+                }
+                else if (o == "Pow") {
+                    if (r.kwarg)
+                        error(9558, pxt.U.lf("multiple **arg"));
+                    shiftToken();
+                    r.kwarg = pdef();
+                }
+                else {
+                    if (r.kwarg)
+                        error(9559, pxt.U.lf("arguments after **"));
+                    var a = pdef();
+                    var defl = undefined;
+                    if (currentOp() == "Assign") {
+                        shiftToken();
+                        defl = test();
+                    }
+                    if (r.vararg !== undefined && defl) {
+                        r.kwonlyargs.push(a);
+                        r.kw_defaults.push(defl);
+                    }
+                    else {
+                        r.args.push(a);
+                        if (defl)
+                            r.defaults.push(defl);
+                        else if (r.defaults.length)
+                            error(9560, pxt.U.lf("non-default argument follows default argument"));
+                    }
+                }
+                if (currentOp() == "Comma") {
+                    shiftToken();
+                }
+                else {
+                    break;
+                }
+            }
+            if (!r.kwarg)
+                r.kwarg = undefined;
+            if (!r.vararg)
+                r.vararg = undefined;
+            return finish(r);
+            function pdef() {
+                var r = mkAST("Arg");
+                r.arg = name();
+                r.annotation = undefined;
+                if (allowTypes) {
+                    if (currentOp() == "Colon") {
+                        shiftToken();
+                        r.annotation = test();
+                    }
+                }
+                return r;
+            }
+        }
+        function lambdef(noCond) {
+            var r = mkAST("Lambda");
+            shiftToken();
+            r.args = parse_arguments(false);
+            expectOp("Colon");
+            r.body = noCond ? test_nocond() : test();
+            return finish(r);
+        }
+        function test() {
+            if (currentKw() == "lambda")
+                return lambdef();
+            var t0 = peekToken();
+            var t = or_test();
+            if (currentKw() == "if") {
+                var r = mkAST("IfExp", t0);
+                r.body = t;
+                expectKw("if");
+                r.test = or_test();
+                expectKw("else");
+                r.orelse = test();
+                return finish(r);
+            }
+            return t;
+        }
+        function bool_test(op, f) {
+            var t0 = peekToken();
+            var r = f();
+            if (currentKw() == op) {
+                var rr = mkAST("BoolOp", t0);
+                rr.op = op == "or" ? "Or" : "And";
+                rr.values = [r];
+                while (currentKw() == op) {
+                    expectKw(op);
+                    rr.values.push(f());
+                }
+                return finish(rr);
+            }
+            return r;
+        }
+        function and_test() {
+            return bool_test("and", not_test);
+        }
+        function or_test() {
+            return bool_test("or", and_test);
+        }
+        function not_test() {
+            if (currentKw() == "not") {
+                var r = mkAST("UnaryOp");
+                shiftToken();
+                r.op = "Not";
+                r.operand = not_test();
+                return finish(r);
+            }
+            else
+                return comparison();
+        }
+        var cmpOpMap = {
+            'Lt': "Lt",
+            'Gt': "Gt",
+            'Eq': "Eq",
+            'GtE': "GtE",
+            'LtE': "LtE",
+            'NotEq': "NotEq",
+            'in': "In",
+            'not': "NotIn",
+            'is': "Is",
+        };
+        function getCmpOp() {
+            return cmpOpMap[currentOp()] || cmpOpMap[currentKw()] || null;
+        }
+        function comparison() {
+            var t0 = peekToken();
+            var e = expr();
+            if (!getCmpOp())
+                return e;
+            var r = mkAST("Compare", t0);
+            r.left = e;
+            r.comparators = [];
+            r.ops = [];
+            while (true) {
+                var c = getCmpOp();
+                if (!c)
+                    break;
+                shiftToken();
+                if (c == "NotIn")
+                    expectKw("in");
+                else if (c == "Is") {
+                    if (currentKw() == "not") {
+                        shiftToken();
+                        c = "IsNot";
+                    }
+                }
+                r.ops.push(c);
+                r.comparators.push(expr());
+            }
+            return finish(r);
+        }
+        var unOpMap = {
+            'Invert': "Invert",
+            'Sub': "USub",
+            'Add': "UAdd",
+        };
+        function binOp(f, ops) {
+            var t0 = peekToken();
+            var e = f();
+            for (;;) {
+                var o = currentOp();
+                if (o && ops.indexOf("," + o + ",") >= 0) {
+                    var r = mkAST("BinOp", t0);
+                    r.left = e;
+                    r.op = o;
+                    shiftToken();
+                    r.right = f();
+                    e = r;
+                }
+                else {
+                    return e;
+                }
+            }
+        }
+        function term() { return binOp(factor, ",Mult,MatMult,Div,Mod,FloorDiv,"); }
+        function arith_expr() { return binOp(term, ",Add,Sub,"); }
+        function shift_expr() { return binOp(arith_expr, ",LShift,RShift,"); }
+        function and_expr() { return binOp(shift_expr, ",BitAnd,"); }
+        function xor_expr() { return binOp(and_expr, ",BitXor,"); }
+        function expr() { return binOp(xor_expr, ",BitOr,"); }
+        function subscript() {
+            var t0 = peekToken();
+            var lower = undefined;
+            if (currentOp() != "Colon") {
+                lower = test();
+            }
+            if (currentOp() == "Colon") {
+                var r = mkAST("Slice", t0);
+                r.lower = lower;
+                shiftToken();
+                var o = currentOp();
+                if (o != "Colon" && o != "Comma" && o != "RSquare")
+                    r.upper = test();
+                else
+                    r.upper = undefined;
+                r.step = undefined;
+                if (currentOp() == "Colon") {
+                    shiftToken();
+                    o = currentOp();
+                    if (o != "Comma" && o != "RSquare")
+                        r.step = test();
+                }
+                return finish(r);
+            }
+            else {
+                if (!lower)
+                    error(9570, pxt.U.lf("unable to parse lower subscript"));
+                var r = mkAST("Index");
+                r.value = lower;
+                return finish(r);
+            }
+        }
+        function star_or_test() {
+            if (currentOp() == "Mult") {
+                var r = mkAST("Starred");
+                r.value = expr();
+                return finish(r);
+            }
+            else {
+                return test();
+            }
+        }
+        function test_nocond() {
+            if (currentKw() == "lambda")
+                return lambdef(true);
+            else
+                return or_test();
+        }
+        function comp_for() {
+            var rr = [];
+            for (;;) {
+                var r = mkAST("Comprehension");
+                r.is_async = 0;
+                rr.push(r);
+                expectKw("for");
+                r.target = exprlist();
+                setStoreCtx(r.target);
+                expectKw("in");
+                r.iter = or_test();
+                r.ifs = [];
+                for (;;) {
+                    if (currentKw() == "if") {
+                        shiftToken();
+                        r.ifs.push(test_nocond());
+                    }
+                    else
+                        break;
+                }
+                if (currentKw() != "for")
+                    return rr;
+            }
+        }
+        function argument() {
+            var t0 = peekToken();
+            if (currentOp() == "Mult") {
+                var r = mkAST("Starred");
+                shiftToken();
+                r.value = test();
+                return finish(r);
+            }
+            if (currentOp() == "Pow") {
+                var r = mkAST("Keyword");
+                shiftToken();
+                r.arg = undefined;
+                r.value = test();
+                return finish(r);
+            }
+            var e = test();
+            if (currentOp() == "Assign") {
+                if (e.kind != "Name") {
+                    error(9561, pxt.U.lf("invalid keyword argument; did you mean ==?"));
+                }
+                shiftToken();
+                var r = mkAST("Keyword", t0);
+                r.arg = e.id || "???";
+                r.value = test();
+                return finish(r);
+            }
+            else if (currentKw() == "for") {
+                var r = mkAST("GeneratorExp", t0);
+                r.elt = e;
+                r.generators = comp_for();
+                return finish(r);
+            }
+            else {
+                return e;
+            }
+        }
+        function dictorsetmaker() {
+            var t0 = peekToken();
+            shiftToken();
+            if (currentOp() == "Pow") {
+                shiftToken();
+                return dict(undefined, expr());
+            }
+            else if (currentOp() == "RBracket") {
+                var r = mkAST("Dict", t0);
+                shiftToken();
+                r.keys = [];
+                r.values = [];
+                return finish(r);
+            }
+            else {
+                var e = star_or_test();
+                if (e.kind != "Starred" && currentOp() == "Colon") {
+                    shiftToken();
+                    return dict(e, test());
+                }
+                else {
+                    return set(e);
+                }
+            }
+            function set(e) {
+                if (currentKw() == "for") {
+                    if (e.kind == "Starred")
+                        error(9562, pxt.U.lf("iterable unpacking cannot be used in comprehension"));
+                    var r_2 = mkAST("SetComp", t0);
+                    r_2.elt = e;
+                    r_2.generators = comp_for();
+                    return finish(r_2);
+                }
+                var r = mkAST("Set", t0);
+                r.elts = [e];
+                if (currentOp() == "Comma") {
+                    var rem = parseParenthesizedList("RBracket", pxt.U.lf("set element"), star_or_test);
+                    r.elts = [e].concat(rem);
+                }
+                else {
+                    expectOp("RBracket");
+                }
+                return finish(r);
+            }
+            function dictelt() {
+                if (currentOp() == "Pow") {
+                    shiftToken();
+                    return [null, expr()];
+                }
+                else {
+                    var e = test();
+                    expectOp("Colon");
+                    return [e, test()];
+                }
+            }
+            function dict(key0, value0) {
+                if (currentKw() == "for") {
+                    if (!key0)
+                        error(9563, pxt.U.lf("dict unpacking cannot be used in dict comprehension"));
+                    var r_3 = mkAST("DictComp", t0);
+                    r_3.key = key0;
+                    r_3.value = value0;
+                    r_3.generators = comp_for();
+                    return finish(r_3);
+                }
+                var r = mkAST("Dict", t0);
+                r.keys = [key0];
+                r.values = [value0];
+                if (currentOp() == "Comma") {
+                    var rem = parseParenthesizedList("RBracket", pxt.U.lf("dict element"), dictelt);
+                    for (var _i = 0, rem_1 = rem; _i < rem_1.length; _i++) {
+                        var e = rem_1[_i];
+                        if (e.length >= 2 && e[0] && e[1]) {
+                            r.keys.push(e[0]);
+                            r.values.push(e[1]);
+                        }
+                    }
+                }
+                else {
+                    expectOp("RBracket");
+                }
+                return finish(r);
+            }
+        }
+        function shiftAndFake() {
+            var r = mkAST("NameConstant");
+            r.value = undefined;
+            shiftToken();
+            return finish(r);
+        }
+        function atom() {
+            var t = peekToken();
+            if (t.type == py.TokenType.Id) {
+                var r = mkAST("Name");
+                shiftToken();
+                r.id = t.value;
+                r.ctx = "Load";
+                return finish(r);
+            }
+            else if (t.type == py.TokenType.Number) {
+                var r = mkAST("Num");
+                shiftToken();
+                r.ns = t.value;
+                r.n = t.auxValue;
+                return finish(r);
+            }
+            else if (t.type == py.TokenType.String) {
+                shiftToken();
+                var s = t.value;
+                while (peekToken().type == py.TokenType.String) {
+                    s += peekToken().value;
+                    shiftToken();
+                }
+                if (t.stringPrefix == "b") {
+                    var r = mkAST("Bytes", t);
+                    r.s = pxt.U.toArray(pxt.U.stringToUint8Array(s));
+                    return finish(r);
+                }
+                else {
+                    var r = mkAST("Str", t);
+                    r.s = s;
+                    return finish(r);
+                }
+            }
+            else if (t.type == py.TokenType.Keyword) {
+                if (t.value == "None" || t.value == "True" || t.value == "False") {
+                    var r = mkAST("NameConstant");
+                    shiftToken();
+                    r.value = t.value == "True" ? true : t.value == "False" ? false : undefined;
+                    return finish(r);
+                }
+                else {
+                    error(9564, pxt.U.lf("expecting atom"));
+                    return shiftAndFake();
+                }
+            }
+            else if (t.type == py.TokenType.Op) {
+                var o = t.value;
+                if (o == "LParen") {
+                    return parseParens("RParen", "Tuple", "GeneratorExp");
+                }
+                else if (o == "LSquare") {
+                    return parseParens("RSquare", "List", "ListComp");
+                }
+                else if (o == "LBracket") {
+                    return dictorsetmaker();
+                }
+                else {
+                    error(9565, pxt.U.lf("unexpected operator"));
+                    return shiftAndFake();
+                }
+            }
+            else {
+                error(9566, pxt.U.lf("unexpected token"));
+                return shiftAndFake();
+            }
+        }
+        function atListEnd() {
+            var op = currentOp();
+            if (op == "RParen" || op == "RSquare" || op == "RBracket" ||
+                op == "Colon" || op == "Semicolon")
+                return true;
+            if (pxt.U.endsWith(op, "Assign"))
+                return true;
+            var kw = currentKw();
+            if (kw == "in")
+                return true;
+            if (peekToken().type == py.TokenType.NewLine)
+                return true;
+            return false;
+        }
+        function parseList(category, f) {
+            var r = [];
+            if (atListEnd())
+                return r;
+            for (;;) {
+                r.push(f());
+                var hasComma = currentOp() == "Comma";
+                if (hasComma)
+                    shiftToken();
+                // final comma is allowed, so no "else if" here
+                if (atListEnd()) {
+                    return r;
+                }
+                else {
+                    if (!hasComma) {
+                        error(9567, pxt.U.lf("expecting {0}", category));
+                        return r;
+                    }
+                }
+            }
+        }
+        function parseSepList(category, f) {
+            var r = [];
+            for (;;) {
+                r.push(f());
+                if (currentOp() == "Comma")
+                    shiftToken();
+                else
+                    break;
+            }
+            return r;
+        }
+        function parseParenthesizedList(cl, category, f) {
+            shiftToken();
+            var r = [];
+            if (currentOp() != cl)
+                for (;;) {
+                    r.push(f());
+                    var hasComma = currentOp() == "Comma";
+                    if (hasComma)
+                        shiftToken();
+                    // final comma is allowed, so no "else if" here
+                    if (currentOp() == cl) {
+                        break;
+                    }
+                    else {
+                        if (!hasComma) {
+                            error(9568, pxt.U.lf("expecting {0}", category));
+                            break;
+                        }
+                    }
+                }
+            expectOp(cl);
+            return r;
+        }
+        function parseParens(cl, tuple, comp) {
+            var t0 = peekToken();
+            shiftToken();
+            if (currentOp() == cl) {
+                shiftToken();
+                var r = mkAST(tuple, t0);
+                r.elts = [];
+                return finish(r);
+            }
+            var e0 = star_or_test();
+            if (currentKw() == "for") {
+                var r = mkAST(comp, t0);
+                r.elt = e0;
+                r.generators = comp_for();
+                expectOp(cl);
+                return finish(r);
+            }
+            if (currentOp() == "Comma") {
+                var r = mkAST(tuple, t0);
+                shiftToken();
+                r.elts = parseList(pxt.U.lf("expression"), star_or_test);
+                r.elts.unshift(e0);
+                expectOp(cl);
+                return finish(r);
+            }
+            expectOp(cl);
+            if (tuple == "List") {
+                var r = mkAST(tuple, t0);
+                r.elts = [e0];
+                return finish(r);
+            }
+            return e0;
+        }
+        function name() {
+            var t = peekToken();
+            if (t.type != py.TokenType.Id)
+                error(9569, pxt.U.lf("expecting identifier"));
+            shiftToken();
+            return t.value;
+        }
+        function parseArgs() {
+            var args = parseParenthesizedList("RParen", pxt.U.lf("argument"), argument);
+            var rargs = [];
+            var rkeywords = [];
+            for (var _i = 0, args_1 = args; _i < args_1.length; _i++) {
+                var e = args_1[_i];
+                if (e.kind == "Keyword")
+                    rkeywords.push(e);
+                else {
+                    if (rkeywords.length)
+                        error(9570, pxt.U.lf("positional argument follows keyword argument"));
+                    rargs.push(e);
+                }
+            }
+            return { args: rargs, keywords: rkeywords };
+        }
+        function trailer(t0, e) {
+            var o = currentOp();
+            if (o == "LParen") {
+                var r = mkAST("Call", t0);
+                r.func = e;
+                var rr = parseArgs();
+                r.args = rr.args;
+                r.keywords = rr.keywords;
+                return finish(r);
+            }
+            else if (o == "LSquare") {
+                var t1 = peekToken();
+                var r = mkAST("Subscript", t0);
+                r.value = e;
+                var sl = parseParenthesizedList("RSquare", pxt.U.lf("subscript"), subscript);
+                if (sl.length == 0)
+                    error(9571, pxt.U.lf("need non-empty index list"));
+                else if (sl.length == 1)
+                    r.slice = sl[0];
+                else {
+                    if (sl.every(function (s) { return s.kind == "Index"; })) {
+                        var q = sl[0];
+                        q.value = tuple(t1, sl.map(function (e) { return e.value; }));
+                        r.slice = q;
+                    }
+                    else {
+                        var extSl = mkAST("ExtSlice", t1);
+                        extSl.dims = sl;
+                        r.slice = finish(extSl);
+                    }
+                }
+                return finish(r);
+            }
+            else if (o == "Dot") {
+                var r = mkAST("Attribute", t0);
+                r.value = e;
+                shiftToken();
+                r.attr = name();
+                return finish(r);
+            }
+            else {
+                return e;
+            }
+        }
+        function atom_expr() {
+            var t0 = peekToken();
+            var e = atom();
+            for (;;) {
+                var ee = trailer(t0, e);
+                if (ee === e)
+                    return e;
+                e = ee;
+            }
+        }
+        function power() {
+            var t0 = peekToken();
+            var e = atom_expr();
+            if (currentOp() == "Pow") {
+                var r = mkAST("BinOp");
+                shiftToken();
+                r.left = e;
+                r.op = "Pow";
+                r.right = factor();
+                return finish(r);
+            }
+            else {
+                return e;
+            }
+        }
+        function factor() {
+            if (unOpMap[currentOp()]) {
+                var r = mkAST("UnaryOp");
+                r.op = unOpMap[currentOp()];
+                shiftToken();
+                r.operand = factor();
+                return finish(r);
+            }
+            else {
+                return power();
+            }
+        }
+        var fieldOrder = {
+            kind: 1, id: 2, n: 3, s: 4, func: 5, key: 6, elt: 7, elts: 8, keys: 9, left: 10,
+            ops: 11, comparators: 12, names: 13, items: 14, test: 15, targets: 16, dims: 17,
+            context_expr: 18, name: 19, bases: 20, type: 21, inClass: 22, target: 23,
+            annotation: 24, simple: 25, op: 26, operand: 27, right: 28, values: 29, iter: 30,
+            ifs: 31, is_async: 32, value: 33, slice: 34, attr: 35, generators: 36, args: 37,
+            keywords: 38, body: 39, handlers: 40, orelse: 41, finalbody: 42, decorator_list: 43,
+            kwonlyargs: 44, kw_defaults: 45, defaults: 46, arg: 47,
+        };
+        var fieldsIgnore = {
+            lineno: 1,
+            col_offset: 1,
+            startPos: 1,
+            endPos: 1,
+            kind: 1,
+        };
+        var stmtFields = {
+            body: 1,
+            orelse: 1,
+            finalbody: 1
+        };
+        var cmpIgnore = {
+            _comments: 1,
+            ctx: 1,
+            ns: 1,
+        };
+        function dump(asts, cmp) {
+            if (cmp === void 0) { cmp = false; }
+            var rec = function (ind, v) {
+                if (Array.isArray(v)) {
+                    var s = "";
+                    for (var i = 0; i < v.length; ++i) {
+                        if (i > 0)
+                            s += ", ";
+                        s += rec(ind, v[i]);
+                    }
+                    return "[" + s + "]";
+                }
+                if (!v || !v.kind)
+                    return JSON.stringify(v);
+                var r = "";
+                var keys = Object.keys(v);
+                keys.sort(function (a, b) { return (fieldOrder[a] || 100) - (fieldOrder[b] || 100) || pxt.U.strcmp(a, b); });
+                for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+                    var k = keys_1[_i];
+                    if (pxt.U.lookup(fieldsIgnore, k))
+                        continue;
+                    if (cmp && pxt.U.lookup(cmpIgnore, k))
+                        continue;
+                    if (r)
+                        r += ", ";
+                    r += k + "=";
+                    if (Array.isArray(v[k]) && v[k].length && pxt.U.lookup(stmtFields, k)) {
+                        r += "[\n";
+                        var i2 = ind + "  ";
+                        for (var _a = 0, _b = v[k]; _a < _b.length; _a++) {
+                            var e = _b[_a];
+                            r += i2 + rec(i2, e) + "\n";
+                        }
+                        r += ind + "]";
+                    }
+                    else if (k == "_comments") {
+                        r += "[\n";
+                        var i2 = ind + "  ";
+                        for (var _c = 0, _d = v[k]; _c < _d.length; _c++) {
+                            var e = _d[_c];
+                            r += i2 + JSON.stringify(e.value) + "\n";
+                        }
+                        r += ind + "]";
+                    }
+                    else {
+                        r += rec(ind, v[k]);
+                    }
+                }
+                return v.kind + "(" + r + ")";
+            };
+            var r = "";
+            for (var _i = 0, asts_1 = asts; _i < asts_1.length; _i++) {
+                var e = asts_1[_i];
+                r += rec("", e) + "\n";
+            }
+            return r;
+        }
+        py.dump = dump;
+        function parse(_source, _filename, _tokens) {
+            source = _source;
+            filename = _filename;
+            tokens = _tokens;
+            inParens = 0;
+            nextToken = 0;
+            currComments = [];
+            indentStack = [0];
+            diags = [];
+            var res = [];
+            try {
+                prevToken = tokens[0];
+                skipTokens();
+                if (peekToken().type != py.TokenType.EOF) {
+                    res = stmt();
+                    while (peekToken().type != py.TokenType.EOF)
+                        pxt.U.pushRange(res, stmt());
+                }
+            }
+            catch (e) {
+                error(9572, pxt.U.lf("exception: {0}", e.message));
+            }
+            return {
+                stmts: res,
+                diagnostics: diags
+            };
+        }
+        py.parse = parse;
+    })(py = pxt.py || (pxt.py = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var py;
+    (function (py) {
+        function decompileToPython(program, filename) {
+            var result = emptyResult();
+            try {
+                var output = tsToPy(program, filename);
+                var outFilename = filename.replace(/(\.py)?\.\w*$/i, '') + '.py';
+                result.outfiles[outFilename] = output;
+            }
+            catch (e) {
+                if (e.pyDiagnostic)
+                    result.diagnostics = [e.pyDiagnostic];
+                else
+                    pxt.reportException(e);
+                result.success = false;
+            }
+            return result;
+        }
+        py.decompileToPython = decompileToPython;
+        function emptyResult() {
+            return {
+                blocksInfo: undefined,
+                outfiles: {},
+                diagnostics: [],
+                success: true,
+                times: {}
+            };
+        }
+        function throwError(node, code, messageText) {
+            var diag = {
+                fileName: node.getSourceFile().fileName,
+                start: node.getStart(),
+                length: node.getEnd() - node.getStart(),
+                line: undefined,
+                column: undefined,
+                code: code,
+                category: pxtc.DiagnosticCategory.Error,
+                messageText: messageText,
+            };
+            var err = new Error(messageText);
+            err.pyDiagnostic = diag;
+            throw err;
+        }
+        ///
+        /// UTILS
+        ///
+        py.INDENT = "    ";
+        function indent(lvl) {
+            return function (s) { return "" + py.INDENT.repeat(lvl) + s; };
+        }
+        var indent1 = indent(1);
+        function tsToPy(prog, filename) {
+            // state
+            // TODO pass state explicitly
+            var global = { vars: {} }; // TODO populate global scope
+            var env = [global];
+            // helpers
+            var tc = prog.getTypeChecker();
+            var lhost = new ts.pxtc.LSHost(prog);
+            // let ls = ts.createLanguageService(lhost) // TODO
+            var file = prog.getSourceFile(filename);
+            var reservedWords = pxt.U.toSet(getReservedNmes(), function (s) { return s; });
+            var _a = ts.pxtc.decompiler.buildRenameMap(prog, file, reservedWords), renameMap = _a[0], globalNames = _a[1];
+            var allSymbols = pxtc.getApiInfo(prog);
+            var symbols = pxt.U.mapMap(allSymbols.byQName, 
+            // filter out symbols from the .ts corresponding to this file
+            function (k, v) { return v.fileName == filename ? undefined : v; });
+            // ts->py
+            return emitFile(file);
+            ///
+            /// ENVIRONMENT
+            ///
+            // TODO: it's possible this parallel scope construction isn't necessary if we can get the info we need from the TS semantic info
+            function pushScope() {
+                var newScope = mkScope();
+                env.unshift(newScope);
+                return newScope;
+                function mkScope() {
+                    return { vars: {} };
+                }
+            }
+            function popScope() {
+                return env.shift();
+            }
+            function getReservedNmes() {
+                var reservedNames = ['ArithmeticError', 'AssertionError', 'AttributeError',
+                    'BaseException', 'BlockingIOError', 'BrokenPipeError', 'BufferError', 'BytesWarning',
+                    'ChildProcessError', 'ConnectionAbortedError', 'ConnectionError',
+                    'ConnectionRefusedError', 'ConnectionResetError', 'DeprecationWarning', 'EOFError',
+                    'Ellipsis', 'EnvironmentError', 'Exception', 'False', 'FileExistsError',
+                    'FileNotFoundError', 'FloatingPointError', 'FutureWarning', 'GeneratorExit', 'IOError',
+                    'ImportError', 'ImportWarning', 'IndentationError', 'IndexError',
+                    'InterruptedError', 'IsADirectoryError', 'KeyError', 'KeyboardInterrupt', 'LookupError',
+                    'MemoryError', 'NameError', 'None', 'NotADirectoryError', 'NotImplemented',
+                    'NotImplementedError', 'OSError', 'OverflowError', 'PendingDeprecationWarning',
+                    'PermissionError', 'ProcessLookupError', 'RecursionError', 'ReferenceError',
+                    'ResourceWarning', 'RuntimeError', 'RuntimeWarning', 'StopAsyncIteration',
+                    'StopIteration', 'SyntaxError', 'SyntaxWarning', 'SystemError', 'SystemExit',
+                    'TabError', 'TimeoutError', 'True', 'TypeError', 'UnboundLocalError',
+                    'UnicodeDecodeError', 'UnicodeEncodeError', 'UnicodeError', 'UnicodeTranslateError',
+                    'UnicodeWarning', 'UserWarning', 'ValueError', 'Warning', 'ZeroDivisionError', '_',
+                    '__build_class__', '__debug__', '__doc__', '__import__', '__loader__', '__name__',
+                    '__package__', '__spec__', 'abs', 'all', 'any', 'ascii', 'bin', 'bool',
+                    'bytearray', 'bytes', 'callable', 'chr', 'classmethod', 'compile', 'complex',
+                    'copyright', 'credits', 'delattr', 'dict', 'dir', 'divmod', 'enumerate', 'eval',
+                    'exec', 'exit', 'filter', 'float', 'format', 'frozenset', 'getattr',
+                    'globals', 'hasattr', 'hash', 'help', 'hex', 'id', 'input', 'int',
+                    'isinstance', 'issubclass', 'iter', 'len', 'license', 'list', 'locals', 'map',
+                    'max', 'memoryview', 'min', 'next', 'object', 'oct', 'open', 'ord', 'pow',
+                    'print', 'property', 'quit', 'range', 'repr', 'reversed', 'round', 'set',
+                    'setattr', 'slice', 'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple',
+                    'type', 'vars', 'zip'];
+                return reservedNames;
+            }
+            function tryGetPyName(exp) {
+                if (!exp.getSourceFile())
+                    return null;
+                var tsExp = exp.getText();
+                var sym = symbols[tsExp];
+                if (sym && sym.pyQName) {
+                    return sym.pyQName;
+                }
+                else if (tsExp in pxtc.ts2PyFunNameMap) {
+                    return pxtc.ts2PyFunNameMap[tsExp].n;
+                }
+                return null;
+            }
+            function getName(name) {
+                var pyName = tryGetPyName(name);
+                if (pyName)
+                    return pyName;
+                if (!ts.isIdentifier(name)) {
+                    return throwError(name, 3001, "Unsupported advanced name format: " + name.getText());
+                }
+                var outName = name.text;
+                var hasSrc = name.getSourceFile();
+                if (renameMap && hasSrc) {
+                    var rename = renameMap.getRenameForPosition(name.getStart());
+                    if (rename) {
+                        outName = rename.name;
+                    }
+                }
+                return outName;
+            }
+            function getNewGlobalName(nameHint) {
+                // TODO right now this uses a global name set, but really there should be options to allow shadowing
+                if (typeof nameHint !== "string")
+                    nameHint = getName(nameHint);
+                if (globalNames[nameHint]) {
+                    return pxtc.decompiler.getNewName(nameHint, globalNames);
+                }
+                else {
+                    globalNames[nameHint] = true;
+                    return nameHint;
+                }
+            }
+            // TODO decide on strategy for tracking variable scope(s)
+            // function introVar(name: string, decl: ts.Node): string {
+            //     let scope = env[0]
+            //     let maxItr = 100
+            //     let newName = name
+            //     for (let i = 0; i < maxItr && newName in scope.vars; i++) {
+            //         let matches = newName.match(/\d+$/);
+            //         if (matches) {
+            //             let num = parseInt(matches[0], 10)
+            //             num++
+            //             newName = newName.replace(/\d+$/, num.toString())
+            //         } else {
+            //             newName += 1
+            //         }
+            //     }
+            //     if (newName in scope.vars)
+            //         throw Error("Implementation error: unable to find an alternative variable name for: " + newName)
+            //     if (newName !== name) {
+            //         // do rename
+            //         let locs = ls.findRenameLocations(filename, decl.pos + 1, false, false)
+            //         for (let l of locs) {
+            //             // ts.getNode
+            //         }
+            //     }
+            //     scope.vars[newName] = decl
+            //     return newName
+            // }
+            ///
+            /// TYPE UTILS
+            ///
+            function hasTypeFlag(t, fs) {
+                return (t.flags & fs) !== 0;
+            }
+            function isType(s, fs) {
+                var type = tc.getTypeAtLocation(s);
+                return hasTypeFlag(type, fs);
+            }
+            function isStringType(s) {
+                return isType(s, ts.TypeFlags.StringLike);
+            }
+            function isNumberType(s) {
+                return isType(s, ts.TypeFlags.NumberLike);
+            }
+            ///
+            /// NEWLINES, COMMENTS, and WRAPPERS
+            ///
+            function emitFile(file) {
+                // emit file
+                var outLns = file.getChildren()
+                    .map(emitNode)
+                    .reduce(function (p, c) { return p.concat(c); }, [])
+                    .join("\n");
+                return outLns;
+            }
+            function emitNode(s) {
+                switch (s.kind) {
+                    case ts.SyntaxKind.SyntaxList:
+                        return s._children
+                            .map(emitNode)
+                            .reduce(function (p, c) { return p.concat(c); }, []);
+                    case ts.SyntaxKind.EndOfFileToken:
+                    case ts.SyntaxKind.OpenBraceToken:
+                    case ts.SyntaxKind.CloseBraceToken:
+                        return [];
+                    default:
+                        return emitStmtWithNewlines(s);
+                }
+            }
+            function emitStmtWithNewlines(s) {
+                var out = [];
+                if (s.getLeadingTriviaWidth() > 0) {
+                    var leading = s.getFullText().slice(0, s.getLeadingTriviaWidth());
+                    var lns = leading.split("\n");
+                    var getTriviaLine = function (s) {
+                        var trimmed = s.trim();
+                        if (!trimmed)
+                            return "blank";
+                        if (!trimmed.startsWith("//"))
+                            return "unknown";
+                        var com = "#" + trimmed.slice(2, trimmed.length);
+                        return ["comment", com];
+                    };
+                    var trivia = lns
+                        .map(getTriviaLine)
+                        .filter(function (s) { return s !== "unknown"; })
+                        .map(function (s) { return s === "blank" ? "" : s[1]; });
+                    if (trivia && !trivia[0])
+                        trivia.shift();
+                    if (trivia && !trivia[trivia.length - 1])
+                        trivia.pop();
+                    out = out.concat(trivia);
+                }
+                out = out.concat(emitStmt(s));
+                return out;
+            }
+            ///
+            /// STATEMENTS
+            ///
+            function emitStmt(s) {
+                if (ts.isVariableStatement(s)) {
+                    return emitVarStmt(s);
+                }
+                else if (ts.isClassDeclaration(s)) {
+                    return emitClassStmt(s);
+                }
+                else if (ts.isEnumDeclaration(s)) {
+                    return emitEnumStmt(s);
+                }
+                else if (ts.isExpressionStatement(s)) {
+                    return emitExpStmt(s);
+                }
+                else if (ts.isFunctionDeclaration(s)) {
+                    return emitFuncDecl(s);
+                }
+                else if (ts.isIfStatement(s)) {
+                    return emitIf(s);
+                }
+                else if (ts.isForStatement(s)) {
+                    return emitForStmt(s);
+                }
+                else if (ts.isForOfStatement(s)) {
+                    return emitForOfStmt(s);
+                }
+                else if (ts.isWhileStatement(s)) {
+                    return emitWhileStmt(s);
+                }
+                else if (ts.isReturnStatement(s)) {
+                    return emitReturnStmt(s);
+                }
+                else if (ts.isBlock(s)) {
+                    return emitBlock(s);
+                }
+                else if (ts.isTypeAliasDeclaration(s)) {
+                    return emitTypeAliasDecl(s);
+                }
+                else if (ts.isEmptyStatement(s)) {
+                    return [];
+                }
+                else if (ts.isModuleDeclaration(s)) {
+                    return emitModuleDeclaration(s);
+                }
+                else if (ts.isBreakStatement(s)) {
+                    return ['break'];
+                }
+                else if (ts.isContinueStatement(s)) {
+                    return ['continue'];
+                }
+                else {
+                    return throwError(s, 3002, "Not implemented: " + ts.SyntaxKind[s.kind] + " (" + s.kind + ")");
+                }
+            }
+            function emitModuleDeclaration(s) {
+                var name = getName(s.name);
+                var stmts = s.body && s.body.getChildren()
+                    .map(emitNode)
+                    .reduce(function (p, c) { return p.concat(c); }, [])
+                    .map(function (n) { return indent1(n); });
+                return ["@namespace", "class " + name + ":"].concat(stmts || []);
+            }
+            function emitTypeAliasDecl(s) {
+                var typeStr = pxtc.emitType(s.type);
+                var name = getName(s.name);
+                return [name + " = " + typeStr];
+            }
+            function emitReturnStmt(s) {
+                if (!s.expression)
+                    return ['return'];
+                var _a = emitExp(s.expression), exp = _a[0], expSup = _a[1];
+                var stmt = expWrap("return ", exp);
+                return expSup.concat(stmt);
+            }
+            function emitWhileStmt(s) {
+                var _a = emitExp(s.expression), cond = _a[0], condSup = _a[1];
+                var body = emitBody(s.statement);
+                var whileStmt = expWrap("while ", cond);
+                return condSup.concat(whileStmt).concat(body);
+            }
+            function isNormalInteger(str) {
+                var asInt = Math.floor(Number(str));
+                return asInt !== Infinity && String(asInt) === str;
+            }
+            function getSimpleForRange(s) {
+                // must be (let i = X; ...)
+                if (!s.initializer)
+                    return null;
+                if (s.initializer.kind !== ts.SyntaxKind.VariableDeclarationList)
+                    return null;
+                var initDecls = s.initializer;
+                if (initDecls.declarations.length !== 1) {
+                    return null;
+                }
+                var decl = initDecls.declarations[0];
+                var result_name = getName(decl.name);
+                if (!decl.initializer || !isConstExp(decl.initializer) || !isNumberType(decl.initializer)) {
+                    // TODO allow variables?
+                    // TODO restrict to numbers?
+                    return null;
+                }
+                var _a = emitExp(decl.initializer), fromNum = _a[0], fromNumSup = _a[1];
+                if (fromNumSup.length)
+                    return null;
+                var result_fromIncl = expToStr(fromNum);
+                // TODO body must not mutate loop variable
+                // must be (...; i < Y; ...)
+                if (!s.condition)
+                    return null;
+                if (!ts.isBinaryExpression(s.condition))
+                    return null;
+                if (!ts.isIdentifier(s.condition.left))
+                    return null;
+                if (getName(s.condition.left) != result_name)
+                    return null;
+                // TODO restrict initializers to expressions that aren't modified by the loop
+                // e.g. isConstExp(s.condition.right) but more semantic
+                if (!isNumberType(s.condition.right)) {
+                    return null;
+                }
+                var _b = emitExp(s.condition.right), toNumExp = _b[0], toNumSup = _b[1];
+                if (toNumSup.length)
+                    return null;
+                var toNum = expToStr(toNumExp);
+                var result_toExcl = toNum;
+                if (s.condition.operatorToken.kind === ts.SyntaxKind.LessThanEqualsToken
+                    && isNormalInteger(toNum)) {
+                    // Note that we have to be careful here because
+                    // <= 3.5 is not the same as < 4.5
+                    // so we only want to handle <= when the toNum is very well behaved
+                    result_toExcl = "" + (Number(toNum) + 1);
+                }
+                else if (s.condition.operatorToken.kind !== ts.SyntaxKind.LessThanToken)
+                    return null;
+                // must be (...; i++)
+                // TODO allow += 1
+                if (!s.incrementor)
+                    return null;
+                if (!ts.isPostfixUnaryExpression(s.incrementor)
+                    && !ts.isPrefixUnaryExpression(s.incrementor))
+                    return null;
+                if (s.incrementor.operator !== ts.SyntaxKind.PlusPlusToken)
+                    return null;
+                // must be X < Y
+                if (!(result_fromIncl < result_toExcl))
+                    return null;
+                var result = {
+                    name: result_name,
+                    fromIncl: result_fromIncl,
+                    toExcl: result_toExcl
+                };
+                return result;
+            }
+            function emitBody(s) {
+                var body = emitStmt(s)
+                    .map(indent1);
+                if (body.length < 1)
+                    body = [indent1("pass")];
+                return body;
+            }
+            function emitForOfStmt(s) {
+                if (!ts.isVariableDeclarationList(s.initializer)) {
+                    return throwError(s, 3003, "Unsupported expression in for..of initializer: " + s.initializer.getText());
+                }
+                var names = s.initializer.declarations
+                    .map(function (d) { return getName(d.name); });
+                if (names.length !== 1) {
+                    return throwError(s, 3004, "Unsupported multiple declerations in for..of: " + s.initializer.getText()); // TODO
+                }
+                var name = names[0];
+                var _a = emitExp(s.expression), exp = _a[0], expSup = _a[1];
+                var out = expSup;
+                out = out.concat(expWrap("for " + name + " in ", exp, ":"));
+                var body = emitBody(s.statement);
+                out = out.concat(body);
+                return out;
+            }
+            function emitForStmt(s) {
+                var rangeItr = getSimpleForRange(s);
+                if (rangeItr) {
+                    // special case (aka "repeat z times" block):
+                    // for (let x = y; x < z; x++)
+                    // ->
+                    // for x in range(y, z):
+                    // TODO ensure x and z can't be mutated in the loop body
+                    var name_3 = rangeItr.name, fromIncl = rangeItr.fromIncl, toExcl = rangeItr.toExcl;
+                    var forStmt = fromIncl === "0"
+                        ? "for " + name_3 + " in range(" + toExcl + "):"
+                        : "for " + name_3 + " in range(" + fromIncl + ", " + toExcl + "):";
+                    var body_1 = emitBody(s.statement);
+                    return [forStmt].concat(body_1);
+                }
+                // general case:
+                // for (<inits>; <cond>; <updates>)
+                // ->
+                // <inits>
+                // while <cond>:
+                //   # body
+                //   <updates>
+                var out = [];
+                // initializer(s)
+                if (s.initializer) {
+                    if (ts.isVariableDeclarationList(s.initializer)) {
+                        var decls = s.initializer.declarations
+                            .map(emitVarDecl)
+                            .reduce(function (p, c) { return p.concat(c); }, []);
+                        out = out.concat(decls);
+                    }
+                    else {
+                        var _a = emitExp(s.initializer), exp = _a[0], expSup = _a[1];
+                        out = out.concat(expSup).concat(exp);
+                    }
+                }
+                // condition(s)
+                var cond;
+                if (s.condition) {
+                    var _b = emitExp(s.condition), condStr = _b[0], condSup = _b[1];
+                    out = out.concat(condSup);
+                    cond = expToStr(condStr);
+                }
+                else {
+                    cond = "True";
+                }
+                var whileStmt = "while " + cond + ":";
+                out.push(whileStmt);
+                // body
+                var body = emitStmt(s.statement)
+                    .map(indent1);
+                if (body.length === 0 && !s.incrementor)
+                    body = [indent1("pass")];
+                out = out.concat(body);
+                // updater(s)
+                if (s.incrementor) {
+                    var unaryIncDec = tryEmitIncDecUnaryStmt(s.incrementor);
+                    if (unaryIncDec) {
+                        // special case: ++ or --
+                        out = out.concat(unaryIncDec.map(indent1));
+                    }
+                    else {
+                        // general case
+                        var _c = emitExp(s.incrementor), inc = _c[0], incSup = _c[1];
+                        out = out.concat(incSup)
+                            .concat(inc.map(indent1));
+                    }
+                }
+                return out;
+            }
+            function emitIf(s) {
+                var _a = emitIfHelper(s), supportStmts = _a.supportStmts, ifStmt = _a.ifStmt, rest = _a.rest;
+                return supportStmts.concat([ifStmt]).concat(rest);
+            }
+            function emitIfHelper(s) {
+                var sup = [];
+                var _a = emitExp(s.expression), cond = _a[0], condSup = _a[1];
+                sup = sup.concat(condSup);
+                var ifStmt = "if " + expToStr(cond) + ":";
+                var ifRest = [];
+                var th = emitBody(s.thenStatement);
+                ifRest = ifRest.concat(th);
+                if (s.elseStatement) {
+                    if (ts.isIfStatement(s.elseStatement)) {
+                        var _b = emitIfHelper(s.elseStatement), supportStmts = _b.supportStmts, ifStmt_1 = _b.ifStmt, rest = _b.rest;
+                        var elif = "el" + ifStmt_1;
+                        sup = sup.concat(supportStmts);
+                        ifRest.push(elif);
+                        ifRest = ifRest.concat(rest);
+                    }
+                    else {
+                        ifRest.push("else:");
+                        var el = emitBody(s.elseStatement);
+                        ifRest = ifRest.concat(el);
+                    }
+                }
+                return { supportStmts: sup, ifStmt: ifStmt, rest: ifRest };
+            }
+            function emitVarStmt(s) {
+                var decls = s.declarationList.declarations;
+                return decls
+                    .map(emitVarDecl)
+                    .reduce(function (p, c) { return p.concat(c); }, []);
+            }
+            function emitClassStmt(s) {
+                var out = [];
+                // TODO handle inheritence
+                if (!s.name) {
+                    return throwError(s, 3011, "Unsupported: anonymous class");
+                }
+                var isEnum = s.members.every(isEnumMem); // TODO hack?
+                var name = getName(s.name);
+                if (isEnum)
+                    out.push("class " + name + "(Enum):");
+                else
+                    out.push("class " + name + ":");
+                var mems = s.members
+                    .map(emitClassMem)
+                    .reduce(function (p, c) { return p.concat(c); }, [])
+                    .filter(function (m) { return m; });
+                if (mems.length) {
+                    out = out.concat(mems.map(indent1));
+                }
+                return out;
+            }
+            function emitEnumStmt(s) {
+                var out = [];
+                out.push("class " + getName(s.name) + "(Enum):");
+                var allInit = s.members
+                    .every(function (m) { return !!m.initializer; });
+                var noInit = !s.members
+                    .every(function (m) { return !!m.initializer; });
+                if (!allInit && !noInit) {
+                    return throwError(s, 3005, "Unsupported enum decleration: has mixture of explicit and implicit initialization");
+                }
+                if (allInit) {
+                    // TODO
+                    // let memAndSup = s.members
+                    //     .map(m => [m, emitExp(m.initializer)] as [ts.EnumMember, ExpRes])
+                    return throwError(s, 3006, "Unsupported: explicit enum initialization");
+                }
+                var val = 0;
+                for (var _i = 0, _a = s.members; _i < _a.length; _i++) {
+                    var m = _a[_i];
+                    out.push(indent1(getName(m.name) + " = " + val++));
+                }
+                return out;
+            }
+            function isEnumMem(s) {
+                if (s.kind !== ts.SyntaxKind.PropertyDeclaration)
+                    return false;
+                var prop = s;
+                if (!prop.modifiers || prop.modifiers.length !== 1)
+                    return false;
+                for (var _i = 0, _a = prop.modifiers; _i < _a.length; _i++) {
+                    var mod = _a[_i];
+                    if (mod.kind !== ts.SyntaxKind.StaticKeyword)
+                        return false;
+                }
+                if (!prop.initializer)
+                    return false;
+                if (prop.initializer.kind !== ts.SyntaxKind.NumericLiteral)
+                    return false;
+                return true;
+            }
+            function emitClassMem(s) {
+                switch (s.kind) {
+                    case ts.SyntaxKind.PropertyDeclaration:
+                        return emitPropDecl(s);
+                    case ts.SyntaxKind.MethodDeclaration:
+                        return emitFuncDecl(s);
+                    case ts.SyntaxKind.Constructor:
+                        return emitFuncDecl(s);
+                    default:
+                        return ["# unknown ClassElement " + s.kind];
+                }
+            }
+            function emitPropDecl(s) {
+                var nm = getName(s.name);
+                if (s.initializer) {
+                    var _a = emitExp(s.initializer), init = _a[0], initSup = _a[1];
+                    return initSup.concat([nm + " = " + expToStr(init)]);
+                }
+                else {
+                    // can't do declerations without initilization in python
+                    return [];
+                }
+            }
+            function isUnaryPlusPlusOrMinusMinus(e) {
+                if (!ts.isPrefixUnaryExpression(e) &&
+                    !ts.isPostfixUnaryExpression(e))
+                    return false;
+                if (e.operator !== ts.SyntaxKind.MinusMinusToken &&
+                    e.operator !== ts.SyntaxKind.PlusPlusToken)
+                    return false;
+                return true;
+            }
+            function tryEmitIncDecUnaryStmt(e) {
+                // special case ++ or -- as a statement
+                if (!isUnaryPlusPlusOrMinusMinus(e))
+                    return null;
+                var _a = emitExp(e.operand), operand = _a[0], sup = _a[1];
+                var incDec = e.operator === ts.SyntaxKind.MinusMinusToken ? " -= 1" : " += 1";
+                var out = sup;
+                out.push("" + expToStr(operand) + incDec);
+                return out;
+            }
+            function emitExpStmt(s) {
+                var unaryExp = tryEmitIncDecUnaryStmt(s.expression);
+                if (unaryExp)
+                    return unaryExp;
+                var _a = emitExp(s.expression), exp = _a[0], expSup = _a[1];
+                return expSup.concat(exp);
+            }
+            function emitBlock(s) {
+                var stmts = s.getChildren()
+                    .map(emitNode)
+                    .reduce(function (p, c) { return p.concat(c); }, []);
+                // TODO figuring out variable scoping..
+                // let syms = tc.getSymbolsInScope(s, ts.SymbolFlags.Variable)
+                // let symTxt = "#ts@ " + syms.map(s => s.name).join(", ")
+                // stmts.unshift(symTxt)
+                // stmts.unshift("# {") // TODO
+                // let pyVars = "#py@ " + Object.keys(env[0].vars).join(", ")
+                // stmts.push(pyVars)
+                // stmts.push("# }")
+                return stmts;
+            }
+            function emitFuncDecl(s, name, altParams, skipTypes) {
+                // TODO determine captured variables, then determine global and nonlocal directives
+                // TODO helper function for determining if an expression can be a python expression
+                var paramList = [];
+                if (s.kind === ts.SyntaxKind.MethodDeclaration ||
+                    s.kind === ts.SyntaxKind.Constructor) {
+                    paramList.push("self");
+                }
+                var paramDeclDefs = altParams ? mergeParamDecls(s.parameters, altParams) : s.parameters;
+                var paramDecls = paramDeclDefs
+                    .map(function (d) { return emitParamDecl(d, !skipTypes); });
+                paramList = paramList.concat(paramDecls);
+                var params = paramList.join(", ");
+                var out = [];
+                var fnName;
+                if (s.kind === ts.SyntaxKind.Constructor) {
+                    fnName = "__init__";
+                }
+                else {
+                    if (name)
+                        fnName = name;
+                    else if (s.name)
+                        fnName = getName(s.name);
+                    else
+                        return throwError(s, 3012, "Unsupported: anonymous function decleration");
+                }
+                out.push("def " + fnName + "(" + params + "):");
+                pushScope(); // functions start a new scope in python
+                if (!s.body)
+                    return throwError(s, 3013, "Unsupported: function decleration without body");
+                var stmts = [];
+                if (ts.isBlock(s.body))
+                    stmts = emitBlock(s.body);
+                else {
+                    var _a = emitExp(s.body), exp = _a[0], sup = _a[1];
+                    stmts = stmts.concat(sup);
+                    stmts.concat(exp);
+                }
+                if (stmts.length) {
+                    out = out.concat(stmts.map(indent1));
+                }
+                else {
+                    out.push(indent1("pass")); // cannot have an empty body
+                }
+                popScope();
+                return out;
+            }
+            function emitParamDecl(s, inclTypesIfAvail) {
+                if (inclTypesIfAvail === void 0) { inclTypesIfAvail = true; }
+                var nm = s.altName || getName(s.name);
+                var typePart = "";
+                if (s.type && inclTypesIfAvail) {
+                    var typ = pxtc.emitType(s.type);
+                    if (typ && typ.indexOf("(TODO") === -1) {
+                        typePart = ": " + typ;
+                    }
+                }
+                var initPart = "";
+                if (s.initializer) {
+                    var _a = emitExp(s.initializer), initExp = _a[0], initSup = _a[1];
+                    if (initSup.length) {
+                        return throwError(s, 3007, "TODO: complex expression in parameter default value not supported. Expression: " + s.initializer.getText());
+                    }
+                    initPart = " = " + expToStr(initExp);
+                }
+                return "" + nm + typePart + initPart;
+            }
+            function emitVarDecl(s) {
+                var out = [];
+                var varNm = getName(s.name);
+                // out.push(`#let ${varNm}`) // TODO debug
+                // varNm = introVar(varNm, s.name)
+                if (s.initializer) {
+                    // TODO
+                    // let syms = tc.getSymbolsInScope(s, ts.SymbolFlags.Variable)
+                    // let symTxt = "#@ " + syms.map(s => s.name).join(", ")
+                    // out.push(symTxt)
+                    var _a = emitExp(s.initializer), exp = _a[0], expSup = _a[1];
+                    out = out.concat(expSup);
+                    var declStmt = void 0;
+                    if (s.type) {
+                        var translatedType = pxtc.emitType(s.type);
+                        declStmt = varNm + ": " + translatedType + " = " + expToStr(exp);
+                    }
+                    else {
+                        declStmt = varNm + " = " + expToStr(exp);
+                    }
+                    out.push(declStmt);
+                    return out;
+                }
+                else {
+                    // can't do declerations without initilization in python
+                }
+                return out;
+            }
+            function asExpRes(str, sup) {
+                return [[str], sup || []];
+            }
+            function expToStr(exps, char) {
+                if (char === void 0) { char = '\n'; }
+                return exps.join(char);
+            }
+            function expWrap(pre, exps, suff) {
+                if (pre === void 0) { pre = ""; }
+                if (suff === void 0) { suff = ""; }
+                exps[0] = pre + exps[0];
+                exps[exps.length - 1] = exps[exps.length - 1] + suff;
+                return exps;
+            }
+            function emitOp(s, node) {
+                switch (s) {
+                    case ts.SyntaxKind.BarBarToken:
+                        return "or";
+                    case ts.SyntaxKind.AmpersandAmpersandToken:
+                        return "and";
+                    case ts.SyntaxKind.ExclamationToken:
+                        return "not";
+                    case ts.SyntaxKind.LessThanToken:
+                        return "<";
+                    case ts.SyntaxKind.LessThanEqualsToken:
+                        return "<=";
+                    case ts.SyntaxKind.GreaterThanToken:
+                        return ">";
+                    case ts.SyntaxKind.GreaterThanEqualsToken:
+                        return ">=";
+                    case ts.SyntaxKind.EqualsEqualsEqualsToken:
+                    case ts.SyntaxKind.EqualsEqualsToken:
+                        // TODO distinguish === from == ?
+                        return "==";
+                    case ts.SyntaxKind.ExclamationEqualsEqualsToken:
+                    case ts.SyntaxKind.ExclamationEqualsToken:
+                        // TODO distinguish !== from != ?
+                        return "!=";
+                    case ts.SyntaxKind.EqualsToken:
+                        return "=";
+                    case ts.SyntaxKind.PlusToken:
+                        return "+";
+                    case ts.SyntaxKind.MinusToken:
+                        return "-";
+                    case ts.SyntaxKind.AsteriskToken:
+                        return "*";
+                    case ts.SyntaxKind.PlusEqualsToken:
+                        return "+=";
+                    case ts.SyntaxKind.MinusEqualsToken:
+                        return "-=";
+                    case ts.SyntaxKind.PercentToken:
+                        return "%";
+                    case ts.SyntaxKind.SlashToken:
+                        return "/";
+                    case ts.SyntaxKind.PlusPlusToken:
+                    case ts.SyntaxKind.MinusMinusToken:
+                        // TODO handle "--" & "++" generally. Seperate prefix and postfix cases.
+                        // This is tricky because it needs to return the value and the mutate after.
+                        return throwError(node, 3008, "Unsupported ++ and -- in an expression (not a statement or for loop)");
+                    case ts.SyntaxKind.AmpersandToken:
+                        return "&";
+                    case ts.SyntaxKind.CaretToken:
+                        return "^";
+                    case ts.SyntaxKind.LessThanLessThanToken:
+                        return "<<";
+                    case ts.SyntaxKind.GreaterThanGreaterThanToken:
+                        return ">>";
+                    case ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken:
+                        return throwError(node, 3009, "Unsupported operator: >>>");
+                    case ts.SyntaxKind.AsteriskAsteriskToken:
+                        return "**";
+                    case ts.SyntaxKind.AsteriskAsteriskEqualsToken:
+                        return "**=";
+                    case ts.SyntaxKind.PercentEqualsToken:
+                        return "%=";
+                    case ts.SyntaxKind.AsteriskEqualsToken:
+                        return "*=";
+                    case ts.SyntaxKind.SlashEqualsToken:
+                        return "/=";
+                    default:
+                        pxt.tickEvent("depython.todo", { op: s });
+                        return throwError(node, 3008, "Unsupported Python operator (code: " + s + ")");
+                }
+            }
+            function emitBinExp(s) {
+                // handle string concatenation
+                // TODO handle implicit type conversions more generally
+                var isLStr = isStringType(s.left);
+                var isRStr = isStringType(s.right);
+                var isStrConcat = s.operatorToken.kind === ts.SyntaxKind.PlusToken
+                    && (isLStr || isRStr);
+                var _a = emitExp(s.left), left = _a[0], leftSup = _a[1];
+                if (isStrConcat && !isLStr)
+                    left = expWrap("str(", left, ")");
+                var op = emitOp(s.operatorToken.kind, s);
+                var _b = emitExp(s.right), right = _b[0], rightSup = _b[1];
+                if (isStrConcat && !isRStr)
+                    right = expWrap("str(", right, ")");
+                var sup = leftSup.concat(rightSup);
+                return [expWrap(expToStr(left) + " " + op + " ", right), sup];
+            }
+            function emitDotExp(s) {
+                // short-circuit if the dot expression is a well-known symbol
+                var pyName = tryGetPyName(s);
+                if (pyName)
+                    return asExpRes(pyName);
+                var _a = emitExp(s.expression), left = _a[0], leftSup = _a[1];
+                var right = getName(s.name);
+                // special: foo.length
+                if (right === "length") {
+                    // TODO confirm the type is correct!
+                    return asExpRes("len(" + expToStr(left) + ")", leftSup);
+                }
+                return asExpRes(expToStr(left) + "." + right, leftSup);
+            }
+            function getSimpleExpNameParts(s, skipNamespaces) {
+                if (skipNamespaces === void 0) { skipNamespaces = false; }
+                // TODO(dz): Impl skip namespaces properly. Right now we just skip the left-most part of a property access
+                if (ts.isPropertyAccessExpression(s)) {
+                    var nmPart = [getName(s.name)];
+                    if (skipNamespaces && ts.isIdentifier(s.expression))
+                        return nmPart;
+                    return getSimpleExpNameParts(s.expression, skipNamespaces).concat(nmPart);
+                }
+                else if (ts.isIdentifier(s)) {
+                    return [getName(s)];
+                }
+                else
+                    return [];
+            }
+            function getNameHint(param, calleeExp, allParams, allArgs) {
+                // get words from the callee
+                var calleePart = "";
+                if (calleeExp)
+                    calleePart = getSimpleExpNameParts(calleeExp, /*skipNamespaces*/ true)
+                        .map(pxtc.snakify)
+                        .join("_");
+                // get words from the previous parameter(s)/arg(s)
+                var enumParamParts = [];
+                if (allParams && allParams.length > 1 && allArgs && allArgs.length > 1) {
+                    // special case: if there are enum parameters, use those as part of the hint
+                    for (var i = 0; i < allParams.length && i < allArgs.length; i++) {
+                        var arg = allArgs[i];
+                        var argType = tc.getTypeAtLocation(arg);
+                        if (hasTypeFlag(argType, ts.TypeFlags.EnumLike)) {
+                            var argParts = getSimpleExpNameParts(arg, /*skipNamespaces*/ true)
+                                .map(pxtc.snakify);
+                            enumParamParts = enumParamParts.concat(argParts);
+                        }
+                    }
+                }
+                var otherParamsPart = enumParamParts.join("_");
+                // get words from this parameter/arg as last resort
+                var paramPart = "";
+                if (!calleePart && !otherParamsPart && param)
+                    paramPart = getName(param.name);
+                // the full hint
+                var hint = [calleePart, otherParamsPart, paramPart]
+                    .filter(function (s) { return s; })
+                    .map(pxtc.snakify)
+                    .map(function (s) { return s.toLowerCase(); })
+                    .join("_") || "my_callback";
+                // sometimes the full hint is too long so shorten them using some heuristics
+                // 1. remove duplicate words
+                // e.g. controller_any_button_on_event_controller_button_event_pressed_callback
+                //   -> controller_any_button_on_event_pressed_callback
+                var allWords = hint.split("_");
+                if (allWords.length > 4) {
+                    allWords = dedupWords(allWords);
+                }
+                // 2. remove less-informative words
+                var lessUsefulWords = pxt.U.toDictionary(["any", "on", "event"], function (s) { return s; });
+                while (allWords.length > 2) {
+                    var newWords = removeOne(allWords, lessUsefulWords);
+                    if (newWords.length == allWords.length)
+                        break;
+                    allWords = newWords;
+                }
+                // 3. if there is only one word, add "on_" prefix
+                if (allWords.length == 1)
+                    allWords = ["on", allWords[0]];
+                return allWords.join("_");
+                function dedupWords(words) {
+                    var usedWords = {};
+                    var out = [];
+                    for (var _i = 0, words_1 = words; _i < words_1.length; _i++) {
+                        var w = words_1[_i];
+                        if (w in usedWords)
+                            continue;
+                        usedWords[w] = true;
+                        out.push(w);
+                    }
+                    return out;
+                }
+                function removeOne(words, exclude) {
+                    var out = [];
+                    var oneExcluded = false;
+                    for (var _i = 0, words_2 = words; _i < words_2.length; _i++) {
+                        var w = words_2[_i];
+                        if (w in exclude && !oneExcluded) {
+                            oneExcluded = true;
+                            continue;
+                        }
+                        out.push(w);
+                    }
+                    return out;
+                }
+            }
+            // determine whether a comma-separated list (array, function parameters) should
+            // use newlines to separate items
+            function getCommaSep(exps) {
+                var res = exps.join(", ");
+                if (res.length > 60) {
+                    return exps.map(function (el, i) {
+                        var sep = el.charAt(el.length - 1) == "," ? "" : ",";
+                        if (i == 0) {
+                            return el + sep;
+                        }
+                        else if (i == exps.length - 1) {
+                            return indent1(el);
+                        }
+                        else {
+                            return indent1(el + sep);
+                        }
+                    });
+                }
+                return [res];
+            }
+            function emitArgExp(s, param, calleeExp, allParams, allArgs) {
+                // special case: function arguments to higher-order functions
+                // reason 1: if the argument is a function and the parameter it is being passed to is also a function type,
+                // then we want to pass along the parameter's function parameters to emitFnExp so that the argument will fit the
+                // parameter type. This is because TypeScript/Javascript allows passing a function with fewer parameters to an
+                // argument that is a function with more parameters while Python does not.
+                // Key example: callbacks
+                // this code compiles in TS:
+                //      function onEvent(callback: (a: number) => void) { ... }
+                //      onEvent(function () { ... })
+                // yet in python this is not allowed, we have to add more parameters to the anonymous declaration to match like this:
+                //      onEvent(function (a: number) { ... })
+                // see "callback_num_args.ts" test case for more details.
+                // reason 2: we want to generate good names, which requires context about the function it is being passed to an other parameters
+                if ((ts.isFunctionExpression(s) || ts.isArrowFunction(s)) && param) {
+                    if (param.type && ts.isFunctionTypeNode(param.type)) {
+                        // TODO(dz): uncomment to support reason #1 above. I've disabled this for now because it generates uglier
+                        // code if we don't have support in py2ts to reverse this
+                        // let altParams = param.type.parameters
+                        var altParams = undefined;
+                        var fnNameHint = getNameHint(param, calleeExp, allParams, allArgs);
+                        return emitFnExp(s, fnNameHint, altParams, true);
+                    }
+                }
+                return emitExp(s);
+            }
+            function emitCallExp(s) {
+                // get callee parameter info
+                var calleeType = tc.getTypeAtLocation(s.expression);
+                var calleeTypeNode = tc.typeToTypeNode(calleeType);
+                var calleeParameters = ts.createNodeArray([]);
+                if (ts.isFunctionTypeNode(calleeTypeNode)) {
+                    calleeParameters = calleeTypeNode.parameters;
+                    if (s.arguments && calleeParameters.length < s.arguments.length) {
+                        pxt.tickEvent("depython.todo", { kind: s.kind });
+                        return throwError(s, 3010, "TODO: Unsupported call site where caller the arguments outnumber the callee parameters: " + s.getText());
+                    }
+                }
+                // TODO inspect type info to rewrite things like console.log, Math.max, etc.
+                var _a = emitExp(s.expression), fnExp = _a[0], fnSup = _a[1];
+                var fn = expToStr(fnExp);
+                var sargs = s.arguments || ts.createNodeArray();
+                var argExps = sargs
+                    .map(function (a, i, allArgs) { return emitArgExp(a, calleeParameters[i], s.expression, calleeParameters, allArgs); });
+                var sup = argExps
+                    .map(function (_a) {
+                    var _ = _a[0], aSup = _a[1];
+                    return aSup;
+                })
+                    .reduce(function (p, c) { return p.concat(c); }, fnSup);
+                if (fn.indexOf("_py.py_") === 0) {
+                    if (argExps.length <= 0)
+                        return throwError(s, 3014, "Unsupported: call expression has no arguments for _py.py_ fn");
+                    // The format is _py.py_type_name, so remove the type
+                    fn = fn.substr(7).split("_").filter(function (_, i) { return i !== 0; }).join("_");
+                    var recv = argExps.shift()[0];
+                    var args_2 = getCommaSep(argExps.map(function (_a) {
+                        var a = _a[0], _ = _a[1];
+                        return a;
+                    }).reduce(function (p, c) { return p.concat(c); }, []));
+                    return [expWrap(recv + "." + fn + "(", args_2, ")"), sup];
+                }
+                var args = getCommaSep(argExps.map(function (_a) {
+                    var a = _a[0], _ = _a[1];
+                    return a;
+                }).reduce(function (p, c) { return p.concat(c); }, [])); //getCommaSep(argExps.map(([a, _]) => a));
+                return [expWrap(fn + "(", args, ")"), sup];
+            }
+            function mergeParamDecls(primary, alt) {
+                // Note: possible name collisions between primary and alt parameters is handled by marking
+                // alt parameters as "unused" so that we can generate them new names without renaming
+                var decls = [];
+                var paramNames = {};
+                for (var i = 0; i < Math.max(primary.length, alt.length); i++) {
+                    var p = void 0;
+                    if (primary[i]) {
+                        p = primary[i];
+                        paramNames[getName(p.name)] = true;
+                    }
+                    else {
+                        p = alt[i];
+                        var name_4 = getName(p.name);
+                        if (paramNames[name_4]) {
+                            name_4 = pxtc.decompiler.getNewName(name_4, paramNames);
+                            p = Object.assign({ altName: name_4 }, alt[i]);
+                        }
+                    }
+                    decls.push(p);
+                }
+                return ts.createNodeArray(decls, false);
+            }
+            function emitFnExp(s, nameHint, altParams, skipType) {
+                // if the anonymous function is simple enough, use a lambda
+                if (!ts.isBlock(s.body)) {
+                    // TODO we're speculatively emitting this expression. This speculation is only safe if emitExp is pure, which it's not quite today (e.g. getNewGlobalName)
+                    var _a = emitExp(s.body), fnBody = _a[0], fnSup = _a[1];
+                    if (fnSup.length === 0) {
+                        var paramDefs = altParams ? mergeParamDecls(s.parameters, altParams) : s.parameters;
+                        var paramList = paramDefs
+                            .map(function (p) { return emitParamDecl(p, false); })
+                            .join(", ");
+                        var stmt = paramList.length
+                            ? "lambda " + paramList + ": " + expToStr(fnBody)
+                            : "lambda: " + expToStr(fnBody);
+                        return asExpRes(stmt);
+                    }
+                }
+                // otherwise emit a standard "def myFunction(...)" declaration
+                var fnName = s.name ? getName(s.name) : getNewGlobalName(nameHint || "my_function");
+                var fnDef = emitFuncDecl(s, fnName, altParams, skipType);
+                return asExpRes(fnName, fnDef);
+            }
+            function getUnaryOpSpacing(s) {
+                switch (s) {
+                    case ts.SyntaxKind.ExclamationToken:// not
+                        return " ";
+                    case ts.SyntaxKind.PlusToken:
+                    case ts.SyntaxKind.MinusToken:
+                        return "";
+                    default:
+                        return " ";
+                }
+            }
+            function emitPreUnaryExp(s) {
+                var op = emitOp(s.operator, s);
+                var _a = emitExp(s.operand), exp = _a[0], expSup = _a[1];
+                // TODO handle order-of-operations ? parenthesis?
+                var space = getUnaryOpSpacing(s.operator);
+                var res = "" + op + space + expToStr(exp);
+                return asExpRes(res, expSup);
+            }
+            function emitPostUnaryExp(s) {
+                var op = emitOp(s.operator, s);
+                var _a = emitExp(s.operand), exp = _a[0], expSup = _a[1];
+                // TODO handle order-of-operations ? parenthesis?
+                var space = getUnaryOpSpacing(s.operator);
+                var res = "" + expToStr(exp) + space + op;
+                return asExpRes(res, expSup);
+            }
+            function emitArrayLitExp(s) {
+                var els = s.elements
+                    .map(emitExp);
+                var sup = els
+                    .map(function (_a) {
+                    var _ = _a[0], sup = _a[1];
+                    return sup;
+                })
+                    .reduce(function (p, c) { return p.concat(c); }, []);
+                var inner = getCommaSep(els.map(function (_a) {
+                    var e = _a[0], _ = _a[1];
+                    return e;
+                }).reduce(function (p, c) { return p.concat(c); }, []));
+                return [expWrap("[", inner, "]"), sup];
+            }
+            function emitElAccessExp(s) {
+                if (!s.argumentExpression)
+                    return throwError(s, 3015, "Unsupported: element access expression without an argument expression");
+                var _a = emitExp(s.expression), left = _a[0], leftSup = _a[1];
+                var _b = emitExp(s.argumentExpression), arg = _b[0], argSup = _b[1];
+                var sup = leftSup.concat(argSup);
+                var exp = expToStr(left) + "[" + expToStr(arg) + "]";
+                return asExpRes(exp, sup);
+            }
+            function emitParenthesisExp(s) {
+                var _a = emitExp(s.expression), inner = _a[0], innerSup = _a[1];
+                return asExpRes("(" + expToStr(inner) + ")", innerSup);
+            }
+            function emitMultiLnStrLitExp(s) {
+                if (ts.isNoSubstitutionTemplateLiteral(s))
+                    return asExpRes("\"\"\"" + s.text + "\"\"\"");
+                var _a = emitExp(s.tag), tag = _a[0], tagSup = _a[1];
+                var _b = emitExp(s.template), temp = _b[0], tempSup = _b[1];
+                var sup = tagSup.concat(tempSup);
+                var exp = expToStr(tag) + "(" + expToStr(temp) + ")";
+                return asExpRes(exp, sup);
+            }
+            function emitIdentifierExp(s) {
+                // TODO disallow keywords and built-ins?
+                // TODO why isn't undefined showing up as a keyword?
+                // let id = s.text;
+                if (s.text == "undefined")
+                    return asExpRes("None");
+                var name = getName(s);
+                return asExpRes(name);
+            }
+            function visitExp(s, fn) {
+                var visitRecur = function (s) {
+                    return visitExp(s, fn);
+                };
+                if (ts.isBinaryExpression(s)) {
+                    return visitRecur(s.left) && visitRecur(s.right);
+                }
+                else if (ts.isPropertyAccessExpression(s)) {
+                    return visitRecur(s.expression);
+                }
+                else if (ts.isPrefixUnaryExpression(s) || ts.isPostfixUnaryExpression(s)) {
+                    return s.operator !== ts.SyntaxKind.PlusPlusToken
+                        && s.operator !== ts.SyntaxKind.MinusMinusToken
+                        && visitRecur(s.operand);
+                }
+                else if (ts.isParenthesizedExpression(s)) {
+                    return visitRecur(s.expression);
+                }
+                else if (ts.isArrayLiteralExpression(s)) {
+                    return s.elements
+                        .map(visitRecur)
+                        .reduce(function (p, c) { return p && c; }, true);
+                }
+                else if (ts.isElementAccessExpression(s)) {
+                    return visitRecur(s.expression)
+                        && (!s.argumentExpression || visitRecur(s.argumentExpression));
+                }
+                return fn(s);
+            }
+            function isConstExp(s) {
+                var isConst = function (s) {
+                    switch (s.kind) {
+                        case ts.SyntaxKind.PropertyAccessExpression:
+                        case ts.SyntaxKind.BinaryExpression:
+                        case ts.SyntaxKind.ParenthesizedExpression:
+                        case ts.SyntaxKind.ArrayLiteralExpression:
+                        case ts.SyntaxKind.ElementAccessExpression:
+                        case ts.SyntaxKind.TrueKeyword:
+                        case ts.SyntaxKind.FalseKeyword:
+                        case ts.SyntaxKind.NullKeyword:
+                        case ts.SyntaxKind.UndefinedKeyword:
+                        case ts.SyntaxKind.NumericLiteral:
+                        case ts.SyntaxKind.StringLiteral:
+                        case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
+                            return true;
+                        case ts.SyntaxKind.CallExpression:
+                        case ts.SyntaxKind.NewExpression:
+                        case ts.SyntaxKind.FunctionExpression:
+                        case ts.SyntaxKind.ArrowFunction:
+                        case ts.SyntaxKind.Identifier:
+                        case ts.SyntaxKind.ThisKeyword:
+                            return false;
+                        case ts.SyntaxKind.PrefixUnaryExpression:
+                        case ts.SyntaxKind.PostfixUnaryExpression:
+                            var e = s;
+                            return e.operator !== ts.SyntaxKind.PlusPlusToken
+                                && e.operator !== ts.SyntaxKind.MinusMinusToken;
+                    }
+                    return false;
+                };
+                return visitExp(s, isConst);
+            }
+            function emitCondExp(s) {
+                var _a = emitExp(s.condition), cond = _a[0], condSup = _a[1];
+                var _b = emitExp(s.whenTrue), tru = _b[0], truSup = _b[1];
+                var _c = emitExp(s.whenFalse), fls = _c[0], flsSup = _c[1];
+                var sup = condSup.concat(truSup).concat(flsSup);
+                var exp = tru + " if " + expToStr(cond) + " else " + expToStr(fls);
+                return asExpRes(exp, sup);
+            }
+            function emitExp(s) {
+                switch (s.kind) {
+                    case ts.SyntaxKind.BinaryExpression:
+                        return emitBinExp(s);
+                    case ts.SyntaxKind.PropertyAccessExpression:
+                        return emitDotExp(s);
+                    case ts.SyntaxKind.CallExpression:
+                        return emitCallExp(s);
+                    case ts.SyntaxKind.NewExpression:
+                        return emitCallExp(s);
+                    case ts.SyntaxKind.FunctionExpression:
+                    case ts.SyntaxKind.ArrowFunction:
+                        return emitFnExp(s);
+                    case ts.SyntaxKind.PrefixUnaryExpression:
+                        return emitPreUnaryExp(s);
+                    case ts.SyntaxKind.PostfixUnaryExpression:
+                        return emitPostUnaryExp(s);
+                    case ts.SyntaxKind.ParenthesizedExpression:
+                        return emitParenthesisExp(s);
+                    case ts.SyntaxKind.ArrayLiteralExpression:
+                        return emitArrayLitExp(s);
+                    case ts.SyntaxKind.ElementAccessExpression:
+                        return emitElAccessExp(s);
+                    case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
+                    case ts.SyntaxKind.TaggedTemplateExpression:
+                        return emitMultiLnStrLitExp(s);
+                    case ts.SyntaxKind.TrueKeyword:
+                        return asExpRes("True");
+                    case ts.SyntaxKind.FalseKeyword:
+                        return asExpRes("False");
+                    case ts.SyntaxKind.ThisKeyword:
+                        return asExpRes("self");
+                    case ts.SyntaxKind.NullKeyword:
+                    case ts.SyntaxKind.UndefinedKeyword:
+                        return asExpRes("None");
+                    case ts.SyntaxKind.Identifier:
+                        return emitIdentifierExp(s);
+                    case ts.SyntaxKind.NumericLiteral:
+                    case ts.SyntaxKind.StringLiteral:
+                        // TODO handle weird syntax?
+                        return asExpRes(s.getText());
+                    case ts.SyntaxKind.ConditionalExpression:
+                        return emitCondExp(s);
+                    default:
+                        // TODO handle more expressions
+                        return asExpRes(s.getText(), ["# unknown expression:  " + s.kind]); // uncomment for easier locating
+                }
+            }
+        }
+    })(py = pxt.py || (pxt.py = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var py;
+    (function (py) {
+        var rx;
+        (function (rx) {
+            var nonASCIIwhitespace = /[\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/;
+            function isIdentifierStart(code) {
+                return ts.pxtc.isIdentifierStart(code, ts.pxtc.ScriptTarget.ES5);
+            }
+            rx.isIdentifierStart = isIdentifierStart;
+            function isIdentifierChar(code) {
+                return ts.pxtc.isIdentifierPart(code, ts.pxtc.ScriptTarget.ES5);
+            }
+            rx.isIdentifierChar = isIdentifierChar;
+            function isSpace(ch) {
+                if (ch === 32 || // ' '
+                    ch === 9 || ch === 11 || ch === 12 || // TODO check this with CPython
+                    ch === 160 || // '\xa0'
+                    ch >= 0x1680 && nonASCIIwhitespace.test(String.fromCharCode(ch))) {
+                    return true;
+                }
+                return false;
+            }
+            rx.isSpace = isSpace;
+            function isNewline(ch) {
+                if (ch === 10 || ch === 13)
+                    return true;
+                // Python ref doesn't really say LINE SEPARATOR and PARAGRAPH SEPARATOR
+                // are line seperators, but how else should we treat them?
+                if (ch === 0x2028 || ch === 0x2029)
+                    return true;
+                return false;
+            }
+            rx.isNewline = isNewline;
+        })(rx = py.rx || (py.rx = {}));
+    })(py = pxt.py || (pxt.py = {}));
+})(pxt || (pxt = {}));

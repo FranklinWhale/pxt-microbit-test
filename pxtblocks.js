@@ -1,1 +1,12359 @@
-var iface,pxt,__extends=this&&this.__extends||function(){var o=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var i in e)e.hasOwnProperty(i)&&(t[i]=e[i])};return function(t,e){function i(){this.constructor=t}o(t,e),t.prototype=null===e?Object.create(e):(i.prototype=e.prototype,new i)}}();!function(Ct){!function($){function n(t,e){return Ct.worker.getWorker(Ct.webConfig.workerjs).opAsync(t,e)}$.workerOpAsync=n;var a={},J=50;function Q(t,e){t.push.apply(t,e)}function tt(t){if(!t)throw new Error("Assertion failure")}var Z,t,i=function(t,e,i,o,r){this.link=t,this.type=e,this.parentType=i,this.childType=o,this.isArrayType=r};function et(t){return t.link?et(t.link):t}function d(t,e){var i=et(t),o=et(e);if(tt(null==i.link&&null==o.link),i!=o){if(i.childType&&o.childType){var r=i.childType;i.childType=null,d(r,o.childType)}else i.childType&&!o.childType&&(o.childType=i.childType);if(i.parentType&&o.parentType){var n=i.parentType;i.parentType=null,d(n,o.parentType)}else!i.parentType||o.parentType||o.type||(o.parentType=i.parentType);var l=function(t,e){{if(null==t||"Array"===t&&f(e))return e;if(null==e||"Array"===e&&f(t))return t;if(t==e)return t;throw new Error("cannot mix "+t+" with "+e)}}(i.type,o.type);t.link=o,i.link=o,i.isArrayType=o.isArrayType,t.type=null,e.type=l}}function y(t,e){return void 0===e&&(e=!1),new i(null,t,null,null,e)}$.Point=i,(t=Z=$.BlockDeclarationType||($.BlockDeclarationType={}))[t.None=0]="None",t[t.Argument=1]="Argument",t[t.Assigned=2]="Assigned",t[t.Implicit=3]="Implicit";var k=y("number"),it=y("boolean"),ot=y("string"),h=y("void");function m(t){if(!t)return y(t);switch(t.toLowerCase()){case"number":return k;case"boolean":return it;case"string":return ot;case"void":return h;default:return y(t)}}function rt(t,e){if(tt(null!=e),"placeholder"==e.type||e.type===pxtc.TS_OUTPUT_TYPE)return et(e.p);if("variables_get"==e.type)return et(ht(t,e,e.getField("VAR").getText()).type);if(!e.outputConnection)return m(h.type);var i=e.outputConnection.check_&&e.outputConnection.check_.length?e.outputConnection.check_[0]:"T";if("Array"===i){if(1<e.outputConnection.check_.length)return m(e.outputConnection.check_[1]);var o=void 0;if(e.inputList&&e.inputList.length)for(var r=0,n=e.inputList;r<n.length;r++){var l=n[r];if(l.connection&&l.connection.targetBlock()){var a=et(rt(t,l.connection.targetBlock()));if(a){if(a.parentType)return a.parentType;T(o=m(a.type+"[]"),a);break}}}return o&&(o.isArrayType=!0),o||y(null,!0)}if("T"===i){var s=t.stdCallTable[e.type],c="lists_index_get"===e.type;if(c||s&&s.comp.thisParameter){var u=void 0;if((u=c?e.inputList.find(function(t){return"LIST"===t.name}):e.inputList.find(function(t){return t.name===s.comp.thisParameter.definitionName})).connection&&u.connection.targetBlock()){var p=rt(t,u.connection.targetBlock());if(p.childType)return p.childType;var d=f(p.type)?y(p.type.substr(0,p.type.length-2)):y(null);return T(p,d),d}}return y(null)}return m(i)}function f(t){return t&&-1!==t.indexOf("[]")}function g(t,e,i,o){var r,n,l=e.getInputTargetBlock(i);l?l.type!==pxtc.TS_OUTPUT_TYPE||l.p||(l.p=y(null)):(a[e.id]||(a[e.id]={}),a[e.id][i]||(a[e.id][i]=(r=t,n=e,{type:"placeholder",p:y(o||null),workspace:r.workspace,parentBlock_:n})))}function nt(t){return"pxt_controls_for"==t.type||"pxt_controls_for_of"==t.type?lt(t,"VAR"):t}function lt(t,e){var i=t.getInputTargetBlock(e);return i||a[t.id]&&a[t.id][e]}function v(){a={}}function b(t,e,i,o){g(t,e,i);try{d(rt(t,lt(e,i)),o)}catch(t){}}function _(t,c,e){function u(t){return t.name?t.connection&&t.connection.check_&&t.connection.check_.length?t.connection.check_[0]:"T":void 0}function p(t,e){var i=t.inputList.filter(function(t){return"T"===u(t)});if(i.length){var o=lt(t,i[0].name);if(o){var r=rt(c,o),n=r.type?m(rt(c,o).type+"[]"):m(null);return T(n,r),b(c,t,e,n),!0}}return!1}t&&t.filter(function(t){return!t.disabled}).forEach(function(l){try{switch(l.type){case"math_op2":b(c,l,"x",m(k.type)),b(c,l,"y",m(k.type));break;case"math_op3":b(c,l,"x",m(k.type));break;case"math_arithmetic":case"logic_compare":switch(l.getFieldValue("OP")){case"ADD":case"MINUS":case"MULTIPLY":case"DIVIDE":case"LT":case"LTE":case"GT":case"GTE":case"POWER":b(c,l,"A",m(k.type)),b(c,l,"B",m(k.type));break;case"AND":case"OR":g(c,l,"A",it.type),g(c,l,"B",it.type);break;case"EQ":case"NEQ":g(c,l,"A"),g(c,l,"B");var t=rt(c,lt(l,"A")),e=rt(c,lt(l,"B"));try{d(t,e)}catch(t){}}break;case"logic_operation":g(c,l,"A",it.type),g(c,l,"B",it.type);break;case"logic_negate":g(c,l,"BOOL",it.type);break;case"controls_if":for(var i=0;i<=l.elseifCount_;++i)g(c,l,"IF"+i,it.type);break;case"pxt_controls_for":case"controls_simple_for":b(c,l,"TO",m(k.type));break;case"pxt_controls_for_of":case"controls_for_of":T(rt(c,lt(l,"LIST")),ht(c,l,nt(l).getField("VAR").getText()).type);break;case"variables_set":case"variables_change":var o=ht(c,l,l.getField("VAR").getText()).type;g(c,l,"VALUE");var r=lt(l,"VALUE");if(r){var n=rt(c,r);try{d(o,n)}catch(t){}}break;case"controls_repeat_ext":b(c,l,"TIMES",m(k.type));break;case"device_while":g(c,l,"COND",it.type);break;case"lists_index_get":b(c,l,"LIST",m("Array")),b(c,l,"INDEX",m(k.type)),T(rt(c,lt(l,"LIST")),rt(c,l));break;case"lists_index_set":b(c,l,"LIST",m("Array")),g(c,l,"VALUE"),p(l,"LIST"),b(c,l,"INDEX",m(k.type));break;case"function_call":l.getArguments().forEach(function(t){b(c,l,t.id,m(t.type))});break;case pxtc.PAUSE_UNTIL_TYPE:b(c,l,"PREDICATE",it);break;default:if(l.type in c.stdCallTable){var a=c.stdCallTable[l.type];if("ENUM_GET"===a.attrs.shim||"KIND_GET"===a.attrs.shim)return;Bt(a,Et(l)).forEach(function(e,t){var i=a.isExtensionMethod&&0===t;if(e.definitionName&&!l.getFieldValue(e.definitionName)){var o=l.inputList.find(function(t){return t.name==e.definitionName});if(o&&o.connection&&o.connection.check_){if(i&&"Array"===u(o))if(p(l,e.definitionName))return;for(var r=0;r<o.connection.check_.length;r++)try{var n=o.connection.check_[r];b(c,l,e.definitionName,m(n));break}catch(t){}}}})}}}catch(t){var s=t.block||l;s.setWarningText(t+""),c.errors.push(s)}}),c.allVariables.forEach(function(t){null==at(t.type).type&&d(t.type,m(t.type.isArrayType?"number[]":k.type))})}function T(t,e){var i=et(t),o=et(e);i.childType?d(i.childType,o):i.type||(i.childType=o),o.parentType?d(o.parentType,i):o.type||(o.parentType=i),i.isArrayType=!0}function at(t,e){void 0===e&&(e=[]);var i=et(t);if(-1===e.indexOf(i)&&(e.push(i),!i.type||"Array"===i.type)){if(i.parentType){var o=at(i.parentType,e);if(o.type&&"Array"!==o.type)return i.type=o.type.substr(0,o.type.length-2),i}if(i.childType){var r=at(i.childType,e);if(r.type)return i.type=r.type+"[]",i}}return i}function st(t){var e,i,o=t.getFieldValue("math_number_minmax"===t.type?"SLIDER":"NUM"),r=parseFloat(o);return e=r,i=t,isFinite(e)&&!isNaN(e)||function(t,e){var i=new Error(t);throw i.block=e,i}(lf("Number entered is either too large or too small"),i),r}function ct(t,e,i){return $.H.mkNumberLiteral(st(e))}var ut={ADD:"+",MINUS:"-",MULTIPLY:"*",DIVIDE:"/",LT:"<",LTE:"<=",GT:">",GTE:">=",AND:"&&",OR:"||",EQ:"==",NEQ:"!=",POWER:"**"};function x(t){var e=t.getContent();return $.Helpers.mkMultiComment(e.trim())}function pt(t){if(null==t.type&&(d(t,m(k.type)),t=et(t)),f(t.type)||t.isArrayType)return $.mkText("[]");switch(t.type){case"boolean":return $.H.mkBooleanLiteral(!1);case"number":return $.H.mkNumberLiteral(0);case"string":return $.H.mkStringLiteral("");default:return $.mkText("null")}}function dt(e,i,o){var t,r,n,l,a,s,c,u,p,d,h,m,f,g,y,k,v,b,_,T,x,E,B,C,A,I,N,w,S,D,L,O,R,F,M,P,U,V,H,G,W,X,j,K,Y,z,q;if(tt(null!=i),e.stats[i.type]=(e.stats[i.type]||0)+1,xt(i,o),i.disabled||"placeholder"==i.type)if("Array"===et(rt(e,i)).type){var J="lists_index_get"===i.parentBlock_.type;if(!J)J=(Z=e.stdCallTable[i.parentBlock_.type])&&Z.isExpression;var Q=$.mkText("[0]");t=J?Q:Tt(Q)}else t=pt(rt(e,i));else switch(i.type){case"math_number":case"math_integer":case"math_whole_number":case"math_number_minmax":t=ct(0,i);break;case"math_op2":X=e,K=o,Y=(j=i).getFieldValue("op"),z=dt(X,lt(j,"x"),K),q=dt(X,lt(j,"y"),K),t=$.H.mathCall(Y,[z,q]);break;case"math_op3":G=o,W=dt(e,lt(i,"x"),G),t=$.H.mathCall("abs",[W]);break;case"math_arithmetic":case"logic_compare":case"logic_operation":t=function(t,e,i){var o=e.getFieldValue("OP"),r=lt(e,"A"),n=lt(e,"B"),l=[dt(t,r,i),dt(t,n,i)],a=rt(t,r).type;if(a==ot.type){if("EQ"==o)return $.H.mkSimpleCall("==",l);if("NEQ"==o)return $.H.mkSimpleCall("!=",l)}else if(a==it.type)return $.H.mkSimpleCall(ut[o],l);return tt(o in ut),$.H.mkSimpleCall(ut[o],l)}(e,i,o);break;case"math_modulo":F=e,P=o,U=lt(M=i,"DIVIDEND"),V=lt(M,"DIVISOR"),H=[dt(F,U,P),dt(F,V,P)],t=$.H.mkSimpleCall("%",H);break;case"logic_boolean":R=i,t=$.H.mkBooleanLiteral("TRUE"==R.getFieldValue("BOOL"));break;case"logic_negate":L=o,O=dt(e,lt(i,"BOOL"),L),t=$.mkPrefix("!",[$.H.mkParenthesizedExpression(O)]);break;case"variables_get":N=e,S=(w=i).getField("VAR").getText(),t=(D=ht(N,w,S))?(tt(null!=D&&null!=D.type),$.mkText(D.escapedName)):$.mkText(S);break;case"text":I=i,t=$.H.mkStringLiteral(I.getFieldValue("TEXT"));break;case"text_join":t=function(t,e,i){for(var o,r=0;;){var n=lt(e,"ADD"+r);if(r++,!n){if(r<e.inputList.length)continue;break}var l=dt(t,n,i);o=o?$.H.mkSimpleCall("+",[o,l]):0===n.type.indexOf("text")?l:$.H.mkSimpleCall("+",[$.H.mkStringLiteral(""),l])}return o||$.H.mkStringLiteral("")}(e,i,o);break;case"lists_create_with":B=e,C=o,A=i.inputList.map(function(t){return t.connection&&t.connection.targetBlock()?dt(B,t.connection.targetBlock(),C):void 0}).filter(function(t){return!!t}),t=$.H.mkArrayLiteral(A);break;case"lists_index_get":T=o,x=dt(b=e,lt(_=i,"LIST"),T),E=dt(b,lt(_,"INDEX"),T),t=$.mkGroup([x,$.mkText("["),E,$.mkText("]")]);break;case"lists_index_set":d=e,m=o,f=lt(h=i,"LIST"),g=dt(d,f,m),y=dt(d,lt(h,"INDEX"),m),k=dt(d,lt(h,"VALUE"),m),v=$.mkGroup([g,$.mkText("["),y,$.mkText("] = "),k]),t="lists_create_with"===f.type?Tt(v):v;break;case"math_js_op":case"math_js_round":a=e,c=o,u=(s=i).getFieldValue("OP"),p=[dt(a,lt(s,"ARG0"),c)],s.getInput("ARG1")&&p.push(dt(a,lt(s,"ARG1"),c)),t=$.H.mathCall(u,p);break;case pxtc.TS_OUTPUT_TYPE:l=i,t=$.mkText(l.getFieldValue("EXPRESSION").trim());break;case"argument_reporter_boolean":case"argument_reporter_number":case"argument_reporter_string":case"argument_reporter_custom":r=e,n=mt(i.getFieldValue("VALUE"),r),t=$.mkText(n);break;default:var Z;(Z=e.stdCallTable[i.type])?t=Z.imageLiteral?bt(e,i,Z.imageLiteral,Z.imageLiteralColumns,Z.imageLiteralRows,Z.namespace,Z.f,Bt(Z,Et(i)).map(function(t){return gt(e,i,t,o)})):yt(e,i,Z,o):(Ct.reportError("blocks","unable to compile expression",{details:i.type}),t=pt(rt(e,i)))}return t.id=i.id,t}function ht(t,e,i){return function t(e,i){return i&&i.declaredVars[e]?i.declaredVars[e]:i&&i.parent?t(e,i.parent):null}(i,t.idToScope[e.id])}function mt(t,e,i){if(void 0===i&&(i=!1),!t)return"_";if(i){if(e.renames.oldToNewFunctions[t])return e.renames.oldToNewFunctions[t]}else if(e.renames.oldToNew[t])return e.renames.oldToNew[t];var o=ts.pxtc.escapeIdentifier(t);if(e.renames.takenNames[o]){for(var r=2;e.renames.takenNames[o+r];)r++;o+=r}return i?(e.renames.oldToNewFunctions[t]=o,e.renames.takenNames[o]=!0):e.renames.oldToNew[t]=o,o}function r(t,e){return Bt(t,Et(e)).map(function(t){return t.definitionName}).filter(function(t){return!!t})}function ft(e,i,o){var t=e.stdCallTable[i.type];return t.imageLiteral?$.mkStmt(bt(e,i,t.imageLiteral,t.imageLiteralColumns,t.imageLiteralRows,t.namespace,t.f,Bt(t,Et(i)).map(function(t){return gt(e,i,t,o)}))):t.hasHandler?function(e,i,t,o,r,n){var l,a=o.map(function(t){return kt(e,i,t,n)}),s=lt(i,"HANDLER"),c=_t(e,s);Ct.appTarget.compile&&Ct.appTarget.compile.emptyEventHandlerComments&&0===c.children.length&&c.children.unshift($.mkStmt($.mkText("// "+pxtc.HANDLER_COMMENT)));if(B(i)&&i.mutation.getMutationType()===$.MutatorTypes.ObjectDestructuringMutator)l=i.mutation.compileMutation(e,n);else if(t.comp.handlerArgs.length){var u=(d=e,N(p=i,t).map(function(t){return ht(d,p,t[0]).escapedName}));l=$.mkText("function ("+u.join(", ")+")")}var p,d;return E(e,r,t.f,a,c,l,t.isExtensionMethod)}(e,i,t,r(t,i),t.namespace,o):$.mkStmt(yt(e,i,t,o))}function gt(t,e,i,o,r){void 0===r&&(r=!1);var n=e.getFieldValue(i.definitionName);if(null!=n){if(e.getField(i.definitionName)instanceof pxtblockly.FieldTextInput)return $.H.mkStringLiteral(n);var l=t.blocksInfo.apis.byQName[i.type];if(l&&l.attributes.emitAsConstant)for(var a=0,s=Object.keys(t.blocksInfo.apis.byQName);a<s.length;a++){var c=s[a],u=t.blocksInfo.apis.byQName[c];if(u&&u.attributes&&u.attributes.enumIdentity===n)return $.mkText(c)}return $.mkText(n)}g(t,e,i.definitionName);var p=lt(e,i.definitionName);return r&&"lists_create_with"===p.type?Tt(dt(t,p,o)):i.shadowOptions&&i.shadowOptions.toString&&rt(t,p)!==ot?$.H.mkSimpleCall("+",[$.H.mkStringLiteral(""),$.H.mkParenthesizedExpression(dt(t,p,o))]):dt(t,p,o)}function yt(i,o,r,n){var t;if(B(o)&&o.mutation.getMutationType()===$.MutatorTypes.RestParameterMutator)t=o.mutation.compileMutation(i,n).children;else{if("ENUM_GET"===r.attrs.shim){var e=r.attrs.enumName,l=o.getFieldValue("MEMBER").replace(/^\d+/,"");return $.H.mkPropertyAccess(l,$.mkText(e))}if("KIND_GET"===r.attrs.shim){var a=i.kinds.filter(function(t){return t.blockId===r.attrs.blockId})[0];return $.H.mkPropertyAccess(o.getFieldValue("MEMBER"),$.mkText(a.name))}t=Bt(r,Et(o)).map(function(t,e){return gt(i,o,t,n,r.isExtensionMethod&&0===e&&!r.isExpression)})}var s=!o.getInputsInline();if(r.isIdentity)return t[0];if(r.property)return $.H.mkPropertyAccess(r.f,t[0]);if("@get@"==r.f)return $.H.mkPropertyAccess(t[1].op.replace(/.*\./,""),t[0]);if("@set@"==r.f)return $.H.mkAssign($.H.mkPropertyAccess(t[1].op.replace(/.*\./,"").replace(/@set/,""),t[0]),t[2]);if("@change@"==r.f)return $.H.mkSimpleCall("+=",[$.H.mkPropertyAccess(t[1].op.replace(/.*\./,"").replace(/@set/,""),t[0]),t[2]]);if(r.isExtensionMethod){if(r.attrs.defaultInstance){var c=void 0;B(o)&&o.mutation.getMutationType()===$.MutatorTypes.DefaultInstanceMutator&&(c=o.mutation.compileMutation(i,n)),c?t.unshift(c):t.unshift($.mkText(r.attrs.defaultInstance))}return $.H.extensionCall(r.f,t,s)}return r.namespace?$.H.namespaceCall(r.namespace,r.f,t,s):$.H.stdCall(r.f,t,s)}function E(t,e,i,o,r,n,l){var a;return void 0===l&&(l=!1),r.noFinalNewline=!0,a=n?$.mkGroup([n,r]):$.mkGroup([$.mkText("function ()"),r]),l?$.mkStmt($.H.extensionCall(i,o.concat([a]),!1)):e?$.mkStmt($.H.namespaceCall(e,i,o.concat([a]),!1)):$.mkStmt($.H.mkCall(i,o.concat([a]),!1))}function kt(t,e,i,o){var r=lt(e,i);return r?dt(t,r,o):e.getField(i)instanceof pxtblockly.FieldTextInput?$.H.mkStringLiteral(e.getFieldValue(i)):$.mkText(e.getFieldValue(i))}function vt(t,e){var i=_t(t,lt(e,"HANDLER"));return Ct.appTarget.compile&&Ct.appTarget.compile.onStartText&&i&&i.children&&i.children.unshift($.mkStmt($.mkText("// "+pxtc.ON_START_COMMENT+"\n"))),i}function B(t){return!!t.mutation}function bt(t,e,i,o,r,n,l,a){a=void 0===a?[]:a;var s="\n";r=r||5,o=(o||5)*i;var c=e.getFieldValue("LEDS");c=c.replace(/[ `\n]+/g,"");for(var u=0;u<r;++u){for(var p=0;p<o;++p)0<p&&(s+=" "),s+="#"===c[u*o+p]?"#":".";s+="\n"}var d=$.H.mkStringLiteral(s);return d.canIndentInside=!0,$.H.namespaceCall(n,l,[d].concat(a),!1)}function C(t,e){var i,o,r,n,l,a,s,c,u,p,d,h,m,f,g,y,k,v,b,_,T,x,E,B,C,A,I,N,w,S,D,L,O,R,F,M,P,U,V,H,G,W,X,j,K,Y,z=[];switch(t.stats[e.type]=(t.stats[e.type]||0)+1,xt(e,z),e.type){case"controls_if":i=function(t,e,i){for(var o=[],r=0;r<=e.elseifCount_;++r){var n=dt(t,lt(e,"IF"+r),i),l=_t(t,lt(e,"DO"+r)),a=$.mkText("if (");0<r&&((a=$.mkText("else if (")).glueToBlock=$.GlueMode.WithSpace),Q(o,[a,n,$.mkText(")"),l])}if(e.elseCount_){var s=$.mkText("else");s.glueToBlock=$.GlueMode.WithSpace,Q(o,[s,_t(t,lt(e,"ELSE"))])}return o}(t,e,z);break;case"pxt_controls_for":case"controls_for":case"controls_simple_for":U=t,H=z,G=lt(V=e,"TO"),W=lt(V,"DO"),X=lt(V,"BY"),j=lt(V,"FROM"),K=!X||X.type.match(/^math_number/)&&1==st(X),Y=ht(U,V,nt(V).getField("VAR").getText()),i=[$.mkText("for (let "+Y.escapedName+" = "),j?dt(U,j,H):$.mkText("0"),$.mkText("; "),$.mkInfix($.mkText(Y.escapedName),"<=",dt(U,G,H)),$.mkText("; "),K?$.mkText(Y.escapedName+"++"):$.mkInfix($.mkText(Y.escapedName),"+=",dt(U,X,H)),$.mkText(")"),_t(U,W)];break;case"pxt_controls_for_of":case"controls_for_of":L=t,R=z,F=lt(O=e,"LIST"),M=lt(O,"DO"),P=ht(L,O,nt(O).getField("VAR").getText()),i=[$.mkText("for (let "+P.escapedName+" of "),dt(L,F,R),$.mkText(")"),_t(L,M)];break;case"variables_set":i=[function(t,e,i){var o=lt(e,"VALUE"),r=ht(t,e,e.getField("VAR").getText()),n=t.idToScope[e.id],l=n.variables[r.name],a=!r.alreadyDeclared&&n.declaredVars[r.name]===r&&l.firstReferencingBlock===e&&l.isDefinitelyAssigned,s=dt(t,o,i),c=r.escapedName+" = ";if(r.isAssigned=!0,a){r.alreadyDeclared=Z.Assigned;var u=at(r.type);if(c="let "+r.escapedName+" = ",u){var p=at(rt(t,o));u.type!==p.type&&(c="let "+r.escapedName+": "+u.type+" = ")}}return $.mkStmt($.mkText(c),s)}(t,e,z)];break;case"variables_change":i=[(C=t,A=e,I=z,N=lt(A,"VALUE"),w=ht(C,A,A.getField("VAR").getText()),S=dt(C,N,I),D=$.mkText(w.escapedName),$.mkStmt($.mkInfix(D,"+=",S)))];break;case"controls_repeat_ext":i=function(t,e,i){for(var o,r=dt(t,lt(e,"TIMES"),i),n=_t(t,lt(e,"DO")),l="index",a=2;o=l,void 0!==t.idToScope[e.id].variables[o];a++)l="index"+a;return[$.mkText("for (let "+l+" = 0; "),$.mkInfix($.mkText(l),"<",r),$.mkText("; "+l+"++)"),n]}(t,e,z);break;case"device_while":x=z,E=dt(_=t,lt(T=e,"COND"),x),B=_t(_,lt(T,"DO")),i=[$.mkText("while ("),E,$.mkText(")"),B];break;case"procedures_defnoreturn":y=t,v=mt((k=e).getFieldValue("NAME"),y,!0),b=lt(k,"STACK"),i=[$.mkText("function "+v+"() "),_t(y,b)];break;case"function_definition":d=t,m=mt((h=e).getField("function_name").getText(),d,!0),f=lt(h,"STACK"),g=h.getArguments().map(function(t){return mt(t.name,d)+": "+t.type}),i=[$.mkText("function "+m+" ("+g.join(", ")+")"),_t(d,f)];break;case"procedures_callnoreturn":i=[(c=t,u=e,p=mt(u.getFieldValue("NAME"),c,!0),$.mkStmt($.mkText(p+"()")))];break;case"function_call":i=[(o=t,r=e,n=z,l=mt(r.getField("function_name").getText(),o,!0),a=!r.getInputsInline(),s=r.getArguments().map(function(t){return{actualName:t.name,definitionName:t.id}}).map(function(t){return gt(o,r,t,n)}),$.mkStmt($.H.stdCall(l,s,a)))];break;case ts.pxtc.ON_START_TYPE:i=vt(t,e).children;break;case pxtc.TS_STATEMENT_TYPE:i=function(t,e){var i=[],o=0;for(;;){var r=e.getFieldValue("LINE"+o);if(o++,null===r)break;i.push($.mkText(r+"\n"))}return i}(0,e);break;case pxtc.PAUSE_UNTIL_TYPE:i=function(t,e,i){var o=Ct.appTarget.runtime&&Ct.appTarget.runtime.pauseUntilBlock;Ct.Util.assert(!!o,"target has block enabled");var r=o.namespace,n=o.callName||"pauseUntil",l=kt(t,e,"PREDICATE",i),a=[$.mkGroup([$.mkText("() => "),l])];return r?[$.mkStmt($.H.namespaceCall(r,n,a,!1))]:[$.mkStmt($.H.mkCall(n,a,!1,!1))]}(t,e,z);break;case pxtc.TS_DEBUGGER_TYPE:i=function(t,e){if("1"==e.getFieldValue("ON_OFF"))return[$.mkText("debugger;\n")];return[]}(0,e);break;case pxtc.TS_BREAK_TYPE:i=[$.mkText("break;\n")];break;case pxtc.TS_CONTINUE_TYPE:i=[$.mkText("continue;\n")];break;default:i=t.stdCallTable[e.type]?[ft(t,e,z)]:[$.mkStmt(dt(t,e,z))]}var q=i[i.length-1];return q&&(q.id=e.id),z.length&&function(t,e){for(var i=[],o=[],r=0,n=t;r<n.length;r++)for(var l=n[r],a=0,s=l.split("\n");a<s.length;a++){var c=s[a];o.push(c)}for(var u=0;u<o.length;u++){for(var p=o[u].split(/\s/),d=void 0,h=0,m=p;h<m.length;h++){var f=m[h];d?d.length+f.length>J?(i.push($.mkText("// "+d)),i.push($.mkNewLine()),d=f):d+=" "+f:d=f}d&&(i.push($.mkText("// "+d)),i.push($.mkNewLine())),u!==o.length-1&&(i.push($.mkText("//")),i.push($.mkNewLine()))}for(var g=0,y=i.reverse();g<y.length;g++){var k=y[g];e.unshift(k)}}(z,i),i.forEach(function(t){(t.type===$.NT.Block||t.type===$.NT.Prefix&&Ct.Util.startsWith(t.op,"//"))&&(t.id=e.id)}),i}function _t(t,e){for(var i=[];e;e=e.getNextBlock())e.disabled||Q(i,C(t,e));return $.mkBlock(i)}function Tt(t){var e=$.mkStmt($.mkText(";"));return e.glueToBlock=$.GlueMode.NoSpace,$.mkGroup([e,t])}function l(t,i){var o={workspace:t,stdCallTable:{},errors:[],renames:{oldToNew:{},takenNames:{},oldToNewFunctions:{}},stats:{},enums:[],kinds:[],idToScope:{},allVariables:[],blocksInfo:null,generatedVarDeclarations:{}};return(o.blocksInfo=i)&&(Object.keys(i.apis.byQName).forEach(function(t){var e=i.apis.byQName[t];!e.pkg||6!==e.kind&&3!==e.kind&&5!==e.kind||(o.renames.takenNames[e.qName]=!0)}),i.enumsByName&&Object.keys(i.enumsByName).forEach(function(t){return o.enums.push(i.enumsByName[t])}),i.kindsByName&&Object.keys(i.kindsByName).forEach(function(t){return o.kinds.push(i.kindsByName[t])}),i.blocks.forEach(function(t){if(o.stdCallTable[t.attributes.blockId])Ct.reportError("blocks","function already defined",{details:t.attributes.blockId,qualifiedName:t.qName,packageName:t.pkg});else{o.renames.takenNames[t.namespace]=!0;var e=Ct.blocks.compileInfo(t),i=!!e.thisParameter;o.stdCallTable[t.attributes.blockId]={namespace:t.namespace,f:t.name,comp:e,attrs:t.attributes,isExtensionMethod:i,isExpression:t.retType&&"void"!==t.retType,imageLiteral:t.attributes.imageLiteral,imageLiteralColumns:t.attributes.imageLiteralColumns,imageLiteralRows:t.attributes.imageLiteralRows,hasHandler:!!e.handlerArgs.length||t.parameters&&t.parameters.some(function(t){return"() => void"==t.type||"Action"==t.type||!!t.properties}),property:!t.parameters,isIdentity:"TD_ID"==t.attributes.shim}}}),t.getTopBlocks(!1).filter(L).forEach(function(t){mt("procedures_defnoreturn"===t.type?t.getFieldValue("NAME"):t.getField("function_name").getText(),o,!0)})),o}function A(t,e){if(t.type===ts.pxtc.ON_START_TYPE)return 0;var i=e.stdCallTable[t.type],o=I(e,t),r=1+ts.pxtc.Util.codalHash16(o);return i&&i.attrs.afterOnStart?r:-r}function s(i,o){try{var t=o.getAllBlocks(),e=o.getTopBlocks(!0);e=e.sort(function(t,e){return A(t,i)-A(e,i)}),function(r,t,e){t.forEach(function(t){return t.setEnabled(!0)});var o={};function n(t,e){var i=o[t];i?e.setEnabled(!1):(e.setEnabled(!0),o[t]=e)}e.forEach(function(t){var e=r.stdCallTable[t.type];if(t.type==ts.pxtc.ON_START_TYPE)n(ts.pxtc.ON_START_TYPE,t);else{if(L(t)||e&&e.attrs.blockAllowMultiple&&!e.attrs.handlerStatement)return;if(e&&e.hasHandler&&!e.attrs.handlerStatement){var i=e.attrs.blockHandlerKey||I(r,t);n(i,t)}else for(var o=t;o;)o.setEnabled(!1),o=o.getNextBlock()}})}(i,t,e),t=t.filter(function(t){return!t.disabled}),function(t,e){for(var d=0,i={declaredVars:{},children:[],variables:{}},o=0,r=t;o<r.length;o++){var n=r[o];if(n.type===ts.pxtc.ON_START_TYPE){var l=n.getInputTargetBlock("HANDLER");l&&f(l,i,e);break}}t.forEach(function(t){t.type!==ts.pxtc.ON_START_TYPE&&f(t,i,e)});for(var a=0,s=Object.keys(i.declaredVars);a<s.length;a++){var c=s[a],u=i.declaredVars[c];delete i.declaredVars[c];var p=w(u);(p.declaredVars[c]=u).declaringScope=p}return function e(t,i){for(var o=0,r=Object.keys(t.declaredVars);o<r.length;o++){var n=r[o],l=t.declaredVars[n];i.allVariables[l.id]=l}t.children.forEach(function(t){return e(t,i)})}(i,e),function e(o,r){for(var t=0,i=Object.keys(o.declaredVars);t<i.length;t++){var n=i[t],l=o.declaredVars[n];l.escapedName||(l.escapedName=a(n))}function a(t){if(!t)return"_";var e=ts.pxtc.escapeIdentifier(t);if(r.renames.takenNames[e]||s(e,o)){for(var i=2;r.renames.takenNames[e+i]||s(e+i,o);)i++;e+=i}return e}function s(t,e){if(e){for(var i=0,o=Object.keys(e.declaredVars);i<o.length;i++){var r=o[i],n=e.declaredVars[r];if(n.name!==n.escapedName&&n.escapedName===t)return!0}return s(t,e.parent)}return!1}o.children.forEach(function(t){return e(t,r)})}(i,e);function h(t,e){void 0===t.scopes?t.scopes=[e]:-1===t.scopes.indexOf(e)&&t.scopes.push(e)}function m(t,e){for(var i=t.parent;void 0!==i&&void 0===i.variables[e];i=i.parent)i.variables[e]={isFirstReferencedInDescendant:!0}}function f(i,o,r){if(r.idToScope[i.id]=o,"variables_get"===i.type||"variables_change"===i.type||"variables_set"===i.type)l=o,h(g(a=(n=i).getField("VAR").getText(),l),l),void 0===l.variables[a]&&(l.variables[a]={firstReferencingBlock:n,isDefinitelyAssigned:"variables_set"===n.type&&(s=!0,S(n,function(t){s&&"variables_get"===t.type&&t.getField("VAR").getText()===a&&(s=!1)},!0),s)},m(l,a));else if(i.type===pxtc.TS_STATEMENT_TYPE){var t=i.declaredVariables;if(t){var e=t.split(",");e.forEach(function(t){var e=g(t,o);e.alreadyDeclared=Z.Argument,o.variables[t]={firstReferencingBlock:i,isDefinitelyAssigned:!0},m(o,t),h(e,o)})}}var n,l,a,s,c;if(i.inputList.some(function(t){return t.type===Blockly.NEXT_STATEMENT})){var u=function(t,e){switch(t.type){case"pxt_controls_for":case"controls_simple_for":return[[nt(t).getField("VAR").getText(),k]];case"pxt_controls_for_of":case"controls_for_of":return[[nt(t).getField("VAR").getText(),y(null)]];case"function_definition":for(var i=[],o=0,r=t.getArguments();o<r.length;o++){var n=r[o];i.push([n.name,y(n.type)])}return i}if(B(t)){var l=t.mutation.getDeclaredVariables();if(l)return Object.keys(l).map(function(t){return[t,y(l[t])]})}var a=e.stdCallTable[t.type];if(a&&a.comp.handlerArgs.length)return N(t,a);return[]}(i,r).map(function(t){return{name:t[0],type:t[1],id:d++}}),p=o;u.length&&(p={parent:o,declaredVars:{},children:[],variables:{}},u.forEach(function(t){t.alreadyDeclared=Z.Assigned,p.declaredVars[t.name]=t,p.variables[t.name]={firstReferencingBlock:i,isDefinitelyAssigned:!0},h(t,p)}),r.idToScope[i.id]=p),o!==p&&o.children.push(p),S(i,function(t){f(t,p,r)}),c=function(t){var e={parent:p,declaredVars:{},children:[],variables:{}};p.children.push(e),f(t,e,r)},i.inputList.filter(function(t){return t.type===Blockly.NEXT_STATEMENT}).forEach(function(t){t.connection&&t.connection.targetBlock()&&c(t.connection.targetBlock())})}else S(i,function(t){f(t,o,r)});i.nextConnection&&i.nextConnection.targetBlock()&&f(i.nextConnection.targetBlock(),o,r)}function g(t,e){return e.declaredVars[t]?e.declaredVars[t]:e.parent?g(t,e.parent):(e.declaredVars[t]={name:t,type:y(null),id:d++},e.declaredVars[t])}}(e=e.filter(function(t){return!t.disabled}),i),_(t,i);var r=[],n=function(t,e){if(!t.length||t.some(function(t){return!t.rendered}))return{orphans:e,idToComments:{}};for(var i=t.map(function(t){var e=t.getBoundingRectangle(),i=t.getHeightWidth();return{id:t.id,x:e.left,y:e.top,width:i.width,height:i.height}}),o={orphans:[],idToComments:{}},r=0,n=e;r<n.length;r++){for(var l=n[r],a=l.getBoundingRectangle(),s=l.getHeightWidth(),c=a.left,u=a.top,p=void 0,d=0,h=i;d<h.length;d++){var m=h[d];D(c,u,s.width,s.height,m)?p=m:!p&&D(c-20,u-20,s.width+40,s.height+40,m)&&(p=m)}p?(o.idToComments[p.id]||(o.idToComments[p.id]=[]),o.idToComments[p.id].push(l)):o.orphans.push(l)}return o}(e,o.getTopComments(!0));n.orphans.forEach(function(t){return Q(r,x(t).children)}),e.forEach(function(t){if(n.idToComments[t.id]&&n.idToComments[t.id].forEach(function(t){Q(r,x(t).children)}),t.type==ts.pxtc.ON_START_TYPE)Q(r,vt(i,t).children);else{var e=$.mkBlock(C(i,t));e.type==$.NT.Block?Q(r,e.children):r.push(e)}});var l=[];i.enums.forEach(function(a){var t=o.getVariablesOfType(a.name);if(t&&t.length){var e=t.map(function(t){var e=/^(\d+)([^0-9].*)$/.exec(t.name);return e?[e[2],parseInt(e[1])]:[t.name,-1]});e.sort(function(t,e){return t[1]-e[1]});var s=[],c=-1;e.forEach(function(t,e){var i,o=t[0],r=t[1];if(a.isBitMask){var n=Math.log2(r);0<=n&&Math.floor(n)===n&&(i=$.H.mkAssign($.mkText(o),$.H.mkSimpleCall("<<",[$.H.mkNumberLiteral(1),$.H.mkNumberLiteral(n)])))}else if(a.isHash){var l=ts.pxtc.Util.codalHash16(o.toLowerCase());i=$.H.mkAssign($.mkText(o),$.H.mkNumberLiteral(l))}i||(i=r===c+1?$.mkText(o):$.H.mkAssign($.mkText(o),$.H.mkNumberLiteral(r))),s.push(i),c=r});var i=$.mkCommaSep(s,!0);i.glueToBlock=$.GlueMode.NoSpace,l.push($.mkGroup([$.mkText("enum "+a.name),$.mkBlock([i])]))}}),i.kinds.forEach(function(e){var t=o.getVariablesOfType("KIND_"+e.name);if(t&&t.length){var i=t.map(function(t){return t.name}).filter(function(t){return-1===e.initialMembers.indexOf(t)});i.length&&l.push($.mkGroup([$.mkText("namespace "+e.name),$.mkBlock(i.map(function(t){return $.mkStmt($.mkText("export const "+t+" = "+e.name+"."+e.createFunctionName+"()"))}))]))}});var a=pxtblockly.getAllTilesetTiles(o);if(a.length){var s=Ct.appTarget.runtime&&Ct.appTarget.runtime.tilesetFieldEditorIdentity;l.push($.mkGroup([$.mkText("namespace "+Ct.sprite.TILE_NAMESPACE),$.mkBlock(a.map(function(t){return $.mkGroup([$.mkStmt($.mkText(s?"//% blockIdentity="+s:"")),$.mkStmt($.mkText("export const "+Ct.sprite.TILE_PREFIX+t.projectId+" = "+Ct.sprite.bitmapToImageLiteral(Ct.sprite.Bitmap.fromData(t.data),"typescript")))])}))]))}var c=i.allVariables.filter(function(t){return!t.alreadyDeclared}).map(function(t){return function(t,e){var i,o=at(t.type);i="Array"===o.type?$.mkText("[]"):pt(o);var r,n=!1;if("null"==i.op||"[]"==i.op){"Array"!==(r=o.type)&&"null[]"!==r||(r="number[]");var l=e.blocksInfo.apis.byQName[r];l&&l.attributes.autoCreate?i=$.mkText(l.attributes.autoCreate+"()"):n=!0}e.generatedVarDeclarations[t.escapedName]={value:$.flattenNode([i]).output},n&&(e.generatedVarDeclarations[t.escapedName].type=r);return t.alreadyDeclared=Z.Implicit,$.mkStmt($.mkText("let "+t.escapedName+(n?": "+r:"")+" = "),i)}(t,i)}),u=[];return i.allVariables.filter(function(t){return t.alreadyDeclared===Z.Implicit&&!t.isAssigned}).forEach(function(e){var t=at(e.type);"string"===t.type||"number"===t.type||"boolean"===t.type||f(t.type)||u.push({blockId:e.scopes.find(function(t){return void 0!==t.variables[e.name]&&void 0!==t.variables[e.name].firstReferencingBlock}).variables[e.name].firstReferencingBlock.id,message:lf("Variable '{0}' is never assigned",e.name)})}),[l.concat(c.concat(r)),u,i.generatedVarDeclarations]}catch(t){var p=t.block;if(!p)throw t;p.setWarningText(t+""),i.errors.push(p)}finally{v()}return[null,null,null]}function I(e,i){if(i.type==ts.pxtc.ON_START_TYPE)return JSON.stringify({name:ts.pxtc.ON_START_TYPE});if(i.type==ts.pxtc.FUNCTION_DEFINITION_TYPE)return JSON.stringify({type:"function",name:i.getFieldValue("function_name")});var t=e.stdCallTable[i.type];if(t){var o=r(t,i).map(function(t){return kt(e,i,t,[])});return JSON.stringify({name:t.f,ns:t.namespace,compiledArgs:o}).replace(/"id"\s*:\s*"[^"]+"/g,"")}}function c(t,e,i,o){var r=$.flattenNode(e);return n("format",{format:{input:r.output,pos:1}}).then(function(){return{source:r.output,sourceMap:r.sourceMap,stats:t.stats,diagnostics:i||[],generatedVarDeclarations:o}})}function xt(t,e){t.comment&&("string"==typeof t.comment?e.push(t.comment):e.push(t.comment.getText()))}function Et(t){if(t.mutationToDom){var e=t.mutationToDom();if(e.hasAttribute("_expanded")){var i=parseInt(e.getAttribute("_expanded"));return isNaN(i)?0:Math.max(i,0)}}return 0}function Bt(t,e){var i=t.comp,o=[];return i.thisParameter&&o.push(i.thisParameter),i.parameters.forEach(function(t){t.isOptional&&0<e?(o.push(t),--e):t.isOptional||o.push(t)}),o}function N(t,e){var i=[];if(e.attrs.draggableParameters)for(var o=0;o<e.comp.handlerArgs.length;o++){var r=void 0,n=lt(t,"HANDLER_DRAG_PARAM_"+(l=e.comp.handlerArgs[o]).name);if(null===(r="reporter"===e.attrs.draggableParameters?n&&n.getFieldValue("VALUE"):n&&n.getField("VAR").getText()))break;i.push([r,y(l.type)])}else for(o=0;o<e.comp.handlerArgs.length;o++){var l=e.comp.handlerArgs[o],a=t.getField("HANDLER_"+l.name);if(null===(r=a&&a.getText()))break;i.push([r,y(l.type)])}return i}function w(t){if(void 0!==t.scopes&&0!==t.scopes.length){if(1===t.scopes.length){var e=t.scopes[0];return void 0===e.parent||e.variables[t.name].isDefinitelyAssigned?e:u(e)[0]}for(var i=p(t.scopes[0],t.scopes[1]),o=2;o<t.scopes.length;o++)i=p(i,t.scopes[o]);var r=i[i.length-1];return r.variables[t.name].isDefinitelyAssigned?r:i[0]}}function u(t){for(var e=[t],i=t.parent;void 0!==i;i=i.parent)e.unshift(i);return e}function p(t,e){var i=Array.isArray(t)?t:u(t),o=u(e);if(i[0]===o[0]){var r,n;i.length>o.length?(r=i,n=o):(r=o,n=i);for(var l=1;l<n.length;l++)if(n[l]!==r[l])return n.slice(0,l);return n}}function S(t,e,i){void 0===i&&(i=!1),t.inputList.filter(function(t){return t.type===Blockly.INPUT_VALUE}).forEach(function(t){t.connection&&t.connection.targetBlock()&&(e(t.connection.targetBlock()),i&&S(t.connection.targetBlock(),e,i))})}function D(t,e,i,o,r){var n=a(t,r.x,r.x+r.width)||a(r.x,t,t+i),l=a(e,r.y,r.y+r.height)||a(r.y,e,e+o);return n&&l;function a(t,e,i){return e<=t&&t<=i}}function L(t){return"procedures_defnoreturn"===t.type||"function_definition"===t.type}$.compileExpression=dt,$.escapeVarName=mt,$.mkEnv=l,$.compileBlockAsync=function(t,e){var i=t.workspace,o=l(i,e);_(i&&i.getAllBlocks(),o);var r=C(o,t);return v(),c(o,r)},$.callKey=I,$.findBlockId=function(t,e){if(e){for(var i,o,r=0;r<t.length;++r){var n=t[r];n.start<=e.start&&n.end>e.start+e.length&&(!i||o>n.end-n.start)&&(o=(i=n).end-n.start)}return i?i.id:void 0}},$.compileAsync=function(t,e){var i=l(t,e),o=s(i,t);return c(i,o[0],o[1],o[2])}}(Ct.blocks||(Ct.blocks={}))}(pxt||(pxt={})),function(n){!function(t){var r={};function e(t,e,i){null==r[t]&&(r[t]={field:e,validator:i})}t.initFieldEditors=function(){e("text",pxtblockly.FieldTextInput),e("note",pxtblockly.FieldNote),e("gridpicker",pxtblockly.FieldGridPicker),e("textdropdown",pxtblockly.FieldTextDropdown),e("numberdropdown",pxtblockly.FieldNumberDropdown),e("imagedropdown",pxtblockly.FieldImageDropdown),e("colorwheel",pxtblockly.FieldColorWheel),e("toggle",pxtblockly.FieldToggle),e("toggleonoff",pxtblockly.FieldToggleOnOff),e("toggleyesno",pxtblockly.FieldToggleYesNo),e("toggleupdown",pxtblockly.FieldToggleUpDown),e("toggledownup",pxtblockly.FieldToggleDownUp),e("togglehighlow",pxtblockly.FieldToggleHighLow),e("togglewinlose",pxtblockly.FieldToggleWinLose),e("colornumber",pxtblockly.FieldColorNumber),e("images",pxtblockly.FieldImages),e("sprite",pxtblockly.FieldSpriteEditor),e("animation",pxtblockly.FieldAnimationEditor),e("tilemap",pxtblockly.FieldTilemap),e("tileset",pxtblockly.FieldTileset),e("speed",pxtblockly.FieldSpeed),e("turnratio",pxtblockly.FieldTurnRatio),e("protractor",pxtblockly.FieldProtractor),e("position",pxtblockly.FieldPosition),e("melody",pxtblockly.FieldCustomMelody)},t.registerFieldEditor=e,t.createFieldEditor=function(t,e,i){if(null==r[t])return console.error("Field editor "+t+" not registered"),null;i||(i={}),n.Util.assert(null==i.lightMode,"lightMode is a reserved parameter for custom fields"),i.lightMode=n.options.light;var o=r[t];return new o.field(e,i,o.validator)}}(n.blocks||(n.blocks={}))}(pxt||(pxt={})),function(A){!function(E){E.diffXml=function(t,e,i){return function(t,e,i){try{return Blockly.Events.disable(),function(l,e,t){A.tickEvent("blocks.diff",{started:1}),t=t||{};var a=A.options.debug||window&&/diffdbg=1/.test(window.location.href)?console.log:function(t){for(var e=[],i=1;i<arguments.length;i++)e[i-1]=arguments[i]};if(!l)return{ws:void 0,message:lf("All blocks are new."),added:0,deleted:0,modified:1};if(!e)return{ws:void 0,message:lf("The current blocks seem corrupted."),added:0,deleted:0,modified:1};var r=A.Util.toDictionary(l.getTopBlocks(!1),function(t){return C(t,!0)});e.getTopBlocks(!1).forEach(function(t){var e=C(t,!0),i=l.getBlockById(t.id)||r[e];if(i){var o=C(i,!0);e==o&&(a("fast unmodified top ",t.id),t.dispose(!1),i.dispose(!1))}});var i=l.getAllBlocks().filter(function(t){return!t.disabled}),o=l.getTopBlocks(!1).filter(function(t){return!t.disabled}),n=e.getAllBlocks().filter(function(t){return!t.disabled});if(a("blocks",n.map(function(t){return t.toDevString()})),a(n),0==i.length&&0==n.length)return A.tickEvent("blocks.diff",{moves:1}),{ws:void 0,message:lf("Some blocks were moved or changed."),added:0,deleted:0,modified:1};var s=o.filter(function(t){return!e.getBlockById(t.id)}),c=i.filter(function(t){return!e.getBlockById(t.id)}),u=n.filter(function(t){return!l.getBlockById(t.id)}),p=A.blocks.initRenderingWorkspace(),d=A.blocks.saveWorkspaceXml(e,!0);A.blocks.domToWorkspaceNoEvents(Blockly.Xml.textToDom(d),p),p.getAllBlocks().filter(function(t){return t.disabled}).forEach(function(t){a("disabled ",t.toDevString()),t.dispose(!1)});var h=A.Util.toDictionary(p.getAllBlocks(),function(t){return t.id});a("todo blocks",h),x("start"),t.hideDeletedTopBlocks||(s.forEach(function(t){a("deleted top "+t.toDevString()),T(t);var e=_(t);T(e),e.setDisabled(!0)}),x("deleted top")),u.map(function(t){return p.getBlockById(t.id)}).filter(function(t){return!!t}).forEach(function(t){a("added "+t.toDevString()),T(t)}),x("added");var m={},f=c.filter(function(t){return!(h[t.id]||b(t)||t.outputConnection&&t.outputConnection.isConnected())});f.forEach(function(t){var e=_(t);m[t.id]=e.id,a("deleted block "+t.toDevString()+"->"+e.toDevString())}),f.forEach(function(t){return function(t){a("stitching "+t.toDevString()+"->"+m[t.id]);var e=p.getBlockById(m[t.id]);e.setDisabled(!0),v(e),T(e);var i=t.getPreviousBlock();if(i){var o=p.getBlockById(m[i.id])||p.getBlockById(i.id);if(a("previous "+t.id+"->"+e.toDevString()+": "+o.toDevString()),o)if(o.nextConnection)e.previousConnection.connect(o.nextConnection);else{var r=o.inputList.slice().reverse().find(function(t){return t.connection&&t.connection.type==Blockly.NEXT_STATEMENT});r&&e.previousConnection.connect(r.connection)}}var n=t.getNextBlock();if(n){var l=p.getBlockById(m[n.id])||p.getBlockById(n.id);l&&(a("next "+t.id+"->"+e.toDevString()+": "+l.toDevString()),e.nextConnection.connect(l.previousConnection))}}(t)});var g=0;if(A.Util.values(h).filter(function(t){return function(t){var e=l.getBlockById(t.id);if(!e)return!1;var i=t.getPreviousBlock();if(i&&!h[i.id])return!1;var o=t.getNextBlock();if(o&&!h[o.id])return!1;var r=e.getPreviousBlock();if(!r&&!i)return!1;if(!!r!=!!i||r.id!=i.id)return!0;var n=e.getNextBlock();return!(!n&&!o||!!n==!!o&&n.id==o.id)}(t)}).forEach(function(t){a("moved "+t.toDevString()),delete h[t.id],v(t),g++}),x("moved"),A.Util.values(h).filter(function(t){return function(t){var e=l.getBlockById(t.id);if(!e)return!1;var i=C(e),o=C(t);return i!=o&&(a("old "+e.toDevString(),i),a("new "+t.toDevString(),o),!0)}(t)}).forEach(function(t){a("changed "+t.toDevString()),delete h[t.id],v(t),g++}),x("changed"),p.getTopBlocks(!1).forEach(function(t){t.getDescendants(!1).find(function(t){return b(t)})||(a("unmodified top "+t.toDevString()),delete h[t.id],t.dispose(!1))}),x("cleaned"),A.Util.values(h).filter(function(t){return!!p.getBlockById(t.id)}).forEach(function(t){var e;t.setColour(B),(e=t).rendered=!1,e.inputList.forEach(function(t){return t.fieldRow.forEach(function(t){t.init(),t.box_&&(t.box_.setAttribute("fill",e.getColour()),t.box_.setAttribute("stroke",e.getColourTertiary()))})})}),!p.getAllBlocks().length)return A.tickEvent("blocks.diff",{missed:1}),{ws:p,message:lf("Some blocks were changed."),deleted:c.length,added:u.length,modified:g};p.resize(),Blockly.svgResize(p);var y=A.blocks.renderWorkspace(t.renderOptions||{emPixels:20,layout:E.BlockLayout.Flow,aspectRatio:.5,useViewWidth:!0}),k={ws:p,svg:y,deleted:c.length,added:u.length,modified:g};return A.tickEvent("blocks.diff",{deleted:k.deleted,added:k.added,modified:k.modified}),k;function v(t){t.__pxt_used=!0}function b(t){return!!t.__pxt_used}function _(t){var e=Blockly.Xml.blockToDom(t,!1),i=Blockly.Xml.domToBlock(e,p);return i.nextConnection&&i.nextConnection.targetConnection&&i.nextConnection.disconnect(),i.previousConnection&&i.previousConnection.targetConnection&&i.previousConnection.disconnect(),i}function T(t){t.getDescendants(!1).forEach(function(t){delete h[t.id],v(t)})}function x(t){a(t+":",A.Util.values(h).map(function(t){return t.toDevString()}))}}(t,e,i)}catch(t){return A.reportException(t),{ws:void 0,message:lf("Oops, we could not diff those blocks."),error:t,deleted:0,added:0,modified:0}}finally{Blockly.Events.enable()}}(A.blocks.loadWorkspaceXml(t,!0),A.blocks.loadWorkspaceXml(e,!0),i)};var B="#d0d0d0";function C(t,e){var i=Blockly.Xml.blockToDom(t,!0);return o(i),function t(e,i){if(!e)return;i(e);for(var o=0,r=A.Util.toArray(e.children);o<r.length;o++){var n=r[o];t(n,i)}}(i,function(t){o(t),e||("next"==t.localName&&t.remove(),"statement"==t.localName&&t.remove())}),Blockly.Xml.domToText(i)}function o(t){t.removeAttribute("id"),t.removeAttribute("x"),t.removeAttribute("y"),t.removeAttribute("deletable"),t.removeAttribute("editable"),t.removeAttribute("movable")}E.mergeXml=function(t,e,i){return t==e?i:i==e?t:void 0}}(A.blocks||(A.blocks={}))}(pxt||(pxt={})),function(f){!function(p){function u(t,e){for(var i=[],o=0;o<t.childNodes.length;o++){var r=t.childNodes.item(o);r.tagName===e&&i.push(r)}return i}function d(t,e){return h(t,"block","type",e).concat(h(t,"shadow","type",e))}function h(t,e,i,o){return f.Util.toArray(t.getElementsByTagName(e)).filter(function(t){return t.getAttribute(i)===o})}function c(t,e,i,o){var r=h(t,e,i,o);return r.length?r[0]:void 0}function m(n,l,a){var t=a.getAttribute("type"),e=Blockly.Blocks[t],i=p.blockSymbol(t);if(i&&e){var s=p.compileInfo(i);i.parameters.forEach(function(t,e){var i=n.apis.byQName[t.type];if(i&&6==i.kind){var o=c(a,"field","name",s.actualNameToParam[t.name].definitionName);if(o){var r=l[i.name+"."+o.textContent];r&&(o.textContent=r)}}})}}p.domToWorkspaceNoEvents=function(t,e){f.tickEvent("blocks.domtow");try{Blockly.Events.disable();var i=Blockly.Xml.domToWorkspace(t,e);return(o=e).getAllBlocks().filter(function(t){return!!t.comment&&t.comment instanceof Blockly.Comment}).forEach(function(t){var e=t.comment.getText();if(/@highlight/.test(e)){var i=e.replace(/@highlight/g,"").trim();t.setCommentText(i||null),o.highlightBlock(t.id)}}),i}finally{Blockly.Events.enable()}var o},p.clearWithoutEvents=function(t){if(f.tickEvent("blocks.clear"),t)try{Blockly.Events.disable(),t.clear(),t.clearUndo()}finally{Blockly.Events.enable()}},p.saveWorkspaceXml=function(t,e){var i=Blockly.Xml.workspaceToDom(t,!e);return Blockly.Xml.domToText(i)},p.getDirectChildren=u,p.getBlocksWithType=d,p.getChildrenWithAttr=h,p.getFirstChildWithAttr=c,p.loadWorkspaceXml=function(t,e){void 0===e&&(e=!1);var i=new Blockly.Workspace;try{var o=Blockly.Xml.textToDom(t);return f.blocks.domToWorkspaceNoEvents(o,i),i}catch(t){return e||f.reportException(t),null}},p.importXml=function(t,e,i,o){void 0===o&&(o=!1);try{f.blocks.initializeAndInject(i);var r=(new DOMParser).parseFromString(e,"application/xml"),n=f.patching.computePatches(t);n&&(n.filter(function(t){return"blockId"==t.type}).forEach(function(i){return Object.keys(i.map).forEach(function(e){d(r,e).forEach(function(t){t.setAttribute("type",i.map[e]),f.debug("patched block "+e+" -> "+i.map[e])})})}),n.filter(function(t){return"blockValue"==t.type}).forEach(function(o){return Object.keys(o.map).forEach(function(e){var t=e.split("."),i=t[0];t[1],d(r,i).reduce(function(t,e){return t.concat(u(e,"value"))},[]).forEach(function(t){t.setAttribute("name",o.map[e]),f.debug("patched block value "+e+" -> "+o.map[e])})})}),n.filter(function(t){return"userenum"==t.type}).forEach(function(i){return Object.keys(i.map).forEach(function(e){h(r,"variable","type",e).forEach(function(t){t.setAttribute("type",i.map[e]),f.debug("patched enum variable type "+e+" -> "+i.map[e])})})}));var l={};Object.keys(i.apis.byQName).forEach(function(t){var e=i.apis.byQName[t];7==e.kind&&(l[e.namespace+"."+(e.attributes.blockImportId||e.attributes.block||e.attributes.blockId||e.name)]=e.namespace+"."+e.name)});for(var a=r.getElementsByTagName("block"),s=0;s<a.length;++s)m(i,l,a[s]);return function(e,t){var i=d(e,ts.pxtc.ON_START_TYPE),o=i.length?i[0]:void 0;if(o)o.removeAttribute("deletable");else{for(var r=[],n=t.blocksById,l=e.firstElementChild,a=void 0;l;){var s=l.nextElementSibling,c=l.getAttribute("type");if(!l.getAttribute("disabled")&&!l.getElementsByTagName("statement").length&&(f.blocks.buildinBlockStatements[c]||n[c]&&"void"==n[c].retType&&!p.hasArrowFunction(n[c])))if(a){var u=e.ownerDocument.createElement("next");u.appendChild(l),a.appendChild(u),l.removeAttribute("x"),l.removeAttribute("y"),a=l}else(a=e.ownerDocument.createElement("statement")).setAttribute("name","HANDLER"),o||((o=e.ownerDocument.createElement("block")).setAttribute("type",ts.pxtc.ON_START_TYPE),r.push(o)),o.appendChild(a),a.appendChild(l),l.removeAttribute("x"),l.removeAttribute("y"),a=l;l=s}r.forEach(function(t){return e.appendChild(t)})}}(r.documentElement,i),c=r.documentElement,f.U.toArray(c.querySelectorAll("block[type=procedures_defnoreturn]")).forEach(function(t){t.setAttribute("type","function_definition"),t.querySelector("field[name=NAME]").setAttribute("name","function_name")}),f.U.toArray(c.querySelectorAll("block[type=procedures_callnoreturn]")).forEach(function(t){t.setAttribute("type","function_call"),t.querySelector("field[name=NAME]").setAttribute("name","function_name")}),f.blocks.extensionBlocklyPatch&&f.blocks.extensionBlocklyPatch(t,r.documentElement),(new XMLSerializer).serializeToString(r)}catch(t){return o||f.reportException(t),e}var c}}(f.blocks||(f.blocks={}))}(pxt||(pxt={})),function(y){var t;(function(t){function i(t,e){return o(t).then(function(t){return t?p(t.width,t.height,0|e||4,t.xml):Promise.resolve(void 0)}).catch(function(t){y.reportException(t)})}t.patchBlocksFromOldWorkspace=function(t,e,i){var r,n,l,a,s,o,c,u,p,d=y.blocks.loadWorkspaceXml(i,!0);return r=t,l=d,(n=e).getTopBlocks(!1).filter(function(t){return!t.disabled}).forEach(function(t){var e=t.xy_;if(e&&0!=e.x&&0!=e.y){a||(a=y.blocks.mkEnv(n,r),s={},l.getTopBlocks(!1).forEach(function(t){var e=y.blocks.callKey(a,t),i=s[e]||[];i.push(t),s[e]=i}));var i=y.blocks.callKey(a,t),o=(s[i]||[]).shift();o&&(o.xy_=e.clone())}}),o=e,c=d,u=Blockly.Xml.workspaceToDom(o,!0),p=Blockly.Xml.workspaceToDom(c,!0),y.Util.toArray(u.childNodes).filter(function(t){return t.nodeType==Node.ELEMENT_NODE&&"block"==t.localName&&"true"==t.getAttribute("disabled")}).forEach(function(t){return p.appendChild(p.ownerDocument.importNode(t,!0))}),Blockly.Xml.domToText(p)},t.splitSvg=function(d,t,h){void 0===h&&(h=18);var e=t.getTopComments(!0),i=t.getTopBlocks(!0);if(e.length+i.length<2)return d;var m=document.createElement("div");function r(t,e,i,o,r){var n=d.cloneNode(!0),l=n.querySelector("g.blocklyWorkspace > g."+t),a=n.querySelector("g.blocklyWorkspace > g."+e),s=y.Util.toArray(l.querySelectorAll("g.blocklyWorkspace > g."+t+" > g")),c=s.splice(i,1)[0];if(c){s.filter(function(t){return t!=c}).forEach(function(t){t.parentNode.removeChild(t)}),l.removeAttribute("transform"),a.parentNode.removeChild(a),c.setAttribute("transform","translate("+r.x+", "+r.y+")");var u=o.width/h+"em",p=o.height/h+"em";n.setAttribute("viewBox","0 0 "+o.width+" "+o.height),n.style.width=u,n.style.height=p,n.setAttribute("width",u),n.setAttribute("height",p),m.appendChild(n)}else y.log("missing block, did block failed to load?")}return m.className="blocks-svg-list",e.forEach(function(t,e){return r("blocklyBubbleCanvas","blocklyBlockCanvas",e,t.getHeightWidth(),{x:0,y:0})}),i.forEach(function(t,e){var i=t.getHeightWidth(),o={x:0,y:0};t.getStartHat()&&(i.height+=h,o.y+=h),r("blocklyBlockCanvas","blocklyBubbleCanvas",e,i,o)}),m},t.verticalAlign=function(t,i){var o=0;t.getTopComments(!0).forEach(function(t){t.moveBy(0,o),o+=t.getHeightWidth().height,o+=i}),t.getTopBlocks(!0).forEach(function(t,e){t.getStartHat()&&(o+=i),t.moveBy(0,o),o+=t.getHeightWidth().height,o+=i})},t.flow=function(t,e){if(e){if(e.useViewWidth){var i=t.getMetrics();if(i.viewHeight>i.viewWidth)return void r(t.getTopComments(!0),t.getTopBlocks(!0),void 0,i.viewWidth)}r(t.getTopComments(!0),t.getTopBlocks(!0),e.ratio)}else r(t.getTopComments(!0),t.getTopBlocks(!0))},t.screenshotEnabled=function(){return!y.BrowserUtils.isIE()&&!y.BrowserUtils.isUwpEdge()},t.screenshotAsync=function(t,e){return i(t,e)},t.toPngAsync=i;var c=1e6;function p(n,l,a,s){return new Promise(function(e,t){var i=document.createElement("canvas"),o=i.getContext("2d"),r=new Image;i.width=n*a,i.height=l*a,r.onload=function(){o.drawImage(r,0,0,n,l,0,0,i.width,i.height);for(var t=i.toDataURL("image/png");t.length>c;)i.width=i.width/2>>0,i.height=i.height/2>>0,y.log("screenshot size "+t.length+"b, shrinking to "+i.width+"x"+i.height),o.drawImage(r,0,0,n,l,0,0,i.width,i.height),t=i.toDataURL("image/png");e(t)},r.onerror=function(t){y.reportError("blocks","blocks screenshot failed"),e(void 0)},r.src=s})}var d,h,m="http://www.w3.org/1999/xlink";function o(t){if(!t)return Promise.resolve(void 0);var e=t.getBlocksBoundingBox(),i=t.getParentSvg().cloneNode(!0);n(i);var o=e.right-e.left,r=e.bottom-e.top;return l(i,e.left,e.top,o,r)}function f(t){return e((new XMLSerializer).serializeToString(t))}function e(t){return t.replace(new RegExp("&nbsp;","g"),"&#160;")}function n(t){y.BrowserUtils.removeClass(t,"blocklySvg"),y.BrowserUtils.addClass(t,"blocklyPreview"),y.U.toArray(t.querySelectorAll(".blocklyMainBackground,.blocklyScrollbarBackground")).forEach(function(t){t&&t.parentNode.removeChild(t)}),t.removeAttribute("width"),t.removeAttribute("height"),y.U.toArray(t.querySelectorAll(".blocklyBlockCanvas,.blocklyBubbleCanvas")).forEach(function(t){return t.removeAttribute("transform")});var i=new DOMParser;return y.U.toArray(t.querySelectorAll(".blocklyCommentTextarea")).forEach(function(t){var e=i.parseFromString("<!doctype html><body>"+y.docs.html2Quote(t.value),"text/html");t.textContent=e.body.textContent}),t}function l(t,e,i,o,r){if(!t.childNodes[0])return Promise.resolve(void 0);t.removeAttribute("width"),t.removeAttribute("height"),t.removeAttribute("transform");var n=f(t).replace(/^\s*<svg[^>]+>/i,"").replace(/<\/svg>\s*$/i,""),l='<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="'+m+'" width="'+o+'" height="'+r+'" viewBox="'+e+" "+i+" "+o+" "+r+'">'+n+"</svg>",a=(new DOMParser).parseFromString(l,"image/svg+xml"),s=a.createElementNS("http://www.w3.org/1999/xhtml","style"),c=y.Util.isUserLanguageRtl(),u=document.getElementById("style-"+(c?"rtl":"")+"blockly.css").href;return y.BrowserUtils.loadAjaxAsync(u).then(function(t){var e=y.Util.toArray(document.head.querySelectorAll("style")).filter(function(t){return/\.blocklySvg/.test(t.innerText)})[0],i=(e?e.innerText:"")+"\n\n"+t+"\n\n";return s.appendChild(a.createCDATASection(i)),a.documentElement.insertBefore(s,a.documentElement.firstElementChild),function(t){d||(d={});var e=t.getElementsByTagName("image"),i=y.Util.toArray(e).filter(function(t){var e=t.getAttributeNS(m,"href");return e&&!/^data:/.test(e)}).map(function(e){var o=e.getAttributeNS(m,"href"),r=d[o];return(r?Promise.resolve(d[o]):y.BrowserUtils.loadImageAsync(e.getAttributeNS(m,"href")).then(function(t){var e=document.createElement("canvas"),i=e.getContext("2d");return e.width=t.width,e.height=t.height,i.drawImage(t,0,0,t.width,t.height,0,0,e.width,e.height),d[o]=r=e.toDataURL("image/png"),r}).catch(function(t){y.debug("svg render: failed to load "+o)})).then(function(t){e.setAttributeNS(m,"href",t)})});return Promise.all(i).then(function(){})}(a).then(function(){return function(t){if(h||(h={}),!y.BrowserUtils.isEdge())return Promise.resolve();var e=t.getElementsByTagName("image"),i=y.Util.toArray(e).filter(function(t){return/^data:image\/svg\+xml/.test(t.getAttributeNS(m,"href"))}).map(function(e){var i=e.getAttributeNS(m,"href"),t=parseInt(e.getAttribute("width").replace(/[^0-9]/g,"")),o=parseInt(e.getAttribute("height").replace(/[^0-9]/g,"")),r=h[i];return(r?Promise.resolve(r):p(t,o,4,i)).then(function(t){h[i]=t,e.setAttributeNS(m,"href",t)})});return Promise.all(i).then(function(){})}(a)}).then(function(){return{width:o,height:r,svg:f(a).replace('<style xmlns="http://www.w3.org/1999/xhtml">',"<style>"),xml:g(a),css:i}})})}function g(t){var e=(new XMLSerializer).serializeToString(t);return"data:image/svg+xml;base64,"+ts.pxtc.encodeBase64(unescape(encodeURIComponent(e)))}function r(t,e,i,o){void 0===i&&(i=1.62);var a,s=[],c={};t.forEach(function(t){var e=t.data;null!=e?c[e]=t:s.push(b(t))}),e.forEach(function(t){var e=t.data;if(e){for(var i=e.split(";"),o=[],r=0;r<i.length;r++){var n=c[i[r]];n&&(o.push(b(n)),delete c[i[r]])}if(o.length)return void s.push({value:t,width:-1,height:-1,children:o})}var l=b(t);a||t.disabled||t.type!==pxtc.ON_START_TYPE?s.push(l):a=l}),a&&s.unshift(a),Object.keys(c).sort(function(t,e){return t.length===e.length?e<t?-1:1:t.length>e.length?-1:1}).forEach(function(t){c[t]&&(a?(a.children||(a.children=[]),a.children.push(b(c[t]))):s.unshift(b(c[t])))});for(var r,n=0,l=0;l<s.length;l++){if((y=s[l]).children){var u=y.value.getHeightWidth();y.x=0,y.y=0;for(var p=u.width+13,d=0,h=0;h<y.children.length;h++)(k=y.children[h]).x=p,k.y=d,d+=k.height+13,y.width=Math.max(y.width,p+k.width);y.height=Math.max(d-13,u.height)}n+=(y.height+13)*(y.width+13)}r=20<o?o-20:Math.sqrt(n)*i;var m=20,f=20,g=0;for(l=0;l<s.length;l++){var y;if((y=s[l]).children)for(v(y,m+y.x,f+y.y),h=0;h<y.children.length;h++){var k;v(k=y.children[h],m+k.x,f+k.y)}else v(y,m,f);m+=y.width+45,g=Math.max(g,f+y.height+45),r<m&&(m=20,f=g)}function v(t,e,i){var o=t.value.getBoundingRectangle();t.value.moveBy(e-o.left,i-o.top)}}function b(t){var e=t.getHeightWidth();return{value:t,height:e.height,width:e.width}}t.toSvgAsync=o,t.serializeNode=f,t.serializeSvgString=e,t.cleanUpBlocklySvg=n,t.blocklyToSvgAsync=l,t.documentToSvg=g})((t=y.blocks||(y.blocks={})).layout||(t.layout={}))}(pxt||(pxt={})),function(V){!function(R){var y={string:{field:"TEXT",block:"text",defaultValue:""},number:{field:"NUM",block:"math_number",defaultValue:"0"},boolean:{field:"BOOL",block:"logic_boolean",defaultValue:"false"},Array:{field:"VAR",block:"variables_get",defaultValue:"list"}};function k(t){var e=/^(?:Array<(.+)>)|(?:(.+)\[\])|(?:\[.+\])$/.exec(t);return e?e[1]?e[1]:e[2]:void 0}R.optionalDummyInputPrefix="0_optional_dummy",R.optionalInputWithFieldPrefix="0_optional_field",R.isArrayType=k,R.isTupleType=function(t){var e=/^\[(.+)\]$/.exec(t);return e?e[1].split(/,\s*/):void 0};var e,h,o=/^(string|number|boolean)$/;function c(){return e||(e={},Object.keys(Blockly.Blocks).forEach(function(t){return e[t]={block:Blockly.Blocks[t]}})),e}R.builtinBlocks=c,R.buildinBlockStatements={controls_if:!0,controls_for:!0,pxt_controls_for:!0,controls_simple_for:!0,controls_repeat_ext:!0,pxt_controls_for_of:!0,controls_for_of:!0,variables_set:!0,variables_change:!0,device_while:!0};var u={};function r(t,e,i,o){var r;if(o=o||e.defaultValue,!(i=i||e.shadowBlockId)&&e.range&&(i="math_number_minmax"),r=o&&'"'==o.slice(0,1)?JSON.parse(o):o,"number"==e.type&&"value"==i)return(m=document.createElement("field")).setAttribute("name",e.definitionName),m.appendChild(document.createTextNode("0")),m;var n="variables_get"==i,l=document.createElement("value");l.setAttribute("name",e.definitionName);var a=k(e.type),s=document.createElement(n||a?"block":"shadow");l.appendChild(s);var c,u=y[a||e.type];if(s.setAttribute("type",i||(a?"lists_create_with":u&&u.block||e.type)),s.setAttribute("colour",Blockly.Colours.textField),a){if(u&&!i){var p=void 0;switch(a){case"number":p=["1","2","3"];break;case"string":p=["a","b","c"];break;case"boolean":p=["FALSE","FALSE","FALSE"]}return v(s,u.block,u.field,p),l}if(i&&r)return v(s,r),l}if(!u||i&&u.block!==i&&"math_number_minmax"!==i){if(r){if((m=document.createElement("field")).textContent=r,n)m.setAttribute("name","VAR"),s.appendChild(m);else if(i){var d=t.blocksById[i];if(d&&d.attributes._def&&d.attributes._def.parameters.length){var h=d.attributes._def.parameters[0];m.setAttribute("name",h.name),s.appendChild(m)}}else m.setAttribute("name",e.definitionName),s.appendChild(m)}}else{var m=document.createElement("field");s.appendChild(m);var f,g=void 0;switch(i){case"variables_get":g="VAR";break;case"math_number_minmax":g="SLIDER";break;default:g=u.field}m.setAttribute("name",g),f="boolean"==e.type?document.createTextNode((r||u.defaultValue).toUpperCase()):document.createTextNode(r||u.defaultValue),m.appendChild(f)}return e.range&&((c=document.createElement("mutation")).setAttribute("min",e.range.min.toString()),c.setAttribute("max",e.range.max.toString()),c.setAttribute("label",e.actualName.charAt(0).toUpperCase()+e.actualName.slice(1)),e.fieldOptions&&(e.fieldOptions.step&&c.setAttribute("step",e.fieldOptions.step),e.fieldOptions.color&&c.setAttribute("color",e.fieldOptions.color),e.fieldOptions.precision&&c.setAttribute("precision",e.fieldOptions.precision))),e.fieldOptions&&(c||(c=document.createElement("mutation")),c.setAttribute("customfield",JSON.stringify(e.fieldOptions))),c&&s.appendChild(c),l}function v(t,e,i,o){var r=o?o.length:2,n=document.createElement("mutation");n.setAttribute("items",""+r),t.appendChild(n);for(var l=0;l<r;l++){var a=document.createElement("value");a.setAttribute("name","ADD"+l);var s=document.createElement("shadow");if(s.setAttribute("type",e),i){var c=document.createElement("field");c.setAttribute("name",i),o&&c.appendChild(document.createTextNode(o[l])),s.appendChild(c)}a.appendChild(s),t.appendChild(a)}}function f(t,e,i,o){var r=n(t,V.toolbox.convertColor(e),i,o);return r.setAttribute("web-class","blocklyFlyoutHeading"),r}function n(t,e,i,o){var r=Blockly.utils.xml.createElement("label");return r.setAttribute("text",t),e&&r.setAttribute("web-icon-color",V.toolbox.convertColor(e)),i&&(1===i.length?(r.setAttribute("web-icon",i),o&&r.setAttribute("web-icon-class",o)):r.setAttribute("web-icon-class","blocklyFlyoutIcon"+t)),r}function l(e,a,t){var s=document.createElement("block");if(s.setAttribute("type",a.attributes.blockId),a.attributes.blockGap?s.setAttribute("gap",a.attributes.blockGap):V.appTarget.appTheme&&V.appTarget.appTheme.defaultBlockGap&&s.setAttribute("gap",V.appTarget.appTheme.defaultBlockGap.toString()),t.thisParameter){var i=t.thisParameter;s.appendChild(r(e,i,i.shadowBlockId||"variables_get",i.defaultValue||i.definitionName))}return a.parameters&&(t.parameters.filter(function(t){return!t.isOptional&&(o.test(t.type)||o.test(k(t.type))||t.shadowBlockId||t.defaultValue)}).forEach(function(t){s.appendChild(r(e,t))}),a.attributes.draggableParameters?t.handlerArgs.forEach(function(t){var e="reporter"===a.attributes.draggableParameters,i=document.createElement("value");i.setAttribute("name","HANDLER_DRAG_PARAM_"+t.name);var o=e?V.blocks.reporterTypeForArgType(t.type):"variables_get_reporter",r=document.createElement("shadow");if(r.setAttribute("type",o),e&&"argument_reporter_custom"===o){var n=document.createElement("mutation");n.setAttribute("typename",t.type),r.appendChild(n)}var l=document.createElement("field");l.setAttribute("name",e?"VALUE":"VAR"),l.textContent=V.Util.htmlEscape(t.name),r.appendChild(l),i.appendChild(r),s.appendChild(i)}):t.handlerArgs.forEach(function(t){var e=document.createElement("field");e.setAttribute("name","HANDLER_"+t.name),e.textContent=t.name,s.appendChild(e)})),s}function i(o){return h=o,Blockly.pxtBlocklyUtils.whitelistDraggableBlockTypes(o.blocks.filter(function(t){return t.attributes.duplicateShadowOnDrag}).map(function(t){return t.attributes.blockId})),o.blocks.map(function(t){if(t.attributes.blockBuiltin)V.Util.assert(!!c()[t.attributes.blockId]),c()[t.attributes.blockId].symbol=t;else{var e=R.compileInfo(t),i=l(o,t,e);!function(t,e,i,o){var r=e.attributes.blockId;if(c()[r])return V.reportError("blocks","trying to override builtin block",{details:r});var n=JSON.stringify(e);if(u[r]&&u[r].hash==n)return;if(Blockly.Blocks[e.attributes.blockId])return console.error("duplicate block definition: "+r);var l={hash:n,fn:e,block:{codeCard:(a=e,s=o,{name:a.namespace+"."+a.name,shortName:a.name,description:a.attributes.jsDoc,url:a.attributes.help?"reference/"+a.attributes.help.replace(/^\//,""):void 0,blocksXml:'<xml xmlns="http://www.w3.org/1999/xhtml">'+p(s)+"</xml>"}),init:function(){!function(n,w,S,D){var t=(S.attributes.blockNamespace||S.namespace).split(".")[0],L=1==S.kind||2==S.kind,e=w.apis.byQName[t],O=S.attributes.blockNamespace&&e&&e.attributes.color||S.attributes.color||e&&e.attributes.color||V.toolbox.getNamespaceColor(t)||255;if(S.attributes.help)n.setHelpUrl("/reference/"+S.attributes.help.replace(/^\//,""));else if(S.pkg&&!V.appTarget.bundledpkgs[S.pkg]){var i=S.qName.toLowerCase().split(".");i[0]==S.pkg&&i.shift(),n.setHelpUrl("/pkg/"+S.pkg+"#"+encodeURIComponent(i.join("-")))}n.setColour(O,S.attributes.colorSecondary,S.attributes.colorTertiary);var o=Blockly.OUTPUT_SHAPE_ROUND;"boolean"==S.retType&&(o=Blockly.OUTPUT_SHAPE_HEXAGONAL);n.setOutputShape(o),S.attributes.undeletable&&n.setDeletable(!1);d(S.attributes._def);var r=!1;if(S.attributes.mutate)R.addMutation(n,S,S.attributes.mutate);else if(S.attributes.defaultInstance)R.addMutation(n,S,R.MutatorTypes.DefaultInstanceMutator);else if(S.attributes._expandedDef&&"disabled"!==S.attributes.expandableArgumentMode){var l="toggle"===S.attributes.expandableArgumentMode;R.initExpandableBlock(w,n,S.attributes._expandedDef,D,l,function(){return d(S.attributes._expandedDef,!0)})}else if(D.handlerArgs.length)if(r=!0,S.attributes.optionalVariableArgs)R.initVariableArgsBlock(n,D.handlerArgs);else if(S.attributes.draggableParameters)D.handlerArgs.filter(function(t){return!t.inBlockDef}).forEach(function(t){var e=n.appendValueInput("HANDLER_DRAG_PARAM_"+t.name);"reporter"==S.attributes.draggableParameters?e.setCheck(F(t.type,w)):e.setCheck("Variable")});else{var a=n.appendDummyInput();D.handlerArgs.filter(function(t){return!t.inBlockDef}).forEach(function(t){a.appendField(new Blockly.FieldVariable(t.name),"HANDLER_"+t.name)})}if(R.appendMutation(n,{mutationToDom:function(i){return n.inputList.forEach(function(t){t.fieldRow.forEach(function(t){if(t.isFieldCustom_&&t.saveOptions){var e=t.saveOptions();e&&i.setAttribute("customfield",JSON.stringify(e))}})}),i},domToMutation:function(i){n.inputList.forEach(function(t){t.fieldRow.forEach(function(t){if(t.isFieldCustom_&&t.restoreOptions){var e=JSON.parse(i.getAttribute("customfield"));e&&t.restoreOptions(e)}})})}}),S.attributes.imageLiteral){var s=(S.attributes.imageLiteralColumns||5)*S.attributes.imageLiteral,c=S.attributes.imageLiteralRows||5,u=n.appendDummyInput();u.appendField(new pxtblockly.FieldMatrix("",{columns:s,rows:c}),"LEDS")}"external"===S.attributes.inlineInputMode?n.setInputsInline(!1):"inline"===S.attributes.inlineInputMode?n.setInputsInline(!0):n.setInputsInline(!S.parameters||S.parameters.length<4&&!S.attributes.imageLiteral);((S.parameters?S.parameters.filter(function(t){return"() => void"==t.type||"Action"==t.type})[0]:void 0)||r)&&(n.appendStatementInput("HANDLER").setCheck(null),n.setInputsInline(!0));g(n,S.retType,w);var p=m(S);function d(t,o){void 0===o&&(o=!1);var r=0,I=!o&&!!D.thisParameter,e=function(t){var e=[],i=[];return t.parts.forEach(function(t){switch(t.kind){case"break":o();break;case"param":i.push(t),o();break;case"image":case"label":i.push(t)}}),o(),e;function o(){i.length&&(e.push(i),i=[])}}(t),N=new V.ImageConverter;"ENUM_GET"!==S.attributes.shim&&"KIND_GET"!==S.attributes.shim||!(1<D.parameters.length||D.thisParameter)?(e.forEach(function(t){var E,B,e,C=[],A=!1;if(t.forEach(function(t){if("param"!==t.kind){var e=function(t){if("image"===t.kind)return function(t){var e=M[t];if(!e)return void V.log("missing jres icon "+t);return new Blockly.FieldImage(e,40,40,"",null,V.Util.isUserLanguageRtl())}(t.uri);var e=function(t){{if(" "===t)return"";if(1<t.length){var e=" "==t.charAt(0),i=" "==t.charAt(t.length-1);if(e||i)return t.substring(e?1:0,i?t.length-1:t.length)}}return t}(t.text);if(!e)return;return t.cssClass?new Blockly.FieldLabel(e,t.cssClass):t.style.length?new pxtblockly.FieldStyledLabel(e,{bold:-1!==t.style.indexOf("bold"),italics:-1!==t.style.indexOf("italics"),blocksInfo:void 0}):new Blockly.FieldLabel(e,void 0)}(t);e&&C.push({field:e})}else{if("ENUM_GET"===S.attributes.shim)return V.U.assert(!!S.attributes.enumName,"Trying to create an ENUM_GET block without a valid enum name"),void C.push({name:"MEMBER",field:new pxtblockly.FieldUserEnum(w.enumsByName[S.attributes.enumName])});if("KIND_GET"===S.attributes.shim)return void C.push({name:"MEMBER",field:new pxtblockly.FieldKind(w.kindsByName[S.attributes.kindNamespace||S.attributes.blockNamespace||S.namespace])});var i=function(e,t,i){void 0===i&&(i=!1);{if(e.ref){var o,r="this"===e.name?t.thisParameter:t.actualNameToParam[e.name];if(!r)if(t.handlerArgs.forEach(function(t){t.name===e.name&&(o=t)}),o)return o;return r}return i?t.thisParameter:t.definitionNameToParam[e.name]}}(t,D,I);if(I=!1,!i)return void console.error("block "+S.attributes.blockId+": unknown parameter "+t.name+(t.ref?" ("+t.ref+")":""));if(!i.definitionName)return E="HANDLER_DRAG_PARAM_"+i.name,void(B="reporter"===S.attributes.draggableParameters?F(i.type,w):"Variable");var o=V.U.lookup(w.apis.byQName,i.type);A=!0;var r=i.definitionName,n=i.actualName,l=o&&6==o.kind,a=o&&!!o.attributes.fixedInstances&&!i.shadowBlockId,s=!!S.attributes.constantShim,c="@combined@"==i.type,u=i.fieldEditor,p=r.charAt(0).toUpperCase()+r.slice(1),d=i.type;if(l||a||s||c){var h=void 0;l?(T=w.apis,x=i.type,h=V.Util.values(T.byQName).filter(function(t){return t.namespace===x&&!t.attributes.blockHidden})):a?h=U(w.apis,o.qName):c?h=S.combinedProperties.map(function(t){return V.U.lookup(w.apis.byQName,t)}):(b=w.apis,_=S.qName,h=V.Util.values(b.byQName).filter(function(t){return t.attributes.blockIdentity===_})),0==h.length&&console.error("no instances of "+o.qName+" found");var m=h.map(function(t){var e=t.attributes.block||t.attributes.blockId||t.name,i=t.attributes.blockCombine;return t.attributes.jresURL&&!t.attributes.iconURL&&V.U.startsWith(t.attributes.jresURL,"data:image/x-mkcd-f")&&(t.attributes.iconURL=N.convert(t.attributes.jresURL)),i&&(e=e.replace(/@set/,"")),[t.attributes.iconURL||t.attributes.blockImage?{src:t.attributes.iconURL||V.Util.pathJoin(V.webConfig.commitCdnUrl,"blocks/"+t.namespace.toLowerCase()+"/"+t.name.toLowerCase()+".png"),alt:e,width:36,height:36,value:t.name}:e,t.namespace+"."+t.name]});if(i.defaultValue){var f=-1;if(m.some(function(t,e){return t[1]===i.defaultValue&&(f=e,!0)}),-1<f){var g=m.splice(f,1)[0];m.unshift(g)}}if(u){var y=S.attributes.paramDefl[n]||"",k={data:m,colour:O,label:p,type:d,blocksInfo:w};V.Util.jsonMergeFrom(k,S.attributes.paramFieldEditorOptions&&S.attributes.paramFieldEditorOptions[n]||{}),C.push(P(R.createFieldEditor(u,y,k),r))}else C.push(P(new Blockly.FieldDropdown(m),r))}else if(u){var y=S.attributes.paramDefl[i.actualName]||"",v={colour:O,label:p,type:d,blocksInfo:w};V.Util.jsonMergeFrom(v,S.attributes.paramFieldEditorOptions&&S.attributes.paramFieldEditorOptions[i.actualName]||{}),C.push(P(R.createFieldEditor(u,y,v),i.definitionName))}else E=r,L&&"this"===t.name?B=i.type:"number"==i.type&&i.shadowBlockId&&"value"==i.shadowBlockId?(E=void 0,C.push(P(new Blockly.FieldTextInput("0",Blockly.FieldTextInput.numberValidator),r))):B="string"==i.type&&i.shadowOptions&&i.shadowOptions.toString?null:F(i.type,w)}var b,_,T,x}),E)(e=n.appendValueInput(E)).setAlign(Blockly.ALIGN_LEFT);else if(o){var i=A?R.optionalInputWithFieldPrefix:R.optionalDummyInputPrefix;e=n.appendDummyInput(i+r++)}else e=n.appendDummyInput();B&&e.setCheck(B),C.forEach(function(t){return e.appendField(t.field,t.name)})}),N.logTime()):console.warn("Enum blocks may only have 1 parameter but "+S.attributes.blockId+" has "+D.parameters.length)}n.setPreviousStatement(!(p&&!S.attributes.handlerStatement)&&"void"==S.retType),n.setNextStatement(!(p&&!S.attributes.handlerStatement)&&"void"==S.retType),n.setTooltip(/^__/.test(S.namespace)?"":S.attributes.jsDoc)}(this,t,e,i)}}};var a,s;V.Util.isTranslationMode()&&V.blocks.promptTranslateBlock&&(l.block.customContextMenu=function(t){e.attributes.translationId&&t.push({enabled:!0,text:lf("Translate this block"),callback:function(){V.blocks.promptTranslateBlock(r,[e.attributes.translationId])}})});u[r]=l,Blockly.Blocks[r]=l.block}(o,t,e,i)}return t})}function p(t){return t.outerHTML.replace(/^<\?[^>]*>/,"")}function m(t){return!!(t.parameters?t.parameters.filter(function(t){return"Action"===t.type||/^\([^\)]*\)\s*=>/.test(t.type)})[0]:void 0)}R.blockSymbol=function(t){var e=u[t];return e?e.fn:void 0},R.createShadowValue=r,R.createFlyoutHeadingLabel=f,R.createFlyoutGroupLabel=function(t,e,i,o){var r=n(t,void 0,e);return r.setAttribute("web-class","blocklyFlyoutGroup"),r.setAttribute("web-line","1.5"),i&&r.setAttribute("web-line-width",i),o&&(r.setAttribute("web-help-button","true"),r.setAttribute("callbackKey",o)),r},R.createFlyoutButton=function(t,e){var i=Blockly.utils.xml.createElement("button");return i.setAttribute("text",e),i.setAttribute("callbackKey",t),i},R.createToolboxBlock=l,R.injectBlocks=i,R.hasArrowFunction=m,R.cleanBlocks=function(){for(var t in V.debug("removing all custom blocks"),u)s(u[t].fn)},R.initializeAndInject=function(t){a(),i(t)};var t=!(R.initialize=function(t){a(),function(t){M={};var i=t.apis.jres;i&&Object.keys(i).forEach(function(t){var e=i[t];e&&e.icon&&(M[t]=e.icon)})}(t)});function a(){var m,a;t||(t=!0,goog.provide("Blockly.Blocks.device"),goog.require("Blockly.Blocks"),Blockly.FieldCheckbox.CHECK_CHAR="■",Blockly.BlockSvg.START_HAT=!!V.appTarget.appTheme.blockHats,R.initFieldEditors(),(m=Blockly.Msg).DUPLICATE_BLOCK=lf("{id:block}Duplicate"),m.REMOVE_COMMENT=lf("Remove Comment"),m.ADD_COMMENT=lf("Add Comment"),m.EXTERNAL_INPUTS=lf("External Inputs"),m.INLINE_INPUTS=lf("Inline Inputs"),m.EXPAND_BLOCK=lf("Expand Block"),m.COLLAPSE_BLOCK=lf("Collapse Block"),m.ENABLE_BLOCK=lf("Enable Block"),m.DISABLE_BLOCK=lf("Disable Block"),m.DELETE_BLOCK=lf("Delete Block"),m.DELETE_X_BLOCKS=lf("Delete Blocks"),m.DELETE_ALL_BLOCKS=lf("Delete All Blocks"),m.HELP=lf("Help"),Blockly.BlockSvg.prototype.showHelp_=function(){var t=goog.isFunction(this.helpUrl)?this.helpUrl():this.helpUrl;t&&(V.blocks.openHelpUrl||window.open)(t)},Blockly.WorkspaceSvg.prototype.showContextMenu_=function(t){var e=this;if(!this.options.readOnly&&!this.isFlyout){var i=[],o=this.getTopBlocks(),r=this.getTopComments(),n=Blockly.utils.genUid();this.options.comments&&!V.BrowserUtils.isIE()&&i.push(Blockly.ContextMenu.workspaceCommentOption(this,t));for(var l=10,a=Blockly.WorkspaceSvg.buildDeleteList_(o),s=0,c=0;c<a.length;c++)a[c].isShadow()||s++;var u={text:1==s?m.DELETE_BLOCK:m.DELETE_ALL_BLOCKS,enabled:0<s,callback:function(){V.tickEvent("blocks.context.delete",void 0,{interactiveConsent:!0}),s<2?h():Blockly.confirm(lf("Delete all {0} blocks?",s),function(t){t&&h()})}};i.push(u);var p={text:lf("Format Code"),enabled:!0,callback:function(){V.tickEvent("blocks.context.format",void 0,{interactiveConsent:!0}),V.blocks.layout.flow(e,{useViewWidth:!0})}};if(i.push(p),V.blocks.layout.screenshotEnabled()){var d={text:lf("Snapshot"),enabled:0<o.length||0<r.length,callback:function(){V.tickEvent("blocks.context.screenshot",void 0,{interactiveConsent:!0}),V.blocks.layout.screenshotAsync(e).done(function(t){V.BrowserUtils.isSafari()&&(t=t.replace(/^data:image\/[^;]/,"data:application/octet-stream")),V.BrowserUtils.browserDownloadDataUri(t,(V.appTarget.nickname||V.appTarget.id)+"-"+lf("screenshot")+".png")})}};i.push(d)}R.onShowContextMenu&&R.onShowContextMenu(this,i),Blockly.ContextMenu.show(t,i,this.RTL)}function h(){Blockly.Events.setGroup(n);var t=a.shift();t&&(t.workspace?(t.dispose(!1,!0),setTimeout(h,l)):h()),Blockly.Events.setGroup(!1)}},Blockly.Constants.Logic.LOGIC_COMPARE_ONCHANGE_MIXIN.onchange=function(){},function(){var t=V.blocks.getBlockDefinition(ts.pxtc.ON_START_TYPE);if(Blockly.Blocks[ts.pxtc.ON_START_TYPE]={init:function(){this.jsonInit({message0:t.block.message0,args0:[{type:"input_dummy"},{type:"input_statement",name:"HANDLER"}],colour:(V.appTarget.runtime?V.appTarget.runtime.onStartColor:"")||V.toolbox.getNamespaceColor("loops")}),_(this,ts.pxtc.ON_START_TYPE,t.name,t.tooltip,t.url,String((V.appTarget.runtime?V.appTarget.runtime.onStartColor:"")||V.toolbox.getNamespaceColor("loops")),void 0,void 0,!!V.appTarget.runtime&&V.appTarget.runtime.onStartUnDeletable)}},Blockly.Blocks[pxtc.TS_STATEMENT_TYPE]={init:function(){var r=this,n=this;n.setColour("#717171"),n.setPreviousStatement(!0),n.setNextStatement(!0),n.setInputsInline(!1),this.domToMutation=function(t){var e=parseInt(t.getAttribute("numlines"));r.declaredVariables=t.getAttribute("declaredvars");for(var i=0;i<e;i++){var o=t.getAttribute("line"+i);n.appendDummyInput().appendField(o,"LINE"+i)}},this.mutationToDom=function(){for(var t=document.createElement("mutation"),e=0;;){var i=n.getFieldValue("LINE"+e);if(null===i)break;t.setAttribute("line"+e,i),e++}return t.setAttribute("numlines",e.toString()),r.declaredVariables&&t.setAttribute("declaredvars",r.declaredVariables),t},n.setEditable(!1),_(this,pxtc.TS_STATEMENT_TYPE,lf("JavaScript statement"),lf("A JavaScript statement that could not be converted to blocks"),"/blocks/javascript-blocks","#717171")}},Blockly.Blocks[pxtc.TS_OUTPUT_TYPE]={init:function(){var t=this;t.setColour("#717171"),t.setPreviousStatement(!1),t.setNextStatement(!1),t.setOutput(!0),t.setEditable(!1),t.appendDummyInput().appendField(new pxtblockly.FieldTsExpression(""),"EXPRESSION"),_(t,pxtc.TS_OUTPUT_TYPE,lf("JavaScript expression"),lf("A JavaScript expression that could not be converted to blocks"),"/blocks/javascript-blocks","#717171")}},V.appTarget.runtime&&V.appTarget.runtime.pauseUntilBlock){var e=V.appTarget.runtime.pauseUntilBlock,i=V.blocks.getBlockDefinition(ts.pxtc.PAUSE_UNTIL_TYPE);Blockly.Blocks[pxtc.PAUSE_UNTIL_TYPE]={init:function(){var t=e.color||V.toolbox.getNamespaceColor("loops");this.jsonInit({message0:i.block.message0,args0:[{type:"input_value",name:"PREDICATE",check:"Boolean"}],inputsInline:!0,previousStatement:null,nextStatement:null,colour:t}),_(this,ts.pxtc.PAUSE_UNTIL_TYPE,i.name,i.tooltip,i.url,t,void 0,void 0,!1)}}}var o="pxt_controls_for_of",r=V.blocks.getBlockDefinition(o);Blockly.Blocks[o]={init:function(){this.jsonInit({message0:r.block.message0,args0:[{type:"input_value",name:"VAR",variable:r.block.variable,check:"Variable"},{type:"input_value",name:"LIST",check:"Array"}],previousStatement:null,nextStatement:null,colour:V.toolbox.blockColors.loops,inputsInline:!0}),this.appendStatementInput("DO").appendField(r.block.appendField);var t=this;_(this,o,r.name,function(){return V.U.rlf(r.tooltip,t.getInputTargetBlock("VAR")?t.getInputTargetBlock("VAR").getField("VAR").getText():"")},r.url,String(V.toolbox.getNamespaceColor("loops")))}};var n="controls_for_of",l=V.blocks.getBlockDefinition(n);Blockly.Blocks[n]={init:function(){this.jsonInit({message0:l.block.message0,args0:[{type:"field_variable",name:"VAR",variable:l.block.variable},{type:"input_value",name:"LIST",check:"Array"}],previousStatement:null,nextStatement:null,colour:V.toolbox.blockColors.loops,inputsInline:!0}),this.appendStatementInput("DO").appendField(l.block.appendField);var t=this;_(this,n,l.name,function(){return V.U.rlf(l.tooltip,t.getField("VAR").getText())},l.url,String(V.toolbox.getNamespaceColor("loops")))}};var a="lists_index_get",s=V.blocks.getBlockDefinition(a);Blockly.Blocks.lists_index_get={init:function(){this.jsonInit({message0:s.block.message0,args0:[{type:"input_value",name:"LIST",check:"Array"},{type:"input_value",name:"INDEX",check:"Number"}],colour:V.toolbox.blockColors.arrays,outputShape:Blockly.OUTPUT_SHAPE_ROUND,inputsInline:!0}),this.setPreviousStatement(!1),this.setNextStatement(!1),this.setOutput(!0),d(this,a)}};var c="lists_index_set",u=V.blocks.getBlockDefinition(c);Blockly.Blocks[c]={init:function(){this.jsonInit({message0:u.block.message0,args0:[{type:"input_value",name:"LIST",check:"Array"},{type:"input_value",name:"INDEX",check:"Number"},{type:"input_value",name:"VALUE",check:null}],previousStatement:null,nextStatement:null,colour:V.toolbox.blockColors.arrays,inputsInline:!0}),d(this,c)}}}(),function(){var t="math_op2",e=V.blocks.getBlockDefinition(t),i=e.tooltip;Blockly.Blocks[t]={init:function(){this.jsonInit({message0:lf("%1 of %2 and %3"),args0:[{type:"field_dropdown",name:"op",options:[[lf("{id:op}min"),"min"],[lf("{id:op}max"),"max"]]},{type:"input_value",name:"x",check:"Number"},{type:"input_value",name:"y",check:"Number"}],inputsInline:!0,output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND,colour:V.toolbox.getNamespaceColor("math")});_(this,t,e.name,function(t){return i[t.getFieldValue("op")]},e.url,V.toolbox.getNamespaceColor(e.category))}};var o="math_op3",r=V.blocks.getBlockDefinition(o);Blockly.Blocks[o]={init:function(){this.jsonInit({message0:r.block.message0,args0:[{type:"input_value",name:"x",check:"Number"}],inputsInline:!0,output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND,colour:V.toolbox.getNamespaceColor("math")}),d(this,o)}},["math_number","math_integer","math_whole_number","math_number_minmax"].forEach(function(t){var e=V.blocks.getBlockDefinition(t);T(t,e.name,e.tooltip,e.url,Blockly.Colours.textField,Blockly.Colours.textField,Blockly.Colours.textField)});var n=Blockly.Msg,l="math_arithmetic",a=V.blocks.getBlockDefinition(l),s=a.tooltip;n.MATH_ADDITION_SYMBOL=a.block.MATH_ADDITION_SYMBOL,n.MATH_SUBTRACTION_SYMBOL=a.block.MATH_SUBTRACTION_SYMBOL,n.MATH_MULTIPLICATION_SYMBOL=a.block.MATH_MULTIPLICATION_SYMBOL,n.MATH_DIVISION_SYMBOL=a.block.MATH_DIVISION_SYMBOL,n.MATH_POWER_SYMBOL=a.block.MATH_POWER_SYMBOL,T(l,a.name,function(t){return s[t.getFieldValue("OP")]},a.url,V.toolbox.getNamespaceColor(a.category));var c="math_modulo",u=V.blocks.getBlockDefinition(c);n.MATH_MODULO_TITLE=u.block.MATH_MODULO_TITLE,b(c),R.initMathOpBlock(),R.initMathRoundBlock()}(),function(){Blockly.FieldVariable.prototype.getVariableTypes_=function(){return[""]};var t=lf("{id:var}item");Blockly.Variables.flyoutCategory=function(t){var e=[];if(!V.appTarget.appTheme.hideFlyoutHeadings){var i=f(lf("Variables"),V.toolbox.getNamespaceColor("variables"),V.toolbox.getNamespaceIcon("variables"));e.push(i)}var o=document.createElement("button");o.setAttribute("text",lf("Make a Variable...")),o.setAttribute("callbackKey","CREATE_VARIABLE"),t.registerButtonCallback("CREATE_VARIABLE",function(t){Blockly.Variables.createVariable(t.getTargetWorkspace())}),e.push(o);var r=Blockly.Variables.flyoutCategoryBlocks(t);return e=e.concat(r)},Blockly.Variables.flyoutCategoryBlocks=function(t){var e=t.getVariablesOfType(""),i=[];if(0<e.length){var o=e[e.length-1];e.sort(Blockly.VariableModel.compareByName);for(var r=0;r<e.length;r++){var n=e[r];if(Blockly.Blocks.variables_get){var l='<xml><block type="variables_get" gap="8">'+Blockly.Variables.generateVariableFieldXmlString(n)+"</block></xml>",a=Blockly.Xml.textToDom(l).firstChild;i.push(a)}}if(i[i.length-1].setAttribute("gap","24"),Blockly.Blocks.variables_set){var s=Blockly.Blocks.variables_change?8:24,l='<xml><block type="variables_set" gap="'+s+'">'+Blockly.Variables.generateVariableFieldXmlString(o)+"</block></xml>",a=Blockly.Xml.textToDom(l).firstChild,c=goog.dom.createDom("value");c.setAttribute("name","VALUE");var u=goog.dom.createDom("shadow");u.setAttribute("type","math_number"),c.appendChild(u);var p=goog.dom.createDom("field");p.setAttribute("name","NUM"),p.appendChild(document.createTextNode("0")),u.appendChild(p),a.appendChild(c),i.push(a)}if(Blockly.Blocks.variables_change){var s=Blockly.Blocks.variables_get?20:8,l='<xml><block type="variables_change" gap="'+s+'">'+Blockly.Variables.generateVariableFieldXmlString(o)+'<value name="DELTA"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block></xml>',a=Blockly.Xml.textToDom(l).firstChild,c=goog.dom.createDom("value");c.setAttribute("name","VALUE");var u=goog.dom.createDom("shadow");u.setAttribute("type","math_number"),c.appendChild(u);var p=goog.dom.createDom("field");p.setAttribute("name","NUM"),p.appendChild(document.createTextNode("1")),u.appendChild(p),a.appendChild(c),i.push(a)}}return i};var e=Blockly.Msg,i="variables_get",o=V.blocks.getBlockDefinition(i);e.VARIABLES_GET_CREATE_SET=o.block.VARIABLES_GET_CREATE_SET,b(i),b("variables_get_reporter"),e.RENAME_VARIABLE=lf("Rename variable..."),e.DELETE_VARIABLE=lf('Delete the "%1" variable'),e.DELETE_VARIABLE_CONFIRMATION=lf('Delete %1 uses of the "%2" variable?'),e.NEW_VARIABLE_DROPDOWN=lf("New variable...");var r="variables_set",n=V.blocks.getBlockDefinition(r);e.VARIABLES_SET=n.block.VARIABLES_SET,e.VARIABLES_DEFAULT_NAME=t,e.VARIABLES_SET_CREATE_GET=lf("Create 'get %1'"),b(r);var l="variables_change",a=V.blocks.getBlockDefinition(l);Blockly.Blocks[l]={init:function(){this.jsonInit({message0:a.block.message0,args0:[{type:"field_variable",name:"VAR",variable:t},{type:"input_value",name:"VALUE",check:"Number"}],inputsInline:!0,previousStatement:null,nextStatement:null,colour:V.toolbox.getNamespaceColor("variables")}),d(this,l)}},e.NEW_VARIABLE_TITLE=lf("New variable name:"),e.RENAME_VARIABLE_TITLE=lf("Rename all '%1' variables to:")}(),function(){var t=Blockly.Msg;t.FUNCTION_CREATE_NEW=lf("Make a Function..."),t.FUNCTION_WARNING_DUPLICATE_ARG=lf("Functions cannot use the same argument name more than once."),t.FUNCTION_WARNING_ARG_NAME_IS_FUNCTION_NAME=lf("Argument names must not be the same as the function name."),t.FUNCTION_WARNING_EMPTY_NAME=lf("Function and argument names cannot be empty."),t.FUNCTIONS_DEFAULT_FUNCTION_NAME=lf("doSomething"),t.FUNCTIONS_DEFAULT_BOOLEAN_ARG_NAME=lf("bool"),t.FUNCTIONS_DEFAULT_STRING_ARG_NAME=lf("text"),t.FUNCTIONS_DEFAULT_NUMBER_ARG_NAME=lf("num"),t.FUNCTIONS_DEFAULT_CUSTOM_ARG_NAME=lf("arg"),t.PROCEDURES_HUE=V.toolbox.getNamespaceColor("functions"),t.REPORTERS_HUE=V.toolbox.getNamespaceColor("variables");var e="procedures_defnoreturn",i=V.blocks.getBlockDefinition(e);t.PROCEDURES_DEFNORETURN_TITLE=i.block.PROCEDURES_DEFNORETURN_TITLE,t.PROCEDURE_ALREADY_EXISTS=i.block.PROCEDURE_ALREADY_EXISTS,Blockly.Blocks.procedures_defnoreturn.init=function(){var t=new Blockly.FieldTextInput("",Blockly.Procedures.rename);this.appendDummyInput().appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE).appendField(t,"NAME").appendField("","PARAMS"),this.setColour(V.toolbox.getNamespaceColor("functions")),this.arguments_=[],this.argumentVarModels_=[],this.setStartHat(!0),this.setStatements_(!0),this.statementConnection_=null},b(e);var o="procedures_callnoreturn",r=V.blocks.getBlockDefinition(o);t.PROCEDURES_CALLRETURN_TOOLTIP=i.tooltip,Blockly.Blocks.procedures_callnoreturn={init:function(){var t=new pxtblockly.FieldProcedure("");this.appendDummyInput("TOPROW").appendField(r.block.PROCEDURES_CALLNORETURN_TITLE).appendField(t,"NAME"),this.setPreviousStatement(!0),this.setNextStatement(!0),this.setColour(V.toolbox.getNamespaceColor("functions")),this.arguments_=[],this.quarkConnections_={},this.quarkIds_=null},getProcedureCall:function(){return this.getFieldValue("NAME")},renameProcedure:function(t,e){Blockly.Names.equals(t,this.getProcedureCall())&&this.setFieldValue(e,"NAME")},onchange:function(t){if(this.workspace&&!this.workspace.isFlyout&&!this.isInsertionMarker())if(t.type==Blockly.Events.CREATE&&-1!=t.ids.indexOf(this.id)){var e=this.getProcedureCall(),i=Blockly.Procedures.getDefinition(e,this.workspace);if(!i||i.type==this.defType_&&JSON.stringify(i.arguments_)==JSON.stringify(this.arguments_)||(i=null),!i){Blockly.Events.setGroup(t.group);var o=Blockly.utils.xml.createElement("xml"),r=Blockly.utils.xml.createElement("block");r.setAttribute("type",this.defType_);var n=this.getRelativeToSurfaceXY(),l=n.x+Blockly.SNAP_RADIUS*(this.RTL?-1:1),a=n.y+2*Blockly.SNAP_RADIUS;r.setAttribute("x",l),r.setAttribute("y",a);var s=Blockly.utils.xml.createElement("field");s.setAttribute("name","NAME"),s.appendChild(document.createTextNode(this.getProcedureCall())),r.appendChild(s),o.appendChild(r),V.blocks.domToWorkspaceNoEvents(o,this.workspace),Blockly.Events.setGroup(!1)}}else if(t.type==Blockly.Events.DELETE){var c=this.getProcedureCall(),i=Blockly.Procedures.getDefinition(c,this.workspace);i||(Blockly.Events.setGroup(t.group),this.dispose(!0,!1),Blockly.Events.setGroup(!1))}},mutationToDom:function(){var t=document.createElement("mutation");return t.setAttribute("name",this.getProcedureCall()),t},domToMutation:function(t){var e=t.getAttribute("name");this.renameProcedure(this.getProcedureCall(),e)},customContextMenu:function(t){var e={enabled:!0};e.text=Blockly.Msg.PROCEDURES_HIGHLIGHT_DEF;var i=this.getProcedureCall(),o=this.workspace;e.callback=function(){var t=Blockly.Procedures.getDefinition(i,o);t&&t.select()},t.push(e)},defType_:"procedures_defnoreturn"},b(o);var n="function_definition",l=V.blocks.getBlockDefinition(n);t.FUNCTIONS_EDIT_OPTION=l.block.FUNCTIONS_EDIT_OPTION,b(n);var a="function_call",s=V.blocks.getBlockDefinition(a);t.FUNCTIONS_CALL_TITLE=s.block.FUNCTIONS_CALL_TITLE,b(a),Blockly.Procedures.flyoutCategory=function(u){var l=[];if(!V.appTarget.appTheme.hideFlyoutHeadings){var t=f(lf("Functions"),V.toolbox.getNamespaceColor("functions"),V.toolbox.getNamespaceIcon("functions"),"blocklyFlyoutIconfunctions");l.push(t)}var i=lf("Make a Function..."),o=lf("New function name:"),e=Blockly.utils.xml.createElement("button");e.setAttribute("text",i),e.setAttribute("callbackKey","CREATE_FUNCTION");u.registerButtonCallback("CREATE_FUNCTION",function(t){var e=function(t){Blockly.prompt(o,t,function(t){V.tickEvent("blocks.makeafunction"),t&&(t=t.replace(/[\s\xa0]+/g," ").replace(/^ | $/g,""))==i&&(t=null),t&&(u.getVariable(t)?Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace("%1",t.toLowerCase()),function(){e(t)}):Blockly.Procedures.isLegalName_(t,u)?function(t){var e=u.getTopBlocks(!0)[0],i=10,o=10;if(e){var r=e.getRelativeToSurfaceXY();i=r.x+Blockly.SNAP_RADIUS*(e.RTL?-1:1),o=r.y+2*Blockly.SNAP_RADIUS}var n=Blockly.utils.xml.createElement("xml"),l=Blockly.utils.xml.createElement("block");l.setAttribute("type","procedures_defnoreturn"),l.setAttribute("x",String(i)),l.setAttribute("y",String(o));var a=Blockly.utils.xml.createElement("field");a.setAttribute("name","NAME"),a.appendChild(document.createTextNode(t)),l.appendChild(a),n.appendChild(l);var s=V.blocks.domToWorkspaceNoEvents(n,u);Blockly.hideChaff();var c=u.getBlockById(s[0]);c.select(),u.centerOnBlock(c.id)}(t):Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace("%1",t.toLowerCase()),function(){e(t)}))})};e("doSomething")}),l.push(e);var r=Blockly.Procedures.allProcedures(u);return function(t,e){for(var i=0;i<t.length;i++){var o=t[i][0],r=(t[i][1],Blockly.utils.xml.createElement("block"));r.setAttribute("type",e),r.setAttribute("gap","16"),r.setAttribute("colour",V.toolbox.getNamespaceColor("functions"));var n=goog.dom.createDom("field",null,o);n.setAttribute("name","NAME"),r.appendChild(n),l.push(r)}}(r[0],"procedures_callnoreturn"),l};var c=Blockly.Functions.flyoutCategory;Blockly.Functions.flyoutCategory=function(t){var e=c(t),i=f(lf("Functions"),V.toolbox.getNamespaceColor("functions"),V.toolbox.getNamespaceIcon("functions"),"blocklyFlyoutIconfunctions");return e.unshift(i),e};var u={number:V.blocks.defaultIconForArgType("number"),boolean:V.blocks.defaultIconForArgType("boolean"),string:V.blocks.defaultIconForArgType("string")},p={},d=V.appTarget.runtime&&V.appTarget.runtime.functionsOptions;d&&d.extraFunctionEditorTypes&&d.extraFunctionEditorTypes.forEach(function(t){u[t.typeName]=t.icon||V.blocks.defaultIconForArgType(),t.defaultName&&(p[t.typeName]=t.defaultName)});Blockly.PXTBlockly.FunctionUtils.argumentIcons=u,Blockly.PXTBlockly.FunctionUtils.argumentDefaultNames=p,Blockly.Blocks.argument_reporter_custom&&(Blockly.Blocks.argument_reporter_custom.domToMutation=function(t){var e=t.getAttribute("typename");this.typeName_=e,g(this,e,h)})}(),function(){var t=Blockly.Msg,e="lists_create_with",i=V.blocks.getBlockDefinition(e);t.LISTS_CREATE_EMPTY_TITLE=i.block.LISTS_CREATE_EMPTY_TITLE,t.LISTS_CREATE_WITH_INPUT_WITH=i.block.LISTS_CREATE_WITH_INPUT_WITH,t.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD=i.block.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD,t.LISTS_CREATE_WITH_ITEM_TITLE=i.block.LISTS_CREATE_WITH_ITEM_TITLE,b(e);var o="lists_length",r=V.blocks.getBlockDefinition(o);t.LISTS_LENGTH_TITLE=r.block.LISTS_LENGTH_TITLE,Blockly.Blocks[o].init=function(){this.jsonInit({message0:t.LISTS_LENGTH_TITLE,args0:[{type:"input_value",name:"VALUE",check:["Array"]}],output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND})},b(o)}(),function(){var t=Blockly.Msg,e="controls_repeat_ext",i=V.blocks.getBlockDefinition(e);t.CONTROLS_REPEAT_TITLE=i.block.CONTROLS_REPEAT_TITLE,t.CONTROLS_REPEAT_INPUT_DO=i.block.CONTROLS_REPEAT_INPUT_DO,b(e);var o="device_while",r=V.blocks.getBlockDefinition(o);Blockly.Blocks[o]={init:function(){this.jsonInit({message0:r.block.message0,args0:[{type:"input_value",name:"COND",check:"Boolean"}],previousStatement:null,nextStatement:null,colour:V.toolbox.getNamespaceColor("loops")}),this.appendStatementInput("DO").appendField(r.block.appendField),d(this,o)}};var n="pxt_controls_for",l=V.blocks.getBlockDefinition(n);Blockly.Blocks[n]={init:function(){this.jsonInit({message0:l.block.message0,args0:[{type:"input_value",name:"VAR",variable:l.block.variable,check:"Variable"},{type:"input_value",name:"TO",check:"Number"}],previousStatement:null,nextStatement:null,colour:V.toolbox.getNamespaceColor("loops"),inputsInline:!0}),this.appendStatementInput("DO").appendField(l.block.appendField);var t=this;_(this,n,l.name,function(){return V.U.rlf(l.tooltip,t.getInputTargetBlock("VAR")?t.getInputTargetBlock("VAR").getField("VAR").getText():"")},l.url,String(V.toolbox.getNamespaceColor("loops")))},getVars:function(){return[this.getField("VAR").getText()]},renameVar:function(t,e){var i=this.getField("VAR");Blockly.Names.equals(t,i.getText())&&(i.setText(e),i.setValue(e))},customContextMenu:function(t){if(!this.isCollapsed()){var e={enabled:!0};e.text=lf("Create 'get {0}'",name);var i=goog.dom.createDom("field",null,name);i.setAttribute("name","VAR");var o=goog.dom.createDom("block",null,i);o.setAttribute("type","variables_get"),e.callback=Blockly.ContextMenu.callbackFactory(this,o),t.push(e)}}};var a="controls_simple_for",s=V.blocks.getBlockDefinition(a);Blockly.Blocks[a]={init:function(){this.jsonInit({message0:s.block.message0,args0:[{type:"field_variable",name:"VAR",variable:s.block.variable},{type:"input_value",name:"TO",check:"Number"}],previousStatement:null,nextStatement:null,colour:V.toolbox.getNamespaceColor("loops"),inputsInline:!0}),this.appendStatementInput("DO").appendField(s.block.appendField);var t=this;_(this,a,s.name,function(){return V.U.rlf(s.tooltip,t.getField("VAR").getText())},s.url,String(V.toolbox.getNamespaceColor("loops")))},getVars:function(){return[this.getField("VAR").getText()]},renameVar:function(t,e){var i=this.getField("VAR");Blockly.Names.equals(t,i.getText())&&(i.setText(e),i.setValue(e))},customContextMenu:function(t){if(!this.isCollapsed()){var e={enabled:!0},i=this.getField("VAR").getText();e.text=lf("Create 'get {0}'",i);var o=goog.dom.createDom("field",null,i);o.setAttribute("name","VAR");var r=goog.dom.createDom("block",null,o);r.setAttribute("type","variables_get"),e.callback=Blockly.ContextMenu.callbackFactory(this,r),t.push(e)}}};var c=V.blocks.getBlockDefinition(ts.pxtc.TS_BREAK_TYPE);Blockly.Blocks[pxtc.TS_BREAK_TYPE]={init:function(){var t=V.toolbox.getNamespaceColor("loops");this.jsonInit({message0:c.block.message0,inputsInline:!0,previousStatement:null,nextStatement:null,colour:t}),_(this,ts.pxtc.TS_BREAK_TYPE,c.name,c.tooltip,c.url,t,void 0,void 0,!1)}};var u=V.blocks.getBlockDefinition(ts.pxtc.TS_CONTINUE_TYPE);Blockly.Blocks[pxtc.TS_CONTINUE_TYPE]={init:function(){var t=V.toolbox.getNamespaceColor("loops");this.jsonInit({message0:u.block.message0,inputsInline:!0,previousStatement:null,nextStatement:null,colour:t}),_(this,ts.pxtc.TS_CONTINUE_TYPE,u.name,u.tooltip,u.url,t,void 0,void 0,!1)}};var p="#cccccc";Blockly.Blocks[pxtc.COLLAPSED_BLOCK]={init:function(){this.jsonInit({message0:"...",inputsInline:!0,previousStatement:null,nextStatement:null,colour:p}),_(this,ts.pxtc.COLLAPSED_BLOCK,"...",lf("a few blocks"),void 0,p,void 0,void 0,!1)}}}(),function(){var t=Blockly.Msg,e="controls_if",i=V.blocks.getBlockDefinition(e),o=i.tooltip;t.CONTROLS_IF_MSG_IF=i.block.CONTROLS_IF_MSG_IF,t.CONTROLS_IF_MSG_THEN=i.block.CONTROLS_IF_MSG_THEN,t.CONTROLS_IF_MSG_ELSE=i.block.CONTROLS_IF_MSG_ELSE,t.CONTROLS_IF_MSG_ELSEIF=i.block.CONTROLS_IF_MSG_ELSEIF,t.CONTROLS_IF_TOOLTIP_1=o.CONTROLS_IF_TOOLTIP_1,t.CONTROLS_IF_TOOLTIP_2=o.CONTROLS_IF_TOOLTIP_2,t.CONTROLS_IF_TOOLTIP_3=o.CONTROLS_IF_TOOLTIP_3,t.CONTROLS_IF_TOOLTIP_4=o.CONTROLS_IF_TOOLTIP_4,b(e);var r="logic_compare",n=V.blocks.getBlockDefinition(r).tooltip;t.LOGIC_COMPARE_TOOLTIP_EQ=n.LOGIC_COMPARE_TOOLTIP_EQ,t.LOGIC_COMPARE_TOOLTIP_NEQ=n.LOGIC_COMPARE_TOOLTIP_NEQ,t.LOGIC_COMPARE_TOOLTIP_LT=n.LOGIC_COMPARE_TOOLTIP_LT,t.LOGIC_COMPARE_TOOLTIP_LTE=n.LOGIC_COMPARE_TOOLTIP_LTE,t.LOGIC_COMPARE_TOOLTIP_GT=n.LOGIC_COMPARE_TOOLTIP_GT,t.LOGIC_COMPARE_TOOLTIP_GTE=n.LOGIC_COMPARE_TOOLTIP_GTE,b(r);var l="logic_operation",a=V.blocks.getBlockDefinition(l),s=a.tooltip;t.LOGIC_OPERATION_AND=a.block.LOGIC_OPERATION_AND,t.LOGIC_OPERATION_OR=a.block.LOGIC_OPERATION_OR,t.LOGIC_OPERATION_TOOLTIP_AND=s.LOGIC_OPERATION_TOOLTIP_AND,t.LOGIC_OPERATION_TOOLTIP_OR=s.LOGIC_OPERATION_TOOLTIP_OR,b(l);var c="logic_negate",u=V.blocks.getBlockDefinition(c);t.LOGIC_NEGATE_TITLE=u.block.LOGIC_NEGATE_TITLE,b(c);var p="logic_boolean",d=V.blocks.getBlockDefinition(p);t.LOGIC_BOOLEAN_TRUE=d.block.LOGIC_BOOLEAN_TRUE,t.LOGIC_BOOLEAN_FALSE=d.block.LOGIC_BOOLEAN_FALSE,b(p)}(),function(){var t=V.blocks.getBlockDefinition("text");T("text",t.name,t.tooltip,t.url,Blockly.Colours.textField,Blockly.Colours.textField,Blockly.Colours.textField);var e=Blockly.Msg,i="text_length",o=V.blocks.getBlockDefinition(i);e.TEXT_LENGTH_TITLE=o.block.TEXT_LENGTH_TITLE,Blockly.Blocks[i].init=function(){this.jsonInit({message0:e.TEXT_LENGTH_TITLE,args0:[{type:"input_value",name:"VALUE",check:["String"]}],output:"Number",outputShape:Blockly.OUTPUT_SHAPE_ROUND})},b(i);var r="text_join",n=V.blocks.getBlockDefinition(r);e.TEXT_JOIN_TITLE_CREATEWITH=n.block.TEXT_JOIN_TITLE_CREATEWITH,b(r)}(),function(){var c=Blockly.BlockDragger.prototype.dragBlock;Blockly.BlockDragger.prototype.dragBlock=function(t,e){var i,o,r=document.getElementsByClassName("blocklyToolboxDiv")[0],n=document.getElementsByClassName("blocklyTreeRoot")[0]||document.getElementsByClassName("blocklyFlyout")[0],l=document.getElementById("blocklyTrashIcon");if(n&&l){var a=(i=n.getBoundingClientRect(),o=t.clientX,Math.abs(o-(i.left+i.width/2)));if(a<200){var s=a/200;l.style.opacity=""+(1-s),l.style.display="block",r&&(n.style.opacity=""+s,a<50&&V.BrowserUtils.addClass(r,"blocklyToolboxDeleting"))}else l.style.display="none",n.style.opacity="1",r&&V.BrowserUtils.removeClass(r,"blocklyToolboxDeleting")}return c.call(this,t,e)};var n=Blockly.BlockDragger.prototype.endBlockDrag;Blockly.BlockDragger.prototype.endBlockDrag=function(t,e){n.call(this,t,e);var i=document.getElementsByClassName("blocklyToolboxDiv")[0],o=document.getElementsByClassName("blocklyTreeRoot")[0]||document.getElementsByClassName("blocklyFlyout")[0],r=document.getElementById("blocklyTrashIcon");r&&o&&(r.style.display="none",o.style.opacity="1",i&&V.BrowserUtils.removeClass(i,"blocklyToolboxDeleting"))}}(),Blockly.Blocks[pxtc.TS_DEBUGGER_TYPE]={init:function(){var t=this;t.setColour(V.toolbox.getNamespaceColor("debug")),t.setPreviousStatement(!0),t.setNextStatement(!0),t.setInputsInline(!1),t.appendDummyInput("ON_OFF").appendField(new Blockly.FieldLabel(lf("breakpoint"),void 0),"DEBUGGER").appendField(new pxtblockly.FieldBreakpoint("1",{type:"number"}),"ON_OFF"),_(this,pxtc.TS_DEBUGGER_TYPE,lf("Debugger statement"),lf("A debugger statement invokes any available debugging functionality"),"/javascript/debugger",V.toolbox.getNamespaceColor("debug"))}},Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT="",a=function(t){if(t.disabled)return lf("This block is disabled and will not run. Attach this block to an event to enable it.");for(var e=t.tooltip;goog.isFunction(e);)e=e(t);return e},Blockly.Tooltip.show_=function(){if(Blockly.Tooltip.poisonedElement_=Blockly.Tooltip.element_,Blockly.Tooltip.DIV){goog.dom.removeChildren(Blockly.Tooltip.DIV);var t=Blockly.Tooltip.element_.codeCard;if(t){var e=V.docs.codeCard.render({header:a(Blockly.Tooltip.element_)});Blockly.Tooltip.DIV.appendChild(e),l()}else{for(var i=a(Blockly.Tooltip.element_),o=(i=Blockly.utils._string.wrap(i,Blockly.Tooltip.LIMIT)).split("\n"),r=0;r<o.length;r++){var n=document.createElement("div");n.appendChild(document.createTextNode(o[r])),Blockly.Tooltip.DIV.appendChild(n)}l()}}function l(){var t=Blockly.Tooltip.element_.RTL,e=goog.dom.getViewportSize(),i=Blockly.Tooltip.DIV;i.style.direction=t?"rtl":"ltr",i.style.display="block",Blockly.Tooltip.visible=!0;var o=Blockly.Tooltip.lastX_;t?o-=Blockly.Tooltip.OFFSET_X+i.offsetWidth:o+=Blockly.Tooltip.OFFSET_X;var r=Blockly.Tooltip.lastY_+Blockly.Tooltip.OFFSET_Y;r+i.offsetHeight>e.height+window.scrollY&&(r-=i.offsetHeight+2*Blockly.Tooltip.OFFSET_Y),t?o=Math.max(Blockly.Tooltip.MARGINS-window.scrollX,o):o+i.offsetWidth>e.width+window.scrollX-2*Blockly.Tooltip.MARGINS&&(o=e.width-i.offsetWidth-2*Blockly.Tooltip.MARGINS),i.style.top=r+"px",i.style.left=o+"px"}},Blockly.Block.prototype.setEnabled=function(t){if(this.disabled==t){var e=Blockly.Events.recordUndo;Blockly.Events.recordUndo=!1,Blockly.Events.fire(new Blockly.Events.BlockChange(this,"disabled",null,this.disabled,!t)),Blockly.Events.recordUndo=e,this.disabled=!t}})}function F(t,e){for(var i=t.split(/\s*\|\s*/),o=[],r=0,n=i;r<n.length;r++){var l=n[r];switch(l){case"number":o.push("Number");break;case"string":o.push("String");break;case"boolean":o.push("Boolean");break;case"T":case"any":return null;case"void":return;default:if(k(l)){if(1<i.length)return null;o.push("Array")}var a=e.apis.byQName[l];a&&a.extendsTypes&&0<a.extendsTypes.length?o.push.apply(o,a.extendsTypes):o.push(l)}}return o}function g(t,e,i){var o=F(e,i);(o||null===o)&&t.setOutput(!0,o)}function d(t,e){var i=V.blocks.getBlockDefinition(e);_(t,e,i.name,i.tooltip,i.url,V.toolbox.getNamespaceColor(i.category))}function b(t){var e=V.blocks.getBlockDefinition(t);T(t,e.name,e.tooltip,e.url,V.toolbox.getNamespaceColor(e.category))}function _(i,o,t,e,r,n,l,a,s){!e||"string"!=typeof e&&"function"!=typeof e||i.setTooltip(e),r&&i.setHelpUrl(r),n&&i.setColour(n,l,a),s&&i.setDeletable(!1);var c=document.getElementById("blocklyToolboxDefinition"),u=c?R.getFirstChildWithAttr(c,"block","type",o):void 0;i.codeCard={header:t,name:t,software:1,description:goog.isFunction(e)?e(i):e,blocksXml:u?'<xml xmlns="http://www.w3.org/1999/xhtml">'+(p(u)||'<block type="'+o+'"></block>')+"</xml>":void 0,url:r},V.Util.isTranslationMode()&&V.blocks.promptTranslateBlock&&(i.customContextMenu=function(t){var e=V.blocks.getBlockDefinition(i.type);e&&e.translationIds&&t.push({enabled:!0,text:lf("Translate this block"),callback:function(){V.blocks.promptTranslateBlock(o,e.translationIds)}})})}function T(t,e,i,o,r,n,l){var a=Blockly.Blocks[t],s=a.init;s&&(a.init=function(){s.call(this);_(this,t,e,i,o,r,n,l)})}function s(t){delete Blockly.Blocks[t.attributes.blockId],delete u[t.attributes.blockId]}function x(t,e,i,o){var r=document.createElement(o?"shadow":"block");r.setAttribute("type",V.Util.htmlEscape(t));var n=document.createElement("field");return n.setAttribute("name",V.Util.htmlEscape(e)),n.textContent=V.Util.htmlEscape(i),r.appendChild(n),r}R.installHelpResources=T,R.onShowContextMenu=void 0,R.mkPredicateBlock=function(t){var e=document.createElement("block");e.setAttribute("type",t);var i=document.createElement("value");i.setAttribute("name","PREDICATE"),e.appendChild(i);var o=x("logic_boolean","BOOL","TRUE",!0);return i.appendChild(o),e},R.mkFieldBlock=x;var M={};function P(t,e){return{field:t,name:e}}function U(e,i){return V.Util.values(e.byQName).filter(function(t){return 4===t.kind&&t.attributes.fixedInstance&&function(t,e,i){if(e==i)return!0;var o=t.byQName[e];return!(!o||!o.extendsTypes)&&0<=o.extendsTypes.indexOf(i)}(e,t.retType,i)})}R.getFixedInstanceDropdownValues=U,R.generateIcons=function(t){var e=new V.ImageConverter;t.forEach(function(t){t.attributes.jresURL&&!t.attributes.iconURL&&V.U.startsWith(t.attributes.jresURL,"data:image/x-mkcd-f")&&(t.attributes.iconURL=e.convert(t.attributes.jresURL))})},R.setVarFieldValue=function(t,e,i){var o=t.getField(e),r=t.workspace.getAllVariables(),n=!1;if(r&&r.length)for(var l=0;l<r.length;l++){var a;(a=r[l]).name===i&&(o.setValue(a.getId()),n=!0)}n||(o.initModel(),(a=o.getVariable()).name=i,o.setText(i),o.setValue(a.getId()))}}(V.blocks||(V.blocks={}))}(pxt||(pxt={})),function(a){!function(l){var s,t;(t=s=l.MutatorTypes||(l.MutatorTypes={})).ObjectDestructuringMutator="objectdestructuring",t.RestParameterMutator="restparameter",t.DefaultInstanceMutator="defaultinstance",l.addMutation=function(t,e,i){var o;switch(i){case s.ObjectDestructuringMutator:if(!e.parameters||e.parameters.length<1)console.error("Destructuring mutations require at least one parameter");else{for(var r=!1,n=0,l=e.parameters;n<l.length;n++){var a=l[n];if(-1!==a.type.indexOf("=>")){if(!a.properties||0===a.properties.length)return void console.error("Destructuring mutations only supported for functions with an event parameter that has multiple properties");r=!0}}if(!r)return void console.error("Destructuring mutations must have an event parameter")}o=new c(t,e);break;case s.RestParameterMutator:o=new u(t,e);break;case s.DefaultInstanceMutator:o=new p(t,e);break;default:return void console.warn("Ignoring unknown mutation type: "+i)}t.mutationToDom=o.mutationToDom.bind(o),t.domToMutation=o.domToMutation.bind(o),t.compose=o.compose.bind(o),t.decompose=o.decompose.bind(o),t.mutation=o},l.mutateToolboxBlock=function(t,e,i){var o=document.createElement("mutation");switch(e){case s.ObjectDestructuringMutator:o.setAttribute(c.propertiesAttributeName,i);break;case s.RestParameterMutator:o.setAttribute(u.countAttributeName,i);break;case s.DefaultInstanceMutator:o.setAttribute(p.attributeName,i);default:return void console.warn("Ignoring unknown mutation type: "+e)}t.appendChild(o)};var r=function(){function l(t,e){this.info=e,this.block=t,this.topBlockType=this.block.type+"_mutator";var i=this.getSubBlockNames();this.initializeMutatorTopBlock(),this.initializeMutatorSubBlocks(i);var o=i.map(function(t){return t.type});this.block.setMutator(new Blockly.Mutator(o))}return l.prototype.compose=function(t){var e=t.getDescendants(!1).map(function(t){return{type:t.type,name:t.inputList[0].name}});e.shift(),this.updateBlock(e)},l.prototype.decompose=function(o){var t=o.newBlock(this.topBlockType);t.initSvg();for(var e=function(t){if(t.name===l.mutatorStatmentInput){var i=t.connection;return r.getVisibleBlockTypes().forEach(function(t){var e=o.newBlock(t);e.initSvg(),i.connect(e.previousConnection),i=e.nextConnection}),"break"}},r=this,i=0,n=t.inputList;i<n.length;i++){if("break"===e(n[i]))break}return t},l.prototype.compileMutation=function(t,e){},l.prototype.getDeclaredVariables=function(){},l.prototype.isDeclaredByMutation=function(t){return!1},l.prototype.initializeMutatorSubBlock=function(t,e,i){t.appendDummyInput(e).appendField(e),t.setColour(i),t.setNextStatement(!0),t.setPreviousStatement(!0)},l.prototype.initializeMutatorTopBlock=function(){var t=this.info.attributes.mutateText,e=this.block.getColour();Blockly.Blocks[this.topBlockType]=Blockly.Blocks[this.topBlockType]||{init:function(){this.appendDummyInput().appendField(t),this.setColour(e),this.appendStatementInput(l.mutatorStatmentInput)}}},l.prototype.initializeMutatorSubBlocks=function(t){var e=this.block.getColour(),i=this.initializeMutatorSubBlock.bind(this);t.forEach(function(t){Blockly.Blocks[t.type]=Blockly.Blocks[t.type]||{init:function(){i(this,t.name,e)}}})},l.mutatorStatmentInput="PROPERTIES",l.mutatedVariableInputName="properties",l}(),c=function(o){function n(t,e){var i=o.call(this,t,e)||this;return i.currentlyVisible=[],i.parameterRenames={},i.prefix=i.info.attributes.mutatePrefix,i.block.appendDummyInput(r.mutatedVariableInputName),i.block.appendStatementInput("HANDLER").setCheck("null"),i}return __extends(n,o),n.prototype.getMutationType=function(){return s.ObjectDestructuringMutator},n.prototype.compileMutation=function(r,t){var n=this;if(this.info.attributes.mutatePropertyEnum||this.parameters.length){var e="function ({ "+this.parameters.map(function(t){var e=n.block.getField(t),i=e&&e.getText(),o=l.escapeVarName(t,r);return i!==t?(n.parameterRenames[t]=i,t+": "+l.escapeVarName(i,r)):o}).join(", ")+" })";return this.info.attributes.mutatePropertyEnum?l.mkText(" ["+this.parameters.map(function(t){return n.info.attributes.mutatePropertyEnum+"."+t}).join(", ")+"],"+e):l.mkText(e)}},n.prototype.getDeclaredVariables=function(){var e=this,i={};return this.parameters.forEach(function(t){i[e.getVarFieldValue(t)]=e.parameterTypes[t]}),i},n.prototype.isDeclaredByMutation=function(e){var i=this;return this.parameters.some(function(t){return i.getVarFieldValue(t)===e})},n.prototype.mutationToDom=function(){var i=this,t=document.createElement("mutation"),e=this.parameters.map(function(t){var e=i.getVarFieldValue(t);return e!==t&&(i.parameterRenames[t]=a.Util.htmlEscape(e)),a.Util.htmlEscape(t)}).join(",");for(var o in t.setAttribute(n.propertiesAttributeName,e),this.parameterRenames)o===this.parameterRenames[o]&&delete this.parameterRenames[o];return t.setAttribute(n.renameAttributeName,JSON.stringify(this.parameterRenames)),t},n.prototype.domToMutation=function(t){var i=this,e=t.getAttribute(n.propertiesAttributeName);if(e){var o=e.split(","),r=[];if(void 0===this.paramIndex&&(this.paramIndex=this.getParameterIndex()),o.forEach(function(t){var e=t.split(":");i.info.parameters[i.paramIndex].properties.some(function(t){return t.name===e[0]})&&r.push({property:e[0],newName:e[1]})}),this.parameterRenames=void 0,t.hasAttribute(n.renameAttributeName))try{this.parameterRenames=JSON.parse(t.getAttribute(n.renameAttributeName))}catch(t){console.warn("Ignoring invalid rename map in saved block mutation")}this.parameterRenames=this.parameterRenames||{},this.parameters=[],r.forEach(function(t){i.parameters.push(t.property),t.newName&&t.newName!==t.property&&(i.parameterRenames[t.property]=t.newName)}),this.updateVisibleProperties(),r.filter(function(t){return!!t.newName}).forEach(function(t){return i.setVarFieldValue(t.property,t.newName)})}},n.prototype.getVarFieldValue=function(t){var e=this.block.getField(t);return e&&e.getText()},n.prototype.setVarFieldValue=function(t,e){this.block.getField(t);this.block.getField(t)&&l.setVarFieldValue(this.block,t,e)},n.prototype.updateBlock=function(t){var e=this;this.parameters=[],t.forEach(function(t){-1===e.parameters.indexOf(t.name)&&e.parameters.push(t.name)}),this.updateVisibleProperties()},n.prototype.getSubBlockNames=function(){var e=this;return this.parameters=[],this.parameterTypes={},void 0===this.paramIndex&&(this.paramIndex=this.getParameterIndex()),this.info.parameters[this.paramIndex].properties.map(function(t){return e.parameterTypes[t.name]=t.type,{type:e.propertyId(t.name),name:t.name}})},n.prototype.getVisibleBlockTypes=function(){var e=this;return this.currentlyVisible.map(function(t){return e.propertyId(t)})},n.prototype.updateVisibleProperties=function(){var i=this;if(!a.Util.listsEqual(this.currentlyVisible,this.parameters)){var o=this.block.inputList.find(function(t){return t.name===r.mutatedVariableInputName});this.prefix&&0===this.currentlyVisible.length&&o.appendField(this.prefix,n.prefixLabel),this.currentlyVisible.forEach(function(t){if(-1===i.parameters.indexOf(t)){var e=i.getVarFieldValue(t);e!==t&&(i.parameterRenames[t]=e),o.removeField(t)}}),this.parameters.forEach(function(t){if(-1===i.currentlyVisible.indexOf(t)){var e=i.parameterRenames[t]||t;o.appendField(new Blockly.FieldVariable(e),t)}}),this.prefix&&0===this.parameters.length&&o.removeField(n.prefixLabel),this.currentlyVisible=this.parameters}},n.prototype.propertyId=function(t){return this.block.type+"_"+t},n.prototype.getParameterIndex=function(){for(var t=0;t<this.info.parameters.length;t++)if(-1!==this.info.parameters[t].type.indexOf("=>"))return t},n.propertiesAttributeName="callbackproperties",n.renameAttributeName="renamemap",n.prefixLabel="0prefix_label_",n}(r),u=function(e){function r(){var t=null!==e&&e.apply(this,arguments)||this;return t.count=0,t}return __extends(r,e),r.prototype.getMutationType=function(){return s.RestParameterMutator},r.prototype.compileMutation=function(e,i){var o=[];return this.forEachInput(function(t){return o.push(l.compileExpression(e,t,i))}),l.mkGroup(o)},r.prototype.mutationToDom=function(){var t=document.createElement("mutation");return t.setAttribute(r.countAttributeName,this.count.toString()),t},r.prototype.domToMutation=function(t){var e=t.getAttribute(r.countAttributeName);if(e){try{this.count=parseInt(e)}catch(t){return}for(var i=0;i<this.count;i++)this.addNumberField(!1,i)}},r.prototype.updateBlock=function(t){if(t){var e=Math.abs(this.count-t.length);if(this.count<t.length)for(var i=0;i<e;i++)this.addNumberField(!0,this.count);else if(this.count>t.length)for(i=0;i<e;i++)this.removeNumberField()}},r.prototype.getSubBlockNames=function(){return[{name:"Value",type:r.entryTypeName}]},r.prototype.getVisibleBlockTypes=function(){var t=[];return this.forEachInput(function(){return t.push(r.entryTypeName)}),t},r.prototype.addNumberField=function(t,e){var i=this.block.appendValueInput(r.valueInputPrefix+e).setCheck("Number");if(t){var o=this.block.workspace.newBlock("math_number");o.initSvg(),o.setShadow(!0),i.connection.connect(o.outputConnection),this.block.workspace.render(),this.count++}},r.prototype.removeNumberField=function(){0<this.count&&this.block.removeInput(r.valueInputPrefix+(this.count-1)),this.count--},r.prototype.forEachInput=function(t){for(var e=0;e<this.count;e++)t(this.block.getInputTargetBlock(r.valueInputPrefix+e),e)},r.countAttributeName="count",r.entryTypeName="entry",r.valueInputPrefix="value_input_",r}(r),p=function(e){function o(){var t=null!==e&&e.apply(this,arguments)||this;return t.showing=!1,t}return __extends(o,e),o.prototype.getMutationType=function(){return s.DefaultInstanceMutator},o.prototype.compileMutation=function(t,e){if(this.showing){var i=this.block.getInputTargetBlock(o.instanceInputName);if(i)return l.compileExpression(t,i,e)}},o.prototype.mutationToDom=function(){var t=document.createElement("mutation");return t.setAttribute(o.attributeName,this.showing?"true":"false"),t},o.prototype.domToMutation=function(t){var e=t.getAttribute(o.attributeName);e?this.updateShape("true"===e):this.updateShape(!1)},o.prototype.updateBlock=function(t){this.updateShape(!(!t||!t.length))},o.prototype.getSubBlockNames=function(){return[{name:"Instance",type:o.instanceSubBlockType}]},o.prototype.getVisibleBlockTypes=function(){var t=[];return this.showing&&t.push(o.instanceSubBlockType),t},o.prototype.updateShape=function(t){this.showing!==t&&(t&&!this.block.getInputTargetBlock(o.instanceInputName)?this.block.appendValueInput(o.instanceInputName):this.block.removeInput(o.instanceInputName),this.showing=t)},o.attributeName="showing",o.instanceInputName="__instance__",o.instanceSubBlockType="instance",o}(r)}(a.blocks||(a.blocks={}))}(pxt||(pxt={})),function(c){!function(t){var r,o,n,e;function l(){return r||((o=document.createElement("div")).style.position="absolute",o.style.top="0",o.style.left="0",o.style.width="1px",o.style.height="1px",document.body.appendChild(o),r=Blockly.inject(o,{scrollbars:!1,readOnly:!0,sound:!1,media:c.webConfig.commitCdnUrl+"blockly/media/",rtl:c.Util.isUserLanguageRtl()})),c.blocks.clearWithoutEvents(r),r}function a(){r&&r.dispose(),r=void 0}function s(t){switch(void 0===t&&(t={emPixels:18,layout:n.Align}),t.splitSvg?n.Align:t.layout||n.Flow){case n.Align:c.blocks.layout.verticalAlign(r,t.emPixels||18);break;case n.Flow:c.blocks.layout.flow(r,{ratio:t.aspectRatio,useViewWidth:t.useViewWidth});break;case n.Clean:r.cleanUp_&&r.cleanUp_()}var e=r.getMetrics(),i=o.querySelectorAll("svg")[0].cloneNode(!0);return c.blocks.layout.cleanUpBlocklySvg(i),c.U.toArray(i.querySelectorAll(".blocklyBlockCanvas,.blocklyBubbleCanvas")).forEach(function(t){return t.setAttribute("transform","translate("+-e.contentLeft+", "+-e.contentTop+") scale(1)")}),i.setAttribute("viewBox","0 0 "+e.contentWidth+" "+e.contentHeight),t.emPixels&&(i.style.width=e.contentWidth/t.emPixels+"em",i.style.height=e.contentHeight/t.emPixels+"em"),t.splitSvg?c.blocks.layout.splitSvg(i,r,t.emPixels):i}(e=n=t.BlockLayout||(t.BlockLayout={}))[e.None=0]="None",e[e.Align=1]="Align",e[e.Clean=3]="Clean",e[e.Flow=4]="Flow",t.initRenderingWorkspace=l,t.cleanRenderingWorkspace=a,t.renderWorkspace=s,t.render=function(t,e){void 0===e&&(e={emPixels:18,layout:n.Align}),l();try{var i=t||'<xml xmlns="http://www.w3.org/1999/xhtml"></xml>',o=Blockly.Xml.textToDom(i);return c.blocks.domToWorkspaceNoEvents(o,r),s(e)}catch(t){return c.reportException(t),void a()}},t.blocksMetrics=function(t){var e=t.getTopBlocks(!1);if(!e.length)return{width:0,height:0};var i=void 0;return e.forEach(function(t){var e=t.getBoundingRectangle();i?(i.l=Math.min(i.l,e.left),i.r=Math.max(i.r,e.right),i.t=Math.min(i.t,e.top),i.b=Math.min(i.b,e.bottom)):i={l:e.left,r:e.right,t:e.top,b:e.bottom}}),{width:i.r-i.l,height:i.b-i.t}}}(c.blocks||(c.blocks={}))}(pxt||(pxt={})),function(t){!function(t){function o(t,e){var i=[];for(var o in t.children){var r=t.children[o];if("block"===r.tagName)if(e){var n=r.getAttribute("type");n&&n===e&&i.push(r)}else i.push(r);else{var l=a(r);l&&(i=i.concat(l))}}return i}function a(t,e){var i=o(t,e);return i.length?i[0]:null}t.findRootBlocks=o,t.findRootBlock=a}(t.blocks||(t.blocks={}))}(pxt||(pxt={})),function(I){var t,e;e=I.docs||(I.docs={}),t=e.codeCard||(e.codeCard={}),I.Util.repeatMap,t.render=function(t,e){void 0===e&&(e={});var i=I.Util.repeatMap,o=t.color||"";o||(t.hardware&&!t.software?o="black":t.software&&!t.hardware&&(o="teal"));var r=t.url?/^[^:]+:\/\//.test(t.url)?t.url:"/"+t.url.replace(/^\.?\/?/,""):t.youTubeId?"https://youtu.be/"+t.youTubeId:void 0,n=!!r,l=function(t,e,i,o){void 0===i&&(i="div"),void 0===o&&(o="");var r=document.createElement(i);return e&&(r.className=e),t&&t.appendChild(r),o&&r.appendChild(document.createTextNode(o+"")),r},a=l(null,"ui card "+(t.color||"")+(n?" link":""),n?"a":"div");if(a.setAttribute("role","option"),a.setAttribute("aria-selected","true"),r&&(a.href=r),!e.hideHeader&&(t.header||t.blocks||t.javascript||t.hardware||t.software||t.any)){var s=l(a,"ui content "+(t.responsive?" tall desktop only":"")),c=l(s,"right floated meta");t.any&&l(c,"ui grey circular label tiny","i",0<t.any?t.any:""),i(t.blocks,function(t){return l(c,"puzzle orange icon","i")}),i(t.javascript,function(t){return l(c,"align left blue icon","i")}),i(t.hardware,function(t){return l(c,"certificate black icon","i")}),i(t.software,function(t){return l(c,"square teal icon","i")}),t.header&&l(s,"description","span",t.header)}var u,p,d,h,m,f=(e.shortName?t.shortName:"")||t.name,g=l(a,"ui image"+(t.responsive?" tall landscape only":""));if(t.label){var y=document.createElement("label");y.className="ui "+(t.labelClass?t.labelClass:"orange right ribbon")+" label",y.textContent=t.label,g.appendChild(y)}if(t.blocksXml){var k=I.blocks.render(t.blocksXml);if(k){var v=l(g,"");v.setAttribute("style","width:100%; min-height:10em"),v.appendChild(k)}else console.error("failed to render blocks"),I.debug(t.blocksXml)}if(t.typeScript){var b=document.createElement("pre");b.appendChild(document.createTextNode(t.typeScript)),g.appendChild(b)}if(t.imageUrl||t.youTubeId&&(t.youTubeId,1)){var _=document.createElement("div");_.className="ui imagewrapper";var T=document.createElement("div");T.className="ui cardimage",T.style.backgroundImage='url("'+t.imageUrl+'")',T.title=f,T.setAttribute("role","presentation"),_.appendChild(T),g.appendChild(_)}if("file"==t.cardType){var x=l(a,"ui fileimage");g.appendChild(x)}if(f||t.description){var E=l(a,"ui content");if(f&&(a.setAttribute("aria-label",f),r&&!n?(u=E,p=r,d=f,h="header",(m=document.createElement("a")).className=h,m.href=p,m.appendChild(document.createTextNode(d)),m.target="_blank",u.appendChild(m)):l(E,"header","div",f)),t.description){var B=l(E,"ui description"),C=t.description.split(".")[0]+".";B.appendChild(document.createTextNode(C))}}if(t.time){var A=l(a,"meta");t.time&&l(A,"date","span").appendChild(document.createTextNode(I.Util.timeSince(t.time)))}return t.extracontent&&l(a,"extra content","div").appendChild(document.createTextNode(t.extracontent)),a}}(pxt||(pxt={})),function(A){!function(B){function p(t,e){var i=t,o=i.mutationToDom,r=i.domToMutation;i.mutationToDom=function(){var t=o?o():document.createElement("mutation");return e.mutationToDom(t)},i.domToMutation=function(t){r&&r(t),e.domToMutation(t)}}B.appendMutation=p,B.initVariableArgsBlock=function(n,l){var a=0,o=0,r=n.appendDummyInput(),s=function(){if(a!==o){if(o<a)for(var t=a-o,e=0;e<t;e++){var i=l[o+e];r.insertFieldAt(r.fieldRow.length-1,new Blockly.FieldVariable(i.name),"HANDLER_"+i.name)}else for(t=o-a,e=0;e<t;e++)i=l[o-e-1],r.removeField("HANDLER_"+i.name);a>=l.length?r.removeField("_HANDLER_ADD"):o>=l.length&&c(),o=a}};function c(){r.appendField(new Blockly.FieldImage(n.ADD_IMAGE_DATAURI,24,24,lf("Add argument"),function(){a=Math.min(a+1,l.length),s()},!1),"_HANDLER_ADD")}Blockly.Extensions.apply("inline-svgs",n,!1),c(),p(n,{mutationToDom:function(t){t.setAttribute("numArgs",a.toString());for(var e=0;e<a;e++){var i=n.getField("HANDLER_"+l[e].name),o=i&&i.getText();t.setAttribute("arg"+e,o)}return t},domToMutation:function(t){var e=parseInt(t.getAttribute("numargs"));a=Math.min(isNaN(e)?0:e,l.length),s();for(var i=0;i<a;i++){var o=t.getAttribute("arg"+i),r="HANDLER_"+l[i].name;n.getField(r)&&B.setVarFieldValue(n,r,o)}}})},B.initExpandableBlock=function(d,h,m,f,t,e){var o="0_add_button",r="0_rem_button",g="_expanded",y="_input_init",k=m.parameters.map(function(t){return t.name}),v=m.parameters.length,i=t?v:1,b=new C(h);b.setEventsEnabled(!1),b.setValue(g,0),b.setValue(y,!1),b.setEventsEnabled(!0);var n=!1,l=!1;function a(t,e,i){void 0===e&&(e=!1),void 0===i&&(i=!1);var o=x(t);if(i||e||o!==b.getNumber(g)){b.setValue(g,o);var r=o;if(b.getBoolean(y)||!(0<r)||(T(),h.rendered)){for(var n=0,l=0;l<h.inputList.length;l++){var a=h.inputList[l];if(A.Util.startsWith(a.name,B.optionalDummyInputPrefix))E(a,n<r||r===v);else if(A.Util.startsWith(a.name,B.optionalInputWithFieldPrefix)||-1!==k.indexOf(a.name)){var s=n<r;if(E(a,s),s&&a.connection&&!a.connection.isConnected()&&!h.isInsertionMarker()){var c=f.definitionNameToParam[m.parameters[n].name],u=B.createShadowValue(d,c);"value"===u.tagName.toLowerCase()&&(u=u.firstElementChild),Blockly.Events.disable();var p=Blockly.Xml.domToBlock(u,h.workspace);p&&a.connection.connect(p.outputConnection),Blockly.Events.enable()}++n}}_(),e||h.render()}}}function s(t,e,i,o){h.appendDummyInput(t).appendField(new Blockly.FieldImage(e,24,24,i,function(){return a(o)},!1))}function _(){var t=b.getNumber(g),e=t!==v,i=0!==t;e||(n=!1,h.removeInput(o,!0)),i||(l=!1,h.removeInput(r,!0)),i&&!l&&(n?(h.removeInput(o,!0),u(),c()):u()),e&&!n&&c()}function c(){n=!0,s(o,h.ADD_IMAGE_DATAURI,lf("Reveal optional arguments"),i)}function u(){l=!0,s(r,h.REMOVE_IMAGE_DATAURI,lf("Hide optional arguments"),-1*i)}function T(){b.setValue(y,!0),e(),_()}function x(t){return Math.min(Math.max(b.getNumber(g)+t,0),v)}function E(t,e){h.rendered&&t.setVisible(e).forEach(function(t){t.render()})}Blockly.Extensions.apply("inline-svgs",h,!1),c(),p(h,{mutationToDom:function(t){return t.setAttribute(g,b.getString(g)),t.setAttribute(y,b.getString(y)),t},domToMutation:function(t){if(b.setEventsEnabled(!1),t.hasAttribute(y)&&"true"==t.getAttribute(y)&&!b.getBoolean(y)&&(b.setValue(y,!0),T()),t.hasAttribute(g)){var e=parseInt(t.getAttribute(g));if(!isNaN(e)){var i=e-(b.getNumber(g)||0);b.getBoolean(y)?h.rendered?a(i,!0):b.setValue(g,x(i)):a(i,!0)}}b.setEventsEnabled(!0)}}),setTimeout(function(){h.rendered&&!h.workspace.isDragging()&&(a(0,void 0,!0),_())},1)};var C=function(){function t(t,e){this.block=t,this.fireEvents=!0,this.state=e||{}}return t.prototype.setValue=function(t,e){var i=this;if(this.fireEvents&&this.block.mutationToDom){var o=this.block.mutationToDom();this.state[t]=e.toString();var r=this.block.mutationToDom();Object.keys(this.state).forEach(function(t){o.getAttribute(t)!==i.state[t]&&r.setAttribute(t,i.state[t])});var n=Blockly.Xml.domToText(o),l=Blockly.Xml.domToText(r);n!=l&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.block,"mutation",null,n,l))}else this.state[t]=e.toString()},t.prototype.getNumber=function(t){return parseInt(this.state[t])},t.prototype.getBoolean=function(t){return"false"!=this.state[t]},t.prototype.getString=function(t){return this.state[t]},t.prototype.setEventsEnabled=function(t){this.fireEvents=t},t}()}(A.blocks||(A.blocks={}))}(pxt||(pxt={})),function(s){var i,o,r;i=s.blocks||(s.blocks={}),r=s.blocks.MATH_FUNCTIONS.unary.concat(s.blocks.MATH_FUNCTIONS.binary).concat(s.blocks.MATH_FUNCTIONS.infix),i.initMathOpBlock=function(){var t="math_js_op",e=s.blocks.getBlockDefinition(t);function l(t,e){var i=t.appendValueInput("ARG"+(e?1:0));i.setCheck("Number"),e&&(i.connection.setShadowDom(function(){if(!o){(o=document.createElement("shadow")).setAttribute("type","math_number");var t=document.createElement("field");t.setAttribute("name","NUM"),t.textContent="0",o.appendChild(t)}return o}()),i.connection.respawnShadow_())}function a(t,e){var i=!!t.getInput("ARG1");e?(i&&t.moveInputBefore("op_dropdown","ARG1"),t.moveInputBefore("ARG0","op_dropdown")):(i&&t.moveInputBefore("ARG0","ARG1"),t.moveInputBefore("op_dropdown","ARG0"))}Blockly.Blocks[t]={init:function(){var n=this;n.setPreviousStatement(!1),n.setNextStatement(!1),n.setOutput(!0,"Number"),n.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND),n.setInputsInline(!0),n.appendDummyInput("op_dropdown").appendField(new Blockly.FieldDropdown(r.map(function(t){return[e.block[t],t]}),function(t){return e=n,o=i=t,-1!==s.blocks.MATH_FUNCTIONS.unary.indexOf(o)?e.removeInput("ARG1",!0):e.getInput("ARG1")||l(e,!0),void a(e,(r=i,-1!==s.blocks.MATH_FUNCTIONS.infix.indexOf(r)));var e,i,o,r}),"OP"),l(n,!1),i.appendMutation(n,{mutationToDom:function(t){for(var e,i=0;i<n.inputList.length;i++){var o=n.inputList[i];if("op_dropdown"===o.name){e=!1;break}if("ARG0"===o.name){e=!0;break}}return t.setAttribute("op-type",(n.getInput("ARG1")?e?"infix":"binary":"unary").toString()),t},domToMutation:function(t){if(t.hasAttribute("op-type")){var e=t.getAttribute("op-type");"unary"!=e&&l(n,!0),a(n,"infix"===e)}}})}},i.installHelpResources(t,e.name,function(t){return e.tooltip[t.getFieldValue("OP")]},e.url,s.toolbox.getNamespaceColor(e.category))}}(pxt||(pxt={})),function(i){var o,r;o=i.blocks||(i.blocks={}),r=i.blocks.ROUNDING_FUNCTIONS,o.initMathRoundBlock=function(){var t="math_js_round",e=i.blocks.getBlockDefinition(t);Blockly.Blocks[t]={init:function(){var t=this;t.setPreviousStatement(!1),t.setNextStatement(!1),t.setOutput(!0,"Number"),t.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND),t.setInputsInline(!0),t.appendDummyInput("round_dropdown").appendField(new Blockly.FieldDropdown(r.map(function(t){return[e.block[t],t]}),function(t){}),"OP"),t.appendValueInput("ARG0").setCheck("Number")}},o.installHelpResources(t,e.name,function(t){return e.tooltip[t.getFieldValue("OP")]},e.url,i.toolbox.getNamespaceColor(e.category))}}(pxt||(pxt={})),function(o){var n=pxt.svgUtil,t=function(r){function t(t,e,i){var o=r.call(this,t,i)||this;return o.isFieldCustom_=!0,o.SERIALIZABLE=!0,o.onMouseEnter=function(){if(!o.animateRef){var t=50<o.state.interval?o.state.interval:50,e=0;o.animateRef=setInterval(function(){o.preview&&o.frames[e]&&o.preview.src(o.frames[e]),e=(e+1)%o.frames.length},t)}},o.onMouseLeave=function(){o.animateRef&&clearInterval(o.animateRef),o.animateRef=void 0,o.preview&&o.frames[0]&&o.preview.src(o.frames[0])},o.lightMode=e.lightMode,o.params=function(t){var e={initWidth:16,initHeight:16};if(!t)return e;t.filter&&(e.filter=t.filter);return e.initWidth=i(t.initWidth,e.initWidth),e.initHeight=i(t.initHeight,e.initHeight),e;function i(t,e){var i=parseInt(t);return isNaN(i)?e:i}}(e),o.blocksInfo=e.blocksInfo,o.initState(),o}return __extends(t,r),t.prototype.init=function(){this.fieldGroup_||(this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null),this.visible_||(this.fieldGroup_.style.display="none"),this.initState(),this.redrawPreview(),this.sourceBlock_.getSvgRoot().addEventListener("mouseenter",this.onMouseEnter),this.sourceBlock_.getSvgRoot().addEventListener("mouseleave",this.onMouseLeave),this.updateEditable(),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.render_(),this.mouseDownWrapper_=Blockly.bindEventWithChecks_(this.getClickTarget_(),"mousedown",this,this.onMouseDown_),this.state.interval=this.getParentInterval())},t.prototype.showEditor_=function(){var i=this;this.params.blocksInfo=this.blocksInfo,this.initState();var t=this.getParentInterval();isNaN(t)||(this.state.interval=t);var o=pxt.react.getFieldEditorView("animation-editor",this.state,this.params);this.undoRedoState&&o.restorePersistentData(this.undoRedoState),o.onHide(function(){var t=o.getResult();if(t){var e=i.getValue();i.state=t,isNaN(i.state.interval)||i.setParentInterval(i.state.interval),i.redrawPreview(),i.undoRedoState=o.getPersistentData(),i.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(i.sourceBlock_,"field",i.name,e,i.getValue()))}}),o.show()},t.prototype.render_=function(){r.prototype.render_.call(this),this.size_.height=50,this.size_.width=80},t.prototype.getValue=function(){return this.state?"["+this.state.frames.map(function(t){return pxt.sprite.bitmapToImageLiteral(pxt.sprite.Bitmap.fromData(t),"typescript")}).join(",")+"]":"[]"},t.prototype.doValueUpdate_=function(t){if(null!=t){this.value_=t;var e=t.replace(/[\[\]]/gm,"").split(",").map(function(t){return pxt.sprite.imageLiteralToBitmap(t).data()}).filter(function(t){return t.height&&t.width});e&&e.length&&(this.initState(),this.state.frames=e),this.redrawPreview(),r.prototype.doValueUpdate_.call(this,t)}},t.prototype.redrawPreview=function(){var e=this;if(this.fieldGroup_){pxsim.U.clear(this.fieldGroup_);var t=(new n.Rect).at(35,5).size(40,40).fill("#dedede").stroke("#898989",1).corner(4);this.fieldGroup_.appendChild(t.el);var i=new n.Text("").at(5,30).fill(this.sourceBlock_.getColourSecondary()).setClass("semanticIcon");this.fieldGroup_.appendChild(i.el),this.state&&(this.frames=this.state.frames.map(function(t){return o.bitmapToImageURI(pxt.sprite.Bitmap.fromData(t),32,e.lightMode)}),this.preview=(new n.Image).src(this.frames[0]).at(39,9).size(32,32),this.fieldGroup_.appendChild(this.preview.el))}},t.prototype.getParentIntervalBlock=function(){var t=this.sourceBlock_;if(t.parentBlock_)for(var e=0,i=t.parentBlock_.inputList;e<i.length;e++){var o=i[e];if("frameInterval"===o.name)return o.connection.targetBlock()}},t.prototype.setParentInterval=function(t){var e=this.getParentIntervalBlock();if(e){var i=l(e);i&&e.setFieldValue(String(t),i)}},t.prototype.getParentInterval=function(){var t=this.getParentIntervalBlock();if(t){var e=l(t);if(e)return Number(t.getFieldValue(e))}return 100},t.prototype.initState=function(){this.state||(this.params?this.state={frames:[new pxt.sprite.Bitmap(this.params.initWidth,this.params.initHeight).data()],interval:100}:this.state={frames:[],interval:100})},t}(Blockly.Field);function l(t){return"math_number_minmax"===t.type?"SLIDER":"math_number"===(e=t.type)||"math_integer"===e||"math_whole_number"===e?"NUM":"timePicker"===t.type?"ms":null;var e}o.FieldAnimationEditor=t}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,void 0,void 0,void 0,i)||this;return o.isFieldCustom_=!0,o.CURSOR="pointer",o.params=e,o.setValue(t),o.addArgType("toggle"),o.type_=e.type,o}return __extends(t,r),t.prototype.init=function(){if(!this.fieldGroup_){this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null),this.visible_||(this.fieldGroup_.style.display="none"),null!==this.getArgTypes()&&(this.sourceBlock_.isShadow()?this.sourceBlock_.svgGroup_.setAttribute("data-argument-type",this.getArgTypes()):this.fieldGroup_.setAttribute("data-argument-type",this.getArgTypes()));var t=this.getSize();this.checkElement_=Blockly.utils.dom.createSvgElement("g",{class:"blocklyToggle "+(this.state_?"blocklyToggleOnBreakpoint":"blocklyToggleOffBreakpoint"),transform:"translate(8, "+t.height/2+")"},this.fieldGroup_),this.toggleThumb_=Blockly.utils.dom.createSvgElement("polygon",{class:"blocklyToggleRect",points:"50,5 100,5 125,30 125,80 100,105 50,105 25,80 25,30"},this.checkElement_);var e=this.sourceBlock_.RTL?-t.width/2:t.width/2;this.textElement_=Blockly.utils.dom.createSvgElement("text",{class:"blocklyText",x:e,dy:"0.6ex",y:t.height/2},this.fieldGroup_),this.updateEditable(),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.switchToggle(this.state_),this.setValue(this.getValue()),this.render_(),this.size_.width=0,this.mouseDownWrapper_=Blockly.bindEventWithChecks_(this.getClickTarget_(),"mousedown",this,this.onMouseDown_)}},t.prototype.updateSize_=function(){this.size_.width=30,this.arrowWidth_=0},t.prototype.getValue=function(){return this.toVal(this.state_)},t.prototype.setValue=function(t){var e=this.fromVal(t);this.state_!==e&&(this.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.state_,e)),this.state_=e,this.switchToggle(this.state_))},t.prototype.switchToggle=function(t){this.checkElement_&&(this.updateSize_(),t?(pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOnBreakpoint"),pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOffBreakpoint")):(pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOnBreakpoint"),pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOffBreakpoint")),this.checkElement_.setAttribute("transform","translate(-7, -1) scale(0.3)"))},t.prototype.updateTextNode_=function(){r.prototype.updateTextNode_.call(this),this.textElement_&&pxt.BrowserUtils.addClass(this.textElement_,"blocklyToggleText")},t.prototype.render_=function(){this.visible_&&this.textElement_&&(goog.dom.removeChildren(this.textElement_),this.updateSize_())},t.prototype.showEditor_=function(){var t=!this.state_;null!==t&&this.setValue(this.toVal(t))},t.prototype.toVal=function(t){return"number"==this.type_?String(t?"1":"0"):String(t?"true":"false")},t.prototype.fromVal=function(t){return"string"==typeof t?"1"==t||"TRUE"==t.toUpperCase():!!t},t}(Blockly.FieldNumber);t.FieldBreakpoint=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,String(t),"0","255","1","10","Color",i)||this;return o.isFieldCustom_=!0,o.params=e,o.params.min&&(o.min_=parseFloat(o.params.min)),o.params.max&&(o.max_=parseFloat(o.params.max)),o.params.label&&(o.labelText_=o.params.label),o.params.channel&&(o.channel_=o.params.channel),o}return __extends(t,r),t.prototype.setBackground_=function(t){var e=this.createColourStops_().join(",");goog.style.setStyle(t,"background","-moz-linear-gradient(left, "+e+")"),goog.style.setStyle(t,"background","-webkit-linear-gradient(left, "+e+")"),goog.style.setStyle(t,"background","-o-linear-gradient(left, "+e+")"),goog.style.setStyle(t,"background","-ms-linear-gradient(left, "+e+")"),goog.style.setStyle(t,"background","linear-gradient(left, "+e+")"),this.params.sliderWidth&&goog.style.setStyle(t,"width",this.params.sliderWidth+"px")},t.prototype.setReadout_=function(t,e){var i=this.colorWheel(parseInt(e),this.channel_),o=document.createElement("span");o.className="blocklyColorReadout",o.style.backgroundColor=""+i,pxsim.U.clear(t),t.appendChild(o)},t.prototype.createColourStops_=function(){for(var t=[],e=0;e<=255;e+=20)t.push(this.colorWheel(e,this.channel_));return t},t.prototype.colorWheel=function(t,e){return"hsvfast"==e?this.hsvFast(t,255,255):(t=255-t)<85?this.hex(3*t,255,255-3*t):t<170?(t-=85,this.hex(255,255-3*t,3*t)):(t-=170,this.hex(255-3*t,3*t,255))},t.prototype.hsvFast=function(t,e,i){var o=t%255>>0;o<0&&(o+=255);var r,n,l,a=i*(255-e)/255>>0,s=i-a,c=(o=192*o/255>>0)/64>>0,u=o%64>>0,p=(u*s/63.75>>0)+a,d=((63-u)*s/63.75>>0)+a;return c?1==c?(r=a,n=d,l=p):(r=p,n=a,l=d):(r=d,n=p,l=a),this.hex(r,n,l)},t.prototype.hex=function(t,e,i){return"#"+this.componentToHex(255&t)+this.componentToHex(255&e)+this.componentToHex(255&i)},t.prototype.componentToHex=function(t){var e=t.toString(16);return 1==e.length?"0"+e:e},t}(Blockly.FieldSlider);t.FieldColorWheel=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(l){function t(t,e,i){var o=l.call(this,t,i)||this;if(o.isFieldCustom_=!0,o.valueMode_="rgb",e.colours)o.setColours(JSON.parse(e.colours));else if(pxt.appTarget.runtime&&pxt.appTarget.runtime.palette){var r=pxt.Util.clone(pxt.appTarget.runtime.palette);r[0]="#dedede";var n=void 0;pxt.appTarget.runtime.paletteNames&&((n=pxt.Util.clone(pxt.appTarget.runtime.paletteNames))[0]=lf("transparent")),o.setColours(r,n)}return e.columns&&o.setColumns(parseInt(e.columns)),e.className&&(o.className_=e.className),e.valueMode&&(o.valueMode_=e.valueMode),o}return __extends(t,l),t.prototype.getValue=function(t){if(t)return this.value_;switch(this.valueMode_){case"hex":return'"'+this.value_+'"';case"rgb":return-1<this.value_.indexOf("#")?"0x"+this.value_.replace(/^#/,""):this.value_;case"index":if(!this.value_)return"-1";for(var e=this.getColours_(),i=0;i<e.length;i++)if(this.value_.toUpperCase()===e[i].toUpperCase())return i+""}return this.value_},t.prototype.setValue=function(t){(t=function(t,e){if(t){var i=/Colors\.([a-zA-Z]+)/.exec(t),o=/(0x|#)([0-9a-fA-F]+)/.exec(t);if(i)switch(i[1].toLocaleLowerCase()){case"red":return"#FF0000";case"orange":return"#FF7F00";case"yellow":return"#FFFF00";case"green":return"#00FF00";case"blue":return"#0000FF";case"indigo":return"#4B0082";case"violet":return"#8A2BE2";case"purple":return"#A033E5";case"pink":return"#FF007F";case"white":return"#FFFFFF";case"black":return"#000000";default:return t}else if(o){var r=o[2];if(3===r.length){for(var n="#",l=0;l<r.length;l++){var a=r.charAt(l);n+=a+a}return n}if(6===r.length)return"#"+r}if(e){var s=parseInt(t);return isNaN(s)||null==e[s]?e[0]:e[s]}}return t}(t,this.getColours_()))&&(this.sourceBlock_&&Blockly.Events.isEnabled()&&this.value_!=t&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.value_,t)),this.value_=t,this.sourceBlock_&&this.sourceBlock_.setColour(t,t,t))},t.prototype.showEditor_=function(){l.prototype.showEditor_.call(this),this.className_&&this.colorPicker_&&pxt.BrowserUtils.addClass(this.colorPicker_,this.className_)},t.prototype.getColours_=function(){return this.colours_},t}(Blockly.FieldColour);t.FieldColorNumber=e}(pxtblockly||(pxtblockly={})),function(l){var t=function(n){function f(t,e,i){var o=n.call(this,e.data)||this;o.isFieldCustom_=!0,o.buttonClick_=function(t){var e=t.target.getAttribute("data-value");null!==e&&(this.setValue(e),this.closeModal_&&(this.close(),this.closeModal_=!1))},o.buttonClickAndClose_=function(t){this.closeModal_=!0,this.buttonClick_(t)},o.columns_=parseInt(e.columns)||4,o.maxRows_=parseInt(e.maxRows)||0,o.width_=parseInt(e.width)||200,o.backgroundColour_=l.parseColour(e.colour),o.borderColour_=pxt.toolbox.fadeColor(o.backgroundColour_,.4,!1);var r={xOffset:parseInt(e.tooltipsXOffset)||15,yOffset:parseInt(e.tooltipsYOffset)||-10};return o.tooltipConfig_=r,o.hasSearchBar_=!!e.hasSearchBar||!1,o.hideRect_=!!e.hideRect||!1,o}return __extends(f,n),f.prototype.dispose=function(){n.prototype.dispose.call(this),this.disposeTooltip(),this.disposeIntersectionObserver()},f.prototype.createTooltip_=function(){this.gridTooltip_||(this.gridTooltip_=document.createElement("div"),this.gridTooltip_.className="goog-tooltip blocklyGridPickerTooltip",this.gridTooltip_.style.position="absolute",this.gridTooltip_.style.display="none",this.gridTooltip_.style.visibility="hidden",document.body.appendChild(this.gridTooltip_))},f.prototype.populateTableContainer=function(t,e,i){pxsim.U.removeChildren(e),0==t.length&&(this.firstItem_=void 0);for(var o=0;o<t.length/this.columns_;o++){var r=this.populateRow(o,t,e);e.appendChild(r)}},f.prototype.populateRow=function(t,u,p){var d=this,e=this.columns_,h=document.createElement("div");h.className="blocklyGridPickerRow";for(var i=function(t){var o=u[t][0],r=u[t][1],n=document.createElement("div");n.className="goog-menuitem goog-option",n.setAttribute("id",":"+t),n.setAttribute("role","menuitem"),n.style.userSelect="none",n.title=o.alt||o,n.setAttribute("data-value",r);var e=document.createElement("div");e.setAttribute("class","goog-menuitem-content"),e.title=o.alt||o,e.setAttribute("data-value",r);var l="object"==typeof o,i=m.backgroundColour_;if(r==m.getValue()&&(n.setAttribute("aria-selected","true"),pxt.BrowserUtils.addClass(n,"goog-option-selected"),i=m.sourceBlock_.getColourTertiary(),m.selectedItemDom=n,l&&!m.shouldShowTooltips()&&m.updateSelectedBar_(o,r)),n.style.backgroundColor=i,n.style.borderColor=m.borderColour_,l){var a=new Image(o.width,o.height);a.setAttribute("draggable","false"),"IntersectionObserver"in window?(a.src=f.DEFAULT_IMG,a.setAttribute("data-src",o.src),m.observer.observe(a)):a.src=o.src,a.alt=o.alt||"",a.setAttribute("data-value",r),e.appendChild(a)}else e.textContent=o;if(m.shouldShowTooltips()){Blockly.bindEvent_(n,"click",m,m.buttonClickAndClose_);var s=m.sourceBlock_.RTL?-m.tooltipConfig_.xOffset:m.tooltipConfig_.xOffset,c=m.tooltipConfig_.yOffset;Blockly.bindEvent_(n,"mousemove",m,function(t){if(l){d.gridTooltip_.style.top=t.clientY+c+"px",d.gridTooltip_.style.left=t.clientX+s+"px";var e=document.elementFromPoint(t.clientX,t.clientY),i=e.title||e.alt;d.gridTooltip_.textContent=i,d.gridTooltip_.style.visibility=i?"visible":"hidden",d.gridTooltip_.style.display=i?"":"none"}pxt.BrowserUtils.addClass(n,"goog-menuitem-highlight"),p.setAttribute("aria-activedescendant",n.id)}),Blockly.bindEvent_(n,"mouseout",m,function(t){l&&(d.gridTooltip_.style.visibility="hidden",d.gridTooltip_.style.display="none"),pxt.BrowserUtils.removeClass(n,"goog-menuitem-highlight"),p.removeAttribute("aria-activedescendant")})}else l?(m.selectedBar_.style.display="",Blockly.bindEvent_(n,"click",m,function(t){if(d.closeModal_)d.buttonClick_(t);else{for(var e=p.getElementsByClassName("goog-menuitem-highlight"),i=0;i<e.length;i++)pxt.BrowserUtils.removeClass(e[i],"goog-menuitem-highlight");pxt.BrowserUtils.addClass(n,"goog-menuitem-highlight"),d.updateSelectedBar_(o,r)}})):(Blockly.bindEvent_(n,"click",m,m.buttonClickAndClose_),Blockly.bindEvent_(n,"mouseup",m,m.buttonClickAndClose_));n.appendChild(e),h.appendChild(n),0==t&&(m.firstItem_=n)},m=this,o=e*t;o<Math.min(e*t+e,u.length);o++)i(o);return h},f.prototype.shouldShowRect_=function(){return!this.hideRect_&&!this.sourceBlock_.isShadow()},f.prototype.setValue=function(t){if(null!==t&&t!==this.value_){this.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.value_,t)),this.value_=t;for(var e=this.getOptions(),i=0;i<e.length;i++)if(e[i][1]==t){var o=e[i][0];return void("object"==typeof o?(this.imageJson_=o,this.setText(o.alt)):(this.imageJson_=null,this.setText(o)))}this.setText(t)}},f.prototype.close=function(){this.disposeTooltip(),Blockly.WidgetDiv.hideIfOwner(this),Blockly.Events.setGroup(!1)},f.prototype.getFirstItem=function(){return this.firstItem_},f.prototype.highlightFirstItem=function(t){var e=t.childNodes;if(e.length&&e[0].childNodes){for(var i=0;i<e.length;++i)for(var o=e[i].childNodes.length,r=0;r<o;++r){var n=e[i].childNodes[r];pxt.BrowserUtils.removeClass(n,"goog-menuitem-highlight"),pxt.BrowserUtils.removeClass(n,"goog-option-selected")}e[0].childNodes[0].className+=" goog-menuitem-highlight"}},f.prototype.highlightAndScrollSelected=function(t,e){this.selectedItemDom&&goog.style.scrollIntoContainerView(this.selectedItemDom,e,!0)},f.prototype.showEditor_=function(){var t=this;Blockly.WidgetDiv.show(this,this.sourceBlock_.RTL,function(){t.onClose_()}),this.setupIntersectionObserver_(),this.createTooltip_();var e=document.createElement("div");this.positionMenu_(e)},f.prototype.positionMenu_=function(t){var e=Blockly.utils.getViewportBBox(),i=this.getAnchorDimensions_(),o=this.createWidget_(t),r=o.paddingContainer,n=o.scrollContainer,l={width:r.offsetWidth,height:r.offsetHeight},a=goog.dom.getViewportSize();this.width_>a.width&&(this.width_=a.width),t.style.width=this.width_+"px";var s=0;if(this.hasSearchBar_&&(s+=50),this.selectedBar_&&(s+=50),this.maxRows_){var c=t.children[0].offsetHeight*(this.maxRows_+.3);a.height<c+s&&(c=a.height-s),l.height>c&&(n.style.overflowY="auto",goog.style.setHeight(n,c),l.height=c)}l.height+=s,this.sourceBlock_.RTL&&Blockly.utils.uiMenu.adjustBBoxesForRTL(e,i,l),Blockly.WidgetDiv.positionWithAnchor(e,i,l,this.sourceBlock_.RTL),this.highlightAndScrollSelected(t,n)},f.prototype.shouldShowTooltips=function(){return!pxt.BrowserUtils.isMobile()},f.prototype.getAnchorDimensions_=function(){var t=this.getScaledBBox_();return this.sourceBlock_.RTL?t.right+=Blockly.FieldDropdown.CHECKMARK_OVERHANG:t.left-=Blockly.FieldDropdown.CHECKMARK_OVERHANG,t},f.prototype.createWidget_=function(t){var e=Blockly.WidgetDiv.DIV,i=this.getOptions();t.setAttribute("role","menu"),t.setAttribute("aria-haspopup","true");var o=document.createElement("div"),r=document.createElement("div");if(r.style.border="solid 1px "+this.borderColour_,t.style.backgroundColor=this.backgroundColour_,o.style.backgroundColor=this.backgroundColour_,r.style.backgroundColor=this.backgroundColour_,t.className="blocklyGridPickerMenu",o.className="blocklyGridPickerScroller",r.className="blocklyGridPickerPadder",r.appendChild(o),o.appendChild(t),e.appendChild(r),this.hasSearchBar_){var n=this.createSearchBar_(t,o,i);r.insertBefore(n,r.childNodes[0])}return this.shouldShowTooltips()||(this.selectedBar_=this.createSelectedBar_(),r.appendChild(this.selectedBar_)),this.populateTableContainer(i,t,o),{paddingContainer:r,scrollContainer:o}},f.prototype.createSearchBar_=function(r,i,n){var l=this,t=document.createElement("div");t.setAttribute("class","ui fluid icon input");var e=document.createElement("i");e.setAttribute("class","search icon");var a=document.createElement("input");return a.setAttribute("type","search"),a.setAttribute("id","search-bar"),a.setAttribute("class","blocklyGridPickerSearchBar"),a.setAttribute("placeholder",pxt.Util.lf("Search")),a.addEventListener("click",function(){a.focus(),a.setSelectionRange(0,a.value.length)}),a.addEventListener("keyup",pxt.Util.debounce(function(){var t=a.value,o=new RegExp(t,"i"),e=n.filter(function(t){var e=t[0].alt,i=t[1];return e?o.test(e):o.test(i)});l.populateTableContainer.bind(l)(e,r,i),t?l.highlightFirstItem(r):l.highlightAndScrollSelected(r,i),l.gridTooltip_.style.visibility="hidden",l.gridTooltip_.style.display="none"},300,!1)),a.addEventListener("keyup",function(t){if(13==t.which){var e=r.childNodes[0];if(e){var i=e.childNodes[0];i&&(l.closeModal_=!0,i.click())}}}),t.appendChild(a),t.appendChild(e),t},f.prototype.createSelectedBar_=function(){var t=this,e=document.createElement("div");e.setAttribute("class","blocklyGridPickerSelectedBar"),e.style.display="none";var i=document.createElement("div"),o=document.createElement("div");o.className="blocklyGridPickerSelectedImage",i.appendChild(o),this.selectedImg_=document.createElement("img"),this.selectedImg_.setAttribute("width","30px"),this.selectedImg_.setAttribute("height","30px"),this.selectedImg_.setAttribute("draggable","false"),this.selectedImg_.style.display="none",this.selectedImg_.src=f.DEFAULT_IMG,o.appendChild(this.selectedImg_),this.selectedBarText_=document.createElement("span"),this.selectedBarText_.className="blocklyGridPickerTooltip",i.appendChild(this.selectedBarText_);var r=document.createElement("div"),n=document.createElement("div");n.className="ui buttons mini",r.appendChild(n);var l=document.createElement("button");l.className="ui button icon green";var a=document.createElement("i");a.className="icon check",l.appendChild(a),Blockly.bindEvent_(l,"click",this,function(){t.setValue(t.selectedBarValue_),t.close()});var s=document.createElement("button");s.className="ui button icon red";var c=document.createElement("i");return c.className="icon cancel",s.appendChild(c),Blockly.bindEvent_(s,"click",this,function(){t.close()}),n.appendChild(l),n.appendChild(s),e.appendChild(i),e.appendChild(r),e},f.prototype.updateSelectedBar_=function(t,e){t.src&&(this.selectedImg_.src=t.src,this.selectedImg_.style.display=""),this.selectedImg_.alt=t.alt||t,this.selectedBarText_.textContent=t.alt||t,this.selectedBarValue_=e},f.prototype.setupIntersectionObserver_=function(){var o=this;if("IntersectionObserver"in window){this.disposeIntersectionObserver();this.observer=new IntersectionObserver(function(t){t.forEach(function(t){var e,i;0<t.intersectionRatio&&(o.observer.unobserve(t.target),e=t.target,(i=e.getAttribute("data-src"))&&(e.src=i,e.removeAttribute("data-src")))})},{rootMargin:"20px 0px",threshold:.01})}},f.prototype.disposeIntersectionObserver=function(){this.observer&&(this.observer=null)},f.prototype.disposeTooltip=function(){this.gridTooltip_&&(pxsim.U.remove(this.gridTooltip_),this.gridTooltip_=null)},f.prototype.onClose_=function(){this.disposeTooltip()},f.prototype.setText=function(t){if(null!==t&&t!==this.text_){this.text_=t,this.updateTextNode_(),this.imageJson_&&this.textElement_?(this.textElement_.setAttribute("class",this.textElement_.getAttribute("class")+" blocklyHidden"),this.imageElement_.parentNode.appendChild(this.arrow_)):this.textElement_&&(this.textElement_.setAttribute("class",this.textElement_.getAttribute("class")+" blocklyDropdownText"),this.textElement_.parentNode.appendChild(this.arrow_));var e=this.sourceBlock_;e&&e.rendered&&(e.render(),e.bumpNeighbours_())}},f.prototype.updateSize_=function(){var t;this.imageJson_?(t=this.imageJson_.width+5,this.arrowY_=this.imageJson_.height/2):t=Blockly.Field.getCachedWidth(this.textElement_),this.EDITABLE&&(t+=Blockly.BlockSvg.EDITABLE_FIELD_PADDING),this.arrowWidth_=0,this.positionArrow&&(this.arrowWidth_=this.positionArrow(t),t+=this.arrowWidth_),this.box_&&(t+=2*Blockly.BlockSvg.BOX_FIELD_PADDING),this.size_.width=t},f.prototype.updateTextNode_=function(){if(this.textElement_||this.imageElement_){var t=this.text_;if(t.length>this.maxDisplayLength?(t=t.substring(0,this.maxDisplayLength-2)+"…",this.textElement_.setAttribute("class","blocklyText blocklyTextTruncated")):this.textElement_.setAttribute("class","blocklyText"),goog.dom.removeChildren(this.textElement_),goog.dom.removeNode(this.imageElement_),this.imageElement_=null,this.imageJson_)this.imageElement_=Blockly.utils.dom.createSvgElement("image",{y:5,x:8,height:this.imageJson_.height+"px",width:this.imageJson_.width+"px",cursor:"pointer"},null),this.imageElement_.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",this.imageJson_.src),this.size_.height=Number(this.imageJson_.height)+10,this.sourceBlock_.RTL&&this.imageElement_.setAttribute("transform","translate("+this.arrowWidth_+", 0)"),this.textElement_.parentNode.appendChild(this.imageElement_);else{t=t.replace(/\s/g,Blockly.Field.NBSP),this.sourceBlock_.RTL&&t&&(t+="‏"),t||(t=Blockly.Field.NBSP);var e=document.createTextNode(t);this.textElement_.appendChild(e)}this.size_.width=0}},f.DEFAULT_IMG="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==",f}(Blockly.FieldDropdown);l.FieldGridPicker=t}(pxtblockly||(pxtblockly={})),function(n){var t=function(r){function t(t,e,i){var o=r.call(this,e.data)||this;return o.isFieldCustom_=!0,o.buttonClick_=function(t){var e=t.target.getAttribute("data-value");e&&(this.setValue(e),this.setText(e),Blockly.DropDownDiv.hide())},o.columns_=parseInt(e.columns),o.maxRows_=parseInt(e.maxRows)||0,o.width_=parseInt(e.width)||300,o.backgroundColour_=n.parseColour(e.colour),o.borderColour_=pxt.toolbox.fadeColor(o.backgroundColour_,.4,!1),o}return __extends(t,r),t.prototype.showEditor_=function(){if(!Blockly.DropDownDiv.hideIfOwner(this)){Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent();var t=Blockly.DropDownDiv.getContentDiv(),e=document.createElement("div");e.setAttribute("role","menu"),e.setAttribute("aria-haspopup","true");for(var i=this.getOptions(),o=0,r=0;r<i.length;r++){var n=i[r][0],l=i[r][1];if("placeholder"!=n.type){var a=document.createElement("button");a.setAttribute("id",":"+r),a.setAttribute("role","menuitem"),a.setAttribute("class","blocklyDropDownButton"),a.title=n.alt;var s=n.height;this.columns_?(s=this.width_/this.columns_-8,a.style.width=s+"px",a.style.height=s+"px"):(a.style.width=n.width+"px",a.style.height=n.height+"px"),o<s&&(o=s);var c=this.backgroundColour_;l==this.getValue()&&(c=this.sourceBlock_.getColourTertiary(),a.setAttribute("aria-selected","true")),a.style.backgroundColor=c,a.style.borderColor=this.borderColour_,Blockly.bindEvent_(a,"click",this,this.buttonClick_),Blockly.bindEvent_(a,"mouseover",a,function(){this.setAttribute("class","blocklyDropDownButton blocklyDropDownButtonHover"),e.setAttribute("aria-activedescendant",this.id)}),Blockly.bindEvent_(a,"mouseout",a,function(){this.setAttribute("class","blocklyDropDownButton"),e.removeAttribute("aria-activedescendant")});var u=document.createElement("img");u.src=n.src,a.setAttribute("data-value",l),u.setAttribute("data-value",l),a.appendChild(u),e.appendChild(a)}else{var p=document.createElement("span");p.setAttribute("class","blocklyDropDownPlaceholder"),p.style.width=n.width+"px",p.style.height=n.height+"px",e.appendChild(p)}}e.style.width=this.width_+"px",t.appendChild(e),this.maxRows_&&(t.style.maxHeight=(this.maxRows_+.4)*(o+8)+"px"),pxt.BrowserUtils.isFirefox()&&(t.style.paddingRight="20px"),Blockly.DropDownDiv.setColour(this.backgroundColour_,this.borderColour_),Blockly.DropDownDiv.showPositionedByBlock(this,this.sourceBlock_,this.onHide_.bind(this)),this.sourceBlock_.isShadow()?(this.savedPrimary_=this.sourceBlock_.getColour(),this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),this.sourceBlock_.getColourSecondary(),this.sourceBlock_.getColourTertiary())):this.box_&&this.box_.setAttribute("fill",this.sourceBlock_.getColourTertiary())}},t.prototype.onHide_=function(){var t=Blockly.DropDownDiv.getContentDiv();t.removeAttribute("role"),t.removeAttribute("aria-haspopup"),t.removeAttribute("aria-activedescendant"),t.style.width="",t.style.paddingRight="",this.sourceBlock_&&(this.sourceBlock_.isShadow()?this.sourceBlock_.setColour(this.savedPrimary_,this.sourceBlock_.getColourSecondary(),this.sourceBlock_.getColourTertiary()):this.box_&&this.box_.setAttribute("fill",this.sourceBlock_.getColour()))},t.prototype.setText=function(t){if(null!==t&&t!==this.text_){this.text_=t,this.updateTextNode_(),this.imageJson_&&this.textElement_?(this.textElement_.setAttribute("class",this.textElement_.getAttribute("class")+" blocklyHidden"),this.imageElement_.parentNode.appendChild(this.arrow_)):this.textElement_&&(this.textElement_.setAttribute("class",this.textElement_.getAttribute("class")+" blocklyDropdownText"),this.textElement_.parentNode.appendChild(this.arrow_));var e=this.sourceBlock_;e&&e.rendered&&(e.render(),e.bumpNeighbours_())}},t.prototype.updateSize_=function(){var t=this.imageJson_.width+5;this.EDITABLE&&(t+=Blockly.BlockSvg.EDITABLE_FIELD_PADDING),this.arrowY_=this.imageJson_.height/2,this.arrowWidth_=0,this.positionArrow&&(this.arrowWidth_=this.positionArrow(t),t+=this.arrowWidth_),this.box_&&(t+=2*Blockly.BlockSvg.BOX_FIELD_PADDING),this.size_.width=t},t.prototype.updateTextNode_=function(){if(this.textElement_||this.imageElement_){var t=this.text_;if(t.length>this.maxDisplayLength?(t=t.substring(0,this.maxDisplayLength-2)+"…",this.textElement_.setAttribute("class","blocklyText blocklyTextTruncated")):this.textElement_.setAttribute("class","blocklyText"),goog.dom.removeChildren(this.textElement_),goog.dom.removeNode(this.imageElement_),this.imageElement_=null,this.imageJson_)this.imageElement_=Blockly.utils.dom.createSvgElement("image",{y:5,x:8,height:this.imageJson_.height+"px",width:this.imageJson_.width+"px"},null),this.imageElement_.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",this.imageJson_.src),this.size_.height=Number(this.imageJson_.height)+10,this.textElement_.parentNode.appendChild(this.imageElement_);else{t=t.replace(/\s/g,Blockly.Field.NBSP),this.sourceBlock_.RTL&&t&&(t+="‏"),t||(t=Blockly.Field.NBSP);var e=document.createTextNode(t);this.textElement_.appendChild(e)}this.size_.width=0}},t}(Blockly.FieldDropdown);n.FieldImageDropdown=t}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o.shouldSort_=e.sort,o.addLabel_=!!e.addLabel,o}return __extends(t,r),t.prototype.showEditor_=function(){if(!Blockly.DropDownDiv.hideIfOwner(this)){Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent();var t=Blockly.DropDownDiv.getContentDiv(),e=document.createElement("div");e.setAttribute("role","menu"),e.setAttribute("aria-haspopup","true");var i=this.getOptions();this.shouldSort_&&i.sort();for(var o=0;o<i.length;o++){var r=i[o][0],n=i[o][1];if("placeholder"!=r.type){var l=document.createElement("button");l.setAttribute("id",":"+o),l.setAttribute("role","menuitem"),l.setAttribute("class","blocklyDropDownButton"),l.title=r.alt,this.columns_?l.style.width=this.width_/this.columns_-8+"px":(l.style.width=r.width+"px",l.style.height=r.height+"px");var a=this.sourceBlock_.getColour();n==this.getValue()&&(a=this.sourceBlock_.getColourTertiary(),l.setAttribute("aria-selected","true")),l.style.backgroundColor=a,l.style.borderColor=this.sourceBlock_.getColourTertiary(),Blockly.bindEvent_(l,"click",this,this.buttonClick_),Blockly.bindEvent_(l,"mouseover",l,function(){this.setAttribute("class","blocklyDropDownButton blocklyDropDownButtonHover"),e.setAttribute("aria-activedescendant",this.id)}),Blockly.bindEvent_(l,"mouseout",l,function(){this.setAttribute("class","blocklyDropDownButton"),e.removeAttribute("aria-activedescendant")});var s=document.createElement("img");if(s.src=r.src,l.setAttribute("data-value",n),s.setAttribute("data-value",n),l.appendChild(s),this.addLabel_){var c=this.createTextNode_(r.alt);c.setAttribute("data-value",n),l.appendChild(c)}e.appendChild(l)}else{var u=document.createElement("span");u.setAttribute("class","blocklyDropDownPlaceholder"),u.style.width=r.width+"px",u.style.height=r.height+"px",e.appendChild(u)}}e.style.width=this.width_+"px",t.appendChild(e),Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(),this.sourceBlock_.getColourTertiary());var p=this.sourceBlock_.workspace.scale,d={width:this.size_.width,height:this.size_.height};d.width*=p,d.height*=p;var h=this.fieldGroup_.getBoundingClientRect(),m=h.left+d.width/2,f=h.top+d.height,g=m,y=h.top;Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode),Blockly.DropDownDiv.show(this,m,f,g,y,this.onHide_.bind(this)),this.sourceBlock_.isShadow()?(this.savedPrimary_=this.sourceBlock_.getColour(),this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(),this.sourceBlock_.getColourSecondary(),this.sourceBlock_.getColourTertiary())):this.box_&&this.box_.setAttribute("fill",this.sourceBlock_.getColourTertiary())}},t.prototype.createTextNode_=function(t){var e=document.createElement("span");return e.setAttribute("class","blocklyDropdownTextLabel"),e.textContent=t,e},t}(t.FieldImageDropdown);t.FieldImages=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(o){function t(t){var i,e=o.call(this,(i=t,function(){var e=[];if(this.sourceBlock_&&this.sourceBlock_.workspace){var t=this.sourceBlock_.workspace.getVariablesOfType(r(i.name));t.forEach(function(t){e.push([t.name,t.name])})}return e.push([lf("Add a new {0}...",i.memberName),"CREATE"]),e}))||this;return e.opts=t,e}return __extends(t,o),t.prototype.init=function(){o.prototype.init.call(this),this.initVariables()},t.prototype.onItemSelected=function(t,e){var i=this;"CREATE"===e.getValue()?function n(l,a,s,c){Blockly.prompt(s,a.promptHint,function(t){if(t){var e=!1;if(pxtc.isIdentifierStart(t.charCodeAt(0),2)){e=!0;for(var i=1;i<t.length;i++)pxtc.isIdentifierPart(t.charCodeAt(i),2)||(e=!1)}if(!e)return void Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."),function(){return n(l,a,s,c)});for(var o=u(l,a.name),i=0;i<o.length;i++){var r=o[i];if(r===t)return void Blockly.alert(lf("A {0} named '{1}' already exists.",a.memberName,t),function(){return n(l,a,s,c)})}t===a.createFunctionName&&Blockly.alert(lf("'{0}' is a reserved name.",a.createFunctionName),function(){return n(l,a,s,c)}),c(p(l,a,t))}})}(this.sourceBlock_.workspace,this.opts,lf("New {0}:",this.opts.memberName),function(t){return t&&i.setValue(t)}):o.prototype.onItemSelected.call(this,t,e)},t.prototype.initVariables=function(){var e=this;if(this.sourceBlock_&&this.sourceBlock_.workspace)if(this.sourceBlock_.isInFlyout)this.setText(this.opts.initialMembers[0]);else{var i=this.sourceBlock_.workspace,o=u(i,this.opts.name);this.opts.initialMembers.forEach(function(t){-1===o.indexOf(t)&&p(i,e.opts,t)}),"CREATE"===this.getValue()&&this.opts.initialMembers.length&&this.setValue(this.opts.initialMembers[0])}},t}(Blockly.FieldDropdown);function u(t,e){var i=t.getVariablesOfType(r(e));return i&&i.length?i.map(function(t){return t.name}):[]}function p(t,e,i){return Blockly.Variables.getOrCreateVariablePackage(t,null,i,r(e.name)),i}function r(t){return"KIND_"+t}t.FieldKind=e}(pxtblockly||(pxtblockly={}));var LabelMode,pxtblockly,rowRegex=/^.*[\.#].*$/;!function(t){t[t.None=0]="None",t[t.Number=1]="Number",t[t.Letter=2]="Letter"}(LabelMode||(LabelMode={})),function(t){var e=function(r){function a(t,e,i){var l=r.call(this,t,i)||this;if(l.isFieldCustom_=!0,l.SERIALIZABLE=!0,l.onColor="#FFFFFF",l.matrixWidth=5,l.matrixHeight=5,l.yAxisLabel=LabelMode.None,l.xAxisLabel=LabelMode.None,l.cellState=[],l.cells=[],l.dontHandleMouseEvent_=function(t){t.stopPropagation(),t.preventDefault()},l.clearLedDragHandler=function(t){var e=l.sourceBlock_.getSvgRoot();pxsim.pointerEvents.down.forEach(function(t){return e.removeEventListener(t,l.dontHandleMouseEvent_)}),e.removeEventListener(pxsim.pointerEvents.move,l.dontHandleMouseEvent_),document.removeEventListener(pxsim.pointerEvents.up,l.clearLedDragHandler),document.removeEventListener(pxsim.pointerEvents.leave,l.clearLedDragHandler),Blockly.Touch.clearTouchIdentifier(),l.elt.removeEventListener(pxsim.pointerEvents.move,l.handleRootMouseMoveListener),t.stopPropagation(),t.preventDefault()},l.toggleRect=function(t,e){l.cellState[t][e]=l.currentDragState_,l.updateValue()},l.handleRootMouseMoveListener=function(t){var e,i;t.changedTouches&&1==t.changedTouches.length?(e=t.changedTouches[0].clientX,i=t.changedTouches[0].clientY):(e=t.clientX,i=t.clientY);var o=document.elementFromPoint(e,i);if(o){var r=o.getAttribute("data-x"),n=o.getAttribute("data-y");null!=r&&null!=n&&l.toggleRect(parseInt(r),parseInt(n))}},l.params=e,void 0!==l.params.rows){var o=parseInt(l.params.rows);isNaN(o)||(l.matrixHeight=o)}if(void 0!==l.params.columns){o=parseInt(l.params.columns);isNaN(o)||(l.matrixWidth=o)}return void 0!==l.params.onColor&&(l.onColor=l.params.onColor),void 0!==l.params.offColor&&(l.offColor=l.params.offColor),l}return __extends(a,r),a.prototype.showEditor_=function(){},a.prototype.initMatrix=function(){if(!this.sourceBlock_.isInsertionMarker()){this.elt=pxsim.svg.parseString('<svg xmlns="http://www.w3.org/2000/svg" id="field-matrix" />');for(var t=0;t<this.matrixWidth;t++){this.cellState.push([]),this.cells.push([]);for(var e=0;e<this.matrixHeight;e++)this.cellState[t].push(!1)}this.restoreStateFromString();for(t=0;t<this.matrixWidth;t++)for(e=0;e<this.matrixHeight;e++)this.createCell(t,e);if(this.updateValue(),this.xAxisLabel!==LabelMode.None){var i=this.matrixHeight*(a.CELL_WIDTH+a.CELL_VERTICAL_MARGIN)+2*a.CELL_VERTICAL_MARGIN+a.BOTTOM_MARGIN,o=pxsim.svg.child(this.elt,"g",{transform:"translate(0 "+i+")"});for(t=0;t<this.matrixWidth;t++){var r=this.getYAxisWidth()+t*(a.CELL_WIDTH+a.CELL_HORIZONTAL_MARGIN)+a.CELL_WIDTH/2+a.CELL_HORIZONTAL_MARGIN/2;pxsim.svg.child(o,"text",{x:r,class:"blocklyText"}).textContent=this.getLabel(t,this.xAxisLabel)}}if(this.yAxisLabel!==LabelMode.None){var n=pxsim.svg.child(this.elt,"g",{});for(t=0;t<this.matrixHeight;t++){i=t*(a.CELL_WIDTH+a.CELL_VERTICAL_MARGIN)+a.CELL_WIDTH/2+2*a.CELL_VERTICAL_MARGIN;pxsim.svg.child(n,"text",{x:0,y:i,class:"blocklyText"}).textContent=this.getLabel(t,this.yAxisLabel)}}this.fieldGroup_.appendChild(this.elt)}},a.prototype.getLabel=function(t,e){switch(e){case LabelMode.Letter:return String.fromCharCode(t+65);default:return(t+1).toString()}},a.prototype.createCell=function(i,o){var r=this,t=i*(a.CELL_WIDTH+a.CELL_HORIZONTAL_MARGIN)+a.CELL_HORIZONTAL_MARGIN+this.getYAxisWidth(),e=o*(a.CELL_WIDTH+a.CELL_VERTICAL_MARGIN)+a.CELL_VERTICAL_MARGIN,n=pxsim.svg.child(this.elt,"g",{transform:"translate("+t+" "+e+")"}),l=pxsim.svg.child(n,"rect",{class:"blocklyLed"+(this.cellState[i][o]?"On":"Off"),cursor:"pointer",width:a.CELL_WIDTH,height:a.CELL_WIDTH,fill:this.getColor(i,o),"data-x":i,"data-y":o,rx:a.CELL_CORNER_RADIUS});this.cells[i][o]=l,this.sourceBlock_.workspace.isFlyout||pxsim.pointerEvents.down.forEach(function(t){return l.addEventListener(t,function(t){var e=r.sourceBlock_.getSvgRoot();r.currentDragState_=!r.cellState[i][o],Blockly.hideChaff(),r.sourceBlock_.select(),r.toggleRect(i,o),pxsim.pointerEvents.down.forEach(function(t){return e.addEventListener(t,r.dontHandleMouseEvent_)}),e.addEventListener(pxsim.pointerEvents.move,r.dontHandleMouseEvent_),document.addEventListener(pxsim.pointerEvents.up,r.clearLedDragHandler),document.addEventListener(pxsim.pointerEvents.leave,r.clearLedDragHandler),r.elt.addEventListener(pxsim.pointerEvents.move,r.handleRootMouseMoveListener),t.stopPropagation(),t.preventDefault()},!1)})},a.prototype.getColor=function(t,e){return this.cellState[t][e]?this.onColor:this.offColor||a.DEFAULT_OFF_COLOR},a.prototype.getOpacity=function(t,e){return this.cellState[t][e]?"1.0":"0.2"},a.prototype.updateCell=function(t,e){var i=this.cells[t][e];i.setAttribute("fill",this.getColor(t,e)),i.setAttribute("fill-opacity",this.getOpacity(t,e)),i.setAttribute("class","blocklyLed"+(this.cellState[t][e]?"On":"Off"))},a.prototype.setValue=function(t,e){if(void 0===e&&(e=!0),r.prototype.setValue.call(this,String(t)),this.elt){e&&this.restoreStateFromString();for(var i=0;i<this.matrixWidth;i++)for(var o=0;o<this.matrixHeight;o++)this.updateCell(i,o)}},a.prototype.render_=function(){this.visible_?(this.elt||this.initMatrix(),this.size_.height=Number(this.matrixHeight)*(a.CELL_WIDTH+a.CELL_VERTICAL_MARGIN)+2*a.CELL_VERTICAL_MARGIN+a.BOTTOM_MARGIN+this.getXAxisHeight(),this.size_.width=Number(this.matrixWidth)*(a.CELL_WIDTH+a.CELL_HORIZONTAL_MARGIN)+this.getYAxisWidth()):this.size_.width=0},a.prototype.getValue=function(){var t=function(t){var e=(t=t.trim()).charAt(0);if(e===t.charAt(t.length-1)&&-1!==i.indexOf(e))return t.substr(1,t.length-2).trim();return t}(this.getText());return"`\n"+a.TAB+t+"\n"+a.TAB+"`"},a.prototype.restoreStateFromString=function(){var t,e,i=this.getText();if(i)for(var o=i.split("\n").filter(function(t){return rowRegex.test(t)}),r=0;r<o.length&&r<this.matrixHeight;r++)for(var n=0,l=o[r],a=0;a<l.length&&n<this.matrixWidth;a++)"."===(e=l[a])||"_"===e||"0"===e?(this.cellState[n][r]=!1,n++):("#"===(t=l[a])||"*"===t||"1"===t)&&(this.cellState[n][r]=!0,n++)},a.prototype.updateValue=function(){for(var t="",e=0;e<this.matrixHeight;e++){for(var i=0;i<this.matrixWidth;i++)t+=(this.cellState[i][e]?"#":".")+" ";t+="\n"+a.TAB}this.setValue(t,!1)},a.prototype.getYAxisWidth=function(){return this.yAxisLabel===LabelMode.None?0:a.Y_AXIS_WIDTH},a.prototype.getXAxisHeight=function(){return this.xAxisLabel===LabelMode.None?0:a.X_AXIS_HEIGHT},a.CELL_WIDTH=25,a.CELL_HORIZONTAL_MARGIN=7,a.CELL_VERTICAL_MARGIN=5,a.CELL_CORNER_RADIUS=5,a.BOTTOM_MARGIN=9,a.Y_AXIS_WIDTH=9,a.X_AXIS_HEIGHT=10,a.TAB="        ",a.DEFAULT_OFF_COLOR="#000000",a}(Blockly.Field);t.FieldMatrix=e;var i=["'",'"',"`"]}(pxtblockly||(pxtblockly={})),function(n){var l=pxt.svgUtil;n.HEADER_HEIGHT=50,n.TOTAL_WIDTH=300;var t=function(r){function a(t,e,i){var o=r.call(this,t,i)||this;return o.isFieldCustom_=!0,o.SERIALIZABLE=!0,o.soundingKeys=0,o.numRow=8,o.numCol=8,o.tempo=120,o.isPlaying=!1,o.timeouts=[],o.params=e,o.createMelodyIfDoesntExist(),o}return __extends(a,r),a.prototype.init=function(){r.prototype.init.call(this),this.onInit()},a.prototype.showEditor_=function(){var t=this;Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent(),Blockly.DropDownDiv.setColour(this.getDropdownBackgroundColour(),this.getDropdownBorderColour());var e=Blockly.DropDownDiv.getContentDiv();pxt.BrowserUtils.addClass(e,"melody-content-div"),pxt.BrowserUtils.addClass(e.parentElement,"melody-editor-dropdown"),this.gallery=new pxtmelody.MelodyGallery,this.renderEditor(e),this.prevString=this.getValue(),Blockly.Events.fire(new Blockly.Events.Ui(this.sourceBlock_,"melody-editor",!1,!0)),Blockly.DropDownDiv.showPositionedByBlock(this,this.sourceBlock_,function(){t.onEditorClose(),pxt.BrowserUtils.removeClass(e,"melody-content-div"),pxt.BrowserUtils.removeClass(e.parentElement,"melody-editor-dropdown"),Blockly.Events.fire(new Blockly.Events.Ui(t.sourceBlock_,"melody-editor",!0,!1))})},a.prototype.getValue=function(){return this.stringRep=this.getTypeScriptValue(),this.stringRep},a.prototype.doValueUpdate_=function(t){null==t||""==t||'""'==t||this.stringRep&&this.stringRep===t||(this.stringRep=t,this.parseTypeScriptValue(t),r.prototype.doValueUpdate_.call(this,this.getValue()))},a.prototype.onInit=function(){this.render_(),this.createMelodyIfDoesntExist(),this.invalidString?Blockly.FieldLabel.prototype.setText.call(this,pxt.Util.lf("Invalid Input")):(this.fieldGroup_||(this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null)),this.visible_||(this.fieldGroup_.style.display="none"),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.updateFieldLabel())},a.prototype.render_=function(){r.prototype.render_.call(this),this.invalidString||(this.size_.width=a.MUSIC_ICON_WIDTH+(a.COLOR_BLOCK_WIDTH+a.COLOR_BLOCK_SPACING)*this.numCol),this.sourceBlock_.setColour("#ffffff")},a.prototype.renderEditor=function(t){var e=this,i=this.getDropdownBackgroundColour(),o=this.getDropdownBorderColour();this.topDiv=document.createElement("div"),pxt.BrowserUtils.addClass(this.topDiv,"melody-top-bar-div"),this.root=new l.SVG(this.topDiv).id("melody-editor-header-controls"),this.toggle=new s(this.root,{leftText:lf("Editor"),rightText:lf("Gallery"),baseColor:i}),this.toggle.onStateChange(function(t){t?e.hideGallery():e.showGallery()}),this.toggle.layout(),this.toggle.translate((n.TOTAL_WIDTH-this.toggle.width())/2,0),t.appendChild(this.topDiv),t.appendChild(this.gallery.getElement()),this.editorDiv=document.createElement("div"),pxt.BrowserUtils.addClass(this.editorDiv,"melody-editor-div"),this.editorDiv.style.setProperty("background-color",o),this.gridDiv=this.createGridDisplay(),this.editorDiv.appendChild(this.gridDiv),this.bottomDiv=document.createElement("div"),pxt.BrowserUtils.addClass(this.bottomDiv,"melody-bottom-bar-div"),this.doneButton=document.createElement("button"),pxt.BrowserUtils.addClass(this.doneButton,"melody-confirm-button"),this.doneButton.innerText=lf("Done"),this.doneButton.addEventListener("click",function(){return e.onDone()}),this.doneButton.style.setProperty("background-color",i),this.playButton=document.createElement("button"),this.playButton.id="melody-play-button",this.playButton.addEventListener("click",function(){return e.togglePlay()}),this.playIcon=document.createElement("i"),this.playIcon.id="melody-play-icon",pxt.BrowserUtils.addClass(this.playIcon,"play icon"),this.playButton.appendChild(this.playIcon),this.tempoInput=document.createElement("input"),pxt.BrowserUtils.addClass(this.tempoInput,"ui input"),this.tempoInput.type="number",this.tempoInput.title=lf("tempo"),this.tempoInput.id="melody-tempo-input",this.tempoInput.addEventListener("input",function(){return e.setTempo(+e.tempoInput.value)}),this.syncTempoField(!0),this.bottomDiv.appendChild(this.tempoInput),this.bottomDiv.appendChild(this.playButton),this.bottomDiv.appendChild(this.doneButton),this.editorDiv.appendChild(this.bottomDiv),t.appendChild(this.editorDiv)},a.prototype.onEditorClose=function(){this.stopMelody(),this.gallery&&this.gallery.stopMelody(),this.clearDomReferences(),this.sourceBlock_&&Blockly.Events.isEnabled()&&this.getValue()!==this.prevString&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.prevString,this.getValue())),this.prevString=void 0},a.prototype.onDone=function(){Blockly.DropDownDiv.hideIfOwner(this),this.onEditorClose()},a.prototype.clearDomReferences=function(){this.topDiv=null,this.editorDiv=null,this.gridDiv=null,this.bottomDiv=null,this.doneButton=null,this.playButton=null,this.playIcon=null,this.tempoInput=null,this.elt=null,this.cells=null,this.toggle=null,this.root=null,this.gallery.clearDomReferences()},a.prototype.getTypeScriptValue=function(){return this.invalidString?this.invalidString:this.melody?'"'+this.melody.getStringRepresentation()+'"':""},a.prototype.parseTypeScriptValue=function(t){var e=this,i=t;try{t=(t=t.slice(1,-1)).trim(),this.createMelodyIfDoesntExist();var o=t.split(" ");o.forEach(function(t){if(!e.isValidNote(t))throw new Error(lf("Invalid note '{0}'. Notes can be C D E F G A B C5",t))}),this.melody.resetMelody();for(var r=0;r<o.length;r++)if("-"!=o[r]){var n=pxtmelody.noteToRow(o[r]);this.melody.updateMelody(n,r)}this.updateFieldLabel()}catch(t){pxt.log(t),this.invalidString=i}},a.prototype.isValidNote=function(t){switch(t){case"C":case"D":case"E":case"F":case"G":case"A":case"B":case"C5":case"-":return!0}return!1},a.prototype.getPreviewWidth=function(){return this.updateSize_(),this.size_.width},a.prototype.getPreviewHeight=function(){return Blockly.BlockSvg.FIELD_HEIGHT},a.prototype.getDropdownBackgroundColour=function(){return this.sourceBlock_.parentBlock_.getColour()},a.prototype.getDropdownBorderColour=function(){return this.sourceBlock_.parentBlock_.getColourTertiary()},a.prototype.updateFieldLabel=function(){if(this.fieldGroup_){pxsim.U.clear(this.fieldGroup_);var t=c("").appendClass("melody-editor-field-icon").at(6,15);this.fieldGroup_.appendChild(t.el);for(var e=this.melody.getStringRepresentation().trim().split(" "),i=0;i<e.length;i++){var o=pxtmelody.getColorClass(pxtmelody.noteToRow(e[i])),r=(new l.Rect).at((a.COLOR_BLOCK_WIDTH+a.COLOR_BLOCK_SPACING)*i+a.COLOR_BLOCK_X,a.COLOR_BLOCK_Y).size(a.COLOR_BLOCK_WIDTH,a.COLOR_BLOCK_HEIGHT).stroke("#898989",1).corners(3,2);pxt.BrowserUtils.addClass(r.el,o),this.fieldGroup_.appendChild(r.el)}}},a.prototype.setTempo=function(t){(isNaN(t)||t<=0)&&this.tempoInput?this.tempoInput.value=this.tempo+"":this.tempo!=t&&(this.tempo=t,this.melody&&this.melody.setTempo(this.tempo),this.tempoInput&&(this.tempoInput.value=this.tempo+""),this.syncTempoField(!1))},a.prototype.syncTempoField=function(t){var e=this.sourceBlock_;if(e.parentBlock_)for(var i=0,o=e.parentBlock_.inputList;i<o.length;i++){var r=o[i];if("tempo"===r.name){var n=r.connection.targetBlock();n&&(t?n.getFieldValue("SLIDER")?(this.tempoInput.value=n.getFieldValue("SLIDER"),this.tempo=+this.tempoInput.value):this.tempoInput.value=this.tempo+"":"math_number_minmax"===n.type?n.setFieldValue(this.tempoInput.value,"SLIDER"):n.setFieldValue(this.tempoInput.value,"NUM"));break}}},a.prototype.getDuration=function(){return 6e4/this.tempo},a.prototype.createMelodyIfDoesntExist=function(){return!this.melody&&(this.melody=new pxtmelody.MelodyArray,!0)},a.prototype.onNoteSelect=function(t,e){this.invalidString=null,this.melody.updateMelody(t,e),this.melody.getValue(t,e)&&!this.isPlaying&&this.playNote(t,e),this.updateGrid(),this.updateFieldLabel()},a.prototype.updateGrid=function(){for(var t=0;t<this.numRow;t++)for(var e=pxtmelody.getColorClass(t),i=0;i<this.numCol;i++){var o=this.cells[t][i];this.melody.getValue(t,i)?(pxt.BrowserUtils.removeClass(o,"melody-default"),pxt.BrowserUtils.addClass(o,e)):(pxt.BrowserUtils.addClass(o,"melody-default"),pxt.BrowserUtils.removeClass(o,e))}},a.prototype.playNote=function(t,e){var i=this,o=++this.soundingKeys;this.isPlaying?(this.timeouts.push(setTimeout(function(){i.playToneCore(t)},e*this.getDuration())),this.timeouts.push(setTimeout(function(){pxt.AudioContextManager.stop()},(e+1)*this.getDuration()))):(this.playToneCore(t),this.timeouts.push(setTimeout(function(){i.soundingKeys==o&&pxt.AudioContextManager.stop()},this.getDuration())))},a.prototype.queueToneForColumn=function(e,t,i){var o=this,r=setTimeout(function(){++o.soundingKeys,pxt.AudioContextManager.stop();for(var t=0;t<o.numRow;t++)o.melody.getValue(t,e)&&o.playToneCore(t);o.highlightColumn(e,!0),o.timeouts=o.timeouts.filter(function(t){return t!==r})},t),n=setTimeout(function(){o.timeouts=o.timeouts.filter(function(t){return t!==n}),o.highlightColumn(e,!1)},t+i);this.timeouts.push(r),this.timeouts.push(n)},a.prototype.playToneCore=function(t){var e=0;switch(t){case 0:e=523;break;case 1:e=494;break;case 2:e=440;break;case 3:e=392;break;case 4:e=349;break;case 5:e=330;break;case 6:e=294;break;case 7:e=262}pxt.AudioContextManager.tone(e)},a.prototype.highlightColumn=function(e,i){this.cells.map(function(t){return t[e]}).forEach(function(t){i?pxt.BrowserUtils.addClass(t,"playing"):pxt.BrowserUtils.removeClass(t,"playing")})},a.prototype.createGridDisplay=function(){a.VIEWBOX_WIDTH=(a.CELL_WIDTH+a.CELL_VERTICAL_MARGIN)*this.numCol+a.CELL_VERTICAL_MARGIN,pxt.BrowserUtils.isEdge()&&(a.VIEWBOX_WIDTH+=37),a.VIEWBOX_HEIGHT=(a.CELL_WIDTH+a.CELL_HORIZONTAL_MARGIN)*this.numRow+a.CELL_HORIZONTAL_MARGIN,this.elt=pxsim.svg.parseString('<svg xmlns="http://www.w3.org/2000/svg" class="melody-grid-div" viewBox="0 0 '+a.VIEWBOX_WIDTH+" "+a.VIEWBOX_HEIGHT+'"/>'),this.cells=[];for(var t=0;t<this.numRow;t++)this.cells.push([]);for(t=0;t<this.numRow;t++)for(var e=0;e<this.numCol;e++)this.createCell(t,e);return this.elt},a.prototype.createCell=function(e,i){var o=this,t=e*(a.CELL_WIDTH+a.CELL_HORIZONTAL_MARGIN)+a.CELL_HORIZONTAL_MARGIN,r=i*(a.CELL_WIDTH+a.CELL_VERTICAL_MARGIN)+a.CELL_VERTICAL_MARGIN,n=pxsim.svg.child(this.elt,"g",{transform:"translate("+r+" "+t+")"}),l=pxsim.svg.child(n,"rect",{cursor:"pointer",width:a.CELL_WIDTH,height:a.CELL_WIDTH,stroke:"white","data-x":e,"data-y":i,rx:a.CELL_CORNER_RADIUS});this.melody.getValue(e,i)?pxt.BrowserUtils.addClass(l,pxtmelody.getColorClass(e)):pxt.BrowserUtils.addClass(l,"melody-default"),this.sourceBlock_.workspace.isFlyout||(pxsim.pointerEvents.down.forEach(function(t){return l.addEventListener(t,function(t){o.onNoteSelect(e,i),t.stopPropagation(),t.preventDefault()},!1)}),this.cells[e][i]=l)},a.prototype.togglePlay=function(){this.isPlaying?this.stopMelody():(this.isPlaying=!0,this.playMelody()),this.updatePlayButton()},a.prototype.updatePlayButton=function(){this.isPlaying?(pxt.BrowserUtils.removeClass(this.playIcon,"play icon"),pxt.BrowserUtils.addClass(this.playIcon,"stop icon")):(pxt.BrowserUtils.removeClass(this.playIcon,"stop icon"),pxt.BrowserUtils.addClass(this.playIcon,"play icon"))},a.prototype.playMelody=function(){var t=this;if(this.isPlaying){for(var e=0;e<this.numCol;e++)this.queueToneForColumn(e,e*this.getDuration(),this.getDuration());this.timeouts.push(setTimeout(function(){return t.playMelody()},this.numCol*this.getDuration()))}else this.stopMelody()},a.prototype.stopMelody=function(){if(this.isPlaying){for(;this.timeouts.length;)clearTimeout(this.timeouts.shift());pxt.AudioContextManager.stop(),this.isPlaying=!1,this.cells.forEach(function(t){return t.forEach(function(t){return pxt.BrowserUtils.removeClass(t,"playing")})})}},a.prototype.showGallery=function(){var e=this;this.stopMelody(),this.updatePlayButton(),this.gallery.show(function(t){t&&(e.melody.parseNotes(t),e.gallery.hide(),e.toggle.toggle(),e.updateFieldLabel(),e.updateGrid())})},a.prototype.hideGallery=function(){this.gallery.hide()},a.CELL_WIDTH=25,a.CELL_HORIZONTAL_MARGIN=7,a.CELL_VERTICAL_MARGIN=5,a.CELL_CORNER_RADIUS=5,a.COLOR_BLOCK_WIDTH=10,a.COLOR_BLOCK_HEIGHT=20,a.COLOR_BLOCK_X=20,a.COLOR_BLOCK_Y=5,a.COLOR_BLOCK_SPACING=2,a.MUSIC_ICON_WIDTH=20,a}(Blockly.Field);n.FieldCustomMelody=t;var s=function(){function t(t,e){this.props=function(t){t.baseColor||(t.baseColor="#e95153");t.backgroundColor||(t.backgroundColor="rgba(52,73,94,.2)");t.borderColor||(t.borderColor="rgba(52,73,94,.4)");t.selectedTextColor||(t.selectedTextColor=t.baseColor);t.unselectedTextColor||(t.unselectedTextColor="hsla(0,0%,100%,.9)");t.switchColor||(t.switchColor="#ffffff");return t}(e),this.root=t.group(),this.buildDom(),this.isLeft=!0}return t.prototype.buildDom=function(){var t=this;this.root.style().content("\n            .toggle-left {\n                transform: translateX(0px);\n                animation: mvleft 0.2s 0s ease;\n            }\n\n            .toggle-right {\n                transform: translateX(100px);\n                animation: mvright 0.2s 0s ease;\n            }\n\n            @keyframes mvright {\n                0% {\n                    transform: translateX(0px);\n                }\n                100% {\n                    transform: translateX(100px);\n                }\n            }\n\n            @keyframes mvleft {\n                0% {\n                    transform: translateX(100px);\n                }\n                100% {\n                    transform: translateX(0px);\n                }\n            }\n            "),this.root.def().create("clipPath","sprite-editor-toggle-border").clipPathUnits(!0).draw("rect").at(0,0).corners(.02,.1).size(1,1),this.root.draw("rect").size(200,40).fill(this.props.baseColor).stroke(this.props.borderColor,4).corners(4,4).clipPath("url(#sprite-editor-toggle-border)"),this.root.draw("rect").at(2,2).size(196,36).fill(this.props.backgroundColor).corners(4,4),this.switch=this.root.draw("rect").at(2,2).size(98,36).fill(this.props.switchColor).corners(4,4),this.leftElement=this.root.group(),this.leftText=c(this.props.leftText).appendClass("sprite-editor-text").fill(this.props.selectedTextColor),this.leftElement.appendChild(this.leftText),this.rightElement=this.root.group(),this.rightText=c(this.props.rightText).appendClass("sprite-editor-text").fill(this.props.unselectedTextColor),this.rightElement.appendChild(this.rightText),this.root.onClick(function(){return t.toggle()})},t.prototype.toggle=function(t){void 0===t&&(t=!1),this.isLeft?(this.switch.removeClass("toggle-left"),this.switch.appendClass("toggle-right"),this.leftText.fill(this.props.unselectedTextColor),this.rightText.fill(this.props.selectedTextColor)):(this.switch.removeClass("toggle-right"),this.switch.appendClass("toggle-left"),this.leftText.fill(this.props.selectedTextColor),this.rightText.fill(this.props.unselectedTextColor)),this.isLeft=!this.isLeft,!t&&this.changeHandler&&this.changeHandler(this.isLeft)},t.prototype.onStateChange=function(t){this.changeHandler=t},t.prototype.layout=function(){this.leftText.moveTo(51,20),this.rightText.moveTo(149,20)},t.prototype.translate=function(t,e){this.root.translate(t,e)},t.prototype.height=function(){return 40},t.prototype.width=function(){return 200},t}();function c(t){return new l.Text(t).anchor("middle").setAttribute("dominant-baseline","middle").setAttribute("dy",pxt.BrowserUtils.isIE()||pxt.BrowserUtils.isEdge()?"0.3em":"0.1em")}}(pxtblockly||(pxtblockly={})),function(s){var n,t;(t=n||(n={}))[t.C=262]="C",t[t.CSharp=277]="CSharp",t[t.D=294]="D",t[t.Eb=311]="Eb",t[t.E=330]="E",t[t.F=349]="F",t[t.FSharp=370]="FSharp",t[t.G=392]="G",t[t.GSharp=415]="GSharp",t[t.A=440]="A",t[t.Bb=466]="Bb",t[t.B=494]="B",t[t.C3=131]="C3",t[t.CSharp3=139]="CSharp3",t[t.D3=147]="D3",t[t.Eb3=156]="Eb3",t[t.E3=165]="E3",t[t.F3=175]="F3",t[t.FSharp3=185]="FSharp3",t[t.G3=196]="G3",t[t.GSharp3=208]="GSharp3",t[t.A3=220]="A3",t[t.Bb3=233]="Bb3",t[t.B3=247]="B3",t[t.C4=262]="C4",t[t.CSharp4=277]="CSharp4",t[t.D4=294]="D4",t[t.Eb4=311]="Eb4",t[t.E4=330]="E4",t[t.F4=349]="F4",t[t.FSharp4=370]="FSharp4",t[t.G4=392]="G4",t[t.GSharp4=415]="GSharp4",t[t.A4=440]="A4",t[t.Bb4=466]="Bb4",t[t.B4=494]="B4",t[t.C5=523]="C5",t[t.CSharp5=555]="CSharp5",t[t.D5=587]="D5",t[t.Eb5=622]="Eb5",t[t.E5=659]="E5",t[t.F5=698]="F5",t[t.FSharp5=740]="FSharp5",t[t.G5=784]="G5",t[t.GSharp5=831]="GSharp5",t[t.A5=880]="A5",t[t.Bb5=932]="Bb5",t[t.B5=988]="B5",t[t.C6=1047]="C6",t[t.CSharp6=1109]="CSharp6",t[t.D6=1175]="D6",t[t.Eb6=1245]="Eb6",t[t.E6=1319]="E6",t[t.F6=1397]="F6",t[t.FSharp6=1480]="FSharp6",t[t.G6=1568]="G6",t[t.GSharp6=1568]="GSharp6",t[t.A6=1760]="A6",t[t.Bb6=1865]="Bb6",t[t.B6=1976]="B6",t[t.C7=2093]="C7";var e=function(a){function m(t,e,i){var o=a.call(this,null,0,null,null,i)||this;o.isFieldCustom_=!0,o.SERIALIZABLE=!0,o.isTextValid_=!0,o.nKeys_=36,o.minNote_=28,o.maxNote_=63,o.eps=2,o.setSpellcheck(!1),o.prepareNotes(),o.isExpanded=!1,o.currentPage=0,o.totalPlayCount=0,e.editorColour&&(o.primaryColour=s.parseColour(e.editorColour),o.borderColour=Blockly.utils.colour.darken(o.primaryColour,.2));var r=parseInt(e.eps);!Number.isNaN(r)&&0<=r&&(o.eps=r);var n=parseInt(e.minNote)||o.minNote_,l=parseInt(e.maxNote)||o.maxNote_;return 28<=n&&l<=75&&n<l&&(o.minNote_=n,o.maxNote_=l,o.nKeys_=o.maxNote_-o.minNote_+1),o.setValue(t),o}return __extends(m,a),m.prototype.doClassValidation_=function(t){var e=/^Note\.(.+)$/.exec(t),i=e&&1<e.length?e[1]:null;if(null===(t=n[i]?n[i]:String(parseFloat(t||"0"))))return null;var o=parseFloat(t||"0");if(isNaN(o)||o<0)return null;var r=Math.floor(o)!=o;return""+o.toFixed(r?2:0)},m.prototype.getValue=function(){return this.value_+""},m.prototype.doValueUpdate_=function(t){isNaN(Number(t))||Number(t)<0||(this.sourceBlock_&&Blockly.Events.isEnabled()&&this.value_!=t&&Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_,"field",this.name,this.value_,t)),this.value_=t,this.refreshText())},m.prototype.getText=function(){if(this.isExpanded)return""+this.value_;for(var t=+this.value_,e=0;e<this.nKeys_;e++)if(Math.abs(this.getKeyFreq(e)-t)<this.eps)return this.getKeyName(e);var i=t.toString();return isNaN(t)||(i+=" Hz"),i},m.prototype.refreshText=function(){this.setText(this.getText()),this.forceRerender()},m.prototype.onHtmlInputChange_=function(t){a.prototype.onHtmlInputChange_.call(this,t),Blockly.DropDownDiv.hideWithoutAnimation()},m.prototype.onFinishEditing_=function(t){this.refreshText()},m.prototype.onHide=function(){this.isExpanded=!1,this.refreshText()},m.prototype.showEditor_=function(t){var e=this;this.isExpanded=!0,this.updateColor(),Blockly.DropDownDiv.hideWithoutAnimation(),Blockly.DropDownDiv.clearContent();var i=pxt.BrowserUtils.isMobile()||pxt.BrowserUtils.isIOS();m.superClass_.showEditor_.call(this,t,i,i),this.refreshText(),Blockly.Events.setGroup(!0),this.piano=[],this.currentSelectedKey=void 0;var o=this.nKeys_-this.nKeys_/m.notesPerOctave*m.blackKeysPerOctave,r=m.notesPerOctave-m.blackKeysPerOctave,n=m.keyWidth*o,l=m.keyHeight+m.labelHeight,a=window.innerWidth<n;a&&(n=r*m.keyWidth,l=m.keyHeight+m.labelHeight+m.prevNextHeight);var s=f("blocklyPianoDiv","width: "+n+"px;\n                height: "+l+"px;");Blockly.DropDownDiv.getContentDiv().appendChild(s),this.noteLabel=f("blocklyNoteLabel","top: "+m.keyHeight+"px;\n                width: "+n+"px;\n                background-color: "+this.primaryColour+";\n                border-color: "+this.primaryColour+";"),s.appendChild(this.noteLabel),this.noteLabel.textContent="-";for(var c=0,u=0;u<this.nKeys_;u++){var p=Math.floor(u/m.notesPerOctave),d=this.getPosition(u);a&&m.notesPerOctave<=u&&(d-=r*p*m.keyWidth);var h=this.getKeyDiv(u,d);this.piano.push(h),s.appendChild(h),Math.abs(this.getKeyFreq(u)-Number(this.getValue()))<this.eps&&(pxt.BrowserUtils.addClass(h,"selected"),this.currentSelectedKey=h,c=p)}a&&(this.setPage(c),s.appendChild(this.getNextPrevDiv(!0,n)),s.appendChild(this.getNextPrevDiv(!1,n))),Blockly.DropDownDiv.setColour(this.primaryColour,this.borderColour),Blockly.DropDownDiv.showPositionedByBlock(this,this.sourceBlock_,function(){return e.onHide()})},m.prototype.playKey=function(t,e){var i=this,o=++this.totalPlayCount;this.currentSelectedKey!==t&&(this.currentSelectedKey&&pxt.BrowserUtils.removeClass(this.currentSelectedKey,"selected"),pxt.BrowserUtils.addClass(t,"selected"),this.setValue(e)),this.currentSelectedKey=t,this.htmlInput_.value=this.getText(),pxt.AudioContextManager.tone(e),setTimeout(function(){i.totalPlayCount==o&&pxt.AudioContextManager.stop()},300)},m.prototype.dispose=function(){Blockly.DropDownDiv.hideIfOwner(this),a.prototype.dispose.call(this)},m.prototype.updateColor=function(){var t;this.sourceBlock_.parentBlock_&&(this.sourceBlock_.isShadow()||1===(t=this.sourceBlock_).inputList.length&&1===t.inputList[0].fieldRow.length)?(this.primaryColour=this.sourceBlock_.parentBlock_.getColour(),this.borderColour=this.sourceBlock_.parentBlock_.getColourTertiary()):(this.primaryColour=this.sourceBlock_.getColourTertiary(),this.borderColour=this.sourceBlock_.getColourTertiary())},m.prototype.setPage=function(t){var e=this.nKeys_/m.notesPerOctave;t=Math.max(Math.min(t,e-1),0),this.noteLabel.textContent="Octave #"+(t+1);for(var i=t*m.notesPerOctave,o=0;o<this.piano.length;++o){var r=i<=o&&o<i+m.notesPerOctave;this.piano[o].style.display=r?"block":"none"}this.currentPage=t},m.prototype.getNextPrevDiv=function(e,t){var i=this,o=f("blocklyNotePrevNext","top: "+(m.keyHeight+m.labelHeight)+"px;\n                left: "+(e?0:t/2)+"px;\n                width: "+Math.ceil(t/2)+"px;\n                "+(e?"border-left-color":"border-right-color")+": "+this.primaryColour+";\n                background-color: "+this.primaryColour+";\n                border-bottom-color: "+this.primaryColour+";");return pxt.BrowserUtils.pointerEvents.down.forEach(function(t){Blockly.bindEventWithChecks_(o,t,i,function(){return i.setPage(e?i.currentPage-1:i.currentPage+1)},!0)}),o.textContent=e?"<":">",o},m.prototype.getKeyDiv=function(e,t){var i=this,o=f("blocklyNote "+(this.isWhite(e)?"":"black"),"width: "+this.getKeyWidth(e)+"px;\n                height: "+this.getKeyHeight(e)+"px;\n                left: "+t+"px;\n                border-color: "+this.primaryColour+";");return pxt.BrowserUtils.pointerEvents.down.forEach(function(t){Blockly.bindEventWithChecks_(o,t,i,function(){return i.playKey(o,i.getKeyFreq(e))},!0)}),Blockly.bindEventWithChecks_(o,"mouseover",this,function(){return i.noteLabel.textContent=i.getKeyName(e)},!0),o},m.prototype.isWhite=function(t){switch(t%12){case 1:case 3:case 6:case 8:case 10:return!1;default:return!0}},m.prototype.getKeyWidth=function(t){return this.isWhite(t)?m.keyWidth:m.keyWidth/2},m.prototype.getKeyHeight=function(t){return this.isWhite(t)?m.keyHeight:m.keyHeight/2},m.prototype.getKeyFreq=function(t){return this.getKeyNoteData(t).freq},m.prototype.getKeyName=function(t){var e=this.getKeyNoteData(t),i=e.prefixedName;return this.nKeys_<=m.notesPerOctave?i=e.name:28<=this.minNote_&&this.maxNote_<=63&&(i=e.altPrefixedName||i),i},m.prototype.getKeyNoteData=function(t){return m.Notes[t+this.minNote_]},m.prototype.getPosition=function(t){var e=(t-Math.floor((t+1)/m.notesPerOctave*m.blackKeysPerOctave))*m.keyWidth;return this.isWhite(t)?e:e-m.keyWidth/4},m.prototype.prepareNotes=function(){m.Notes||(m.Notes={28:{name:lf("C"),prefixedName:lf("Low C"),freq:131},29:{name:lf("C#"),prefixedName:lf("Low C#"),freq:139},30:{name:lf("D"),prefixedName:lf("Low D"),freq:147},31:{name:lf("D#"),prefixedName:lf("Low D#"),freq:156},32:{name:lf("E"),prefixedName:lf("Low E"),freq:165},33:{name:lf("F"),prefixedName:lf("Low F"),freq:175},34:{name:lf("F#"),prefixedName:lf("Low F#"),freq:185},35:{name:lf("G"),prefixedName:lf("Low G"),freq:196},36:{name:lf("G#"),prefixedName:lf("Low G#"),freq:208},37:{name:lf("A"),prefixedName:lf("Low A"),freq:220},38:{name:lf("A#"),prefixedName:lf("Low A#"),freq:233},39:{name:lf("B"),prefixedName:lf("Low B"),freq:247},40:{name:lf("C"),prefixedName:lf("Middle C"),freq:262},41:{name:lf("C#"),prefixedName:lf("Middle C#"),freq:277},42:{name:lf("D"),prefixedName:lf("Middle D"),freq:294},43:{name:lf("D#"),prefixedName:lf("Middle D#"),freq:311},44:{name:lf("E"),prefixedName:lf("Middle E"),freq:330},45:{name:lf("F"),prefixedName:lf("Middle F"),freq:349},46:{name:lf("F#"),prefixedName:lf("Middle F#"),freq:370},47:{name:lf("G"),prefixedName:lf("Middle G"),freq:392},48:{name:lf("G#"),prefixedName:lf("Middle G#"),freq:415},49:{name:lf("A"),prefixedName:lf("Middle A"),freq:440},50:{name:lf("A#"),prefixedName:lf("Middle A#"),freq:466},51:{name:lf("B"),prefixedName:lf("Middle B"),freq:494},52:{name:lf("C"),prefixedName:lf("Tenor C"),altPrefixedName:lf("High C"),freq:523},53:{name:lf("C#"),prefixedName:lf("Tenor C#"),altPrefixedName:lf("High C#"),freq:554},54:{name:lf("D"),prefixedName:lf("Tenor D"),altPrefixedName:lf("High D"),freq:587},55:{name:lf("D#"),prefixedName:lf("Tenor D#"),altPrefixedName:lf("High D#"),freq:622},56:{name:lf("E"),prefixedName:lf("Tenor E"),altPrefixedName:lf("High E"),freq:659},57:{name:lf("F"),prefixedName:lf("Tenor F"),altPrefixedName:lf("High F"),freq:698},58:{name:lf("F#"),prefixedName:lf("Tenor F#"),altPrefixedName:lf("High F#"),freq:740},59:{name:lf("G"),prefixedName:lf("Tenor G"),altPrefixedName:lf("High G"),freq:784},60:{name:lf("G#"),prefixedName:lf("Tenor G#"),altPrefixedName:lf("High G#"),freq:831},61:{name:lf("A"),prefixedName:lf("Tenor A"),altPrefixedName:lf("High A"),freq:880},62:{name:lf("A#"),prefixedName:lf("Tenor A#"),altPrefixedName:lf("High A#"),freq:932},63:{name:lf("B"),prefixedName:lf("Tenor B"),altPrefixedName:lf("High B"),freq:988},64:{name:lf("C"),prefixedName:lf("High C"),freq:1046},65:{name:lf("C#"),prefixedName:lf("High C#"),freq:1109},66:{name:lf("D"),prefixedName:lf("High D"),freq:1175},67:{name:lf("D#"),prefixedName:lf("High D#"),freq:1245},68:{name:lf("E"),prefixedName:lf("High E"),freq:1319},69:{name:lf("F"),prefixedName:lf("High F"),freq:1397},70:{name:lf("F#"),prefixedName:lf("High F#"),freq:1478},71:{name:lf("G"),prefixedName:lf("High G"),freq:1568},72:{name:lf("G#"),prefixedName:lf("High G#"),freq:1661},73:{name:lf("A"),prefixedName:lf("High A"),freq:1760},74:{name:lf("A#"),prefixedName:lf("High A#"),freq:1865},75:{name:lf("B"),prefixedName:lf("High B"),freq:1976}})},m.keyWidth=22,m.keyHeight=90,m.labelHeight=24,m.prevNextHeight=20,m.notesPerOctave=12,m.blackKeysPerOctave=5,m}(Blockly.FieldNumber);function f(t,e){var i=document.createElement("div");return pxt.BrowserUtils.addClass(i,t),i.setAttribute("style",e.replace(/\s+/g," ")),i}s.FieldNote=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e.data,e.min,e.max,e.precision,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getOptions=function(){var t;return this.menuGenerator_&&(t=JSON.parse(this.menuGenerator_).map(function(t){return"object"==typeof t?t:[String(t),String(t)]})),t},t}(Blockly.FieldNumberDropdown);t.FieldNumberDropdown=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,"0","100","1","100","Value",i)||this;return o.isFieldCustom_=!0,o.params=e,o.params.screenHeight||(o.params.screenHeight=120),o.params.screenWidth||(o.params.screenWidth=160),o.params.xInputName||(o.params.xInputName="x"),o.params.yInputName||(o.params.yInputName="y"),o.params.min&&(o.min_=parseInt(o.params.min)),o.params.max&&(o.max_=parseInt(o.params.max)),o}return __extends(t,r),t.prototype.showEditor_=function(){this.getFieldByName(this.params.xInputName)===this&&(this.max_=this.params.screenWidth,this.labelText_=this.params.xInputName),this.getFieldByName(this.params.yInputName)===this&&(this.max_=this.params.screenHeight,this.labelText_=this.params.yInputName),r.prototype.showEditor_.call(this),this.renderScreenPicker()},t.prototype.setValue=function(t){r.prototype.setValue.call(this,t),this.resetCrosshair&&this.resetCrosshair()},t.prototype.renderScreenPicker=function(){var l=this,t=Blockly.DropDownDiv.getContentDiv();this.selectorDiv_=document.createElement("div"),this.selectorDiv_.className="blocklyCanvasOverlayOuter",t.appendChild(this.selectorDiv_);var a=document.createElement("div");a.className="blocklyCanvasOverlayDiv",this.selectorDiv_.appendChild(a);var o=document.createElement("div");o.className="cross-x",a.appendChild(o);var r=document.createElement("div");r.className="cross-y",a.appendChild(r);var n=document.createElement("div");n.className="label",a.appendChild(n);var s=1.5*this.params.screenWidth,c=1.5*this.params.screenHeight;a.style.height=c+"px",a.style.width=s+"px";var e=t.getElementsByClassName("goog-slider-horizontal")[0];if(e){e.style.width=s+"px";var i=parseFloat(this.getValue());!isNaN(i)&&i>this.getMin()&&(this.setValue(i-1+""),this.setValue(i+""))}var u=function(t,e){t=Math.round(Math.max(0,Math.min(s,t))),e=Math.round(Math.max(0,Math.min(c,e))),o.style.top=e+"px",r.style.left=t+"px",t=Math.round(Math.max(0,Math.min(l.params.screenWidth,t/s*l.params.screenWidth))),e=Math.round(Math.max(0,Math.min(l.params.screenHeight,e/c*l.params.screenHeight))),n.textContent=l.params.xInputName+"="+t+" "+l.params.yInputName+"="+e;var i=n.getBoundingClientRect();t>l.params.screenWidth/2?n.style.left=t*(s/l.params.screenWidth)-i.width-8+"px":n.style.left=t*(s/l.params.screenWidth)+4+"px",e>l.params.screenHeight/2?n.style.top=e*(c/l.params.screenHeight)-i.height-6+"px":n.style.top=e*(c/l.params.screenHeight)+"px"};this.resetCrosshair=function(){var t=l.getXY(),e=t.currentX,i=t.currentY;u(e/l.params.screenWidth*s,i/l.params.screenHeight*c)},this.resetCrosshair(),Blockly.bindEvent_(this.selectorDiv_,"mousemove",this,function(t){var e=a.getBoundingClientRect(),i=t.clientX-e.left,o=t.clientY-e.top;u(i,o)}),Blockly.bindEvent_(this.selectorDiv_,"mouseleave",this,this.resetCrosshair),Blockly.bindEvent_(this.selectorDiv_,"click",this,function(t){var e=a.getBoundingClientRect(),i=t.clientX-e.left,o=t.clientY-e.top,r=Math.round(i/s*l.params.screenWidth),n=Math.round(o/c*l.params.screenHeight);l.close(),l.setXY(r,n)})},t.prototype.resizeHandler=function(){this.close()},t.prototype.setXY=function(t,e){var i=this.getFieldByName(this.params.xInputName);i&&"number"==typeof i.getValue()&&(i.setValue(String(t)),i.setText(String(t)));var o=this.getFieldByName(this.params.yInputName);o&&"number"==typeof o.getValue()&&(o.setValue(String(e)),o.setText(String(e)))},t.prototype.getFieldByName=function(t){var e=this.sourceBlock_.parentBlock_;if(e)for(var i=0;i<e.inputList.length;i++){var o=e.inputList[i];if(o.name===t)return this.getTargetField(o)}},t.prototype.getXY=function(){var t,e,i=this.getFieldByName(this.params.xInputName);i&&(t=i.getValue());var o=this.getFieldByName(this.params.yInputName);return o&&(e=o.getValue()),{currentX:parseInt(t),currentY:parseInt(e)}},t.prototype.getTargetField=function(t){var e=t.connection.targetBlock();if(!e)return null;var i=e.inputList[0];return i?i.fieldRow[0]:null},t.prototype.widgetDispose_=function(){Blockly.FieldNumber.superClass_.widgetDispose_.call(this),this.close(!0)},t.prototype.close=function(t){t||(Blockly.WidgetDiv.hideIfOwner(this),Blockly.DropDownDiv.hideIfOwner(this)),window.removeEventListener("resize",this.resizeHandler),this.resetCrosshair=void 0,this.selectorDiv_&&(goog.dom.removeNode(this.selectorDiv_),this.selectorDiv_=void 0)},t}(Blockly.FieldSlider);t.FieldPosition=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(o){function t(t,e){var i=o.call(this,null,e)||this;return i.setValue(t||""),i}return __extends(t,o),t.prototype.getOptions=function(){return this.dropdownCreate()},t.prototype.init=function(){this.fieldGroup_||o.prototype.init.call(this)},t.prototype.setSourceBlock=function(t){goog.asserts.assert(!t.isShadow(),"Procedure fields are not allowed to exist on shadow blocks."),o.prototype.setSourceBlock.call(this,t)},t.prototype.getValue=function(){return this.getText()},t.prototype.doValueUpdate_=function(t){this.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_,"field",this.name,this.value_,t)),this.value_=t,this.setText(t)},t.prototype.dropdownCreate=function(){var t=[];if(this.sourceBlock_&&this.sourceBlock_.workspace)for(var e=this.sourceBlock_.workspace.getAllBlocks(),i=0;i<e.length;i++)if(e[i].getProcedureDef){var o=e[i].getProcedureDef();t.push(o[0])}var r=this.getText();r&&-1==t.indexOf(r)&&t.push(r),t.sort(goog.string.caseInsensitiveCompare),t.length||t.push("Temp");var n=[];for(i=0;i<t.length;i++)n[i]=[t[i],t[i]];return n},t.prototype.onItemSelected=function(t,e){var i=e.getValue();this.sourceBlock_&&(i=this.callValidator(i)),null!==i&&this.setValue(i)},t}(Blockly.FieldDropdown);t.FieldProcedure=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,String(t),"0","180","1","15",lf("Angle"),i)||this;return o.isFieldCustom_=!0,o.params=e,o}return __extends(t,r),t.prototype.createLabelDom_=function(t){var e=document.createElement("div");this.circleSVG=document.createElementNS("http://www.w3.org/2000/svg","svg"),pxsim.svg.hydrate(this.circleSVG,{viewBox:"0 0 200 100",width:"170"}),e.appendChild(this.circleSVG);pxsim.svg.child(this.circleSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#a8aaa8","stroke-width":"1rem"});this.circleBar=pxsim.svg.child(this.circleSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#f12a21","stroke-width":"1rem"}),this.reporter=pxsim.svg.child(this.circleSVG,"text",{x:100,y:80,"text-anchor":"middle","dominant-baseline":"middle",style:"font-size: 50px",class:"sim-text inverted number"});var i=document.createElement("span");return i.setAttribute("class","blocklyFieldSliderReadout"),[e,i]},t.prototype.setReadout_=function(t,e){this.updateAngle(parseFloat(e)),this.reporter.textContent=e+"°"},t.prototype.updateAngle=function(t){var e=(180-(t=Math.max(0,Math.min(180,t))))/180*Math.PI*90;this.circleBar.setAttribute("stroke-dashoffset",""+e)},t}(Blockly.FieldSlider);t.FieldProtractor=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,String(t),"-100","100","1","10","Speed",i)||this;return o.isFieldCustom_=!0,o.params=e,o.params.min&&(o.min_=parseFloat(o.params.min)),o.params.max&&(o.max_=parseFloat(o.params.max)),o.params.label&&(o.labelText_=o.params.label),o.params.format||(o.params.format="{0}%"),o}return __extends(t,r),t.prototype.createLabelDom_=function(t){var e=document.createElement("div");this.speedSVG=document.createElementNS("http://www.w3.org/2000/svg","svg"),pxsim.svg.hydrate(this.speedSVG,{viewBox:"0 0 200 100",width:"170"}),e.appendChild(this.speedSVG);pxsim.svg.child(this.speedSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#a8aaa8","stroke-width":"1rem"});this.circleBar=pxsim.svg.child(this.speedSVG,"circle",{"stroke-dasharray":"565.48","stroke-dashoffset":"0",cx:100,cy:100,r:"90",style:"fill:transparent; transition: stroke-dashoffset 0.1s linear;",stroke:"#f12a21","stroke-width":"1rem"}),this.reporter=pxsim.svg.child(this.speedSVG,"text",{x:100,y:80,"text-anchor":"middle","dominant-baseline":"middle",style:"font-size: "+Math.max(14,50-5*(this.params.format.length-4))+"px",class:"sim-text inverted number"});var i=document.createElement("span");return i.setAttribute("class","blocklyFieldSliderReadout"),[e,i]},t.prototype.setReadout_=function(t,e){this.updateSpeed(parseFloat(e)),this.reporter.textContent=ts.pxtc.U.rlf(this.params.format,e)},t.prototype.updateSpeed=function(t){var e=this.sign(t);t=Math.abs(t)/100*50+50,-1==e&&(t=50-t);var i=(100-t)/100*(180*Math.PI);this.circleBar.setAttribute("stroke-dashoffset",""+i)},t.prototype.sign=function(t){return t?t<0?-1:1:0},t}(Blockly.FieldSlider);t.FieldSpeed=e}(pxtblockly||(pxtblockly={})),function(o){var n=pxt.svgUtil,t=function(r){function t(t,e,i){var o=r.call(this,t,i)||this;return o.isFieldCustom_=!0,o.SERIALIZABLE=!0,o.lightMode=e.lightMode,o.params=function(t){var e={initColor:1,initWidth:16,initHeight:16,disableResize:!1};if(!t)return e;if(t.sizes){for(var i=t.sizes.split(";"),o=[],r=0;r<i.length;r++){var n=i[r].split(",");if(2===n.length){var l=parseInt(n[0]),a=parseInt(n[1]);if(!isNaN(l)&&!isNaN(a)){var s=pxt.appTarget.runtime&&pxt.appTarget.runtime.screenSize;l<0&&s&&(l=s.width),a<0&&s&&(a=s.height),o.push([l,a])}}}0<o.length&&(e.initWidth=o[0][0],e.initHeight=o[0][1])}t.filter&&(e.filter=t.filter);t.disableResize&&(e.disableResize="true"===t.disableResize.toLowerCase()||"1"===t.disableResize);return e.initColor=c(t.initColor,e.initColor),e.initWidth=c(t.initWidth,e.initWidth),e.initHeight=c(t.initHeight,e.initHeight),e;function c(t,e){var i=parseInt(t);return isNaN(i)?e:i}}(e),o.blocksInfo=e.blocksInfo,o.state||(o.state=new pxt.sprite.Bitmap(o.params.initWidth,o.params.initHeight)),o}return __extends(t,r),t.prototype.init=function(){this.fieldGroup_||(this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null),this.visible_||(this.fieldGroup_.style.display="none"),this.state||(this.state=new pxt.sprite.Bitmap(this.params.initWidth,this.params.initHeight)),this.redrawPreview(),this.updateEditable(),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.render_(),this.mouseDownWrapper_=Blockly.bindEventWithChecks_(this.getClickTarget_(),"mousedown",this,this.onMouseDown_))},t.prototype.showEditor_=function(){var i=this;this.params.blocksInfo=this.blocksInfo;var o=pxt.react.getFieldEditorView("image-editor",this.state,this.params);this.undoRedoState&&o.restorePersistentData(this.undoRedoState),o.onHide(function(){var t=o.getResult();if(t){var e=i.getValue();i.state=t,i.redrawPreview(),i.undoRedoState=o.getPersistentData(),i.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(i.sourceBlock_,"field",i.name,e,i.getValue()))}}),o.show()},t.prototype.render_=function(){r.prototype.render_.call(this),this.size_.height=50,this.size_.width=50},t.prototype.getValue=function(){return pxt.sprite.bitmapToImageLiteral(this.state,"typescript")},t.prototype.doValueUpdate_=function(t){null!=t&&(this.value_=t,this.parseBitmap(t),this.redrawPreview(),r.prototype.doValueUpdate_.call(this,t))},t.prototype.redrawPreview=function(){if(this.fieldGroup_){pxsim.U.clear(this.fieldGroup_);var t=(new n.Rect).at(5,5).size(40,40).fill("#dedede").stroke("#898989",1).corner(4);if(this.fieldGroup_.appendChild(t.el),this.state){var e=o.bitmapToImageURI(this.state,32,this.lightMode),i=(new n.Image).src(e).at(9,9).size(32,32);this.fieldGroup_.appendChild(i.el)}}},t.prototype.parseBitmap=function(t){var e=pxt.sprite.imageLiteralToBitmap(t);e&&e.width&&e.height&&(this.state=e)},t}(Blockly.Field);o.FieldSpriteEditor=t}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,function(t){if(t){if(t.bold&&t.italics)return"blocklyBoldItalicizedText";if(t.bold)return"blocklyBoldText";if(t.italics)return"blocklyItalicizedText"}return}(e))||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t}(Blockly.FieldLabel);t.FieldStyledLabel=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e.values,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t}(Blockly.FieldTextDropdown);t.FieldTextDropdown=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t}(Blockly.FieldTextInput);t.FieldTextInput=e}(pxtblockly||(pxtblockly={})),function(h){var n=pxt.svgUtil,t=function(r){function t(t,e,i){var o=r.call(this,t,i)||this;return o.isFieldCustom_=!0,o.SERIALIZABLE=!0,o.lightMode=e.lightMode,o.params=function(t){var e={initWidth:16,initHeight:16};if(!t)return e;t.filter&&(e.filter=t.filter);return e.initWidth=i(t.initWidth,e.initWidth),e.initHeight=i(t.initHeight,e.initHeight),e;function i(t,e){var i=parseInt(t);return isNaN(i)?e:i}}(e),o.blocksInfo=e.blocksInfo,t&&!o.state&&o.doValueUpdate_(t),o.initState(),o}return __extends(t,r),t.prototype.init=function(){this.fieldGroup_||(this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null),this.visible_||(this.fieldGroup_.style.display="none"),this.initState(),this.redrawPreview(),this.updateEditable(),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.render_(),this.mouseDownWrapper_=Blockly.bindEventWithChecks_(this.getClickTarget_(),"mousedown",this,this.onMouseDown_))},t.prototype.showEditor_=function(){var n=this;if(!this.isGreyBlock){this.params.blocksInfo=this.blocksInfo,this.restoreTilesFromWorkspace(this.state);var l=pxt.react.getFieldEditorView("tilemap-editor",this.state,this.params);this.undoRedoState&&l.restorePersistentData(this.undoRedoState),l.onHide(function(){var t=l.getResult();if(t){var e=n.getValue();n.state=t,n.updateWorkspaceTiles(n.state.tileset);for(var i=0,o=n.state.tileset.tiles;i<o.length;i++){var r=o[i];r.projectId&&r.data&&delete r.data}n.redrawPreview(),n.undoRedoState=l.getPersistentData(),n.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(n.sourceBlock_,"field",n.name,e,n.getValue()))}}),l.show()}},t.prototype.render_=function(){r.prototype.render_.call(this),this.isGreyBlock||(this.size_.height=50,this.size_.width=50)},t.prototype.getValue=function(){return this.isGreyBlock?pxt.Util.htmlUnescape(this.text_):pxt.sprite.encodeTilemap(this.state,"typescript")},t.prototype.getTileset=function(){return this.state.tileset},t.prototype.doValueUpdate_=function(t){null!=t&&(this.value_=t,this.parseBitmap(t),this.redrawPreview(),r.prototype.doValueUpdate_.call(this,t))},t.prototype.redrawPreview=function(t){if(this.fieldGroup_){if(pxsim.U.clear(this.fieldGroup_),this.isGreyBlock)return this.createTextElement_(),void this.updateEditable();var e=(new n.Rect).at(5,5).size(40,40).fill("#dedede").stroke("#898989",1).corner(4);if(this.fieldGroup_.appendChild(e.el),this.state){this.restoreTilesFromWorkspace(this.state,t);var i=h.tilemapToImageURI(this.state,32,this.lightMode,this.blocksInfo),o=(new n.Image).src(i).at(9,9).size(32,32);this.fieldGroup_.appendChild(o.el)}}},t.prototype.parseBitmap=function(t){if(this.blocksInfo){var e=pxt.sprite.decodeTilemap(t,"typescript");!function(t,i){if(!(t&&t.tilemap&&t.tilemap.width&&t.tilemap.height))return!1;if(!t.layers||t.layers.width!==t.tilemap.width||t.layers.height!==t.tilemap.height)return!1;if(!t.tileset)return!1;for(var e=function(e){return e&&(0<=e.projectId||e.qualifiedName&&i.some(function(t){return t.qName===e.qualifiedName}))?"continue":{value:!1}},o=0,r=t.tileset.tiles;o<r.length;o++){var n=r[o],l=e(n);if("object"==typeof l)return l.value}return!0}(e,pxt.sprite.filterItems(pxt.sprite.getGalleryItems(this.blocksInfo,"Image"),this.params.filter.split(" ")))?t.trim()&&(this.isGreyBlock=!0,this.text_=t):(this.state=e,this.isGreyBlock=!1)}},t.prototype.initState=function(){this.state||(this.state=new pxt.sprite.TilemapData(new pxt.sprite.Tilemap(this.params.initWidth,this.params.initHeight),{tiles:[],tileWidth:16},new pxt.sprite.Bitmap(this.params.initWidth,this.params.initHeight).data()))},t.prototype.updateWorkspaceTiles=function(t){var l=this.sourceBlock_.workspace,e=h.getAllTilesetTiles(l),i=t.tiles,o=[];if(e.filter(function(t){return null!=t.projectId}).forEach(function(e){i.some(function(t){return t.projectId===e.projectId})||o.push(e)}),Blockly.Events.setGroup(!0),o.length){for(var a=h.getAllBlocksWithTilemaps(l),r=function(e){h.deleteTilesetTileIfExists(l,e);for(var t=0,i=a;t<i.length;t++){var o=i[t];if(!o.parsed){var r=o.block.getFieldValue(o.field);o.parsed=pxt.sprite.decodeTilemap(r,"typescript")}var n=o.parsed.tileset.tiles.findIndex(function(t){return t.projectId===e.projectId});-1!=n&&(o.parsed.tileset.tiles.splice(n,1),m(n,o.parsed.tilemap))}},n=0,s=o;n<s.length;n++){r(s[n])}for(var c=0,u=a;c<u.length;c++){var p=u[c];p.parsed&&p.block.setFieldValue(pxt.sprite.encodeTilemap(p.parsed,"typescript"),p.field)}}i.filter(function(t){return void 0!==t.projectId}).forEach(function(t){return h.saveTilesetTile(l,t)}),h.FieldTileset.rebuildTileCache(this.sourceBlock_.workspace,this.blocksInfo);var d=h.getAllTilesetTiles(l);h.getAllBlocksWithTilemaps(l).forEach(function(t){return t.ref.redrawPreview(d)}),Blockly.Events.setGroup(!1)},t.prototype.restoreTilesFromWorkspace=function(t,e){for(var i=e||h.getAllTilesetTiles(this.sourceBlock_.workspace),o=function(e){if(null!=e.projectId){var t=i.find(function(t){return t.projectId===e.projectId});t&&(e.data=t.data)}},r=0,n=t.tileset.tiles;r<n.length;r++){o(n[r])}for(var l=0,a=function(e){l=e.projectId?Math.max(e.projectId,l):l,t.tileset.tiles.some(function(t){return t.projectId===e.projectId})||t.tileset.tiles.push(e)},s=0,c=i;s<c.length;s++){a(c[s])}t.nextId=l+1;var u=pxt.sprite.TILE_NAMESPACE+"."+pxt.sprite.TILE_PREFIX,p=h.getAllBlocksWithTilesets(this.sourceBlock_.workspace);t.projectReferences=p.map(function(t){return t.ref.getValue()}).filter(function(t){return pxt.U.startsWith(t,u)}).map(function(t){return Number(t.substr(u.length))})},t.prototype.getDisplayText_=function(){var t=pxt.Util.htmlUnescape(this.text_);return t.substr(0,t.indexOf("("))+"(...)"},t.prototype.updateEditable=function(){if(this.isGreyBlock&&this.fieldGroup_){var t=this.fieldGroup_;Blockly.utils.dom.removeClass(t,"blocklyNonEditableText"),Blockly.utils.dom.removeClass(t,"blocklyEditableText"),t.style.cursor=""}else r.prototype.updateEditable.call(this)},t}(Blockly.Field);function m(t,e){for(var i=0;i<e.width;i++)for(var o=0;o<e.height;o++){var r=e.get(i,o);r===t?e.set(i,o,0):t<r&&e.set(i,o,r-1)}}h.FieldTilemap=t}(pxtblockly||(pxtblockly={})),function(y){var n=32,t=function(r){function g(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o.menuGenerator_=function(){o.transparent||(o.transparent=[{src:function(t){var e=document.createElement("canvas"),i=e.getContext("2d");e.width=t,e.height=t,i.fillStyle="#aeaeae",i.fillRect(0,0,t,t),i.fillStyle="#dedede";for(var o=0;o<t;o+=4)for(var r=0;r<t;r+=4)o+r>>2&1&&i.fillRect(o,r,4,4);return e.toDataURL()}(16),width:n,height:n,alt:pxt.U.lf("transparency")},"myTiles.tile0"]);var t=[o.transparent];if(o.sourceBlock_){var e=y.getAllTilesetTiles(o.sourceBlock_.workspace).filter(function(t){return 0!==t.projectId});t.push.apply(t,e.map(function(t){return[g.getTileImageJSON(t,o.sourceBlock_.workspace,o.blocksInfo),g.getTileKey(t)]}).filter(function(t){return!!t[1]}));var i=g.getGalleryTiles();o.value_&&!t.concat(i).some(function(t){return t[1]===o.value_})&&g.rebuildTileCache(o.sourceBlock_.workspace,o.blocksInfo),t.push.apply(t,g.getGalleryTiles())}return t},o.blocksInfo=e.blocksInfo,t||o.setValue(o.getOptions()[0][1]),o}return __extends(g,r),g.rebuildTileCache=function(t,i){var e=y.getAllTilesetTiles(t);g.tileCache||(g.tileCache={});for(var o=0,r=e;o<r.length;o++){var n=r[o],l=g.getTileKey(n);l&&(g.tileCache[l]=y.bitmapToImageURI(pxt.sprite.Bitmap.fromData(n.data),16,!1))}if(g.galleryTiles=[],i){for(var a=0,s=y.getAllBlocksWithTilemaps(t);a<s.length;a++)for(var c=(n=s[a]).ref.getTileset(),u=function(e){e.qualifiedName&&(g.tileCache[e.qualifiedName]||(g.tileCache[e.qualifiedName]=y.bitmapToImageURI(pxt.sprite.getBitmap(i,e.qualifiedName),c.tileWidth,!1)),g.galleryTiles.some(function(t){return t[1]===e.qualifiedName})||g.galleryTiles.push([g.getTileImageJSON(e,t,i),e.qualifiedName]))},p=0,d=c.tiles;p<d.length;p++){u(d[p])}for(var h=function(e){g.tileCache[e]||(g.tileCache[e]=y.bitmapToImageURI(pxt.sprite.getBitmap(i,e),16,!1)),g.galleryTiles.some(function(t){return t[1]===e})||g.galleryTiles.push([g.getTileImageJSON({qualifiedName:e,data:null},t,i),e])},m=0,f=y.getAllBlocksWithTilesets(t).map(function(t){return t.ref.getValue()}).filter(function(t){return"null"!==t&&!pxt.Util.startsWith(t,pxt.sprite.TILE_NAMESPACE)});m<f.length;m++){h(f[m])}}},g.getTileKey=function(t){return t.qualifiedName?t.qualifiedName:void 0!==t.projectId?pxt.sprite.TILE_NAMESPACE+"."+pxt.sprite.TILE_PREFIX+t.projectId:void 0},g.getTileImage=function(t,e,i){return g.tileCache&&g.tileCache[g.getTileKey(t)]||g.rebuildTileCache(e,i),g.tileCache[g.getTileKey(t)]},g.getTileImageJSON=function(t,e,i){return{src:g.getTileImage(t,e,i),width:n,height:n,alt:g.getTileKey(t).split(".").pop()}},g.getGalleryTiles=function(){return g.galleryTiles||[]},g.prototype.init=function(){(r.prototype.init.call(this),this.sourceBlock_&&this.sourceBlock_.workspace&&!this.sourceBlock_.isInFlyout)&&(y.getAllTilesetTiles(this.sourceBlock_.workspace).some(function(t){return 0===t.projectId})||y.saveTilesetTile(this.sourceBlock_.workspace,{projectId:0,data:new pxt.sprite.Bitmap(16,16).data()}))},g}(y.FieldImages);y.FieldTileset=t}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,void 0,void 0,void 0,i)||this;return o.isFieldCustom_=!0,o.CURSOR="pointer",o.params=e,o.setValue(t),o.addArgType("toggle"),o.type_=e.type,o}return __extends(t,r),t.prototype.init=function(){if(!this.fieldGroup_){this.fieldGroup_=Blockly.utils.dom.createSvgElement("g",{},null),this.visible_||(this.fieldGroup_.style.display="none"),null!==this.getArgTypes()&&(this.sourceBlock_.isShadow()?this.sourceBlock_.svgGroup_.setAttribute("data-argument-type",this.getArgTypes()):this.fieldGroup_.setAttribute("data-argument-type",this.getArgTypes())),!this.sourceBlock_.isShadow()&&this.sourceBlock_.inputList&&1<this.sourceBlock_.inputList.length&&(this.box_=Blockly.utils.dom.createSvgElement("rect",{rx:Blockly.BlockSvg.CORNER_RADIUS,ry:Blockly.BlockSvg.CORNER_RADIUS,x:0,y:0,width:this.size_.width,height:this.size_.height,fill:Blockly.Colours.textField,stroke:this.sourceBlock_.getColourTertiary()},null),this.fieldGroup_.insertBefore(this.box_,this.textElement_));var t=this.getSize();switch(this.checkElement_=Blockly.utils.dom.createSvgElement("g",{class:"blocklyToggle "+(this.state_?"blocklyToggleOn":"blocklyToggleOff"),transform:"translate(8, "+t.height/2+")"},this.fieldGroup_),this.getOutputShape()){case Blockly.OUTPUT_SHAPE_HEXAGONAL:this.toggleThumb_=Blockly.utils.dom.createSvgElement("polygon",{class:"blocklyToggleRect",points:"-7,-14 -21,0 -7,14 7,14 21,0 7,-14",cursor:"pointer"},this.checkElement_);break;case Blockly.OUTPUT_SHAPE_ROUND:this.toggleThumb_=Blockly.utils.dom.createSvgElement("rect",{class:"blocklyToggleCircle",x:-6,y:-14,height:28,width:28,rx:14,ry:14,cursor:"pointer"},this.checkElement_);break;case Blockly.OUTPUT_SHAPE_SQUARE:this.toggleThumb_=Blockly.utils.dom.createSvgElement("rect",{class:"blocklyToggleRect",x:-6,y:-14,height:28,width:28,rx:3,ry:3,cursor:"pointer"},this.checkElement_)}var e=this.sourceBlock_.RTL?-t.width/2:t.width/2;this.textElement_=Blockly.utils.dom.createSvgElement("text",{class:"blocklyText",x:e,dy:"0.6ex",y:t.height/2},this.fieldGroup_),this.updateEditable(),this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_),this.switchToggle(this.state_),this.setValue(this.getValue()),this.render_(),this.size_.width=0,this.mouseDownWrapper_=Blockly.bindEventWithChecks_(this.getClickTarget_(),"mousedown",this,this.onMouseDown_)}},t.prototype.getDisplayText_=function(){return this.state_?this.getTrueText():this.getFalseText()},t.prototype.getTrueText=function(){return lf("True")},t.prototype.getFalseText=function(){return lf("False")},t.prototype.updateSize_=function(){this.getInnerWidth();switch(this.getOutputShape()){case Blockly.OUTPUT_SHAPE_ROUND:this.size_.width=2*this.getInnerWidth()-7;break;case Blockly.OUTPUT_SHAPE_HEXAGONAL:this.size_.width=2*this.getInnerWidth()+8-Math.floor(this.getInnerWidth()/2);break;case Blockly.OUTPUT_SHAPE_SQUARE:this.size_.width=9+2*this.getInnerWidth()}this.arrowWidth_=0},t.prototype.getInnerWidth=function(){return 10*this.getMaxLength()},t.prototype.getMaxLength=function(){return Math.max(this.getTrueText().length,this.getFalseText().length)},t.prototype.getOutputShape=function(){return this.sourceBlock_.isShadow()?this.sourceBlock_.getOutputShape():Blockly.OUTPUT_SHAPE_SQUARE},t.prototype.getValue=function(){return this.toVal(this.state_)},t.prototype.setValue=function(t){var e=this.fromVal(t);this.state_!==e&&(this.sourceBlock_&&Blockly.Events.isEnabled()&&Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_,"field",this.name,this.state_,e)),this.state_=e,this.switchToggle(this.state_),this.setText(this.getDisplayText_()))},t.prototype.switchToggle=function(t){if(this.checkElement_){this.updateSize_();var e=this.getSize(),i=this.getInnerWidth();t?(pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOn"),pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOff")):(pxt.BrowserUtils.removeClass(this.checkElement_,"blocklyToggleOn"),pxt.BrowserUtils.addClass(this.checkElement_,"blocklyToggleOff"));var o=this.getOutputShape(),r=0,n=0,l=0,a=0;switch(o){case Blockly.OUTPUT_SHAPE_HEXAGONAL:var s=(n=(r=i)/2)/2;l=3<this.getMaxLength()?-4:1;var c=a=-s,u=s;this.toggleThumb_.setAttribute("points",c+",-14 "+(c-14)+",0 "+c+",14 "+u+",14 "+(u+14)+",0 "+u+",-14");break;case Blockly.OUTPUT_SHAPE_ROUND:case Blockly.OUTPUT_SHAPE_SQUARE:n=(r=5+i)/2,this.toggleThumb_.setAttribute("width",""+r),this.toggleThumb_.setAttribute("x","-"+n),l=a=o==Blockly.OUTPUT_SHAPE_SQUARE?2:-6}this.checkElement_.setAttribute("transform","translate("+(t?a+i+n:n+l)+", "+e.height/2+")")}},t.prototype.updateTextNode_=function(){r.prototype.updateTextNode_.call(this),this.textElement_&&pxt.BrowserUtils.addClass(this.textElement_,"blocklyToggleText")},t.prototype.render_=function(){if(this.visible_&&this.textElement_){goog.dom.removeChildren(this.textElement_);var t=document.createTextNode(this.getDisplayText_());this.textElement_.appendChild(t),pxt.BrowserUtils.addClass(this.textElement_,"blocklyToggleText"),this.updateSize_();var e=this.size_.width/2,i=(this.state_?e+e/2:e/2)-Blockly.Field.getCachedWidth(this.textElement_)/2;this.textElement_.setAttribute("x",""+i)}this.box_&&(this.box_.setAttribute("width",""+this.size_.width),this.box_.setAttribute("height",""+this.size_.height))},t.prototype.showEditor_=function(){var t=!this.state_;null!==t&&this.setValue(this.toVal(t))},t.prototype.toVal=function(t){return"number"==this.type_?String(t?"1":"0"):String(t?"true":"false")},t.prototype.fromVal=function(t){return"string"==typeof t?"1"==t||"TRUE"==t.toUpperCase():!!t},t}(Blockly.FieldNumber);t.FieldToggle=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getTrueText=function(){return lf("HIGH")},t.prototype.getFalseText=function(){return lf("LOW")},t}(t.FieldToggle);t.FieldToggleHighLow=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getTrueText=function(){return lf("ON")},t.prototype.getFalseText=function(){return lf("OFF")},t}(t.FieldToggle);t.FieldToggleOnOff=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getTrueText=function(){return lf("UP")},t.prototype.getFalseText=function(){return lf("DOWN")},t}(t.FieldToggle);t.FieldToggleUpDown=e;var i=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getTrueText=function(){return lf("DOWN")},t.prototype.getFalseText=function(){return lf("UP")},t}(t.FieldToggle);t.FieldToggleDownUp=i}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getTrueText=function(){return lf("WIN")},t.prototype.getFalseText=function(){return lf("LOSE")},t}(t.FieldToggle);t.FieldToggleWinLose=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function t(t,e,i){var o=r.call(this,t,e,i)||this;return o.isFieldCustom_=!0,o}return __extends(t,r),t.prototype.getTrueText=function(){return lf("Yes")},t.prototype.getFalseText=function(){return lf("No")},t}(t.FieldToggle);t.FieldToggleYesNo=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(e){function t(){var t=null!==e&&e.apply(this,arguments)||this;return t.isFieldCustom_=!0,t}return __extends(t,e),t.prototype.updateEditable=function(){var t=this.fieldGroup_;this.EDITABLE&&t&&(this.sourceBlock_.isEditable()?(pxt.BrowserUtils.addClass(t,"blocklyEditableText"),pxt.BrowserUtils.removeClass(t,"blocklyGreyExpressionBlockText"),this.fieldGroup_.style.cursor=this.CURSOR):(pxt.BrowserUtils.addClass(t,"blocklyGreyExpressionBlockText"),pxt.BrowserUtils.removeClass(t,"blocklyEditableText"),this.fieldGroup_.style.cursor=""))},t}(Blockly.FieldTextInput);t.FieldTsExpression=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(r){function h(t,e,i){var o=r.call(this,String(t),"-200","200","1","10","TurnRatio",i)||this;return o.isFieldCustom_=!0,o.params=e,o.sliderColor_="#a8aaa8",o}return __extends(h,r),h.prototype.createLabelDom_=function(t){var e=document.createElement("div"),i=Blockly.utils.dom.createSvgElement("svg",{xmlns:"http://www.w3.org/2000/svg","xmlns:html":"http://www.w3.org/1999/xhtml","xmlns:xlink":"http://www.w3.org/1999/xlink",version:"1.1",height:h.HALF+h.HANDLE_RADIUS+10+"px",width:2*h.HALF+"px"},e),o=Blockly.utils.dom.createSvgElement("defs",{},i),r=Blockly.utils.dom.createSvgElement("marker",{id:"head",orient:"auto",markerWidth:"2",markerHeight:"4",refX:"0.1",refY:"1.5"},o);Blockly.utils.dom.createSvgElement("path",{d:"M0,0 V3 L1.5,1.5 Z",fill:"#f12a21"},r);this.reporter_=pxsim.svg.child(i,"text",{x:h.HALF,y:96,"text-anchor":"middle","dominant-baseline":"middle",style:"font-size: 50px",class:"sim-text inverted number"}),this.path_=Blockly.utils.dom.createSvgElement("path",{x1:h.HALF,y1:h.HALF,"marker-end":"url(#head)",style:"fill: none; stroke: #f12a21; stroke-width: 10"},i),this.updateGraph_();var n=document.createElement("span");return n.setAttribute("class","blocklyFieldSliderReadout"),[e,n]},h.prototype.updateGraph_=function(){if(this.path_){var t=goog.math.clamp(this.getValue()||0,-200,200),e=t/100,i=Math.max(-1,Math.min(1,e)),o=Math.max(i)*Math.PI/2,r=h.RADIUS-6,n=h.HALF,l=h.HALF-22;1<Math.abs(e)&&(n-=(e-(0<e?1:-1))*r/2);var a=.2+.5*Math.abs(i),s=r*a,c=r*Math.sin(Math.PI/2-o),u=r*Math.cos(Math.PI/2-o),p=c-r*a*Math.cos(2*o),d="M "+n+" "+l+" C "+n+" "+(l-s)+" "+(n+(u-r*a*Math.sin(2*o)))+" "+(l-p)+" "+(n+u)+" "+(l-c);this.path_.setAttribute("d",d),this.reporter_.textContent=""+t}},h.prototype.setReadout_=function(t,e){this.updateGraph_()},h.RADIUS=(h.HALF=80)-(h.HANDLE_RADIUS=30)-1,h}(Blockly.FieldSlider);t.FieldTurnRatio=e}(pxtblockly||(pxtblockly={})),function(t){var e=function(o){function t(t){var e,i=o.call(this,(e=t,function(){var i=[];if(this.sourceBlock_&&this.sourceBlock_.workspace){var t=this.sourceBlock_.workspace.getVariablesOfType(e.name);t.forEach(function(t){var e=t.name.replace(/^\d+/,"");i.push([e,t.name])})}return i.push([lf("Add a new {0}...",e.memberName),"CREATE"]),i}))||this;return i.opts=t,i}return __extends(t,o),t.prototype.init=function(){o.prototype.init.call(this),this.initVariables()},t.prototype.onItemSelected=function(t,e){var i=this;"CREATE"===e.getValue()?function l(a,s,c,u){Blockly.prompt(c,s.promptHint,function(t){if(t){var e=!1;if(pxtc.isIdentifierStart(t.charCodeAt(0),2)){e=!0;for(var i=1;i<t.length;i++)pxtc.isIdentifierPart(t.charCodeAt(i),2)||(e=!1)}if(!e)return void Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."),function(){return l(a,s,c,u)});for(var o=p(a,s.name),i=0;i<o.length;i++){var r=o[i],n=r[0];r[1];if(n===t)return void Blockly.alert(lf("A {0} named '{1}' already exists.",s.memberName,t),function(){return l(a,s,c,u)})}u(d(a,s,t))}})}(this.sourceBlock_.workspace,this.opts,lf("New {0}:",this.opts.memberName),function(t){return t&&i.setValue(t)}):o.prototype.onItemSelected.call(this,t,e)},t.prototype.initVariables=function(){var t=this;if(this.sourceBlock_&&this.sourceBlock_.workspace)if(this.sourceBlock_.isInFlyout)this.setText(this.opts.initialMembers[0]);else{var e=this.sourceBlock_.workspace,o=p(e,this.opts.name);if(this.opts.initialMembers.forEach(function(i){o.some(function(t){var e=t[0];t[1];return e===i})||d(e,t.opts,i)}),"CREATE"===this.getValue()){var i=function(t,e,i){var o=t.getVariablesOfType(e);if(o&&o.length)for(var r=0;r<o.length;r++){var n=l(o[r])[0];if(n===i)return o[r].name}return}(e,this.opts.name,this.opts.initialMembers[0]);i&&this.setValue(i)}}},t}(Blockly.FieldDropdown);function l(t){var e=/^(\d+)([^0-9].*)$/.exec(t.name);return e?[e[2],parseInt(e[1])]:[t.name,-1]}function p(t,e){var i=t.getVariablesOfType(e);return i&&i.length?i.map(l):[]}function r(t,e){var i=t.map(function(t){t[0];return t[1]});if(e.isBitMask){for(var o=0;o<i.length;o++){var r=1<<o;if(i.indexOf(r)<0)return r}return 1<<i.length}if(e.isHash)return 0;var n=e.firstValue||0;for(o=0;o<i.length;o++)if(i.indexOf(n+o)<0)return n+o;return n+i.length}function d(t,e,i){var o=r(p(t,e.name),e)+i;return Blockly.Variables.getOrCreateVariablePackage(t,null,o,e.name),o}t.FieldUserEnum=e,t.getNextValue=r}(pxtblockly||(pxtblockly={})),function(e){var t;function i(t,e){for(var i=0,o=t.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE);i<o.length;i++){var r=o[i];if(parseInt(r.name.substr(0,r.name.indexOf(";")))===e.projectId){t.deleteVariableById(r.getId());break}}}function o(t,s){var c=[];return t.getTopBlocks(!1).forEach(function(t){return function t(e){for(var i=0,o=e.inputList;i<o.length;i++){for(var r=o[i],n=0,l=r.fieldRow;n<l.length;n++){var a=l[n];s(a)&&c.push({block:e,field:a.name,ref:a})}r.connection&&r.connection.targetBlock()&&t(r.connection.targetBlock())}e.nextConnection&&e.nextConnection.targetBlock()&&t(e.nextConnection.targetBlock())}(t)}),c}(t=e.svg||(e.svg={})).hasClass=function(t,e){return pxt.BrowserUtils.containsClass(t,e)},t.addClass=function(t,e){pxt.BrowserUtils.addClass(t,e)},t.removeClass=function(t,e){pxt.BrowserUtils.removeClass(t,e)},e.parseColour=function(t){var e=Number(t);return isNaN(e)?goog.isString(t)&&t.match(/^#[0-9a-fA-F]{6}$/)?t:"#000":Blockly.hueToRgb(e)},e.bitmapToImageURI=function(t,e,i){var o=pxt.appTarget.runtime.palette.slice(1),r=document.createElement("canvas");r.width=e,r.height=e;var n,l=Math.min(e/t.width,e/t.height),a=Math.max(Math.floor(e*(1-t.width/t.height)/2),0),s=Math.max(Math.floor(e*(1-t.height/t.width)/2),0);i?((n=r.getContext("2d",{alpha:!1})).fillStyle="#dedede",n.fillRect(0,0,e,e)):n=r.getContext("2d");for(var c=0;c<t.width;c++)for(var u=0;u<t.height;u++){var p=t.get(c,u);p?(n.fillStyle=o[p-1],n.fillRect(a+c*l,s+u*l,l,l)):i&&(n.fillStyle="#dedede",n.fillRect(a+c*l,s+u*l,l,l))}return r.toDataURL()},e.tilemapToImageURI=function(t,e,i,o){var r=pxt.appTarget.runtime.palette.slice(),n=document.createElement("canvas");n.width=e,n.height=e;var l,a=Math.min(e/t.tilemap.width,e/t.tilemap.height),s=Math.max(Math.floor(e*(1-t.tilemap.width/t.tilemap.height)/2),0),c=Math.max(Math.floor(e*(1-t.tilemap.height/t.tilemap.width)/2),0);i?((l=n.getContext("2d",{alpha:!1})).fillStyle="#dedede",l.fillRect(0,0,e,e)):l=n.getContext("2d");for(var u=[],p=0;p<t.tilemap.width;p++)for(var d=0;d<t.tilemap.height;d++){var h=t.tilemap.get(p,d);if(h){if(!u[h]){var m=t.tileset.tiles[h];if(m.data)u[h]=pxt.sprite.computeAverageColor(pxt.sprite.Bitmap.fromData(m.data),r);else{var f=pxt.sprite.getBitmap(o,m.qualifiedName);u[h]=f?pxt.sprite.computeAverageColor(f,r):"#ffffff"}}l.fillStyle=u[h],l.fillRect(s+p*a,c+d*a,a,a)}else i&&(l.fillStyle="#dedede",l.fillRect(s+p*a,c+d*a,a,a))}return n.toDataURL()},e.saveTilesetTile=function(t,e){i(t,e),t.createVariable(pxt.sprite.tileToBlocklyVariable(e),pxt.sprite.BLOCKLY_TILESET_TYPE)},e.deleteTilesetTileIfExists=i,e.getAllTilesetTiles=function(t){return t.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE).map(function(t){return pxt.sprite.blocklyVariableToTile(t.name)})},e.getAllBlocksWithTilemaps=function(t){return o(t,function(t){return t instanceof e.FieldTilemap&&!t.isGreyBlock})},e.getAllBlocksWithTilesets=function(t){return o(t,function(t){return t instanceof e.FieldTileset})}}(pxtblockly||(pxtblockly={}));
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+///<reference path='../localtypings/pxtblockly.d.ts'/>
+/// <reference path="../built/pxtlib.d.ts" />
+var iface;
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_1) {
+        function workerOpAsync(op, arg) {
+            return pxt.worker.getWorker(pxt.webConfig.workerjs).opAsync(op, arg);
+        }
+        blocks_1.workerOpAsync = workerOpAsync;
+        var placeholders = {};
+        var MAX_COMMENT_LINE_LENGTH = 50;
+        ///////////////////////////////////////////////////////////////////////////////
+        // Miscellaneous utility functions
+        ///////////////////////////////////////////////////////////////////////////////
+        // Mutate [a1] in place and append to it the elements from [a2].
+        function append(a1, a2) {
+            a1.push.apply(a1, a2);
+        }
+        // A few wrappers for basic Block operations that throw errors when compilation
+        // is not possible. (The outer code catches these and highlights the relevant
+        // block.)
+        // Internal error (in our code). Compilation shouldn't proceed.
+        function assert(x) {
+            if (!x)
+                throw new Error("Assertion failure");
+        }
+        function throwBlockError(msg, block) {
+            var e = new Error(msg);
+            e.block = block;
+            throw e;
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        // Types
+        //
+        // We slap a very simple type system on top of Blockly. This is needed to ensure
+        // we generate valid TouchDevelop code (otherwise compilation from TD to C++
+        // would not work).
+        ///////////////////////////////////////////////////////////////////////////////
+        // There are several layers of abstraction for the type system.
+        // - Block are annotated with a string return type, and a string type for their
+        //   input blocks (see blocks-custom.js). We use that as the reference semantics
+        //   for the blocks.
+        // - In this "type system", we use the enum Type. Using an enum rules out more
+        //   mistakes.
+        // - When emitting code, we target the "TouchDevelop types".
+        //
+        // Type inference / checking is done as follows. First, we try to assign a type
+        // to all variables. We do this by examining all variable assignments and
+        // figuring out the type from the right-hand side. There's a fixpoint computation
+        // (see [mkEnv]). Then, we propagate down the expected type when doing code
+        // generation; when generating code for a variable dereference, if the expected
+        // type doesn't match the inferred type, it's an error. If the type was
+        // undetermined as of yet, the type of the variable becomes the expected type.
+        var Point = /** @class */ (function () {
+            function Point(link, type, parentType, childType, isArrayType) {
+                this.link = link;
+                this.type = type;
+                this.parentType = parentType;
+                this.childType = childType;
+                this.isArrayType = isArrayType;
+            }
+            return Point;
+        }());
+        blocks_1.Point = Point;
+        var BlockDeclarationType;
+        (function (BlockDeclarationType) {
+            BlockDeclarationType[BlockDeclarationType["None"] = 0] = "None";
+            BlockDeclarationType[BlockDeclarationType["Argument"] = 1] = "Argument";
+            BlockDeclarationType[BlockDeclarationType["Assigned"] = 2] = "Assigned";
+            BlockDeclarationType[BlockDeclarationType["Implicit"] = 3] = "Implicit";
+        })(BlockDeclarationType = blocks_1.BlockDeclarationType || (blocks_1.BlockDeclarationType = {}));
+        function find(p) {
+            if (p.link)
+                return find(p.link);
+            return p;
+        }
+        function union(p1, p2) {
+            var _p1 = find(p1);
+            var _p2 = find(p2);
+            assert(_p1.link == null && _p2.link == null);
+            if (_p1 == _p2)
+                return;
+            if (_p1.childType && _p2.childType) {
+                var ct = _p1.childType;
+                _p1.childType = null;
+                union(ct, _p2.childType);
+            }
+            else if (_p1.childType && !_p2.childType) {
+                _p2.childType = _p1.childType;
+            }
+            if (_p1.parentType && _p2.parentType) {
+                var pt = _p1.parentType;
+                _p1.parentType = null;
+                union(pt, _p2.parentType);
+            }
+            else if (_p1.parentType && !_p2.parentType && !_p2.type) {
+                _p2.parentType = _p1.parentType;
+            }
+            var t = unify(_p1.type, _p2.type);
+            p1.link = _p2;
+            _p1.link = _p2;
+            _p1.isArrayType = _p2.isArrayType;
+            p1.type = null;
+            p2.type = t;
+        }
+        // Ground types.
+        function mkPoint(t, isArrayType) {
+            if (isArrayType === void 0) { isArrayType = false; }
+            return new Point(null, t, null, null, isArrayType);
+        }
+        var pNumber = mkPoint("number");
+        var pBoolean = mkPoint("boolean");
+        var pString = mkPoint("string");
+        var pUnit = mkPoint("void");
+        function ground(t) {
+            if (!t)
+                return mkPoint(t);
+            switch (t.toLowerCase()) {
+                case "number": return pNumber;
+                case "boolean": return pBoolean;
+                case "string": return pString;
+                case "void": return pUnit;
+                default:
+                    // Unification variable.
+                    return mkPoint(t);
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        // Type inference
+        //
+        // Expressions are now directly compiled as a tree. This requires knowing, for
+        // each property ref, the right value for its [parent] property.
+        ///////////////////////////////////////////////////////////////////////////////
+        // Infers the expected type of an expression by looking at the untranslated
+        // block and figuring out, from the look of it, what type of expression it
+        // holds.
+        function returnType(e, b) {
+            assert(b != null);
+            if (b.type == "placeholder" || b.type === pxtc.TS_OUTPUT_TYPE)
+                return find(b.p);
+            if (b.type == "variables_get")
+                return find(lookup(e, b, b.getField("VAR").getText()).type);
+            if (!b.outputConnection) {
+                return ground(pUnit.type);
+            }
+            var check = b.outputConnection.check_ && b.outputConnection.check_.length ? b.outputConnection.check_[0] : "T";
+            if (check === "Array") {
+                if (b.outputConnection.check_.length > 1) {
+                    // HACK: The real type is stored as the second check
+                    return ground(b.outputConnection.check_[1]);
+                }
+                // The only block that hits this case should be lists_create_with, so we
+                // can safely infer the type from the first input that has a return type
+                var tp = void 0;
+                if (b.inputList && b.inputList.length) {
+                    for (var _i = 0, _a = b.inputList; _i < _a.length; _i++) {
+                        var input = _a[_i];
+                        if (input.connection && input.connection.targetBlock()) {
+                            var t = find(returnType(e, input.connection.targetBlock()));
+                            if (t) {
+                                if (t.parentType) {
+                                    return t.parentType;
+                                }
+                                tp = ground(t.type + "[]");
+                                genericLink(tp, t);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (tp)
+                    tp.isArrayType = true;
+                return tp || mkPoint(null, true);
+            }
+            else if (check === "T") {
+                var func_1 = e.stdCallTable[b.type];
+                var isArrayGet = b.type === "lists_index_get";
+                if (isArrayGet || func_1 && func_1.comp.thisParameter) {
+                    var parentInput = void 0;
+                    if (isArrayGet) {
+                        parentInput = b.inputList.find(function (i) { return i.name === "LIST"; });
+                    }
+                    else {
+                        parentInput = b.inputList.find(function (i) { return i.name === func_1.comp.thisParameter.definitionName; });
+                    }
+                    if (parentInput.connection && parentInput.connection.targetBlock()) {
+                        var parentType = returnType(e, parentInput.connection.targetBlock());
+                        if (parentType.childType) {
+                            return parentType.childType;
+                        }
+                        var p = isArrayType(parentType.type) ? mkPoint(parentType.type.substr(0, parentType.type.length - 2)) : mkPoint(null);
+                        genericLink(parentType, p);
+                        return p;
+                    }
+                }
+                return mkPoint(null);
+            }
+            return ground(check);
+        }
+        // Basic type unification routine; easy, because there's no structural types.
+        // FIXME: Generics are not supported
+        function unify(t1, t2) {
+            if (t1 == null || t1 === "Array" && isArrayType(t2))
+                return t2;
+            else if (t2 == null || t2 === "Array" && isArrayType(t1))
+                return t1;
+            else if (t1 == t2)
+                return t1;
+            else
+                throw new Error("cannot mix " + t1 + " with " + t2);
+        }
+        function isArrayType(type) {
+            return type && type.indexOf("[]") !== -1;
+        }
+        function mkPlaceholderBlock(e, parent, type) {
+            // XXX define a proper placeholder block type
+            return {
+                type: "placeholder",
+                p: mkPoint(type || null),
+                workspace: e.workspace,
+                parentBlock_: parent
+            };
+        }
+        function attachPlaceholderIf(e, b, n, type) {
+            // Ugly hack to keep track of the type we want there.
+            var target = b.getInputTargetBlock(n);
+            if (!target) {
+                if (!placeholders[b.id]) {
+                    placeholders[b.id] = {};
+                }
+                if (!placeholders[b.id][n]) {
+                    placeholders[b.id][n] = mkPlaceholderBlock(e, b, type);
+                }
+            }
+            else if (target.type === pxtc.TS_OUTPUT_TYPE && !(target.p)) {
+                target.p = mkPoint(null);
+            }
+        }
+        function getLoopVariableField(b) {
+            return (b.type == "pxt_controls_for" || b.type == "pxt_controls_for_of") ?
+                getInputTargetBlock(b, "VAR") : b;
+        }
+        function getInputTargetBlock(b, n) {
+            var res = b.getInputTargetBlock(n);
+            if (!res) {
+                return placeholders[b.id] && placeholders[b.id][n];
+            }
+            else {
+                return res;
+            }
+        }
+        function removeAllPlaceholders() {
+            placeholders = {};
+        }
+        // Unify the *return* type of the parameter [n] of block [b] with point [p].
+        function unionParam(e, b, n, p) {
+            attachPlaceholderIf(e, b, n);
+            try {
+                union(returnType(e, getInputTargetBlock(b, n)), p);
+            }
+            catch (e) {
+                // TypeScript should catch this error and bubble it up
+            }
+        }
+        function infer(allBlocks, e, w) {
+            if (allBlocks)
+                allBlocks.filter(function (b) { return !b.disabled; }).forEach(function (b) {
+                    try {
+                        switch (b.type) {
+                            case "math_op2":
+                                unionParam(e, b, "x", ground(pNumber.type));
+                                unionParam(e, b, "y", ground(pNumber.type));
+                                break;
+                            case "math_op3":
+                                unionParam(e, b, "x", ground(pNumber.type));
+                                break;
+                            case "math_arithmetic":
+                            case "logic_compare":
+                                switch (b.getFieldValue("OP")) {
+                                    case "ADD":
+                                    case "MINUS":
+                                    case "MULTIPLY":
+                                    case "DIVIDE":
+                                    case "LT":
+                                    case "LTE":
+                                    case "GT":
+                                    case "GTE":
+                                    case "POWER":
+                                        unionParam(e, b, "A", ground(pNumber.type));
+                                        unionParam(e, b, "B", ground(pNumber.type));
+                                        break;
+                                    case "AND":
+                                    case "OR":
+                                        attachPlaceholderIf(e, b, "A", pBoolean.type);
+                                        attachPlaceholderIf(e, b, "B", pBoolean.type);
+                                        break;
+                                    case "EQ":
+                                    case "NEQ":
+                                        attachPlaceholderIf(e, b, "A");
+                                        attachPlaceholderIf(e, b, "B");
+                                        var p1_1 = returnType(e, getInputTargetBlock(b, "A"));
+                                        var p2 = returnType(e, getInputTargetBlock(b, "B"));
+                                        try {
+                                            union(p1_1, p2);
+                                        }
+                                        catch (e) {
+                                            // TypeScript should catch this error and bubble it up
+                                        }
+                                        break;
+                                }
+                                break;
+                            case "logic_operation":
+                                attachPlaceholderIf(e, b, "A", pBoolean.type);
+                                attachPlaceholderIf(e, b, "B", pBoolean.type);
+                                break;
+                            case "logic_negate":
+                                attachPlaceholderIf(e, b, "BOOL", pBoolean.type);
+                                break;
+                            case "controls_if":
+                                for (var i = 0; i <= b.elseifCount_; ++i)
+                                    attachPlaceholderIf(e, b, "IF" + i, pBoolean.type);
+                                break;
+                            case "pxt_controls_for":
+                            case "controls_simple_for":
+                                unionParam(e, b, "TO", ground(pNumber.type));
+                                break;
+                            case "pxt_controls_for_of":
+                            case "controls_for_of":
+                                var listTp = returnType(e, getInputTargetBlock(b, "LIST"));
+                                var elementTp = lookup(e, b, getLoopVariableField(b).getField("VAR").getText()).type;
+                                genericLink(listTp, elementTp);
+                                break;
+                            case "variables_set":
+                            case "variables_change":
+                                var p1 = lookup(e, b, b.getField("VAR").getText()).type;
+                                attachPlaceholderIf(e, b, "VALUE");
+                                var rhs = getInputTargetBlock(b, "VALUE");
+                                if (rhs) {
+                                    var tr = returnType(e, rhs);
+                                    try {
+                                        union(p1, tr);
+                                    }
+                                    catch (e) {
+                                        // TypeScript should catch this error and bubble it up
+                                    }
+                                }
+                                break;
+                            case "controls_repeat_ext":
+                                unionParam(e, b, "TIMES", ground(pNumber.type));
+                                break;
+                            case "device_while":
+                                attachPlaceholderIf(e, b, "COND", pBoolean.type);
+                                break;
+                            case "lists_index_get":
+                                unionParam(e, b, "LIST", ground("Array"));
+                                unionParam(e, b, "INDEX", ground(pNumber.type));
+                                var listType = returnType(e, getInputTargetBlock(b, "LIST"));
+                                var ret = returnType(e, b);
+                                genericLink(listType, ret);
+                                break;
+                            case "lists_index_set":
+                                unionParam(e, b, "LIST", ground("Array"));
+                                attachPlaceholderIf(e, b, "VALUE");
+                                handleGenericType(b, "LIST");
+                                unionParam(e, b, "INDEX", ground(pNumber.type));
+                                break;
+                            case 'function_call':
+                                b.getArguments().forEach(function (arg) {
+                                    unionParam(e, b, arg.id, ground(arg.type));
+                                });
+                                break;
+                            case pxtc.PAUSE_UNTIL_TYPE:
+                                unionParam(e, b, "PREDICATE", pBoolean);
+                                break;
+                            default:
+                                if (b.type in e.stdCallTable) {
+                                    var call_1 = e.stdCallTable[b.type];
+                                    if (call_1.attrs.shim === "ENUM_GET" || call_1.attrs.shim === "KIND_GET")
+                                        return;
+                                    visibleParams(call_1, countOptionals(b)).forEach(function (p, i) {
+                                        var isInstance = call_1.isExtensionMethod && i === 0;
+                                        if (p.definitionName && !b.getFieldValue(p.definitionName)) {
+                                            var i_1 = b.inputList.find(function (i) { return i.name == p.definitionName; });
+                                            if (i_1 && i_1.connection && i_1.connection.check_) {
+                                                if (isInstance && connectionCheck(i_1) === "Array") {
+                                                    var gen = handleGenericType(b, p.definitionName);
+                                                    if (gen) {
+                                                        return;
+                                                    }
+                                                }
+                                                // All of our injected blocks have single output checks, but the builtin
+                                                // blockly ones like string.length and array.length might have multiple
+                                                for (var j = 0; j < i_1.connection.check_.length; j++) {
+                                                    try {
+                                                        var t = i_1.connection.check_[j];
+                                                        unionParam(e, b, p.definitionName, ground(t));
+                                                        break;
+                                                    }
+                                                    catch (e) {
+                                                        // Ignore type checking errors in the blocks...
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                        }
+                    }
+                    catch (err) {
+                        var be = err.block || b;
+                        be.setWarningText(err + "");
+                        e.errors.push(be);
+                    }
+                });
+            // Last pass: if some variable has no type (because it was never used or
+            // assigned to), just unify it with int...
+            e.allVariables.forEach(function (v) {
+                if (getConcreteType(v.type).type == null)
+                    union(v.type, ground(v.type.isArrayType ? "number[]" : pNumber.type));
+            });
+            function connectionCheck(i) {
+                return i.name ? i.connection && i.connection.check_ && i.connection.check_.length ? i.connection.check_[0] : "T" : undefined;
+            }
+            function handleGenericType(b, name) {
+                var genericArgs = b.inputList.filter(function (input) { return connectionCheck(input) === "T"; });
+                if (genericArgs.length) {
+                    var gen = getInputTargetBlock(b, genericArgs[0].name);
+                    if (gen) {
+                        var arg = returnType(e, gen);
+                        var arrayType = arg.type ? ground(returnType(e, gen).type + "[]") : ground(null);
+                        genericLink(arrayType, arg);
+                        unionParam(e, b, name, arrayType);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        function genericLink(parent, child) {
+            var p = find(parent);
+            var c = find(child);
+            if (p.childType) {
+                union(p.childType, c);
+            }
+            else if (!p.type) {
+                p.childType = c;
+            }
+            if (c.parentType) {
+                union(c.parentType, p);
+            }
+            else if (!c.type) {
+                c.parentType = p;
+            }
+            p.isArrayType = true;
+        }
+        function getConcreteType(point, found) {
+            if (found === void 0) { found = []; }
+            var t = find(point);
+            if (found.indexOf(t) === -1) {
+                found.push(t);
+                if (!t.type || t.type === "Array") {
+                    if (t.parentType) {
+                        var parent_1 = getConcreteType(t.parentType, found);
+                        if (parent_1.type && parent_1.type !== "Array") {
+                            t.type = parent_1.type.substr(0, parent_1.type.length - 2);
+                            return t;
+                        }
+                    }
+                    if (t.childType) {
+                        var child = getConcreteType(t.childType, found);
+                        if (child.type) {
+                            t.type = child.type + "[]";
+                            return t;
+                        }
+                    }
+                }
+            }
+            return t;
+        }
+        ///////////////////////////////////////////////////////////////////////////////
+        // Expressions
+        //
+        // Expressions are now directly compiled as a tree. This requires knowing, for
+        // each property ref, the right value for its [parent] property.
+        ///////////////////////////////////////////////////////////////////////////////
+        function extractNumber(b) {
+            var v = b.getFieldValue(b.type === "math_number_minmax" ? "SLIDER" : "NUM");
+            var parsed = parseFloat(v);
+            checkNumber(parsed, b);
+            return parsed;
+        }
+        function checkNumber(n, b) {
+            if (!isFinite(n) || isNaN(n)) {
+                throwBlockError(lf("Number entered is either too large or too small"), b);
+            }
+        }
+        function extractTsExpression(e, b, comments) {
+            return blocks_1.mkText(b.getFieldValue("EXPRESSION").trim());
+        }
+        function compileNumber(e, b, comments) {
+            return blocks_1.H.mkNumberLiteral(extractNumber(b));
+        }
+        var opToTok = {
+            // POWER gets a special treatment because there's no operator for it in
+            // TouchDevelop
+            "ADD": "+",
+            "MINUS": "-",
+            "MULTIPLY": "*",
+            "DIVIDE": "/",
+            "LT": "<",
+            "LTE": "<=",
+            "GT": ">",
+            "GTE": ">=",
+            "AND": "&&",
+            "OR": "||",
+            "EQ": "==",
+            "NEQ": "!=",
+            "POWER": "**"
+        };
+        function compileArithmetic(e, b, comments) {
+            var bOp = b.getFieldValue("OP");
+            var left = getInputTargetBlock(b, "A");
+            var right = getInputTargetBlock(b, "B");
+            var args = [compileExpression(e, left, comments), compileExpression(e, right, comments)];
+            var t = returnType(e, left).type;
+            if (t == pString.type) {
+                if (bOp == "EQ")
+                    return blocks_1.H.mkSimpleCall("==", args);
+                else if (bOp == "NEQ")
+                    return blocks_1.H.mkSimpleCall("!=", args);
+            }
+            else if (t == pBoolean.type)
+                return blocks_1.H.mkSimpleCall(opToTok[bOp], args);
+            // Compilation of math operators.
+            assert(bOp in opToTok);
+            return blocks_1.H.mkSimpleCall(opToTok[bOp], args);
+        }
+        function compileModulo(e, b, comments) {
+            var left = getInputTargetBlock(b, "DIVIDEND");
+            var right = getInputTargetBlock(b, "DIVISOR");
+            var args = [compileExpression(e, left, comments), compileExpression(e, right, comments)];
+            return blocks_1.H.mkSimpleCall("%", args);
+        }
+        function compileMathOp2(e, b, comments) {
+            var op = b.getFieldValue("op");
+            var x = compileExpression(e, getInputTargetBlock(b, "x"), comments);
+            var y = compileExpression(e, getInputTargetBlock(b, "y"), comments);
+            return blocks_1.H.mathCall(op, [x, y]);
+        }
+        function compileMathOp3(e, b, comments) {
+            var x = compileExpression(e, getInputTargetBlock(b, "x"), comments);
+            return blocks_1.H.mathCall("abs", [x]);
+        }
+        function compileText(e, b, comments) {
+            return blocks_1.H.mkStringLiteral(b.getFieldValue("TEXT"));
+        }
+        function compileTextJoin(e, b, comments) {
+            var last;
+            var i = 0;
+            while (true) {
+                var val = getInputTargetBlock(b, "ADD" + i);
+                i++;
+                if (!val) {
+                    if (i < b.inputList.length) {
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                var compiled = compileExpression(e, val, comments);
+                if (!last) {
+                    if (val.type.indexOf("text") === 0) {
+                        last = compiled;
+                    }
+                    else {
+                        // If we don't start with a string, then the TS won't match
+                        // the implied semantics of the blocks
+                        last = blocks_1.H.mkSimpleCall("+", [blocks_1.H.mkStringLiteral(""), compiled]);
+                    }
+                }
+                else {
+                    last = blocks_1.H.mkSimpleCall("+", [last, compiled]);
+                }
+            }
+            if (!last) {
+                return blocks_1.H.mkStringLiteral("");
+            }
+            return last;
+        }
+        function compileBoolean(e, b, comments) {
+            return blocks_1.H.mkBooleanLiteral(b.getFieldValue("BOOL") == "TRUE");
+        }
+        function compileNot(e, b, comments) {
+            var expr = compileExpression(e, getInputTargetBlock(b, "BOOL"), comments);
+            return blocks_1.mkPrefix("!", [blocks_1.H.mkParenthesizedExpression(expr)]);
+        }
+        function compileCreateList(e, b, comments) {
+            // collect argument
+            var args = b.inputList.map(function (input) { return input.connection && input.connection.targetBlock() ? compileExpression(e, input.connection.targetBlock(), comments) : undefined; })
+                .filter(function (e) { return !!e; });
+            return blocks_1.H.mkArrayLiteral(args);
+        }
+        function compileListGet(e, b, comments) {
+            var listBlock = getInputTargetBlock(b, "LIST");
+            var listExpr = compileExpression(e, listBlock, comments);
+            var index = compileExpression(e, getInputTargetBlock(b, "INDEX"), comments);
+            var res = blocks_1.mkGroup([listExpr, blocks_1.mkText("["), index, blocks_1.mkText("]")]);
+            return res;
+        }
+        function compileListSet(e, b, comments) {
+            var listBlock = getInputTargetBlock(b, "LIST");
+            var listExpr = compileExpression(e, listBlock, comments);
+            var index = compileExpression(e, getInputTargetBlock(b, "INDEX"), comments);
+            var value = compileExpression(e, getInputTargetBlock(b, "VALUE"), comments);
+            var res = blocks_1.mkGroup([listExpr, blocks_1.mkText("["), index, blocks_1.mkText("] = "), value]);
+            return listBlock.type === "lists_create_with" ? prefixWithSemicolon(res) : res;
+        }
+        function compileMathJsOp(e, b, comments) {
+            var op = b.getFieldValue("OP");
+            var args = [compileExpression(e, getInputTargetBlock(b, "ARG0"), comments)];
+            if (b.getInput("ARG1")) {
+                args.push(compileExpression(e, getInputTargetBlock(b, "ARG1"), comments));
+            }
+            return blocks_1.H.mathCall(op, args);
+        }
+        function compileFunctionDefinition(e, b, comments) {
+            var name = escapeVarName(b.getField("function_name").getText(), e, true);
+            var stmts = getInputTargetBlock(b, "STACK");
+            var argsDeclaration = b.getArguments().map(function (a) {
+                return escapeVarName(a.name, e) + ": " + a.type;
+            });
+            return [
+                blocks_1.mkText("function " + name + " (" + argsDeclaration.join(", ") + ")"),
+                compileStatements(e, stmts)
+            ];
+        }
+        function compileProcedure(e, b, comments) {
+            var name = escapeVarName(b.getFieldValue("NAME"), e, true);
+            var stmts = getInputTargetBlock(b, "STACK");
+            return [
+                blocks_1.mkText("function " + name + "() "),
+                compileStatements(e, stmts)
+            ];
+        }
+        function compileProcedureCall(e, b, comments) {
+            var name = escapeVarName(b.getFieldValue("NAME"), e, true);
+            return blocks_1.mkStmt(blocks_1.mkText(name + "()"));
+        }
+        function compileFunctionCall(e, b, comments) {
+            var name = escapeVarName(b.getField("function_name").getText(), e, true);
+            var externalInputs = !b.getInputsInline();
+            var args = b.getArguments().map(function (a) {
+                return {
+                    actualName: a.name,
+                    definitionName: a.id
+                };
+            });
+            var compiledArgs = args.map(function (a) { return compileArgument(e, b, a, comments); });
+            return blocks_1.mkStmt(blocks_1.H.stdCall(name, compiledArgs, externalInputs));
+        }
+        function compileArgumentReporter(e, b, comments) {
+            var name = escapeVarName(b.getFieldValue("VALUE"), e);
+            return blocks_1.mkText(name);
+        }
+        function compileWorkspaceComment(c) {
+            var content = c.getContent();
+            return blocks_1.Helpers.mkMultiComment(content.trim());
+        }
+        function defaultValueForType(t) {
+            if (t.type == null) {
+                union(t, ground(pNumber.type));
+                t = find(t);
+            }
+            if (isArrayType(t.type) || t.isArrayType) {
+                return blocks_1.mkText("[]");
+            }
+            switch (t.type) {
+                case "boolean":
+                    return blocks_1.H.mkBooleanLiteral(false);
+                case "number":
+                    return blocks_1.H.mkNumberLiteral(0);
+                case "string":
+                    return blocks_1.H.mkStringLiteral("");
+                default:
+                    return blocks_1.mkText("null");
+            }
+        }
+        // [t] is the expected type; we assume that we never null block children
+        // (because placeholder blocks have been inserted by the type-checking phase
+        // whenever a block was actually missing).
+        function compileExpression(e, b, comments) {
+            assert(b != null);
+            e.stats[b.type] = (e.stats[b.type] || 0) + 1;
+            maybeAddComment(b, comments);
+            var expr;
+            if (b.disabled || b.type == "placeholder") {
+                var ret = find(returnType(e, b));
+                if (ret.type === "Array") {
+                    // FIXME: Can't use default type here because TS complains about
+                    // the array having an implicit any type. However, forcing this
+                    // to be a number array may cause type issues. Also, potential semicolon
+                    // issues if we ever have a block where the array is not the first argument...
+                    var isExpression = b.parentBlock_.type === "lists_index_get";
+                    if (!isExpression) {
+                        var call = e.stdCallTable[b.parentBlock_.type];
+                        isExpression = call && call.isExpression;
+                    }
+                    var arrayNode = blocks_1.mkText("[0]");
+                    expr = isExpression ? arrayNode : prefixWithSemicolon(arrayNode);
+                }
+                else {
+                    expr = defaultValueForType(returnType(e, b));
+                }
+            }
+            else
+                switch (b.type) {
+                    case "math_number":
+                    case "math_integer":
+                    case "math_whole_number":
+                        expr = compileNumber(e, b, comments);
+                        break;
+                    case "math_number_minmax":
+                        expr = compileNumber(e, b, comments);
+                        break;
+                    case "math_op2":
+                        expr = compileMathOp2(e, b, comments);
+                        break;
+                    case "math_op3":
+                        expr = compileMathOp3(e, b, comments);
+                        break;
+                    case "math_arithmetic":
+                    case "logic_compare":
+                    case "logic_operation":
+                        expr = compileArithmetic(e, b, comments);
+                        break;
+                    case "math_modulo":
+                        expr = compileModulo(e, b, comments);
+                        break;
+                    case "logic_boolean":
+                        expr = compileBoolean(e, b, comments);
+                        break;
+                    case "logic_negate":
+                        expr = compileNot(e, b, comments);
+                        break;
+                    case "variables_get":
+                        expr = compileVariableGet(e, b);
+                        break;
+                    case "text":
+                        expr = compileText(e, b, comments);
+                        break;
+                    case "text_join":
+                        expr = compileTextJoin(e, b, comments);
+                        break;
+                    case "lists_create_with":
+                        expr = compileCreateList(e, b, comments);
+                        break;
+                    case "lists_index_get":
+                        expr = compileListGet(e, b, comments);
+                        break;
+                    case "lists_index_set":
+                        expr = compileListSet(e, b, comments);
+                        break;
+                    case "math_js_op":
+                    case "math_js_round":
+                        expr = compileMathJsOp(e, b, comments);
+                        break;
+                    case pxtc.TS_OUTPUT_TYPE:
+                        expr = extractTsExpression(e, b, comments);
+                        break;
+                    case "argument_reporter_boolean":
+                    case "argument_reporter_number":
+                    case "argument_reporter_string":
+                    case "argument_reporter_custom":
+                        expr = compileArgumentReporter(e, b, comments);
+                        break;
+                    default:
+                        var call = e.stdCallTable[b.type];
+                        if (call) {
+                            if (call.imageLiteral)
+                                expr = compileImage(e, b, call.imageLiteral, call.imageLiteralColumns, call.imageLiteralRows, call.namespace, call.f, visibleParams(call, countOptionals(b)).map(function (ar) { return compileArgument(e, b, ar, comments); }));
+                            else
+                                expr = compileStdCall(e, b, call, comments);
+                        }
+                        else {
+                            pxt.reportError("blocks", "unable to compile expression", { "details": b.type });
+                            expr = defaultValueForType(returnType(e, b));
+                        }
+                        break;
+                }
+            expr.id = b.id;
+            return expr;
+        }
+        blocks_1.compileExpression = compileExpression;
+        function lookup(e, b, name) {
+            return getVarInfo(name, e.idToScope[b.id]);
+        }
+        function emptyEnv(w) {
+            return {
+                workspace: w,
+                stdCallTable: {},
+                errors: [],
+                renames: {
+                    oldToNew: {},
+                    takenNames: {},
+                    oldToNewFunctions: {}
+                },
+                stats: {},
+                enums: [],
+                kinds: [],
+                idToScope: {},
+                allVariables: [],
+                blocksInfo: null,
+                generatedVarDeclarations: {}
+            };
+        }
+        ;
+        ///////////////////////////////////////////////////////////////////////////////
+        // Statements
+        ///////////////////////////////////////////////////////////////////////////////
+        function compileControlsIf(e, b, comments) {
+            var stmts = [];
+            // Notice the <= (if there's no else-if, we still compile the primary if).
+            for (var i = 0; i <= b.elseifCount_; ++i) {
+                var cond = compileExpression(e, getInputTargetBlock(b, "IF" + i), comments);
+                var thenBranch = compileStatements(e, getInputTargetBlock(b, "DO" + i));
+                var startNode = blocks_1.mkText("if (");
+                if (i > 0) {
+                    startNode = blocks_1.mkText("else if (");
+                    startNode.glueToBlock = blocks_1.GlueMode.WithSpace;
+                }
+                append(stmts, [
+                    startNode,
+                    cond,
+                    blocks_1.mkText(")"),
+                    thenBranch
+                ]);
+            }
+            if (b.elseCount_) {
+                var elseNode = blocks_1.mkText("else");
+                elseNode.glueToBlock = blocks_1.GlueMode.WithSpace;
+                append(stmts, [
+                    elseNode,
+                    compileStatements(e, getInputTargetBlock(b, "ELSE"))
+                ]);
+            }
+            return stmts;
+        }
+        function compileControlsFor(e, b, comments) {
+            var bTo = getInputTargetBlock(b, "TO");
+            var bDo = getInputTargetBlock(b, "DO");
+            var bBy = getInputTargetBlock(b, "BY");
+            var bFrom = getInputTargetBlock(b, "FROM");
+            var incOne = !bBy || (bBy.type.match(/^math_number/) && extractNumber(bBy) == 1);
+            var binding = lookup(e, b, getLoopVariableField(b).getField("VAR").getText());
+            return [
+                blocks_1.mkText("for (let " + binding.escapedName + " = "),
+                bFrom ? compileExpression(e, bFrom, comments) : blocks_1.mkText("0"),
+                blocks_1.mkText("; "),
+                blocks_1.mkInfix(blocks_1.mkText(binding.escapedName), "<=", compileExpression(e, bTo, comments)),
+                blocks_1.mkText("; "),
+                incOne ? blocks_1.mkText(binding.escapedName + "++") : blocks_1.mkInfix(blocks_1.mkText(binding.escapedName), "+=", compileExpression(e, bBy, comments)),
+                blocks_1.mkText(")"),
+                compileStatements(e, bDo)
+            ];
+        }
+        function compileControlsRepeat(e, b, comments) {
+            var bound = compileExpression(e, getInputTargetBlock(b, "TIMES"), comments);
+            var body = compileStatements(e, getInputTargetBlock(b, "DO"));
+            var valid = function (x) { return e.idToScope[b.id].variables[x] === undefined; };
+            var name = "index";
+            // Start at 2 because index0 and index1 are bad names
+            for (var i = 2; !valid(name); i++)
+                name = "index" + i;
+            return [
+                blocks_1.mkText("for (let " + name + " = 0; "),
+                blocks_1.mkInfix(blocks_1.mkText(name), "<", bound),
+                blocks_1.mkText("; " + name + "++)"),
+                body
+            ];
+        }
+        function compileWhile(e, b, comments) {
+            var cond = compileExpression(e, getInputTargetBlock(b, "COND"), comments);
+            var body = compileStatements(e, getInputTargetBlock(b, "DO"));
+            return [
+                blocks_1.mkText("while ("),
+                cond,
+                blocks_1.mkText(")"),
+                body
+            ];
+        }
+        function compileControlsForOf(e, b, comments) {
+            var bOf = getInputTargetBlock(b, "LIST");
+            var bDo = getInputTargetBlock(b, "DO");
+            var binding = lookup(e, b, getLoopVariableField(b).getField("VAR").getText());
+            return [
+                blocks_1.mkText("for (let " + binding.escapedName + " of "),
+                compileExpression(e, bOf, comments),
+                blocks_1.mkText(")"),
+                compileStatements(e, bDo)
+            ];
+        }
+        function compileForever(e, b) {
+            var bBody = getInputTargetBlock(b, "HANDLER");
+            var body = compileStatements(e, bBody);
+            return mkCallWithCallback(e, "basic", "forever", [], body);
+        }
+        // convert to javascript friendly name
+        function escapeVarName(name, e, isFunction) {
+            if (isFunction === void 0) { isFunction = false; }
+            if (!name)
+                return '_';
+            if (isFunction) {
+                if (e.renames.oldToNewFunctions[name]) {
+                    return e.renames.oldToNewFunctions[name];
+                }
+            }
+            else if (e.renames.oldToNew[name]) {
+                return e.renames.oldToNew[name];
+            }
+            var n = ts.pxtc.escapeIdentifier(name);
+            if (e.renames.takenNames[n]) {
+                var i = 2;
+                while (e.renames.takenNames[n + i]) {
+                    i++;
+                }
+                n += i;
+            }
+            if (isFunction) {
+                e.renames.oldToNewFunctions[name] = n;
+                e.renames.takenNames[n] = true;
+            }
+            else {
+                e.renames.oldToNew[name] = n;
+            }
+            return n;
+        }
+        blocks_1.escapeVarName = escapeVarName;
+        function compileVariableGet(e, b) {
+            var name = b.getField("VAR").getText();
+            var binding = lookup(e, b, name);
+            if (!binding)
+                return blocks_1.mkText(name);
+            assert(binding != null && binding.type != null);
+            return blocks_1.mkText(binding.escapedName);
+        }
+        function compileSet(e, b, comments) {
+            var bExpr = getInputTargetBlock(b, "VALUE");
+            var binding = lookup(e, b, b.getField("VAR").getText());
+            var currentScope = e.idToScope[b.id];
+            var varInfoInCurrentScope = currentScope.variables[binding.name];
+            var isDef = !binding.alreadyDeclared && currentScope.declaredVars[binding.name] === binding && varInfoInCurrentScope.firstReferencingBlock === b && varInfoInCurrentScope.isDefinitelyAssigned;
+            var expr = compileExpression(e, bExpr, comments);
+            var bindString = binding.escapedName + " = ";
+            binding.isAssigned = true;
+            if (isDef) {
+                binding.alreadyDeclared = BlockDeclarationType.Assigned;
+                var declaredType = getConcreteType(binding.type);
+                bindString = "let " + binding.escapedName + " = ";
+                if (declaredType) {
+                    var expressionType = getConcreteType(returnType(e, bExpr));
+                    if (declaredType.type !== expressionType.type) {
+                        bindString = "let " + binding.escapedName + ": " + declaredType.type + " = ";
+                    }
+                }
+            }
+            return blocks_1.mkStmt(blocks_1.mkText(bindString), expr);
+        }
+        function compileChange(e, b, comments) {
+            var bExpr = getInputTargetBlock(b, "VALUE");
+            var binding = lookup(e, b, b.getField("VAR").getText());
+            var expr = compileExpression(e, bExpr, comments);
+            var ref = blocks_1.mkText(binding.escapedName);
+            return blocks_1.mkStmt(blocks_1.mkInfix(ref, "+=", expr));
+        }
+        function eventArgs(call, b) {
+            return visibleParams(call, countOptionals(b)).filter(function (ar) { return !!ar.definitionName; });
+        }
+        function compileCall(e, b, comments) {
+            var call = e.stdCallTable[b.type];
+            if (call.imageLiteral)
+                return blocks_1.mkStmt(compileImage(e, b, call.imageLiteral, call.imageLiteralColumns, call.imageLiteralRows, call.namespace, call.f, visibleParams(call, countOptionals(b)).map(function (ar) { return compileArgument(e, b, ar, comments); })));
+            else if (call.hasHandler)
+                return compileEvent(e, b, call, eventArgs(call, b), call.namespace, comments);
+            else
+                return blocks_1.mkStmt(compileStdCall(e, b, call, comments));
+        }
+        function compileArgument(e, b, p, comments, beginningOfStatement) {
+            if (beginningOfStatement === void 0) { beginningOfStatement = false; }
+            var f = b.getFieldValue(p.definitionName);
+            if (f != null) {
+                if (b.getField(p.definitionName) instanceof pxtblockly.FieldTextInput) {
+                    return blocks_1.H.mkStringLiteral(f);
+                }
+                // For some enums in pxt-minecraft, we emit the members as constants that are defined in
+                // libs/core. For example, Blocks.GoldBlock is emitted as GOLD_BLOCK
+                var type = e.blocksInfo.apis.byQName[p.type];
+                if (type && type.attributes.emitAsConstant) {
+                    for (var _i = 0, _a = Object.keys(e.blocksInfo.apis.byQName); _i < _a.length; _i++) {
+                        var symbolName = _a[_i];
+                        var symbol = e.blocksInfo.apis.byQName[symbolName];
+                        if (symbol && symbol.attributes && symbol.attributes.enumIdentity === f) {
+                            return blocks_1.mkText(symbolName);
+                        }
+                    }
+                }
+                return blocks_1.mkText(f);
+            }
+            else {
+                attachPlaceholderIf(e, b, p.definitionName);
+                var target = getInputTargetBlock(b, p.definitionName);
+                if (beginningOfStatement && target.type === "lists_create_with") {
+                    // We have to be careful of array literals at the beginning of a statement
+                    // because they can cause errors (i.e. they get parsed as an index). Add a
+                    // semicolon to the previous statement just in case.
+                    // FIXME: No need to do this if the previous statement was a code block
+                    return prefixWithSemicolon(compileExpression(e, target, comments));
+                }
+                if (p.shadowOptions && p.shadowOptions.toString && returnType(e, target) !== pString) {
+                    return blocks_1.H.mkSimpleCall("+", [blocks_1.H.mkStringLiteral(""), blocks_1.H.mkParenthesizedExpression(compileExpression(e, target, comments))]);
+                }
+                return compileExpression(e, target, comments);
+            }
+        }
+        function compileStdCall(e, b, func, comments) {
+            var args;
+            if (isMutatingBlock(b) && b.mutation.getMutationType() === blocks_1.MutatorTypes.RestParameterMutator) {
+                args = b.mutation.compileMutation(e, comments).children;
+            }
+            else if (func.attrs.shim === "ENUM_GET") {
+                var enumName = func.attrs.enumName;
+                var enumMember = b.getFieldValue("MEMBER").replace(/^\d+/, "");
+                return blocks_1.H.mkPropertyAccess(enumMember, blocks_1.mkText(enumName));
+            }
+            else if (func.attrs.shim === "KIND_GET") {
+                var info = e.kinds.filter(function (k) { return k.blockId === func.attrs.blockId; })[0];
+                return blocks_1.H.mkPropertyAccess(b.getFieldValue("MEMBER"), blocks_1.mkText(info.name));
+            }
+            else {
+                args = visibleParams(func, countOptionals(b)).map(function (p, i) { return compileArgument(e, b, p, comments, func.isExtensionMethod && i === 0 && !func.isExpression); });
+            }
+            var externalInputs = !b.getInputsInline();
+            if (func.isIdentity)
+                return args[0];
+            else if (func.property) {
+                return blocks_1.H.mkPropertyAccess(func.f, args[0]);
+            }
+            else if (func.f == "@get@") {
+                return blocks_1.H.mkPropertyAccess(args[1].op.replace(/.*\./, ""), args[0]);
+            }
+            else if (func.f == "@set@") {
+                return blocks_1.H.mkAssign(blocks_1.H.mkPropertyAccess(args[1].op.replace(/.*\./, "").replace(/@set/, ""), args[0]), args[2]);
+            }
+            else if (func.f == "@change@") {
+                return blocks_1.H.mkSimpleCall("+=", [blocks_1.H.mkPropertyAccess(args[1].op.replace(/.*\./, "").replace(/@set/, ""), args[0]), args[2]]);
+            }
+            else if (func.isExtensionMethod) {
+                if (func.attrs.defaultInstance) {
+                    var instance = void 0;
+                    if (isMutatingBlock(b) && b.mutation.getMutationType() === blocks_1.MutatorTypes.DefaultInstanceMutator) {
+                        instance = b.mutation.compileMutation(e, comments);
+                    }
+                    if (instance) {
+                        args.unshift(instance);
+                    }
+                    else {
+                        args.unshift(blocks_1.mkText(func.attrs.defaultInstance));
+                    }
+                }
+                return blocks_1.H.extensionCall(func.f, args, externalInputs);
+            }
+            else if (func.namespace) {
+                return blocks_1.H.namespaceCall(func.namespace, func.f, args, externalInputs);
+            }
+            else {
+                return blocks_1.H.stdCall(func.f, args, externalInputs);
+            }
+        }
+        function compileStdBlock(e, b, f, comments) {
+            return blocks_1.mkStmt(compileStdCall(e, b, f, comments));
+        }
+        function mkCallWithCallback(e, n, f, args, body, argumentDeclaration, isExtension) {
+            if (isExtension === void 0) { isExtension = false; }
+            body.noFinalNewline = true;
+            var callback;
+            if (argumentDeclaration) {
+                callback = blocks_1.mkGroup([argumentDeclaration, body]);
+            }
+            else {
+                callback = blocks_1.mkGroup([blocks_1.mkText("function ()"), body]);
+            }
+            if (isExtension)
+                return blocks_1.mkStmt(blocks_1.H.extensionCall(f, args.concat([callback]), false));
+            else if (n)
+                return blocks_1.mkStmt(blocks_1.H.namespaceCall(n, f, args.concat([callback]), false));
+            else
+                return blocks_1.mkStmt(blocks_1.H.mkCall(f, args.concat([callback]), false));
+        }
+        function compileStartEvent(e, b) {
+            var bBody = getInputTargetBlock(b, "HANDLER");
+            var body = compileStatements(e, bBody);
+            if (pxt.appTarget.compile && pxt.appTarget.compile.onStartText && body && body.children) {
+                body.children.unshift(blocks_1.mkStmt(blocks_1.mkText("// " + pxtc.ON_START_COMMENT + "\n")));
+            }
+            return body;
+        }
+        function compileEvent(e, b, stdfun, args, ns, comments) {
+            var compiledArgs = args.map(function (arg) { return compileArgument(e, b, arg, comments); });
+            var bBody = getInputTargetBlock(b, "HANDLER");
+            var body = compileStatements(e, bBody);
+            if (pxt.appTarget.compile && pxt.appTarget.compile.emptyEventHandlerComments && body.children.length === 0) {
+                body.children.unshift(blocks_1.mkStmt(blocks_1.mkText("// " + pxtc.HANDLER_COMMENT)));
+            }
+            var argumentDeclaration;
+            if (isMutatingBlock(b) && b.mutation.getMutationType() === blocks_1.MutatorTypes.ObjectDestructuringMutator) {
+                argumentDeclaration = b.mutation.compileMutation(e, comments);
+            }
+            else if (stdfun.comp.handlerArgs.length) {
+                var handlerArgs = getEscapedCBParameters(b, stdfun, e);
+                argumentDeclaration = blocks_1.mkText("function (" + handlerArgs.join(", ") + ")");
+            }
+            return mkCallWithCallback(e, ns, stdfun.f, compiledArgs, body, argumentDeclaration, stdfun.isExtensionMethod);
+        }
+        function isMutatingBlock(b) {
+            return !!b.mutation;
+        }
+        function compileImage(e, b, frames, columns, rows, n, f, args) {
+            args = args === undefined ? [] : args;
+            var state = "\n";
+            rows = rows || 5;
+            columns = (columns || 5) * frames;
+            var leds = b.getFieldValue("LEDS");
+            leds = leds.replace(/[ `\n]+/g, '');
+            for (var i = 0; i < rows; ++i) {
+                for (var j = 0; j < columns; ++j) {
+                    if (j > 0)
+                        state += ' ';
+                    state += (leds[(i * columns) + j] === '#') ? "#" : ".";
+                }
+                state += '\n';
+            }
+            var lit = blocks_1.H.mkStringLiteral(state);
+            lit.canIndentInside = true;
+            return blocks_1.H.namespaceCall(n, f, [lit].concat(args), false);
+        }
+        function compileStatementBlock(e, b) {
+            var r;
+            var comments = [];
+            e.stats[b.type] = (e.stats[b.type] || 0) + 1;
+            maybeAddComment(b, comments);
+            switch (b.type) {
+                case 'controls_if':
+                    r = compileControlsIf(e, b, comments);
+                    break;
+                case 'pxt_controls_for':
+                case 'controls_for':
+                case 'controls_simple_for':
+                    r = compileControlsFor(e, b, comments);
+                    break;
+                case 'pxt_controls_for_of':
+                case 'controls_for_of':
+                    r = compileControlsForOf(e, b, comments);
+                    break;
+                case 'variables_set':
+                    r = [compileSet(e, b, comments)];
+                    break;
+                case 'variables_change':
+                    r = [compileChange(e, b, comments)];
+                    break;
+                case 'controls_repeat_ext':
+                    r = compileControlsRepeat(e, b, comments);
+                    break;
+                case 'device_while':
+                    r = compileWhile(e, b, comments);
+                    break;
+                case 'procedures_defnoreturn':
+                    r = compileProcedure(e, b, comments);
+                    break;
+                case 'function_definition':
+                    r = compileFunctionDefinition(e, b, comments);
+                    break;
+                case 'procedures_callnoreturn':
+                    r = [compileProcedureCall(e, b, comments)];
+                    break;
+                case 'function_call':
+                    r = [compileFunctionCall(e, b, comments)];
+                    break;
+                case ts.pxtc.ON_START_TYPE:
+                    r = compileStartEvent(e, b).children;
+                    break;
+                case pxtc.TS_STATEMENT_TYPE:
+                    r = compileTypescriptBlock(e, b);
+                    break;
+                case pxtc.PAUSE_UNTIL_TYPE:
+                    r = compilePauseUntilBlock(e, b, comments);
+                    break;
+                case pxtc.TS_DEBUGGER_TYPE:
+                    r = compileDebuggeStatementBlock(e, b);
+                    break;
+                case pxtc.TS_BREAK_TYPE:
+                    r = compileBreakStatementBlock(e, b);
+                    break;
+                case pxtc.TS_CONTINUE_TYPE:
+                    r = compileContinueStatementBlock(e, b);
+                    break;
+                default:
+                    var call = e.stdCallTable[b.type];
+                    if (call)
+                        r = [compileCall(e, b, comments)];
+                    else
+                        r = [blocks_1.mkStmt(compileExpression(e, b, comments))];
+                    break;
+            }
+            var l = r[r.length - 1];
+            if (l)
+                l.id = b.id;
+            if (comments.length) {
+                addCommentNodes(comments, r);
+            }
+            r.forEach(function (l) {
+                if (l.type === blocks_1.NT.Block || l.type === blocks_1.NT.Prefix && pxt.Util.startsWith(l.op, "//")) {
+                    l.id = b.id;
+                }
+            });
+            return r;
+        }
+        function compileStatements(e, b) {
+            var stmts = [];
+            for (; b; b = b.getNextBlock()) {
+                if (!b.disabled) {
+                    append(stmts, compileStatementBlock(e, b));
+                }
+            }
+            return blocks_1.mkBlock(stmts);
+        }
+        function compileTypescriptBlock(e, b) {
+            return b.getLines().map(function (line) { return blocks_1.mkText(line + "\n"); });
+        }
+        function compileDebuggeStatementBlock(e, b) {
+            if (b.getFieldValue("ON_OFF") == "1") {
+                return [
+                    blocks_1.mkText("debugger;\n")
+                ];
+            }
+            return [];
+        }
+        function compileBreakStatementBlock(e, b) {
+            return [blocks_1.mkText("break;\n")];
+        }
+        function compileContinueStatementBlock(e, b) {
+            return [blocks_1.mkText("continue;\n")];
+        }
+        function prefixWithSemicolon(n) {
+            var emptyStatement = blocks_1.mkStmt(blocks_1.mkText(";"));
+            emptyStatement.glueToBlock = blocks_1.GlueMode.NoSpace;
+            return blocks_1.mkGroup([emptyStatement, n]);
+        }
+        function compilePauseUntilBlock(e, b, comments) {
+            var options = pxt.appTarget.runtime && pxt.appTarget.runtime.pauseUntilBlock;
+            pxt.Util.assert(!!options, "target has block enabled");
+            var ns = options.namespace;
+            var name = options.callName || "pauseUntil";
+            var arg = compileArgument(e, b, { definitionName: "PREDICATE", actualName: "PREDICATE" }, comments);
+            var lambda = [blocks_1.mkGroup([blocks_1.mkText("() => "), arg])];
+            if (ns) {
+                return [blocks_1.mkStmt(blocks_1.H.namespaceCall(ns, name, lambda, false))];
+            }
+            else {
+                return [blocks_1.mkStmt(blocks_1.H.mkCall(name, lambda, false, false))];
+            }
+        }
+        // This function creates an empty environment where type inference has NOT yet
+        // been performed.
+        // - All variables have been assigned an initial [Point] in the union-find.
+        // - Variables have been marked to indicate if they are compatible with the
+        //   TouchDevelop for-loop model.
+        function mkEnv(w, blockInfo) {
+            // The to-be-returned environment.
+            var e = emptyEnv(w);
+            e.blocksInfo = blockInfo;
+            // append functions in stdcalltable
+            if (blockInfo) {
+                // Enums, tagged templates, and namespaces are not enclosed in namespaces,
+                // so add them to the taken names to avoid collision
+                Object.keys(blockInfo.apis.byQName).forEach(function (name) {
+                    var info = blockInfo.apis.byQName[name];
+                    // Note: the check for info.pkg filters out functions defined in the user's project.
+                    // Otherwise, after the first compile the function will be renamed because it conflicts
+                    // with itself. You can still get collisions if you attempt to define a function with
+                    // the same name as a function defined in another file in the user's project (e.g. custom.ts)
+                    if (info.pkg && (info.kind === 6 /* Enum */ || info.kind === 3 /* Function */ || info.kind === 5 /* Module */)) {
+                        e.renames.takenNames[info.qName] = true;
+                    }
+                });
+                if (blockInfo.enumsByName) {
+                    Object.keys(blockInfo.enumsByName).forEach(function (k) { return e.enums.push(blockInfo.enumsByName[k]); });
+                }
+                if (blockInfo.kindsByName) {
+                    Object.keys(blockInfo.kindsByName).forEach(function (k) { return e.kinds.push(blockInfo.kindsByName[k]); });
+                }
+                blockInfo.blocks
+                    .forEach(function (fn) {
+                    if (e.stdCallTable[fn.attributes.blockId]) {
+                        pxt.reportError("blocks", "function already defined", {
+                            "details": fn.attributes.blockId,
+                            "qualifiedName": fn.qName,
+                            "packageName": fn.pkg,
+                        });
+                        return;
+                    }
+                    e.renames.takenNames[fn.namespace] = true;
+                    var comp = pxt.blocks.compileInfo(fn);
+                    var instance = !!comp.thisParameter;
+                    e.stdCallTable[fn.attributes.blockId] = {
+                        namespace: fn.namespace,
+                        f: fn.name,
+                        comp: comp,
+                        attrs: fn.attributes,
+                        isExtensionMethod: instance,
+                        isExpression: fn.retType && fn.retType !== "void",
+                        imageLiteral: fn.attributes.imageLiteral,
+                        imageLiteralColumns: fn.attributes.imageLiteralColumns,
+                        imageLiteralRows: fn.attributes.imageLiteralRows,
+                        hasHandler: !!comp.handlerArgs.length || fn.parameters && fn.parameters.some(function (p) { return (p.type == "() => void" || p.type == "Action" || !!p.properties); }),
+                        property: !fn.parameters,
+                        isIdentity: fn.attributes.shim == "TD_ID"
+                    };
+                });
+                w.getTopBlocks(false).filter(isFunctionDefinition).forEach(function (b) {
+                    // Add functions to the rename map to prevent name collisions with variables
+                    var name = b.type === "procedures_defnoreturn" ? b.getFieldValue("NAME") : b.getField("function_name").getText();
+                    escapeVarName(name, e, true);
+                });
+            }
+            return e;
+        }
+        blocks_1.mkEnv = mkEnv;
+        function compileBlockAsync(b, blockInfo) {
+            var w = b.workspace;
+            var e = mkEnv(w, blockInfo);
+            infer(w && w.getAllBlocks(), e, w);
+            var compiled = compileStatementBlock(e, b);
+            removeAllPlaceholders();
+            return tdASTtoTS(e, compiled);
+        }
+        blocks_1.compileBlockAsync = compileBlockAsync;
+        function eventWeight(b, e) {
+            if (b.type === ts.pxtc.ON_START_TYPE) {
+                return 0;
+            }
+            var api = e.stdCallTable[b.type];
+            var key = callKey(e, b);
+            var hash = 1 + ts.pxtc.Util.codalHash16(key);
+            if (api && api.attrs.afterOnStart)
+                return hash;
+            else
+                return -hash;
+        }
+        function compileWorkspace(e, w) {
+            try {
+                // all compiled top level blocks are events
+                var allBlocks = w.getAllBlocks();
+                // the top blocks are storted by blockly
+                var topblocks = w.getTopBlocks(true);
+                // reorder remaining events by names (top blocks still contains disabled blocks)
+                topblocks = topblocks.sort(function (a, b) {
+                    return eventWeight(a, e) - eventWeight(b, e);
+                });
+                // update disable blocks
+                updateDisabledBlocks(e, allBlocks, topblocks);
+                // drop disabled blocks
+                allBlocks = allBlocks.filter(function (b) { return !b.disabled; });
+                topblocks = topblocks.filter(function (b) { return !b.disabled; });
+                trackAllVariables(topblocks, e);
+                infer(allBlocks, e, w);
+                var stmtsMain_1 = [];
+                // compile workspace comments, add them to the top
+                var topComments = w.getTopComments(true);
+                var commentMap_1 = groupWorkspaceComments(topblocks, topComments);
+                commentMap_1.orphans.forEach(function (comment) { return append(stmtsMain_1, compileWorkspaceComment(comment).children); });
+                topblocks.forEach(function (b) {
+                    if (commentMap_1.idToComments[b.id]) {
+                        commentMap_1.idToComments[b.id].forEach(function (comment) {
+                            append(stmtsMain_1, compileWorkspaceComment(comment).children);
+                        });
+                    }
+                    if (b.type == ts.pxtc.ON_START_TYPE)
+                        append(stmtsMain_1, compileStartEvent(e, b).children);
+                    else {
+                        var compiled = blocks_1.mkBlock(compileStatementBlock(e, b));
+                        if (compiled.type == blocks_1.NT.Block)
+                            append(stmtsMain_1, compiled.children);
+                        else
+                            stmtsMain_1.push(compiled);
+                    }
+                });
+                var stmtsEnums_1 = [];
+                e.enums.forEach(function (info) {
+                    var models = w.getVariablesOfType(info.name);
+                    if (models && models.length) {
+                        var members = models.map(function (m) {
+                            var match = /^(\d+)([^0-9].*)$/.exec(m.name);
+                            if (match) {
+                                return [match[2], parseInt(match[1])];
+                            }
+                            else {
+                                // Someone has been messing with the XML...
+                                return [m.name, -1];
+                            }
+                        });
+                        members.sort(function (a, b) { return a[1] - b[1]; });
+                        var nodes_1 = [];
+                        var lastValue_1 = -1;
+                        members.forEach(function (_a, index) {
+                            var name = _a[0], value = _a[1];
+                            var newNode;
+                            if (info.isBitMask) {
+                                var shift = Math.log2(value);
+                                if (shift >= 0 && Math.floor(shift) === shift) {
+                                    newNode = blocks_1.H.mkAssign(blocks_1.mkText(name), blocks_1.H.mkSimpleCall("<<", [blocks_1.H.mkNumberLiteral(1), blocks_1.H.mkNumberLiteral(shift)]));
+                                }
+                            }
+                            else if (info.isHash) {
+                                var hash = ts.pxtc.Util.codalHash16(name.toLowerCase());
+                                newNode = blocks_1.H.mkAssign(blocks_1.mkText(name), blocks_1.H.mkNumberLiteral(hash));
+                            }
+                            if (!newNode) {
+                                if (value === lastValue_1 + 1) {
+                                    newNode = blocks_1.mkText(name);
+                                }
+                                else {
+                                    newNode = blocks_1.H.mkAssign(blocks_1.mkText(name), blocks_1.H.mkNumberLiteral(value));
+                                }
+                            }
+                            nodes_1.push(newNode);
+                            lastValue_1 = value;
+                        });
+                        var declarations = blocks_1.mkCommaSep(nodes_1, true);
+                        declarations.glueToBlock = blocks_1.GlueMode.NoSpace;
+                        stmtsEnums_1.push(blocks_1.mkGroup([
+                            blocks_1.mkText("enum " + info.name),
+                            blocks_1.mkBlock([declarations])
+                        ]));
+                    }
+                });
+                e.kinds.forEach(function (info) {
+                    var models = w.getVariablesOfType("KIND_" + info.name);
+                    if (models && models.length) {
+                        var userDefined = models.map(function (m) { return m.name; }).filter(function (n) { return info.initialMembers.indexOf(n) === -1; });
+                        if (userDefined.length) {
+                            stmtsEnums_1.push(blocks_1.mkGroup([
+                                blocks_1.mkText("namespace " + info.name),
+                                blocks_1.mkBlock(userDefined.map(function (varName) { return blocks_1.mkStmt(blocks_1.mkText("export const " + varName + " = " + info.name + "." + info.createFunctionName + "()")); }))
+                            ]));
+                        }
+                    }
+                });
+                var tiles = pxtblockly.getAllTilesetTiles(w);
+                if (tiles.length) {
+                    var tilesetFieldEditorIdentity_1 = pxt.appTarget.runtime && pxt.appTarget.runtime.tilesetFieldEditorIdentity;
+                    stmtsEnums_1.push(blocks_1.mkGroup([
+                        blocks_1.mkText("namespace " + pxt.sprite.TILE_NAMESPACE),
+                        blocks_1.mkBlock(tiles.map(function (t) { return blocks_1.mkGroup([
+                            blocks_1.mkStmt(blocks_1.mkText(tilesetFieldEditorIdentity_1 ? "//% blockIdentity=" + tilesetFieldEditorIdentity_1 : "")),
+                            blocks_1.mkStmt(blocks_1.mkText("export const " + pxt.sprite.TILE_PREFIX + t.projectId + " = " + pxt.sprite.bitmapToImageLiteral(pxt.sprite.Bitmap.fromData(t.data), "typescript")))
+                        ]); }))
+                    ]));
+                }
+                var leftoverVars = e.allVariables.filter(function (v) { return !v.alreadyDeclared; }).map(function (v) { return mkVariableDeclaration(v, e); });
+                var diags_1 = [];
+                e.allVariables.filter(function (v) { return v.alreadyDeclared === BlockDeclarationType.Implicit && !v.isAssigned; }).forEach(function (v) {
+                    var t = getConcreteType(v.type);
+                    // The primitive types all get initializers set to default values, other types are set to null
+                    if (t.type === "string" || t.type === "number" || t.type === "boolean" || isArrayType(t.type))
+                        return;
+                    diags_1.push({
+                        blockId: v.scopes.find(function (s) { return s.variables[v.name] !== undefined && s.variables[v.name].firstReferencingBlock !== undefined; }).variables[v.name].firstReferencingBlock.id,
+                        message: lf("Variable '{0}' is never assigned", v.name)
+                    });
+                });
+                return [stmtsEnums_1.concat(leftoverVars.concat(stmtsMain_1)), diags_1, e.generatedVarDeclarations];
+            }
+            catch (err) {
+                var be = err.block;
+                if (be) {
+                    be.setWarningText(err + "");
+                    e.errors.push(be);
+                }
+                else {
+                    throw err;
+                }
+            }
+            finally {
+                removeAllPlaceholders();
+            }
+            return [null, null, null]; // unreachable
+        }
+        function callKey(e, b) {
+            if (b.type == ts.pxtc.ON_START_TYPE)
+                return JSON.stringify({ name: ts.pxtc.ON_START_TYPE });
+            else if (b.type == ts.pxtc.FUNCTION_DEFINITION_TYPE)
+                return JSON.stringify({ type: "function", name: b.getFieldValue("function_name") });
+            var call = e.stdCallTable[b.type];
+            if (call) {
+                // detect if same event is registered already
+                var compiledArgs = eventArgs(call, b).map(function (arg) { return compileArgument(e, b, arg, []); });
+                var key = JSON.stringify({ name: call.f, ns: call.namespace, compiledArgs: compiledArgs })
+                    .replace(/"id"\s*:\s*"[^"]+"/g, ''); // remove blockly ids
+                return key;
+            }
+            return undefined;
+        }
+        blocks_1.callKey = callKey;
+        function updateDisabledBlocks(e, allBlocks, topBlocks) {
+            // unset disabled
+            allBlocks.forEach(function (b) { return b.setEnabled(true); });
+            // update top blocks
+            var events = {};
+            function flagDuplicate(key, block) {
+                var otherEvent = events[key];
+                if (otherEvent) {
+                    // another block is already registered
+                    block.setEnabled(false);
+                }
+                else {
+                    block.setEnabled(true);
+                    events[key] = block;
+                }
+            }
+            topBlocks.forEach(function (b) {
+                var call = e.stdCallTable[b.type];
+                // multiple calls allowed
+                if (b.type == ts.pxtc.ON_START_TYPE)
+                    flagDuplicate(ts.pxtc.ON_START_TYPE, b);
+                else if (isFunctionDefinition(b) || call && call.attrs.blockAllowMultiple && !call.attrs.handlerStatement)
+                    return;
+                else if (call && call.hasHandler && !call.attrs.handlerStatement) {
+                    // compute key that identifies event call
+                    // detect if same event is registered already
+                    var key = call.attrs.blockHandlerKey || callKey(e, b);
+                    flagDuplicate(key, b);
+                }
+                else {
+                    // all non-events are disabled
+                    var t = b;
+                    while (t) {
+                        t.setEnabled(false);
+                        t = t.getNextBlock();
+                    }
+                }
+            });
+        }
+        function findBlockId(sourceMap, loc) {
+            if (!loc)
+                return undefined;
+            var bestChunk;
+            var bestChunkLength;
+            for (var i = 0; i < sourceMap.length; ++i) {
+                var chunk = sourceMap[i];
+                if (chunk.start <= loc.start && chunk.end > loc.start + loc.length && (!bestChunk || bestChunkLength > chunk.end - chunk.start)) {
+                    bestChunk = chunk;
+                    bestChunkLength = chunk.end - chunk.start;
+                }
+            }
+            if (bestChunk) {
+                return bestChunk.id;
+            }
+            return undefined;
+        }
+        blocks_1.findBlockId = findBlockId;
+        function compileAsync(b, blockInfo) {
+            var e = mkEnv(b, blockInfo);
+            var _a = compileWorkspace(e, b), nodes = _a[0], diags = _a[1], decl = _a[2];
+            var result = tdASTtoTS(e, nodes, diags, decl);
+            return result;
+        }
+        blocks_1.compileAsync = compileAsync;
+        function tdASTtoTS(env, app, diags, varDecls) {
+            var res = blocks_1.flattenNode(app);
+            // Note: the result of format is not used!
+            return workerOpAsync("format", { format: { input: res.output, pos: 1 } }).then(function () {
+                return {
+                    source: res.output,
+                    sourceMap: res.sourceMap,
+                    stats: env.stats,
+                    diagnostics: diags || [],
+                    generatedVarDeclarations: varDecls
+                };
+            });
+        }
+        function maybeAddComment(b, comments) {
+            if (b.comment) {
+                if ((typeof b.comment) === "string") {
+                    comments.push(b.comment);
+                }
+                else {
+                    comments.push(b.comment.getText());
+                }
+            }
+        }
+        function addCommentNodes(comments, r) {
+            var commentNodes = [];
+            var paragraphs = [];
+            for (var _i = 0, comments_1 = comments; _i < comments_1.length; _i++) {
+                var comment = comments_1[_i];
+                for (var _a = 0, _b = comment.split("\n"); _a < _b.length; _a++) {
+                    var paragraph = _b[_a];
+                    paragraphs.push(paragraph);
+                }
+            }
+            for (var i = 0; i < paragraphs.length; i++) {
+                // Wrap paragraph lines
+                var words = paragraphs[i].split(/\s/);
+                var currentLine = void 0;
+                for (var _c = 0, words_1 = words; _c < words_1.length; _c++) {
+                    var word = words_1[_c];
+                    if (!currentLine) {
+                        currentLine = word;
+                    }
+                    else if (currentLine.length + word.length > MAX_COMMENT_LINE_LENGTH) {
+                        commentNodes.push(blocks_1.mkText("// " + currentLine));
+                        commentNodes.push(blocks_1.mkNewLine());
+                        currentLine = word;
+                    }
+                    else {
+                        currentLine += " " + word;
+                    }
+                }
+                if (currentLine) {
+                    commentNodes.push(blocks_1.mkText("// " + currentLine));
+                    commentNodes.push(blocks_1.mkNewLine());
+                }
+                // The decompiler expects an empty comment line between paragraphs
+                if (i !== paragraphs.length - 1) {
+                    commentNodes.push(blocks_1.mkText("//"));
+                    commentNodes.push(blocks_1.mkNewLine());
+                }
+            }
+            for (var _d = 0, _e = commentNodes.reverse(); _d < _e.length; _d++) {
+                var commentNode = _e[_d];
+                r.unshift(commentNode);
+            }
+        }
+        function mkVariableDeclaration(v, e) {
+            var t = getConcreteType(v.type);
+            var defl;
+            if (t.type === "Array") {
+                defl = blocks_1.mkText("[]");
+            }
+            else {
+                defl = defaultValueForType(t);
+            }
+            var emitTp = false;
+            var tpname;
+            if (defl.op == "null" || defl.op == "[]") {
+                tpname = t.type;
+                // If the type is "Array" or null[] it means that we failed to narrow the type of array.
+                // Best we can do is just default to number[]
+                if (tpname === "Array" || tpname === "null[]") {
+                    tpname = "number[]";
+                }
+                var tpinfo = e.blocksInfo.apis.byQName[tpname];
+                if (tpinfo && tpinfo.attributes.autoCreate) {
+                    defl = blocks_1.mkText(tpinfo.attributes.autoCreate + "()");
+                }
+                else {
+                    emitTp = true;
+                }
+            }
+            e.generatedVarDeclarations[v.escapedName] = {
+                value: blocks_1.flattenNode([defl]).output
+            };
+            if (emitTp) {
+                e.generatedVarDeclarations[v.escapedName].type = tpname;
+            }
+            v.alreadyDeclared = BlockDeclarationType.Implicit;
+            return blocks_1.mkStmt(blocks_1.mkText("let " + v.escapedName + (emitTp ? ": " + tpname : "") + " = "), defl);
+        }
+        function countOptionals(b) {
+            if (b.mutationToDom) {
+                var el = b.mutationToDom();
+                if (el.hasAttribute("_expanded")) {
+                    var val = parseInt(el.getAttribute("_expanded"));
+                    return isNaN(val) ? 0 : Math.max(val, 0);
+                }
+            }
+            return 0;
+        }
+        function visibleParams(_a, optionalCount) {
+            var comp = _a.comp;
+            var res = [];
+            if (comp.thisParameter) {
+                res.push(comp.thisParameter);
+            }
+            comp.parameters.forEach(function (p) {
+                if (p.isOptional && optionalCount > 0) {
+                    res.push(p);
+                    --optionalCount;
+                }
+                else if (!p.isOptional) {
+                    res.push(p);
+                }
+            });
+            return res;
+        }
+        function getEscapedCBParameters(b, stdfun, e) {
+            return getCBParameters(b, stdfun).map(function (binding) { return lookup(e, b, binding[0]).escapedName; });
+        }
+        function getCBParameters(b, stdfun) {
+            var handlerArgs = [];
+            if (stdfun.attrs.draggableParameters) {
+                for (var i = 0; i < stdfun.comp.handlerArgs.length; i++) {
+                    var arg = stdfun.comp.handlerArgs[i];
+                    var varName = void 0;
+                    var varBlock = getInputTargetBlock(b, "HANDLER_DRAG_PARAM_" + arg.name);
+                    if (stdfun.attrs.draggableParameters === "reporter") {
+                        varName = varBlock && varBlock.getFieldValue("VALUE");
+                    }
+                    else {
+                        varName = varBlock && varBlock.getField("VAR").getText();
+                    }
+                    if (varName !== null) {
+                        handlerArgs.push([varName, mkPoint(arg.type)]);
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < stdfun.comp.handlerArgs.length; i++) {
+                    var arg = stdfun.comp.handlerArgs[i];
+                    var varField = b.getField("HANDLER_" + arg.name);
+                    var varName = varField && varField.getText();
+                    if (varName !== null) {
+                        handlerArgs.push([varName, mkPoint(arg.type)]);
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            return handlerArgs;
+        }
+        function groupWorkspaceComments(blocks, comments) {
+            if (!blocks.length || blocks.some(function (b) { return !b.rendered; })) {
+                return {
+                    orphans: comments,
+                    idToComments: {}
+                };
+            }
+            var blockBounds = blocks.map(function (block) {
+                var bounds = block.getBoundingRectangle();
+                var size = block.getHeightWidth();
+                return {
+                    id: block.id,
+                    x: bounds.left,
+                    y: bounds.top,
+                    width: size.width,
+                    height: size.height
+                };
+            });
+            var map = {
+                orphans: [],
+                idToComments: {}
+            };
+            var radius = 20;
+            for (var _i = 0, comments_2 = comments; _i < comments_2.length; _i++) {
+                var comment = comments_2[_i];
+                var bounds = comment.getBoundingRectangle();
+                var size = comment.getHeightWidth();
+                var x = bounds.left;
+                var y = bounds.top;
+                var parent_2 = void 0;
+                for (var _a = 0, blockBounds_1 = blockBounds; _a < blockBounds_1.length; _a++) {
+                    var rect = blockBounds_1[_a];
+                    if (doesIntersect(x, y, size.width, size.height, rect)) {
+                        parent_2 = rect;
+                    }
+                    else if (!parent_2 && doesIntersect(x - radius, y - radius, size.width + radius * 2, size.height + radius * 2, rect)) {
+                        parent_2 = rect;
+                    }
+                }
+                if (parent_2) {
+                    if (!map.idToComments[parent_2.id]) {
+                        map.idToComments[parent_2.id] = [];
+                    }
+                    map.idToComments[parent_2.id].push(comment);
+                }
+                else {
+                    map.orphans.push(comment);
+                }
+            }
+            return map;
+        }
+        function escapeVariables(current, e) {
+            for (var _i = 0, _a = Object.keys(current.declaredVars); _i < _a.length; _i++) {
+                var varName = _a[_i];
+                var info = current.declaredVars[varName];
+                if (!info.escapedName)
+                    info.escapedName = escapeVarName(varName);
+            }
+            current.children.forEach(function (c) { return escapeVariables(c, e); });
+            function escapeVarName(name) {
+                if (!name)
+                    return '_';
+                var n = ts.pxtc.escapeIdentifier(name);
+                if (e.renames.takenNames[n] || nameIsTaken(n, current)) {
+                    var i = 2;
+                    while (e.renames.takenNames[n + i] || nameIsTaken(n + i, current)) {
+                        i++;
+                    }
+                    n += i;
+                }
+                return n;
+            }
+            function nameIsTaken(name, scope) {
+                if (scope) {
+                    for (var _i = 0, _a = Object.keys(scope.declaredVars); _i < _a.length; _i++) {
+                        var varName = _a[_i];
+                        var info = scope.declaredVars[varName];
+                        if (info.name !== info.escapedName && info.escapedName === name)
+                            return true;
+                    }
+                    return nameIsTaken(name, scope.parent);
+                }
+                return false;
+            }
+        }
+        function findDeclaringScope(varInfo) {
+            if (varInfo.scopes === undefined || varInfo.scopes.length === 0) {
+                return undefined;
+            }
+            if (varInfo.scopes.length === 1) {
+                var onlyScope = varInfo.scopes[0];
+                return onlyScope.parent === undefined || onlyScope.variables[varInfo.name].isDefinitelyAssigned ? onlyScope : getPathToSelf(onlyScope)[0];
+            }
+            var lcaPath = findPathToLowestCommonAncestor(varInfo.scopes[0], varInfo.scopes[1]);
+            for (var i = 2; i < varInfo.scopes.length; i++) {
+                lcaPath = findPathToLowestCommonAncestor(lcaPath, varInfo.scopes[i]);
+            }
+            var lca = lcaPath[lcaPath.length - 1];
+            return lca.variables[varInfo.name].isDefinitelyAssigned ? lca : lcaPath[0];
+        }
+        function getPathToSelf(scope) {
+            var result = [scope];
+            for (var s = scope.parent; s !== undefined; s = s.parent) {
+                result.unshift(s);
+            }
+            return result;
+        }
+        function findPathToLowestCommonAncestor(a, b) {
+            var pathToA = Array.isArray(a) ? a : getPathToSelf(a);
+            var pathToB = getPathToSelf(b);
+            if (pathToA[0] !== pathToB[0]) {
+                return undefined;
+            }
+            var longer;
+            var shorter;
+            if (pathToA.length > pathToB.length) {
+                longer = pathToA;
+                shorter = pathToB;
+            }
+            else {
+                longer = pathToB;
+                shorter = pathToA;
+            }
+            for (var i = 1; i < shorter.length; i++) {
+                if (shorter[i] !== longer[i]) {
+                    return shorter.slice(0, i);
+                }
+            }
+            return shorter;
+        }
+        function trackAllVariables(topBlocks, e) {
+            var id = 0;
+            var topScope = {
+                declaredVars: {},
+                children: [],
+                variables: {}
+            };
+            // First, look for on-start
+            for (var _i = 0, topBlocks_1 = topBlocks; _i < topBlocks_1.length; _i++) {
+                var block = topBlocks_1[_i];
+                if (block.type === ts.pxtc.ON_START_TYPE) {
+                    var firstStatement = block.getInputTargetBlock("HANDLER");
+                    if (firstStatement) {
+                        trackVariables(firstStatement, topScope, e);
+                    }
+                    break;
+                }
+            }
+            topBlocks.forEach(function (block) {
+                if (block.type === ts.pxtc.ON_START_TYPE) {
+                    return;
+                }
+                trackVariables(block, topScope, e);
+            });
+            for (var _a = 0, _b = Object.keys(topScope.declaredVars); _a < _b.length; _a++) {
+                var varName = _b[_a];
+                var varInfo = topScope.declaredVars[varName];
+                delete topScope.declaredVars[varName];
+                var declaringScope = findDeclaringScope(varInfo);
+                declaringScope.declaredVars[varName] = varInfo;
+                varInfo.declaringScope = declaringScope;
+            }
+            recordAllVariables(topScope, e);
+            escapeVariables(topScope, e);
+            return topScope;
+            function addScopeToVarInfo(varInfo, scope) {
+                if (varInfo.scopes === undefined) {
+                    varInfo.scopes = [scope];
+                }
+                else if (varInfo.scopes.indexOf(scope) === -1) {
+                    varInfo.scopes.push(scope);
+                }
+            }
+            function referenceVariableInAncestors(scope, varName) {
+                for (var parentScope = scope.parent; parentScope !== undefined; parentScope = parentScope.parent) {
+                    if (parentScope.variables[varName] !== undefined) {
+                        break;
+                    }
+                    parentScope.variables[varName] = {
+                        isFirstReferencedInDescendant: true
+                    };
+                }
+            }
+            function referenceVariable(block, scope) {
+                var varName = block.getField("VAR").getText();
+                var varInfo = findOrDeclareVariable(varName, scope);
+                addScopeToVarInfo(varInfo, scope);
+                if (scope.variables[varName] === undefined) {
+                    scope.variables[varName] = {
+                        firstReferencingBlock: block,
+                        isDefinitelyAssigned: block.type === "variables_set" && ((function () {
+                            var result = true;
+                            forEachChildExpression(block, function (child) {
+                                if (result && child.type === "variables_get" && child.getField("VAR").getText() === varName) {
+                                    result = false;
+                                }
+                            }, true);
+                            return result;
+                        })())
+                    };
+                    referenceVariableInAncestors(scope, varName);
+                }
+            }
+            function trackVariables(block, currentScope, e) {
+                e.idToScope[block.id] = currentScope;
+                if (block.type === "variables_get" || block.type === "variables_change" || block.type === "variables_set") {
+                    referenceVariable(block, currentScope);
+                }
+                else if (block.type === pxtc.TS_STATEMENT_TYPE) {
+                    var declaredVars = block.declaredVariables;
+                    if (declaredVars) {
+                        var varNames = declaredVars.split(",");
+                        varNames.forEach(function (vName) {
+                            var info = findOrDeclareVariable(vName, currentScope);
+                            info.alreadyDeclared = BlockDeclarationType.Argument;
+                            currentScope.variables[vName] = {
+                                firstReferencingBlock: block,
+                                isDefinitelyAssigned: true
+                            };
+                            referenceVariableInAncestors(currentScope, vName);
+                            addScopeToVarInfo(info, currentScope);
+                        });
+                    }
+                }
+                if (hasStatementInput(block)) {
+                    var vars = getDeclaredVariables(block, e).map(function (binding) {
+                        return {
+                            name: binding[0],
+                            type: binding[1],
+                            id: id++
+                        };
+                    });
+                    var inputScope_1 = currentScope;
+                    if (vars.length) {
+                        // We need to create a scope for this block, and then a scope
+                        // for each statement input (in case there are multiple)
+                        inputScope_1 = {
+                            parent: currentScope,
+                            declaredVars: {},
+                            children: [],
+                            variables: {}
+                        };
+                        vars.forEach(function (v) {
+                            v.alreadyDeclared = BlockDeclarationType.Assigned;
+                            inputScope_1.declaredVars[v.name] = v;
+                            inputScope_1.variables[v.name] = {
+                                firstReferencingBlock: block,
+                                isDefinitelyAssigned: true
+                            };
+                            addScopeToVarInfo(v, inputScope_1);
+                        });
+                        e.idToScope[block.id] = inputScope_1;
+                    }
+                    if (currentScope !== inputScope_1) {
+                        currentScope.children.push(inputScope_1);
+                    }
+                    forEachChildExpression(block, function (child) {
+                        trackVariables(child, inputScope_1, e);
+                    });
+                    forEachStatementInput(block, function (connectedBlock) {
+                        var newScope = {
+                            parent: inputScope_1,
+                            declaredVars: {},
+                            children: [],
+                            variables: {}
+                        };
+                        inputScope_1.children.push(newScope);
+                        trackVariables(connectedBlock, newScope, e);
+                    });
+                }
+                else {
+                    forEachChildExpression(block, function (child) {
+                        trackVariables(child, currentScope, e);
+                    });
+                }
+                if (block.nextConnection && block.nextConnection.targetBlock()) {
+                    trackVariables(block.nextConnection.targetBlock(), currentScope, e);
+                }
+            }
+            function findOrDeclareVariable(name, scope) {
+                if (scope.declaredVars[name]) {
+                    return scope.declaredVars[name];
+                }
+                else if (scope.parent) {
+                    return findOrDeclareVariable(name, scope.parent);
+                }
+                else {
+                    // Declare it in the top scope
+                    scope.declaredVars[name] = {
+                        name: name,
+                        type: mkPoint(null),
+                        id: id++
+                    };
+                    return scope.declaredVars[name];
+                }
+            }
+        }
+        function getVarInfo(name, scope) {
+            if (scope && scope.declaredVars[name]) {
+                return scope.declaredVars[name];
+            }
+            else if (scope && scope.parent) {
+                return getVarInfo(name, scope.parent);
+            }
+            else {
+                return null;
+            }
+        }
+        function hasStatementInput(block) {
+            return block.inputList.some(function (i) { return i.type === Blockly.NEXT_STATEMENT; });
+        }
+        function getDeclaredVariables(block, e) {
+            switch (block.type) {
+                case 'pxt_controls_for':
+                case 'controls_simple_for':
+                    return [[getLoopVariableField(block).getField("VAR").getText(), pNumber]];
+                case 'pxt_controls_for_of':
+                case 'controls_for_of':
+                    return [[getLoopVariableField(block).getField("VAR").getText(), mkPoint(null)]];
+                case 'function_definition':
+                    var vars = [];
+                    for (var _i = 0, _a = block.getArguments(); _i < _a.length; _i++) {
+                        var a = _a[_i];
+                        vars.push([a.name, mkPoint(a.type)]);
+                    }
+                    return vars;
+                default:
+                    break;
+            }
+            if (isMutatingBlock(block)) {
+                var declarations_1 = block.mutation.getDeclaredVariables();
+                if (declarations_1) {
+                    return Object.keys(declarations_1).map(function (varName) { return [varName, mkPoint(declarations_1[varName])]; });
+                }
+            }
+            var stdFunc = e.stdCallTable[block.type];
+            if (stdFunc && stdFunc.comp.handlerArgs.length) {
+                return getCBParameters(block, stdFunc);
+            }
+            return [];
+        }
+        function forEachChildExpression(block, cb, recursive) {
+            if (recursive === void 0) { recursive = false; }
+            block.inputList.filter(function (i) { return i.type === Blockly.INPUT_VALUE; }).forEach(function (i) {
+                if (i.connection && i.connection.targetBlock()) {
+                    cb(i.connection.targetBlock());
+                    if (recursive) {
+                        forEachChildExpression(i.connection.targetBlock(), cb, recursive);
+                    }
+                }
+            });
+        }
+        function forEachStatementInput(block, cb) {
+            block.inputList.filter(function (i) { return i.type === Blockly.NEXT_STATEMENT; }).forEach(function (i) {
+                if (i.connection && i.connection.targetBlock()) {
+                    cb(i.connection.targetBlock());
+                }
+            });
+        }
+        function printScope(scope, depth) {
+            if (depth === void 0) { depth = 0; }
+            var declared = Object.keys(scope.declaredVars).map(function (k) { return k + "(" + scope.declaredVars[k].id + ")"; }).join(",");
+            if (declared.length) {
+                console.log(mkIndent(depth) + declared);
+            }
+            scope.children.forEach(function (s) { return printScope(s, depth + 1); });
+        }
+        function mkIndent(depth) {
+            var res = "";
+            for (var i = 0; i < depth; i++) {
+                res += "    ";
+            }
+            return res;
+        }
+        function recordAllVariables(scope, e) {
+            for (var _i = 0, _a = Object.keys(scope.declaredVars); _i < _a.length; _i++) {
+                var varName = _a[_i];
+                var varInfo = scope.declaredVars[varName];
+                e.allVariables[varInfo.id] = varInfo;
+            }
+            scope.children.forEach(function (child) { return recordAllVariables(child, e); });
+        }
+        function doesIntersect(x, y, width, height, other) {
+            var xOverlap = between(x, other.x, other.x + other.width) || between(other.x, x, x + width);
+            var yOverlap = between(y, other.y, other.y + other.height) || between(other.y, y, y + height);
+            return xOverlap && yOverlap;
+            function between(val, lower, upper) {
+                return val >= lower && val <= upper;
+            }
+        }
+        function isFunctionDefinition(b) {
+            return b.type === "procedures_defnoreturn" || b.type === "function_definition";
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        var registeredFieldEditors = {};
+        function initFieldEditors() {
+            registerFieldEditor('text', pxtblockly.FieldTextInput);
+            registerFieldEditor('note', pxtblockly.FieldNote);
+            registerFieldEditor('gridpicker', pxtblockly.FieldGridPicker);
+            registerFieldEditor('textdropdown', pxtblockly.FieldTextDropdown);
+            registerFieldEditor('numberdropdown', pxtblockly.FieldNumberDropdown);
+            registerFieldEditor('imagedropdown', pxtblockly.FieldImageDropdown);
+            registerFieldEditor('colorwheel', pxtblockly.FieldColorWheel);
+            registerFieldEditor('toggle', pxtblockly.FieldToggle);
+            registerFieldEditor('toggleonoff', pxtblockly.FieldToggleOnOff);
+            registerFieldEditor('toggleyesno', pxtblockly.FieldToggleYesNo);
+            registerFieldEditor('toggleupdown', pxtblockly.FieldToggleUpDown);
+            registerFieldEditor('toggledownup', pxtblockly.FieldToggleDownUp);
+            registerFieldEditor('togglehighlow', pxtblockly.FieldToggleHighLow);
+            registerFieldEditor('togglewinlose', pxtblockly.FieldToggleWinLose);
+            registerFieldEditor('colornumber', pxtblockly.FieldColorNumber);
+            registerFieldEditor('images', pxtblockly.FieldImages);
+            registerFieldEditor('sprite', pxtblockly.FieldSpriteEditor);
+            registerFieldEditor('animation', pxtblockly.FieldAnimationEditor);
+            registerFieldEditor('tilemap', pxtblockly.FieldTilemap);
+            registerFieldEditor('tileset', pxtblockly.FieldTileset);
+            registerFieldEditor('speed', pxtblockly.FieldSpeed);
+            registerFieldEditor('turnratio', pxtblockly.FieldTurnRatio);
+            registerFieldEditor('protractor', pxtblockly.FieldProtractor);
+            registerFieldEditor('position', pxtblockly.FieldPosition);
+            registerFieldEditor('melody', pxtblockly.FieldCustomMelody);
+        }
+        blocks.initFieldEditors = initFieldEditors;
+        function registerFieldEditor(selector, field, validator) {
+            if (registeredFieldEditors[selector] == undefined) {
+                registeredFieldEditors[selector] = {
+                    field: field,
+                    validator: validator
+                };
+            }
+        }
+        blocks.registerFieldEditor = registerFieldEditor;
+        function createFieldEditor(selector, text, params) {
+            if (registeredFieldEditors[selector] == undefined) {
+                console.error("Field editor " + selector + " not registered");
+                return null;
+            }
+            if (!params) {
+                params = {};
+            }
+            pxt.Util.assert(params.lightMode == undefined, "lightMode is a reserved parameter for custom fields");
+            params.lightMode = pxt.options.light;
+            var customField = registeredFieldEditors[selector];
+            var instance = new customField.field(text, params, customField.validator);
+            return instance;
+        }
+        blocks.createFieldEditor = createFieldEditor;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        function diffXml(oldXml, newXml, options) {
+            var oldWs = pxt.blocks.loadWorkspaceXml(oldXml, true);
+            var newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
+            return diffWorkspace(oldWs, newWs, options);
+        }
+        blocks.diffXml = diffXml;
+        var UNMODIFIED_COLOR = "#d0d0d0";
+        // Workspaces are modified in place!
+        function diffWorkspace(oldWs, newWs, options) {
+            try {
+                Blockly.Events.disable();
+                return diffWorkspaceNoEvents(oldWs, newWs, options);
+            }
+            catch (e) {
+                pxt.reportException(e);
+                return {
+                    ws: undefined,
+                    message: lf("Oops, we could not diff those blocks."),
+                    error: e,
+                    deleted: 0,
+                    added: 0,
+                    modified: 0
+                };
+            }
+            finally {
+                Blockly.Events.enable();
+            }
+        }
+        function diffWorkspaceNoEvents(oldWs, newWs, options) {
+            pxt.tickEvent("blocks.diff", { started: 1 });
+            options = options || {};
+            var log = pxt.options.debug || (window && /diffdbg=1/.test(window.location.href))
+                ? console.log : function (message) {
+                var args = [];
+                for (var _i = 1; _i < arguments.length; _i++) {
+                    args[_i - 1] = arguments[_i];
+                }
+            };
+            if (!oldWs) {
+                return {
+                    ws: undefined,
+                    message: lf("All blocks are new."),
+                    added: 0,
+                    deleted: 0,
+                    modified: 1
+                }; // corrupted blocks
+            }
+            if (!newWs) {
+                return {
+                    ws: undefined,
+                    message: lf("The current blocks seem corrupted."),
+                    added: 0,
+                    deleted: 0,
+                    modified: 1
+                }; // corrupted blocks
+            }
+            // remove all unmodified topblocks
+            // when doing a Blocks->TS roundtrip, all ids are trashed.
+            var oldXml = pxt.Util.toDictionary(oldWs.getTopBlocks(false), function (b) { return normalizedDom(b, true); });
+            newWs.getTopBlocks(false)
+                .forEach(function (newb) {
+                var newn = normalizedDom(newb, true);
+                // try to find by id or by matching normalized xml
+                var oldb = oldWs.getBlockById(newb.id) || oldXml[newn];
+                if (oldb) {
+                    var oldn = normalizedDom(oldb, true);
+                    if (newn == oldn) {
+                        log("fast unmodified top ", newb.id);
+                        newb.dispose(false);
+                        oldb.dispose(false);
+                    }
+                }
+            });
+            // we'll ignore disabled blocks in the final output
+            var oldBlocks = oldWs.getAllBlocks().filter(function (b) { return !b.disabled; });
+            var oldTopBlocks = oldWs.getTopBlocks(false).filter(function (b) { return !b.disabled; });
+            var newBlocks = newWs.getAllBlocks().filter(function (b) { return !b.disabled; });
+            log("blocks", newBlocks.map(function (b) { return b.toDevString(); }));
+            log(newBlocks);
+            if (oldBlocks.length == 0 && newBlocks.length == 0) {
+                pxt.tickEvent("blocks.diff", { moves: 1 });
+                return {
+                    ws: undefined,
+                    message: lf("Some blocks were moved or changed."),
+                    added: 0,
+                    deleted: 0,
+                    modified: 1
+                }; // just moves
+            }
+            // locate deleted and added blocks
+            var deletedTopBlocks = oldTopBlocks.filter(function (b) { return !newWs.getBlockById(b.id); });
+            var deletedBlocks = oldBlocks.filter(function (b) { return !newWs.getBlockById(b.id); });
+            var addedBlocks = newBlocks.filter(function (b) { return !oldWs.getBlockById(b.id); });
+            // clone new workspace into rendering workspace
+            var ws = pxt.blocks.initRenderingWorkspace();
+            var newXml = pxt.blocks.saveWorkspaceXml(newWs, true);
+            pxt.blocks.domToWorkspaceNoEvents(Blockly.Xml.textToDom(newXml), ws);
+            // delete disabled blocks from final workspace
+            ws.getAllBlocks().filter(function (b) { return b.disabled; }).forEach(function (b) {
+                log('disabled ', b.toDevString());
+                b.dispose(false);
+            });
+            var todoBlocks = pxt.Util.toDictionary(ws.getAllBlocks(), function (b) { return b.id; });
+            log("todo blocks", todoBlocks);
+            logTodo('start');
+            // 1. deleted top blocks
+            if (!options.hideDeletedTopBlocks) {
+                deletedTopBlocks.forEach(function (b) {
+                    log("deleted top " + b.toDevString());
+                    done(b);
+                    var b2 = cloneIntoDiff(b);
+                    done(b2);
+                    b2.setDisabled(true);
+                });
+                logTodo('deleted top');
+            }
+            // 2. added blocks
+            addedBlocks.map(function (b) { return ws.getBlockById(b.id); })
+                .filter(function (b) { return !!b; }) // ignore disabled
+                .forEach(function (b) {
+                log("added " + b.toDevString());
+                //b.inputList[0].insertFieldAt(0, new Blockly.FieldImage(ADD_IMAGE_DATAURI, 24, 24, false));
+                done(b);
+            });
+            logTodo('added');
+            // 3. delete statement blocks
+            // inject deleted blocks in new workspace
+            var dids = {};
+            var deletedStatementBlocks = deletedBlocks
+                .filter(function (b) { return !todoBlocks[b.id]
+                && !isUsed(b)
+                && (!b.outputConnection || !b.outputConnection.isConnected()); } // ignore reporters
+            );
+            deletedStatementBlocks
+                .forEach(function (b) {
+                var b2 = cloneIntoDiff(b);
+                dids[b.id] = b2.id;
+                log("deleted block " + b.toDevString() + "->" + b2.toDevString());
+            });
+            // connect deleted blocks together
+            deletedStatementBlocks
+                .forEach(function (b) { return stitch(b); });
+            // 4. moved blocks
+            var modified = 0;
+            pxt.Util.values(todoBlocks).filter(function (b) { return moved(b); }).forEach(function (b) {
+                log("moved " + b.toDevString());
+                delete todoBlocks[b.id];
+                markUsed(b);
+                modified++;
+            });
+            logTodo('moved');
+            // 5. blocks with field properties that changed
+            pxt.Util.values(todoBlocks).filter(function (b) { return changed(b); }).forEach(function (b) {
+                log("changed " + b.toDevString());
+                delete todoBlocks[b.id];
+                markUsed(b);
+                modified++;
+            });
+            logTodo('changed');
+            // delete unmodified top blocks
+            ws.getTopBlocks(false)
+                .forEach(function (b) {
+                if (!findUsed(b)) {
+                    log("unmodified top " + b.toDevString());
+                    delete todoBlocks[b.id];
+                    b.dispose(false);
+                }
+            });
+            logTodo('cleaned');
+            // all unmodifed blocks are greyed out
+            pxt.Util.values(todoBlocks).filter(function (b) { return !!ws.getBlockById(b.id); }).forEach(function (b) {
+                b.setColour(UNMODIFIED_COLOR);
+                forceRender(b);
+            });
+            // if nothing is left in the workspace, we "missed" change
+            if (!ws.getAllBlocks().length) {
+                pxt.tickEvent("blocks.diff", { missed: 1 });
+                return {
+                    ws: ws,
+                    message: lf("Some blocks were changed."),
+                    deleted: deletedBlocks.length,
+                    added: addedBlocks.length,
+                    modified: modified
+                };
+            }
+            // make sure everything is rendered
+            ws.resize();
+            Blockly.svgResize(ws);
+            // final render
+            var svg = pxt.blocks.renderWorkspace(options.renderOptions || {
+                emPixels: 20,
+                layout: blocks.BlockLayout.Flow,
+                aspectRatio: 0.5,
+                useViewWidth: true
+            });
+            // and we're done
+            var r = {
+                ws: ws,
+                svg: svg,
+                deleted: deletedBlocks.length,
+                added: addedBlocks.length,
+                modified: modified
+            };
+            pxt.tickEvent("blocks.diff", { deleted: r.deleted, added: r.added, modified: r.modified });
+            return r;
+            function stitch(b) {
+                log("stitching " + b.toDevString() + "->" + dids[b.id]);
+                var wb = ws.getBlockById(dids[b.id]);
+                wb.setDisabled(true);
+                markUsed(wb);
+                done(wb);
+                // connect previous connection to delted or existing block
+                var previous = b.getPreviousBlock();
+                if (previous) {
+                    var previousw = ws.getBlockById(dids[previous.id]) || ws.getBlockById(previous.id);
+                    log("previous " + b.id + "->" + wb.toDevString() + ": " + previousw.toDevString());
+                    if (previousw) {
+                        // either connected under or in the block
+                        if (previousw.nextConnection)
+                            wb.previousConnection.connect(previousw.nextConnection);
+                        else {
+                            var ic = previousw.inputList.slice()
+                                .reverse()
+                                .find(function (input) { return input.connection && input.connection.type == Blockly.NEXT_STATEMENT; });
+                            if (ic)
+                                wb.previousConnection.connect(ic.connection);
+                        }
+                    }
+                }
+                // connect next connection to delete or existing block
+                var next = b.getNextBlock();
+                if (next) {
+                    var nextw = ws.getBlockById(dids[next.id]) || ws.getBlockById(next.id);
+                    if (nextw) {
+                        log("next " + b.id + "->" + wb.toDevString() + ": " + nextw.toDevString());
+                        wb.nextConnection.connect(nextw.previousConnection);
+                    }
+                }
+            }
+            function markUsed(b) {
+                b.__pxt_used = true;
+            }
+            function isUsed(b) {
+                return !!b.__pxt_used;
+            }
+            function cloneIntoDiff(b) {
+                var bdom = Blockly.Xml.blockToDom(b, false);
+                var b2 = Blockly.Xml.domToBlock(bdom, ws);
+                // disconnect
+                if (b2.nextConnection && b2.nextConnection.targetConnection)
+                    b2.nextConnection.disconnect();
+                if (b2.previousConnection && b2.previousConnection.targetConnection)
+                    b2.previousConnection.disconnect();
+                return b2;
+            }
+            function forceRender(b) {
+                var a = b;
+                a.rendered = false;
+                b.inputList.forEach(function (i) { return i.fieldRow.forEach(function (f) {
+                    f.init();
+                    if (f.box_) {
+                        f.box_.setAttribute('fill', b.getColour());
+                        f.box_.setAttribute('stroke', b.getColourTertiary());
+                    }
+                }); });
+            }
+            function done(b) {
+                b.getDescendants(false).forEach(function (t) { delete todoBlocks[t.id]; markUsed(t); });
+            }
+            function findUsed(b) {
+                return !!b.getDescendants(false).find(function (c) { return isUsed(c); });
+            }
+            function logTodo(msg) {
+                log(msg + ":", pxt.Util.values(todoBlocks).map(function (b) { return b.toDevString(); }));
+            }
+            function moved(b) {
+                var oldb = oldWs.getBlockById(b.id); // extra block created in added step
+                if (!oldb)
+                    return false;
+                var newPrevious = b.getPreviousBlock();
+                // connection already already processed
+                if (newPrevious && !todoBlocks[newPrevious.id])
+                    return false;
+                var newNext = b.getNextBlock();
+                // already processed
+                if (newNext && !todoBlocks[newNext.id])
+                    return false;
+                var oldPrevious = oldb.getPreviousBlock();
+                if (!oldPrevious && !newPrevious)
+                    return false; // no connection
+                if (!!oldPrevious != !!newPrevious // new connection
+                    || oldPrevious.id != newPrevious.id)
+                    return true;
+                var oldNext = oldb.getNextBlock();
+                if (!oldNext && !newNext)
+                    return false; // no connection
+                if (!!oldNext != !!newNext // new connection
+                    || oldNext.id != newNext.id)
+                    return true;
+                return false;
+            }
+            function changed(b) {
+                var oldb = oldWs.getBlockById(b.id); // extra block created in added step
+                if (!oldb)
+                    return false;
+                // normalize
+                //oldb = copyToTrashWs(oldb);
+                var oldText = normalizedDom(oldb);
+                //b = copyToTrashWs(b);
+                var newText = normalizedDom(b);
+                if (oldText != newText) {
+                    log("old " + oldb.toDevString(), oldText);
+                    log("new " + b.toDevString(), newText);
+                    return true;
+                }
+                // not changed!
+                return false;
+            }
+        }
+        function mergeXml(xmlA, xmlO, xmlB) {
+            if (xmlA == xmlO)
+                return xmlB;
+            if (xmlB == xmlO)
+                return xmlA;
+            // TODO merge
+            return undefined;
+        }
+        blocks.mergeXml = mergeXml;
+        function normalizedDom(b, keepChildren) {
+            var dom = Blockly.Xml.blockToDom(b, true);
+            normalizeAttributes(dom);
+            visDom(dom, function (e) {
+                normalizeAttributes(e);
+                if (!keepChildren) {
+                    if (e.localName == "next")
+                        e.remove(); // disconnect or unplug not working propertly
+                    if (e.localName == "statement")
+                        e.remove();
+                }
+            });
+            return Blockly.Xml.domToText(dom);
+        }
+        function normalizeAttributes(e) {
+            e.removeAttribute("id");
+            e.removeAttribute("x");
+            e.removeAttribute("y");
+            e.removeAttribute("deletable");
+            e.removeAttribute("editable");
+            e.removeAttribute("movable");
+        }
+        function visDom(el, f) {
+            if (!el)
+                return;
+            f(el);
+            for (var _i = 0, _a = pxt.Util.toArray(el.children); _i < _a.length; _i++) {
+                var child = _a[_i];
+                visDom(child, f);
+            }
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+///<reference path='../localtypings/pxtblockly.d.ts'/>
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_2) {
+        /**
+         * Converts a DOM into workspace without triggering any Blockly event. Returns the new block ids
+         * @param dom
+         * @param workspace
+         */
+        function domToWorkspaceNoEvents(dom, workspace) {
+            pxt.tickEvent("blocks.domtow");
+            try {
+                Blockly.Events.disable();
+                var newBlockIds = Blockly.Xml.domToWorkspace(dom, workspace);
+                applyMetaComments(workspace);
+                return newBlockIds;
+            }
+            finally {
+                Blockly.Events.enable();
+            }
+        }
+        blocks_2.domToWorkspaceNoEvents = domToWorkspaceNoEvents;
+        function applyMetaComments(workspace) {
+            // process meta comments
+            // @highlight -> highlight block
+            workspace.getAllBlocks()
+                .filter(function (b) { return !!b.comment && b.comment instanceof Blockly.Comment; })
+                .forEach(function (b) {
+                var c = b.comment.getText();
+                if (/@highlight/.test(c)) {
+                    var cc = c.replace(/@highlight/g, '').trim();
+                    b.setCommentText(cc || null);
+                    workspace.highlightBlock(b.id);
+                }
+            });
+        }
+        function clearWithoutEvents(workspace) {
+            pxt.tickEvent("blocks.clear");
+            if (!workspace)
+                return;
+            try {
+                Blockly.Events.disable();
+                workspace.clear();
+                workspace.clearUndo();
+            }
+            finally {
+                Blockly.Events.enable();
+            }
+        }
+        blocks_2.clearWithoutEvents = clearWithoutEvents;
+        function saveWorkspaceXml(ws, keepIds) {
+            var xml = Blockly.Xml.workspaceToDom(ws, !keepIds);
+            var text = Blockly.Xml.domToText(xml);
+            return text;
+        }
+        blocks_2.saveWorkspaceXml = saveWorkspaceXml;
+        function getDirectChildren(parent, tag) {
+            var res = [];
+            for (var i = 0; i < parent.childNodes.length; i++) {
+                var n = parent.childNodes.item(i);
+                if (n.tagName === tag) {
+                    res.push(n);
+                }
+            }
+            return res;
+        }
+        blocks_2.getDirectChildren = getDirectChildren;
+        function getBlocksWithType(parent, type) {
+            return getChildrenWithAttr(parent, "block", "type", type).concat(getChildrenWithAttr(parent, "shadow", "type", type));
+        }
+        blocks_2.getBlocksWithType = getBlocksWithType;
+        function getChildrenWithAttr(parent, tag, attr, value) {
+            return pxt.Util.toArray(parent.getElementsByTagName(tag)).filter(function (b) { return b.getAttribute(attr) === value; });
+        }
+        blocks_2.getChildrenWithAttr = getChildrenWithAttr;
+        function getFirstChildWithAttr(parent, tag, attr, value) {
+            var res = getChildrenWithAttr(parent, tag, attr, value);
+            return res.length ? res[0] : undefined;
+        }
+        blocks_2.getFirstChildWithAttr = getFirstChildWithAttr;
+        /**
+         * Loads the xml into a off-screen workspace (not suitable for size computations)
+         */
+        function loadWorkspaceXml(xml, skipReport) {
+            if (skipReport === void 0) { skipReport = false; }
+            var workspace = new Blockly.Workspace();
+            try {
+                var dom = Blockly.Xml.textToDom(xml);
+                pxt.blocks.domToWorkspaceNoEvents(dom, workspace);
+                return workspace;
+            }
+            catch (e) {
+                if (!skipReport)
+                    pxt.reportException(e);
+                return null;
+            }
+        }
+        blocks_2.loadWorkspaceXml = loadWorkspaceXml;
+        function patchFloatingBlocks(dom, info) {
+            var onstarts = getBlocksWithType(dom, ts.pxtc.ON_START_TYPE);
+            var onstart = onstarts.length ? onstarts[0] : undefined;
+            if (onstart) {
+                onstart.removeAttribute("deletable");
+                return;
+            }
+            var newnodes = [];
+            var blocks = info.blocksById;
+            // walk top level blocks
+            var node = dom.firstElementChild;
+            var insertNode = undefined;
+            while (node) {
+                var nextNode = node.nextElementSibling;
+                // does this block is disable or have s nested statement block?
+                var nodeType = node.getAttribute("type");
+                if (!node.getAttribute("disabled") && !node.getElementsByTagName("statement").length
+                    && (pxt.blocks.buildinBlockStatements[nodeType] ||
+                        (blocks[nodeType] && blocks[nodeType].retType == "void" && !blocks_2.hasArrowFunction(blocks[nodeType])))) {
+                    // old block, needs to be wrapped in onstart
+                    if (!insertNode) {
+                        insertNode = dom.ownerDocument.createElement("statement");
+                        insertNode.setAttribute("name", "HANDLER");
+                        if (!onstart) {
+                            onstart = dom.ownerDocument.createElement("block");
+                            onstart.setAttribute("type", ts.pxtc.ON_START_TYPE);
+                            newnodes.push(onstart);
+                        }
+                        onstart.appendChild(insertNode);
+                        insertNode.appendChild(node);
+                        node.removeAttribute("x");
+                        node.removeAttribute("y");
+                        insertNode = node;
+                    }
+                    else {
+                        // event, add nested statement
+                        var next = dom.ownerDocument.createElement("next");
+                        next.appendChild(node);
+                        insertNode.appendChild(next);
+                        node.removeAttribute("x");
+                        node.removeAttribute("y");
+                        insertNode = node;
+                    }
+                }
+                node = nextNode;
+            }
+            newnodes.forEach(function (n) { return dom.appendChild(n); });
+        }
+        /**
+         * Patch to transform old function blocks to new ones, and rename child nodes
+         */
+        function patchFunctionBlocks(dom, info) {
+            var functionNodes = pxt.U.toArray(dom.querySelectorAll("block[type=procedures_defnoreturn]"));
+            functionNodes.forEach(function (node) {
+                node.setAttribute("type", "function_definition");
+                node.querySelector("field[name=NAME]").setAttribute("name", "function_name");
+            });
+            var functionCallNodes = pxt.U.toArray(dom.querySelectorAll("block[type=procedures_callnoreturn]"));
+            functionCallNodes.forEach(function (node) {
+                node.setAttribute("type", "function_call");
+                node.querySelector("field[name=NAME]").setAttribute("name", "function_name");
+            });
+        }
+        function importXml(pkgTargetVersion, xml, info, skipReport) {
+            if (skipReport === void 0) { skipReport = false; }
+            try {
+                // If it's the first project we're importing in the session, Blockly is not initialized
+                // and blocks haven't been injected yet
+                pxt.blocks.initializeAndInject(info);
+                var parser = new DOMParser();
+                var doc_1 = parser.parseFromString(xml, "application/xml");
+                var upgrades = pxt.patching.computePatches(pkgTargetVersion);
+                if (upgrades) {
+                    // patch block types
+                    upgrades.filter(function (up) { return up.type == "blockId"; })
+                        .forEach(function (up) { return Object.keys(up.map).forEach(function (type) {
+                        getBlocksWithType(doc_1, type)
+                            .forEach(function (blockNode) {
+                            blockNode.setAttribute("type", up.map[type]);
+                            pxt.debug("patched block " + type + " -> " + up.map[type]);
+                        });
+                    }); });
+                    // patch block value
+                    upgrades.filter(function (up) { return up.type == "blockValue"; })
+                        .forEach(function (up) { return Object.keys(up.map).forEach(function (k) {
+                        var m = k.split('.');
+                        var type = m[0];
+                        var name = m[1];
+                        getBlocksWithType(doc_1, type)
+                            .reduce(function (prev, current) { return prev.concat(getDirectChildren(current, "value")); }, [])
+                            .forEach(function (blockNode) {
+                            blockNode.setAttribute("name", up.map[k]);
+                            pxt.debug("patched block value " + k + " -> " + up.map[k]);
+                        });
+                    }); });
+                    // patch enum variables
+                    upgrades.filter(function (up) { return up.type == "userenum"; })
+                        .forEach(function (up) { return Object.keys(up.map).forEach(function (k) {
+                        getChildrenWithAttr(doc_1, "variable", "type", k).forEach(function (el) {
+                            el.setAttribute("type", up.map[k]);
+                            pxt.debug("patched enum variable type " + k + " -> " + up.map[k]);
+                        });
+                    }); });
+                }
+                // build upgrade map
+                var enums_1 = {};
+                Object.keys(info.apis.byQName).forEach(function (k) {
+                    var api = info.apis.byQName[k];
+                    if (api.kind == 7 /* EnumMember */)
+                        enums_1[api.namespace + '.' + (api.attributes.blockImportId || api.attributes.block || api.attributes.blockId || api.name)]
+                            = api.namespace + '.' + api.name;
+                });
+                // walk through blocks and patch enums
+                var blocks_3 = doc_1.getElementsByTagName("block");
+                for (var i = 0; i < blocks_3.length; ++i)
+                    patchBlock(info, enums_1, blocks_3[i]);
+                // patch floating blocks
+                patchFloatingBlocks(doc_1.documentElement, info);
+                // patch function blocks
+                patchFunctionBlocks(doc_1.documentElement, info);
+                // apply extension patches
+                if (pxt.blocks.extensionBlocklyPatch)
+                    pxt.blocks.extensionBlocklyPatch(pkgTargetVersion, doc_1.documentElement);
+                // serialize and return
+                return new XMLSerializer().serializeToString(doc_1);
+            }
+            catch (e) {
+                if (!skipReport)
+                    pxt.reportException(e);
+                return xml;
+            }
+        }
+        blocks_2.importXml = importXml;
+        function patchBlock(info, enums, block) {
+            var type = block.getAttribute("type");
+            var b = Blockly.Blocks[type];
+            var symbol = blocks_2.blockSymbol(type);
+            if (!symbol || !b)
+                return;
+            var comp = blocks_2.compileInfo(symbol);
+            symbol.parameters.forEach(function (p, i) {
+                var ptype = info.apis.byQName[p.type];
+                if (ptype && ptype.kind == 6 /* Enum */) {
+                    var field = getFirstChildWithAttr(block, "field", "name", comp.actualNameToParam[p.name].definitionName);
+                    if (field) {
+                        var en = enums[ptype.name + '.' + field.textContent];
+                        if (en)
+                            field.textContent = en;
+                    }
+                    /*
+    <block type="device_button_event" x="92" y="77">
+        <field name="NAME">Button.AB</field>
+      </block>
+                      */
+                }
+            });
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_4) {
+        var layout;
+        (function (layout) {
+            function patchBlocksFromOldWorkspace(blockInfo, oldWs, newXml) {
+                var newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
+                // position blocks
+                alignBlocks(blockInfo, oldWs, newWs);
+                // inject disabled blocks
+                return injectDisabledBlocks(oldWs, newWs);
+            }
+            layout.patchBlocksFromOldWorkspace = patchBlocksFromOldWorkspace;
+            function injectDisabledBlocks(oldWs, newWs) {
+                var oldDom = Blockly.Xml.workspaceToDom(oldWs, true);
+                var newDom = Blockly.Xml.workspaceToDom(newWs, true);
+                pxt.Util.toArray(oldDom.childNodes)
+                    .filter(function (n) { return n.nodeType == Node.ELEMENT_NODE && n.localName == "block" && n.getAttribute("disabled") == "true"; })
+                    .forEach(function (n) { return newDom.appendChild(newDom.ownerDocument.importNode(n, true)); });
+                var updatedXml = Blockly.Xml.domToText(newDom);
+                return updatedXml;
+            }
+            function alignBlocks(blockInfo, oldWs, newWs) {
+                var env;
+                var newBlocks; // support for multiple events with similar name
+                oldWs.getTopBlocks(false).filter(function (ob) { return !ob.disabled; })
+                    .forEach(function (ob) {
+                    var otp = ob.xy_;
+                    if (otp && otp.x != 0 && otp.y != 0) {
+                        if (!env) {
+                            env = pxt.blocks.mkEnv(oldWs, blockInfo);
+                            newBlocks = {};
+                            newWs.getTopBlocks(false).forEach(function (b) {
+                                var nkey = pxt.blocks.callKey(env, b);
+                                var nbs = newBlocks[nkey] || [];
+                                nbs.push(b);
+                                newBlocks[nkey] = nbs;
+                            });
+                        }
+                        var oldKey = pxt.blocks.callKey(env, ob);
+                        var newBlock = (newBlocks[oldKey] || []).shift();
+                        if (newBlock)
+                            newBlock.xy_ = otp.clone();
+                    }
+                });
+            }
+            /**
+             * Splits a blockly SVG AFTER a vertical layout. This function relies on the ordering
+             * of blocks / comments to get as getTopBlock(true)/getTopComment(true)
+             */
+            function splitSvg(svg, ws, emPixels) {
+                if (emPixels === void 0) { emPixels = 18; }
+                var comments = ws.getTopComments(true);
+                var blocks = ws.getTopBlocks(true);
+                // don't split for a single block
+                if (comments.length + blocks.length < 2)
+                    return svg;
+                var div = document.createElement("div");
+                div.className = "blocks-svg-list";
+                function extract(parentClass, otherClass, blocki, size, translate) {
+                    var svgclone = svg.cloneNode(true);
+                    // collect all blocks
+                    var parentSvg = svgclone.querySelector("g.blocklyWorkspace > g." + parentClass);
+                    var otherSvg = svgclone.querySelector("g.blocklyWorkspace > g." + otherClass);
+                    var blocksSvg = pxt.Util.toArray(parentSvg.querySelectorAll("g.blocklyWorkspace > g." + parentClass + " > g"));
+                    var blockSvg = blocksSvg.splice(blocki, 1)[0];
+                    if (!blockSvg) {
+                        // seems like no blocks were generated
+                        pxt.log("missing block, did block failed to load?");
+                        return;
+                    }
+                    // remove all but the block we care about
+                    blocksSvg.filter(function (g) { return g != blockSvg; })
+                        .forEach(function (g) {
+                        g.parentNode.removeChild(g);
+                    });
+                    // clear transform, remove other group
+                    parentSvg.removeAttribute("transform");
+                    otherSvg.parentNode.removeChild(otherSvg);
+                    // patch size
+                    blockSvg.setAttribute("transform", "translate(" + translate.x + ", " + translate.y + ")");
+                    var width = (size.width / emPixels) + "em";
+                    var height = (size.height / emPixels) + "em";
+                    svgclone.setAttribute("viewBox", "0 0 " + size.width + " " + size.height);
+                    svgclone.style.width = width;
+                    svgclone.style.height = height;
+                    svgclone.setAttribute("width", width);
+                    svgclone.setAttribute("height", height);
+                    div.appendChild(svgclone);
+                }
+                comments.forEach(function (comment, commenti) { return extract('blocklyBubbleCanvas', 'blocklyBlockCanvas', commenti, comment.getHeightWidth(), { x: 0, y: 0 }); });
+                blocks.forEach(function (block, blocki) {
+                    var size = block.getHeightWidth();
+                    var translate = { x: 0, y: 0 };
+                    if (block.getStartHat()) {
+                        size.height += emPixels;
+                        translate.y += emPixels;
+                    }
+                    extract('blocklyBlockCanvas', 'blocklyBubbleCanvas', blocki, size, translate);
+                });
+                return div;
+            }
+            layout.splitSvg = splitSvg;
+            function verticalAlign(ws, emPixels) {
+                var y = 0;
+                var comments = ws.getTopComments(true);
+                comments.forEach(function (comment) {
+                    comment.moveBy(0, y);
+                    y += comment.getHeightWidth().height;
+                    y += emPixels; //buffer
+                });
+                var blocks = ws.getTopBlocks(true);
+                blocks.forEach(function (block, bi) {
+                    // TODO: REMOVE THIS WHEN FIXED IN PXT-BLOCKLY
+                    if (block.getStartHat())
+                        y += emPixels; // hat height
+                    block.moveBy(0, y);
+                    y += block.getHeightWidth().height;
+                    y += emPixels; //buffer
+                });
+            }
+            layout.verticalAlign = verticalAlign;
+            ;
+            function flow(ws, opts) {
+                if (opts) {
+                    if (opts.useViewWidth) {
+                        var metrics = ws.getMetrics();
+                        // Only use the width if in portrait, otherwise the blocks are too spread out
+                        if (metrics.viewHeight > metrics.viewWidth) {
+                            flowBlocks(ws.getTopComments(true), ws.getTopBlocks(true), undefined, metrics.viewWidth);
+                            return;
+                        }
+                    }
+                    flowBlocks(ws.getTopComments(true), ws.getTopBlocks(true), opts.ratio);
+                }
+                else {
+                    flowBlocks(ws.getTopComments(true), ws.getTopBlocks(true));
+                }
+            }
+            layout.flow = flow;
+            function screenshotEnabled() {
+                return !pxt.BrowserUtils.isIE()
+                    && !pxt.BrowserUtils.isUwpEdge(); // TODO figure out why screenshots are not working in UWP; disable for now
+            }
+            layout.screenshotEnabled = screenshotEnabled;
+            function screenshotAsync(ws, pixelDensity) {
+                return toPngAsync(ws, pixelDensity);
+            }
+            layout.screenshotAsync = screenshotAsync;
+            function toPngAsync(ws, pixelDensity) {
+                return toSvgAsync(ws)
+                    .then(function (sg) {
+                    if (!sg)
+                        return Promise.resolve(undefined);
+                    return toPngAsyncInternal(sg.width, sg.height, (pixelDensity | 0) || 4, sg.xml);
+                }).catch(function (e) {
+                    pxt.reportException(e);
+                    return undefined;
+                });
+            }
+            layout.toPngAsync = toPngAsync;
+            var MAX_SCREENSHOT_SIZE = 1e6; // max 1Mb
+            function toPngAsyncInternal(width, height, pixelDensity, data) {
+                return new Promise(function (resolve, reject) {
+                    var cvs = document.createElement("canvas");
+                    var ctx = cvs.getContext("2d");
+                    var img = new Image;
+                    cvs.width = width * pixelDensity;
+                    cvs.height = height * pixelDensity;
+                    img.onload = function () {
+                        ctx.drawImage(img, 0, 0, width, height, 0, 0, cvs.width, cvs.height);
+                        var canvasdata = cvs.toDataURL("image/png");
+                        // if the generated image is too big, shrink image
+                        while (canvasdata.length > MAX_SCREENSHOT_SIZE) {
+                            cvs.width = (cvs.width / 2) >> 0;
+                            cvs.height = (cvs.height / 2) >> 0;
+                            pxt.log("screenshot size " + canvasdata.length + "b, shrinking to " + cvs.width + "x" + cvs.height);
+                            ctx.drawImage(img, 0, 0, width, height, 0, 0, cvs.width, cvs.height);
+                            canvasdata = cvs.toDataURL("image/png");
+                        }
+                        resolve(canvasdata);
+                    };
+                    img.onerror = function (ev) {
+                        pxt.reportError("blocks", "blocks screenshot failed");
+                        resolve(undefined);
+                    };
+                    img.src = data;
+                });
+            }
+            var XLINK_NAMESPACE = "http://www.w3.org/1999/xlink";
+            function toSvgAsync(ws) {
+                if (!ws)
+                    return Promise.resolve(undefined);
+                var metrics = ws.getBlocksBoundingBox();
+                var sg = ws.getParentSvg().cloneNode(true);
+                cleanUpBlocklySvg(sg);
+                var width = metrics.right - metrics.left;
+                var height = metrics.bottom - metrics.top;
+                return blocklyToSvgAsync(sg, metrics.left, metrics.top, width, height);
+            }
+            layout.toSvgAsync = toSvgAsync;
+            function serializeNode(sg) {
+                return serializeSvgString(new XMLSerializer().serializeToString(sg));
+            }
+            layout.serializeNode = serializeNode;
+            function serializeSvgString(xmlString) {
+                return xmlString
+                    .replace(new RegExp('&nbsp;', 'g'), '&#160;'); // Replace &nbsp; with &#160; as a workaround for having nbsp missing from SVG xml
+            }
+            layout.serializeSvgString = serializeSvgString;
+            function cleanUpBlocklySvg(svg) {
+                pxt.BrowserUtils.removeClass(svg, "blocklySvg");
+                pxt.BrowserUtils.addClass(svg, "blocklyPreview");
+                pxt.U.toArray(svg.querySelectorAll('.blocklyMainBackground,.blocklyScrollbarBackground'))
+                    .forEach(function (el) { if (el)
+                    el.parentNode.removeChild(el); });
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                pxt.U.toArray(svg.querySelectorAll('.blocklyBlockCanvas,.blocklyBubbleCanvas'))
+                    .forEach(function (el) { return el.removeAttribute('transform'); });
+                // In order to get the Blockly comment's text area to serialize properly they have to have names
+                var parser = new DOMParser();
+                pxt.U.toArray(svg.querySelectorAll('.blocklyCommentTextarea'))
+                    .forEach(function (el) {
+                    var dom = parser.parseFromString('<!doctype html><body>' + pxt.docs.html2Quote(el.value), 'text/html');
+                    el.textContent = dom.body.textContent;
+                });
+                return svg;
+            }
+            layout.cleanUpBlocklySvg = cleanUpBlocklySvg;
+            function blocklyToSvgAsync(sg, x, y, width, height) {
+                if (!sg.childNodes[0])
+                    return Promise.resolve(undefined);
+                sg.removeAttribute("width");
+                sg.removeAttribute("height");
+                sg.removeAttribute("transform");
+                var xmlString = serializeNode(sg)
+                    .replace(/^\s*<svg[^>]+>/i, '')
+                    .replace(/<\/svg>\s*$/i, ''); // strip out svg tag
+                var svgXml = "<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"" + XLINK_NAMESPACE + "\" width=\"" + width + "\" height=\"" + height + "\" viewBox=\"" + x + " " + y + " " + width + " " + height + "\">" + xmlString + "</svg>";
+                var xsg = new DOMParser().parseFromString(svgXml, "image/svg+xml");
+                var cssLink = xsg.createElementNS("http://www.w3.org/1999/xhtml", "style");
+                var isRtl = pxt.Util.isUserLanguageRtl();
+                var customCssHref = document.getElementById("style-" + (isRtl ? 'rtl' : '') + "blockly.css").href;
+                return pxt.BrowserUtils.loadAjaxAsync(customCssHref)
+                    .then(function (customCss) {
+                    var blocklySvg = pxt.Util.toArray(document.head.querySelectorAll("style"))
+                        .filter(function (el) { return /\.blocklySvg/.test(el.innerText); })[0];
+                    // CSS may contain <, > which need to be stored in CDATA section
+                    var cssString = (blocklySvg ? blocklySvg.innerText : "") + '\n\n' + customCss + '\n\n';
+                    cssLink.appendChild(xsg.createCDATASection(cssString));
+                    xsg.documentElement.insertBefore(cssLink, xsg.documentElement.firstElementChild);
+                    return expandImagesAsync(xsg)
+                        .then(function () { return convertIconsToPngAsync(xsg); })
+                        .then(function () {
+                        return {
+                            width: width,
+                            height: height,
+                            svg: serializeNode(xsg).replace('<style xmlns="http://www.w3.org/1999/xhtml">', '<style>'),
+                            xml: documentToSvg(xsg),
+                            css: cssString
+                        };
+                    });
+                });
+            }
+            layout.blocklyToSvgAsync = blocklyToSvgAsync;
+            function documentToSvg(xsg) {
+                var xml = new XMLSerializer().serializeToString(xsg);
+                var data = "data:image/svg+xml;base64," + ts.pxtc.encodeBase64(unescape(encodeURIComponent(xml)));
+                return data;
+            }
+            layout.documentToSvg = documentToSvg;
+            var imageXLinkCache;
+            function expandImagesAsync(xsg) {
+                if (!imageXLinkCache)
+                    imageXLinkCache = {};
+                var images = xsg.getElementsByTagName("image");
+                var p = pxt.Util.toArray(images)
+                    .filter(function (image) {
+                    var href = image.getAttributeNS(XLINK_NAMESPACE, "href");
+                    return href && !/^data:/.test(href);
+                })
+                    .map(function (image) {
+                    var href = image.getAttributeNS(XLINK_NAMESPACE, "href");
+                    var dataUri = imageXLinkCache[href];
+                    return (dataUri ? Promise.resolve(imageXLinkCache[href])
+                        : pxt.BrowserUtils.loadImageAsync(image.getAttributeNS(XLINK_NAMESPACE, "href"))
+                            .then(function (img) {
+                            var cvs = document.createElement("canvas");
+                            var ctx = cvs.getContext("2d");
+                            cvs.width = img.width;
+                            cvs.height = img.height;
+                            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, cvs.width, cvs.height);
+                            imageXLinkCache[href] = dataUri = cvs.toDataURL("image/png");
+                            return dataUri;
+                        }).catch(function (e) {
+                            // ignore load error
+                            pxt.debug("svg render: failed to load " + href);
+                        }))
+                        .then(function (href) { image.setAttributeNS(XLINK_NAMESPACE, "href", href); });
+                });
+                return Promise.all(p).then(function () { });
+            }
+            var imageIconCache;
+            function convertIconsToPngAsync(xsg) {
+                if (!imageIconCache)
+                    imageIconCache = {};
+                if (!pxt.BrowserUtils.isEdge())
+                    return Promise.resolve();
+                var images = xsg.getElementsByTagName("image");
+                var p = pxt.Util.toArray(images)
+                    .filter(function (image) { return /^data:image\/svg\+xml/.test(image.getAttributeNS(XLINK_NAMESPACE, "href")); })
+                    .map(function (image) {
+                    var svgUri = image.getAttributeNS(XLINK_NAMESPACE, "href");
+                    var width = parseInt(image.getAttribute("width").replace(/[^0-9]/g, ""));
+                    var height = parseInt(image.getAttribute("height").replace(/[^0-9]/g, ""));
+                    var pngUri = imageIconCache[svgUri];
+                    return (pngUri ? Promise.resolve(pngUri)
+                        : toPngAsyncInternal(width, height, 4, svgUri))
+                        .then(function (href) {
+                        imageIconCache[svgUri] = href;
+                        image.setAttributeNS(XLINK_NAMESPACE, "href", href);
+                    });
+                });
+                return Promise.all(p).then(function () { });
+            }
+            function flowBlocks(comments, blocks, ratio, maxWidth) {
+                if (ratio === void 0) { ratio = 1.62; }
+                // Margin between blocks and their comments
+                var innerGroupMargin = 13;
+                // Margin between groups of blocks and comments
+                var outerGroupMargin = 45;
+                // Workspace margins
+                var marginx = 20;
+                var marginy = 20;
+                var groups = [];
+                var commentMap = {};
+                comments.forEach(function (comment) {
+                    var ref = comment.data;
+                    if (ref != undefined) {
+                        commentMap[ref] = comment;
+                    }
+                    else {
+                        groups.push(formattable(comment));
+                    }
+                });
+                var onStart;
+                blocks.forEach(function (block) {
+                    var commentRefs = block.data;
+                    if (commentRefs) {
+                        var refs = commentRefs.split(";");
+                        var children = [];
+                        for (var i = 0; i < refs.length; i++) {
+                            var comment = commentMap[refs[i]];
+                            if (comment) {
+                                children.push(formattable(comment));
+                                delete commentMap[refs[i]];
+                            }
+                        }
+                        if (children.length) {
+                            groups.push({ value: block, width: -1, height: -1, children: children });
+                            return;
+                        }
+                    }
+                    var f = formattable(block);
+                    if (!onStart && !block.disabled && block.type === pxtc.ON_START_TYPE) {
+                        onStart = f;
+                    }
+                    else {
+                        groups.push(f);
+                    }
+                });
+                if (onStart) {
+                    groups.unshift(onStart);
+                }
+                // Collect the comments that were not linked to a top-level block
+                // and puth them in on start (if it exists)
+                Object.keys(commentMap).sort(function (a, b) {
+                    // These are strings of integers (eg "0", "17", etc.) with no duplicates
+                    if (a.length === b.length) {
+                        return a > b ? -1 : 1;
+                    }
+                    else {
+                        return a.length > b.length ? -1 : 1;
+                    }
+                }).forEach(function (key) {
+                    if (commentMap[key]) {
+                        if (onStart) {
+                            if (!onStart.children) {
+                                onStart.children = [];
+                            }
+                            onStart.children.push(formattable(commentMap[key]));
+                        }
+                        else {
+                            // Stick the comments in the front so that they show up in the top left
+                            groups.unshift(formattable(commentMap[key]));
+                        }
+                    }
+                });
+                var surfaceArea = 0;
+                for (var i = 0; i < groups.length; i++) {
+                    var group = groups[i];
+                    if (group.children) {
+                        var valueDimensions = group.value.getHeightWidth();
+                        group.x = 0;
+                        group.y = 0;
+                        var x = valueDimensions.width + innerGroupMargin;
+                        var y = 0;
+                        // Lay comments out to the right of the parent node
+                        for (var j = 0; j < group.children.length; j++) {
+                            var child = group.children[j];
+                            child.x = x;
+                            child.y = y;
+                            y += child.height + innerGroupMargin;
+                            group.width = Math.max(group.width, x + child.width);
+                        }
+                        group.height = Math.max(y - innerGroupMargin, valueDimensions.height);
+                    }
+                    surfaceArea += (group.height + innerGroupMargin) * (group.width + innerGroupMargin);
+                }
+                var maxx;
+                if (maxWidth > marginx) {
+                    maxx = maxWidth - marginx;
+                }
+                else {
+                    maxx = Math.sqrt(surfaceArea) * ratio;
+                }
+                var insertx = marginx;
+                var inserty = marginy;
+                var rowBottom = 0;
+                for (var i = 0; i < groups.length; i++) {
+                    var group = groups[i];
+                    if (group.children) {
+                        moveFormattable(group, insertx + group.x, inserty + group.y);
+                        for (var j = 0; j < group.children.length; j++) {
+                            var child = group.children[j];
+                            moveFormattable(child, insertx + child.x, inserty + child.y);
+                        }
+                    }
+                    else {
+                        moveFormattable(group, insertx, inserty);
+                    }
+                    insertx += group.width + outerGroupMargin;
+                    rowBottom = Math.max(rowBottom, inserty + group.height + outerGroupMargin);
+                    if (insertx > maxx) {
+                        insertx = marginx;
+                        inserty = rowBottom;
+                    }
+                }
+                function moveFormattable(f, x, y) {
+                    var bounds = f.value.getBoundingRectangle();
+                    f.value.moveBy(x - bounds.left, y - bounds.top);
+                }
+            }
+            function formattable(entity) {
+                var hw = entity.getHeightWidth();
+                return { value: entity, height: hw.height, width: hw.width };
+            }
+        })(layout = blocks_4.layout || (blocks_4.layout = {}));
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/blockly.d.ts" />
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        var typeDefaults = {
+            "string": {
+                field: "TEXT",
+                block: "text",
+                defaultValue: ""
+            },
+            "number": {
+                field: "NUM",
+                block: "math_number",
+                defaultValue: "0"
+            },
+            "boolean": {
+                field: "BOOL",
+                block: "logic_boolean",
+                defaultValue: "false"
+            },
+            "Array": {
+                field: "VAR",
+                block: "variables_get",
+                defaultValue: "list"
+            }
+        };
+        // Add numbers before input names to prevent clashes with the ones added by BlocklyLoader
+        blocks.optionalDummyInputPrefix = "0_optional_dummy";
+        blocks.optionalInputWithFieldPrefix = "0_optional_field";
+        // Matches arrays
+        function isArrayType(type) {
+            var arrayTypeRegex = /^(?:Array<(.+)>)|(?:(.+)\[\])|(?:\[.+\])$/;
+            var parsed = arrayTypeRegex.exec(type);
+            if (parsed) {
+                // Is an array, returns what type it is an array of
+                if (parsed[1]) {
+                    // Is an array with form Array<type>
+                    return parsed[1];
+                }
+                else {
+                    // Is an array with form type[]
+                    return parsed[2];
+                }
+            }
+            else {
+                // Not an array
+                return undefined;
+            }
+        }
+        blocks.isArrayType = isArrayType;
+        // Matches tuples
+        function isTupleType(type) {
+            var tupleTypeRegex = /^\[(.+)\]$/;
+            var parsed = tupleTypeRegex.exec(type);
+            if (parsed) {
+                // Returns an array containing the types of the tuple
+                return parsed[1].split(/,\s*/);
+            }
+            else {
+                // Not a tuple
+                return undefined;
+            }
+        }
+        blocks.isTupleType = isTupleType;
+        var primitiveTypeRegex = /^(string|number|boolean)$/;
+        // list of built-in blocks, should be touched.
+        var _builtinBlocks;
+        function builtinBlocks() {
+            if (!_builtinBlocks) {
+                _builtinBlocks = {};
+                Object.keys(Blockly.Blocks)
+                    .forEach(function (k) { return _builtinBlocks[k] = { block: Blockly.Blocks[k] }; });
+            }
+            return _builtinBlocks;
+        }
+        blocks.builtinBlocks = builtinBlocks;
+        blocks.buildinBlockStatements = {
+            "controls_if": true,
+            "controls_for": true,
+            "pxt_controls_for": true,
+            "controls_simple_for": true,
+            "controls_repeat_ext": true,
+            "pxt_controls_for_of": true,
+            "controls_for_of": true,
+            "variables_set": true,
+            "variables_change": true,
+            "device_while": true
+        };
+        // Cached block info from the last inject operation
+        var cachedBlockInfo;
+        var cachedBlocks = {};
+        function blockSymbol(type) {
+            var b = cachedBlocks[type];
+            return b ? b.fn : undefined;
+        }
+        blocks.blockSymbol = blockSymbol;
+        function createShadowValue(info, p, shadowId, defaultV) {
+            defaultV = defaultV || p.defaultValue;
+            shadowId = shadowId || p.shadowBlockId;
+            if (!shadowId && p.range)
+                shadowId = "math_number_minmax";
+            var defaultValue;
+            if (defaultV && defaultV.slice(0, 1) == "\"")
+                defaultValue = JSON.parse(defaultV);
+            else {
+                defaultValue = defaultV;
+            }
+            if (p.type == "number" && shadowId == "value") {
+                var field = document.createElement("field");
+                field.setAttribute("name", p.definitionName);
+                field.appendChild(document.createTextNode("0"));
+                return field;
+            }
+            var isVariable = shadowId == "variables_get";
+            var value = document.createElement("value");
+            value.setAttribute("name", p.definitionName);
+            var isArray = isArrayType(p.type);
+            var shadow = document.createElement(isVariable || isArray ? "block" : "shadow");
+            value.appendChild(shadow);
+            var typeInfo = typeDefaults[isArray || p.type];
+            shadow.setAttribute("type", shadowId || (isArray ? 'lists_create_with' : typeInfo && typeInfo.block || p.type));
+            shadow.setAttribute("colour", Blockly.Colours.textField);
+            if (isArray) {
+                // if an array of booleans, numbers, or strings
+                if (typeInfo && !shadowId) {
+                    var fieldValues = void 0;
+                    switch (isArray) {
+                        case "number":
+                            fieldValues = ["1", "2", "3"];
+                            break;
+                        case "string":
+                            fieldValues = ["a", "b", "c"];
+                            break;
+                        case "boolean":
+                            fieldValues = ["FALSE", "FALSE", "FALSE"];
+                            break;
+                    }
+                    buildArrayShadow(shadow, typeInfo.block, typeInfo.field, fieldValues);
+                    return value;
+                }
+                else if (shadowId && defaultValue) {
+                    buildArrayShadow(shadow, defaultValue);
+                    return value;
+                }
+            }
+            if (typeInfo && (!shadowId || typeInfo.block === shadowId || shadowId === "math_number_minmax")) {
+                var field = document.createElement("field");
+                shadow.appendChild(field);
+                var fieldName = void 0;
+                switch (shadowId) {
+                    case "variables_get":
+                        fieldName = "VAR";
+                        break;
+                    case "math_number_minmax":
+                        fieldName = "SLIDER";
+                        break;
+                    default:
+                        fieldName = typeInfo.field;
+                        break;
+                }
+                field.setAttribute("name", fieldName);
+                var value_1;
+                if (p.type == "boolean") {
+                    value_1 = document.createTextNode((defaultValue || typeInfo.defaultValue).toUpperCase());
+                }
+                else {
+                    value_1 = document.createTextNode(defaultValue || typeInfo.defaultValue);
+                }
+                field.appendChild(value_1);
+            }
+            else if (defaultValue) {
+                var field = document.createElement("field");
+                field.textContent = defaultValue;
+                if (isVariable) {
+                    field.setAttribute("name", "VAR");
+                    shadow.appendChild(field);
+                }
+                else if (shadowId) {
+                    var shadowInfo = info.blocksById[shadowId];
+                    if (shadowInfo && shadowInfo.attributes._def && shadowInfo.attributes._def.parameters.length) {
+                        var shadowParam = shadowInfo.attributes._def.parameters[0];
+                        field.setAttribute("name", shadowParam.name);
+                        shadow.appendChild(field);
+                    }
+                }
+                else {
+                    field.setAttribute("name", p.definitionName);
+                    shadow.appendChild(field);
+                }
+            }
+            var mut;
+            if (p.range) {
+                mut = document.createElement('mutation');
+                mut.setAttribute('min', p.range.min.toString());
+                mut.setAttribute('max', p.range.max.toString());
+                mut.setAttribute('label', p.actualName.charAt(0).toUpperCase() + p.actualName.slice(1));
+                if (p.fieldOptions) {
+                    if (p.fieldOptions['step'])
+                        mut.setAttribute('step', p.fieldOptions['step']);
+                    if (p.fieldOptions['color'])
+                        mut.setAttribute('color', p.fieldOptions['color']);
+                    if (p.fieldOptions['precision'])
+                        mut.setAttribute('precision', p.fieldOptions['precision']);
+                }
+            }
+            if (p.fieldOptions) {
+                if (!mut)
+                    mut = document.createElement('mutation');
+                mut.setAttribute("customfield", JSON.stringify(p.fieldOptions));
+            }
+            if (mut) {
+                shadow.appendChild(mut);
+            }
+            return value;
+        }
+        blocks.createShadowValue = createShadowValue;
+        function buildArrayShadow(shadow, blockType, fieldName, fieldValues) {
+            var itemCount = fieldValues ? fieldValues.length : 2;
+            var mut = document.createElement('mutation');
+            mut.setAttribute("items", "" + itemCount);
+            shadow.appendChild(mut);
+            for (var i = 0; i < itemCount; i++) {
+                var innerValue = document.createElement("value");
+                innerValue.setAttribute("name", "ADD" + i);
+                var innerShadow = document.createElement("shadow");
+                innerShadow.setAttribute("type", blockType);
+                if (fieldName) {
+                    var field = document.createElement("field");
+                    field.setAttribute("name", fieldName);
+                    if (fieldValues) {
+                        field.appendChild(document.createTextNode(fieldValues[i]));
+                    }
+                    innerShadow.appendChild(field);
+                }
+                innerValue.appendChild(innerShadow);
+                shadow.appendChild(innerValue);
+            }
+        }
+        function createFlyoutHeadingLabel(name, color, icon, iconClass) {
+            var headingLabel = createFlyoutLabel(name, pxt.toolbox.convertColor(color), icon, iconClass);
+            headingLabel.setAttribute('web-class', 'blocklyFlyoutHeading');
+            return headingLabel;
+        }
+        blocks.createFlyoutHeadingLabel = createFlyoutHeadingLabel;
+        function createFlyoutGroupLabel(name, icon, labelLineWidth, helpCallback) {
+            var groupLabel = createFlyoutLabel(name, undefined, icon);
+            groupLabel.setAttribute('web-class', 'blocklyFlyoutGroup');
+            groupLabel.setAttribute('web-line', '1.5');
+            if (labelLineWidth)
+                groupLabel.setAttribute('web-line-width', labelLineWidth);
+            if (helpCallback) {
+                groupLabel.setAttribute('web-help-button', 'true');
+                groupLabel.setAttribute('callbackKey', helpCallback);
+            }
+            return groupLabel;
+        }
+        blocks.createFlyoutGroupLabel = createFlyoutGroupLabel;
+        function createFlyoutLabel(name, color, icon, iconClass) {
+            // Add the Heading label
+            var headingLabel = Blockly.utils.xml.createElement('label');
+            headingLabel.setAttribute('text', name);
+            if (color) {
+                headingLabel.setAttribute('web-icon-color', pxt.toolbox.convertColor(color));
+            }
+            if (icon) {
+                if (icon.length === 1) {
+                    headingLabel.setAttribute('web-icon', icon);
+                    if (iconClass)
+                        headingLabel.setAttribute('web-icon-class', iconClass);
+                }
+                else {
+                    headingLabel.setAttribute('web-icon-class', "blocklyFlyoutIcon" + name);
+                }
+            }
+            return headingLabel;
+        }
+        function createFlyoutButton(callbackKey, label) {
+            var button = Blockly.utils.xml.createElement('button');
+            button.setAttribute('text', label);
+            button.setAttribute('callbackKey', callbackKey);
+            return button;
+        }
+        blocks.createFlyoutButton = createFlyoutButton;
+        function createToolboxBlock(info, fn, comp) {
+            //
+            // toolbox update
+            //
+            var block = document.createElement("block");
+            block.setAttribute("type", fn.attributes.blockId);
+            if (fn.attributes.blockGap)
+                block.setAttribute("gap", fn.attributes.blockGap);
+            else if (pxt.appTarget.appTheme && pxt.appTarget.appTheme.defaultBlockGap)
+                block.setAttribute("gap", pxt.appTarget.appTheme.defaultBlockGap.toString());
+            if (comp.thisParameter) {
+                var t = comp.thisParameter;
+                block.appendChild(createShadowValue(info, t, t.shadowBlockId || "variables_get", t.defaultValue || t.definitionName));
+            }
+            if (fn.parameters) {
+                comp.parameters.filter(function (pr) { return !pr.isOptional &&
+                    (primitiveTypeRegex.test(pr.type)
+                        || primitiveTypeRegex.test(isArrayType(pr.type))
+                        || pr.shadowBlockId
+                        || pr.defaultValue); })
+                    .forEach(function (pr) {
+                    block.appendChild(createShadowValue(info, pr));
+                });
+                if (fn.attributes.draggableParameters) {
+                    comp.handlerArgs.forEach(function (arg) {
+                        // draggableParameters="variable":
+                        // <value name="HANDLER_DRAG_PARAM_arg">
+                        // <shadow type="variables_get_reporter">
+                        //     <field name="VAR">defaultName</field>
+                        // </shadow>
+                        // </value>
+                        // draggableParameters="reporter"
+                        // <value name="HANDLER_DRAG_PARAM_arg">
+                        //     <shadow type="argument_reporter_custom">
+                        //         <mutation typename="Sprite"></mutation>
+                        //         <field name="VALUE">mySprite</field>
+                        //     </shadow>
+                        // </value>
+                        var useReporter = fn.attributes.draggableParameters === "reporter";
+                        var value = document.createElement("value");
+                        value.setAttribute("name", "HANDLER_DRAG_PARAM_" + arg.name);
+                        var blockType = useReporter ? pxt.blocks.reporterTypeForArgType(arg.type) : "variables_get_reporter";
+                        var shadow = document.createElement("shadow");
+                        shadow.setAttribute("type", blockType);
+                        if (useReporter && blockType === "argument_reporter_custom") {
+                            var mutation = document.createElement("mutation");
+                            mutation.setAttribute("typename", arg.type);
+                            shadow.appendChild(mutation);
+                        }
+                        var field = document.createElement("field");
+                        field.setAttribute("name", useReporter ? "VALUE" : "VAR");
+                        field.textContent = pxt.Util.htmlEscape(arg.name);
+                        shadow.appendChild(field);
+                        value.appendChild(shadow);
+                        block.appendChild(value);
+                    });
+                }
+                else {
+                    comp.handlerArgs.forEach(function (arg) {
+                        var field = document.createElement("field");
+                        field.setAttribute("name", "HANDLER_" + arg.name);
+                        field.textContent = arg.name;
+                        block.appendChild(field);
+                    });
+                }
+            }
+            return block;
+        }
+        blocks.createToolboxBlock = createToolboxBlock;
+        function injectBlocks(blockInfo) {
+            cachedBlockInfo = blockInfo;
+            Blockly.pxtBlocklyUtils.whitelistDraggableBlockTypes(blockInfo.blocks.filter(function (fn) { return fn.attributes.duplicateShadowOnDrag; }).map(function (fn) { return fn.attributes.blockId; }));
+            // inject Blockly with all block definitions
+            return blockInfo.blocks
+                .map(function (fn) {
+                if (fn.attributes.blockBuiltin) {
+                    pxt.Util.assert(!!builtinBlocks()[fn.attributes.blockId]);
+                    builtinBlocks()[fn.attributes.blockId].symbol = fn;
+                }
+                else {
+                    var comp = blocks.compileInfo(fn);
+                    var block = createToolboxBlock(blockInfo, fn, comp);
+                    injectBlockDefinition(blockInfo, fn, comp, block);
+                }
+                return fn;
+            });
+        }
+        blocks.injectBlocks = injectBlocks;
+        function injectBlockDefinition(info, fn, comp, blockXml) {
+            var id = fn.attributes.blockId;
+            if (builtinBlocks()[id]) {
+                pxt.reportError("blocks", 'trying to override builtin block', { "details": id });
+                return false;
+            }
+            var hash = JSON.stringify(fn);
+            /* tslint:disable:possible-timing-attack (not a security critical codepath) */
+            if (cachedBlocks[id] && cachedBlocks[id].hash == hash) {
+                return true;
+            }
+            /* tslint:enable:possible-timing-attack */
+            if (Blockly.Blocks[fn.attributes.blockId]) {
+                console.error("duplicate block definition: " + id);
+                return false;
+            }
+            var cachedBlock = {
+                hash: hash,
+                fn: fn,
+                block: {
+                    codeCard: mkCard(fn, blockXml),
+                    init: function () { initBlock(this, info, fn, comp); }
+                }
+            };
+            if (pxt.Util.isTranslationMode()
+                && pxt.blocks.promptTranslateBlock) {
+                cachedBlock.block.customContextMenu = function (options) {
+                    if (fn.attributes.translationId) {
+                        options.push({
+                            enabled: true,
+                            text: lf("Translate this block"),
+                            callback: function () {
+                                pxt.blocks.promptTranslateBlock(id, [fn.attributes.translationId]);
+                            }
+                        });
+                    }
+                };
+            }
+            cachedBlocks[id] = cachedBlock;
+            Blockly.Blocks[id] = cachedBlock.block;
+            return true;
+        }
+        function newLabel(part) {
+            if (part.kind === "image") {
+                return iconToFieldImage(part.uri);
+            }
+            var txt = removeOuterSpace(part.text);
+            if (!txt) {
+                return undefined;
+            }
+            if (part.cssClass) {
+                return new Blockly.FieldLabel(txt, part.cssClass);
+            }
+            else if (part.style.length) {
+                return new pxtblockly.FieldStyledLabel(txt, {
+                    bold: part.style.indexOf("bold") !== -1,
+                    italics: part.style.indexOf("italics") !== -1,
+                    blocksInfo: undefined
+                });
+            }
+            else {
+                return new Blockly.FieldLabel(txt, undefined);
+            }
+        }
+        function cleanOuterHTML(el) {
+            // remove IE11 junk
+            return el.outerHTML.replace(/^<\?[^>]*>/, '');
+        }
+        function mkCard(fn, blockXml) {
+            return {
+                name: fn.namespace + '.' + fn.name,
+                shortName: fn.name,
+                description: fn.attributes.jsDoc,
+                url: fn.attributes.help ? 'reference/' + fn.attributes.help.replace(/^\//, '') : undefined,
+                blocksXml: "<xml xmlns=\"http://www.w3.org/1999/xhtml\">" + cleanOuterHTML(blockXml) + "</xml>",
+            };
+        }
+        function isSubtype(apis, specific, general) {
+            if (specific == general)
+                return true;
+            var inf = apis.byQName[specific];
+            if (inf && inf.extendsTypes)
+                return inf.extendsTypes.indexOf(general) >= 0;
+            return false;
+        }
+        function initBlock(block, info, fn, comp) {
+            var ns = (fn.attributes.blockNamespace || fn.namespace).split('.')[0];
+            var instance = fn.kind == 1 /* Method */ || fn.kind == 2 /* Property */;
+            var nsinfo = info.apis.byQName[ns];
+            var color = 
+            // blockNamespace overrides color on block
+            (fn.attributes.blockNamespace && nsinfo && nsinfo.attributes.color)
+                || fn.attributes.color
+                || (nsinfo && nsinfo.attributes.color)
+                || pxt.toolbox.getNamespaceColor(ns)
+                || 255;
+            if (fn.attributes.help)
+                block.setHelpUrl("/reference/" + fn.attributes.help.replace(/^\//, ''));
+            else if (fn.pkg && !pxt.appTarget.bundledpkgs[fn.pkg]) {
+                var anchor = fn.qName.toLowerCase().split('.');
+                if (anchor[0] == fn.pkg)
+                    anchor.shift();
+                block.setHelpUrl("/pkg/" + fn.pkg + "#" + encodeURIComponent(anchor.join('-')));
+            }
+            block.setColour(color, fn.attributes.colorSecondary, fn.attributes.colorTertiary);
+            var blockShape = Blockly.OUTPUT_SHAPE_ROUND;
+            if (fn.retType == "boolean")
+                blockShape = Blockly.OUTPUT_SHAPE_HEXAGONAL;
+            block.setOutputShape(blockShape);
+            if (fn.attributes.undeletable)
+                block.setDeletable(false);
+            buildBlockFromDef(fn.attributes._def);
+            var hasHandler = false;
+            if (fn.attributes.mutate) {
+                blocks.addMutation(block, fn, fn.attributes.mutate);
+            }
+            else if (fn.attributes.defaultInstance) {
+                blocks.addMutation(block, fn, blocks.MutatorTypes.DefaultInstanceMutator);
+            }
+            else if (fn.attributes._expandedDef && fn.attributes.expandableArgumentMode !== "disabled") {
+                var shouldToggle = fn.attributes.expandableArgumentMode === "toggle";
+                blocks.initExpandableBlock(info, block, fn.attributes._expandedDef, comp, shouldToggle, function () { return buildBlockFromDef(fn.attributes._expandedDef, true); });
+            }
+            else if (comp.handlerArgs.length) {
+                /**
+                 * We support four modes for handler parameters: variable dropdowns,
+                 * expandable variable dropdowns with +/- buttons (used for chat commands),
+                 * draggable variable blocks, and draggable reporter blocks.
+                 */
+                hasHandler = true;
+                if (fn.attributes.optionalVariableArgs) {
+                    blocks.initVariableArgsBlock(block, comp.handlerArgs);
+                }
+                else if (fn.attributes.draggableParameters) {
+                    comp.handlerArgs.filter(function (a) { return !a.inBlockDef; }).forEach(function (arg) {
+                        var i = block.appendValueInput("HANDLER_DRAG_PARAM_" + arg.name);
+                        if (fn.attributes.draggableParameters == "reporter") {
+                            i.setCheck(getBlocklyCheckForType(arg.type, info));
+                        }
+                        else {
+                            i.setCheck("Variable");
+                        }
+                    });
+                }
+                else {
+                    var i_2 = block.appendDummyInput();
+                    comp.handlerArgs.filter(function (a) { return !a.inBlockDef; }).forEach(function (arg) {
+                        i_2.appendField(new Blockly.FieldVariable(arg.name), "HANDLER_" + arg.name);
+                    });
+                }
+            }
+            // Add mutation to save and restore custom field settings
+            blocks.appendMutation(block, {
+                mutationToDom: function (el) {
+                    block.inputList.forEach(function (input) {
+                        input.fieldRow.forEach(function (fieldRow) {
+                            if (fieldRow.isFieldCustom_ && fieldRow.saveOptions) {
+                                var getOptions = fieldRow.saveOptions();
+                                if (getOptions) {
+                                    el.setAttribute("customfield", JSON.stringify(getOptions));
+                                }
+                            }
+                        });
+                    });
+                    return el;
+                },
+                domToMutation: function (saved) {
+                    block.inputList.forEach(function (input) {
+                        input.fieldRow.forEach(function (fieldRow) {
+                            if (fieldRow.isFieldCustom_ && fieldRow.restoreOptions) {
+                                var options_1 = JSON.parse(saved.getAttribute("customfield"));
+                                if (options_1) {
+                                    fieldRow.restoreOptions(options_1);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+            if (fn.attributes.imageLiteral) {
+                var columns = (fn.attributes.imageLiteralColumns || 5) * fn.attributes.imageLiteral;
+                var rows = fn.attributes.imageLiteralRows || 5;
+                var ri = block.appendDummyInput();
+                ri.appendField(new pxtblockly.FieldMatrix("", { columns: columns, rows: rows }), "LEDS");
+            }
+            if (fn.attributes.inlineInputMode === "external") {
+                block.setInputsInline(false);
+            }
+            else if (fn.attributes.inlineInputMode === "inline") {
+                block.setInputsInline(true);
+            }
+            else {
+                block.setInputsInline(!fn.parameters || (fn.parameters.length < 4 && !fn.attributes.imageLiteral));
+            }
+            var body = fn.parameters ? fn.parameters.filter(function (pr) { return pr.type == "() => void" || pr.type == "Action"; })[0] : undefined;
+            if (body || hasHandler) {
+                block.appendStatementInput("HANDLER")
+                    .setCheck(null);
+                block.setInputsInline(true);
+            }
+            setOutputCheck(block, fn.retType, info);
+            // hook up/down if return value is void
+            var hasHandlers = hasArrowFunction(fn);
+            block.setPreviousStatement(!(hasHandlers && !fn.attributes.handlerStatement) && fn.retType == "void");
+            block.setNextStatement(!(hasHandlers && !fn.attributes.handlerStatement) && fn.retType == "void");
+            block.setTooltip(/^__/.test(fn.namespace) ? "" : fn.attributes.jsDoc);
+            function buildBlockFromDef(def, expanded) {
+                if (expanded === void 0) { expanded = false; }
+                var anonIndex = 0;
+                var firstParam = !expanded && !!comp.thisParameter;
+                var inputs = splitInputs(def);
+                var imgConv = new pxt.ImageConverter();
+                if (fn.attributes.shim === "ENUM_GET" || fn.attributes.shim === "KIND_GET") {
+                    if (comp.parameters.length > 1 || comp.thisParameter) {
+                        console.warn("Enum blocks may only have 1 parameter but " + fn.attributes.blockId + " has " + comp.parameters.length);
+                        return;
+                    }
+                }
+                inputs.forEach(function (inputParts) {
+                    var fields = [];
+                    var inputName;
+                    var inputCheck;
+                    var hasParameter = false;
+                    inputParts.forEach(function (part) {
+                        if (part.kind !== "param") {
+                            var f = newLabel(part);
+                            if (f) {
+                                fields.push({ field: f });
+                            }
+                        }
+                        else if (fn.attributes.shim === "ENUM_GET") {
+                            pxt.U.assert(!!fn.attributes.enumName, "Trying to create an ENUM_GET block without a valid enum name");
+                            fields.push({
+                                name: "MEMBER",
+                                field: new pxtblockly.FieldUserEnum(info.enumsByName[fn.attributes.enumName])
+                            });
+                            return;
+                        }
+                        else if (fn.attributes.shim === "KIND_GET") {
+                            fields.push({
+                                name: "MEMBER",
+                                field: new pxtblockly.FieldKind(info.kindsByName[fn.attributes.kindNamespace || fn.attributes.blockNamespace || fn.namespace])
+                            });
+                            return;
+                        }
+                        else {
+                            // find argument
+                            var pr_1 = getParameterFromDef(part, comp, firstParam);
+                            firstParam = false;
+                            if (!pr_1) {
+                                console.error("block " + fn.attributes.blockId + ": unknown parameter " + part.name + (part.ref ? " (" + part.ref + ")" : ""));
+                                return;
+                            }
+                            if (isHandlerArg(pr_1)) {
+                                inputName = "HANDLER_DRAG_PARAM_" + pr_1.name;
+                                inputCheck = fn.attributes.draggableParameters === "reporter" ? getBlocklyCheckForType(pr_1.type, info) : "Variable";
+                                return;
+                            }
+                            var typeInfo = pxt.U.lookup(info.apis.byQName, pr_1.type);
+                            hasParameter = true;
+                            var defName = pr_1.definitionName;
+                            var actName = pr_1.actualName;
+                            var isEnum = typeInfo && typeInfo.kind == 6 /* Enum */;
+                            var isFixed = typeInfo && !!typeInfo.attributes.fixedInstances && !pr_1.shadowBlockId;
+                            var isConstantShim = !!fn.attributes.constantShim;
+                            var isCombined = pr_1.type == "@combined@";
+                            var customField = pr_1.fieldEditor;
+                            var fieldLabel = defName.charAt(0).toUpperCase() + defName.slice(1);
+                            var fieldType = pr_1.type;
+                            if (isEnum || isFixed || isConstantShim || isCombined) {
+                                var syms = void 0;
+                                if (isEnum) {
+                                    syms = getEnumDropdownValues(info.apis, pr_1.type);
+                                }
+                                else if (isFixed) {
+                                    syms = getFixedInstanceDropdownValues(info.apis, typeInfo.qName);
+                                }
+                                else if (isCombined) {
+                                    syms = fn.combinedProperties.map(function (p) { return pxt.U.lookup(info.apis.byQName, p); });
+                                }
+                                else {
+                                    syms = getConstantDropdownValues(info.apis, fn.qName);
+                                }
+                                if (syms.length == 0) {
+                                    console.error("no instances of " + typeInfo.qName + " found");
+                                }
+                                var dd = syms.map(function (v) {
+                                    var k = v.attributes.block || v.attributes.blockId || v.name;
+                                    var comb = v.attributes.blockCombine;
+                                    if (v.attributes.jresURL && !v.attributes.iconURL && pxt.U.startsWith(v.attributes.jresURL, "data:image/x-mkcd-f")) {
+                                        v.attributes.iconURL = imgConv.convert(v.attributes.jresURL);
+                                    }
+                                    if (!!comb)
+                                        k = k.replace(/@set/, "");
+                                    return [
+                                        v.attributes.iconURL || v.attributes.blockImage ? {
+                                            src: v.attributes.iconURL || pxt.Util.pathJoin(pxt.webConfig.commitCdnUrl, "blocks/" + v.namespace.toLowerCase() + "/" + v.name.toLowerCase() + ".png"),
+                                            alt: k,
+                                            width: 36,
+                                            height: 36,
+                                            value: v.name
+                                        } : k,
+                                        v.namespace + "." + v.name
+                                    ];
+                                });
+                                // if a value is provided, move it first
+                                if (pr_1.defaultValue) {
+                                    var shadowValueIndex_1 = -1;
+                                    dd.some(function (v, i) {
+                                        if (v[1] === pr_1.defaultValue) {
+                                            shadowValueIndex_1 = i;
+                                            return true;
+                                        }
+                                        return false;
+                                    });
+                                    if (shadowValueIndex_1 > -1) {
+                                        var shadowValue = dd.splice(shadowValueIndex_1, 1)[0];
+                                        dd.unshift(shadowValue);
+                                    }
+                                }
+                                if (customField) {
+                                    var defl = fn.attributes.paramDefl[actName] || "";
+                                    var options_2 = {
+                                        data: dd,
+                                        colour: color,
+                                        label: fieldLabel,
+                                        type: fieldType,
+                                        blocksInfo: info
+                                    };
+                                    pxt.Util.jsonMergeFrom(options_2, fn.attributes.paramFieldEditorOptions && fn.attributes.paramFieldEditorOptions[actName] || {});
+                                    fields.push(namedField(blocks.createFieldEditor(customField, defl, options_2), defName));
+                                }
+                                else
+                                    fields.push(namedField(new Blockly.FieldDropdown(dd), defName));
+                            }
+                            else if (customField) {
+                                var defl = fn.attributes.paramDefl[pr_1.actualName] || "";
+                                var options_3 = {
+                                    colour: color,
+                                    label: fieldLabel,
+                                    type: fieldType,
+                                    blocksInfo: info
+                                };
+                                pxt.Util.jsonMergeFrom(options_3, fn.attributes.paramFieldEditorOptions && fn.attributes.paramFieldEditorOptions[pr_1.actualName] || {});
+                                fields.push(namedField(blocks.createFieldEditor(customField, defl, options_3), pr_1.definitionName));
+                            }
+                            else {
+                                inputName = defName;
+                                if (instance && part.name === "this") {
+                                    inputCheck = pr_1.type;
+                                }
+                                else if (pr_1.type == "number" && pr_1.shadowBlockId && pr_1.shadowBlockId == "value") {
+                                    inputName = undefined;
+                                    fields.push(namedField(new Blockly.FieldTextInput("0", Blockly.FieldTextInput.numberValidator), defName));
+                                }
+                                else if (pr_1.type == "string" && pr_1.shadowOptions && pr_1.shadowOptions.toString) {
+                                    inputCheck = null;
+                                }
+                                else {
+                                    inputCheck = getBlocklyCheckForType(pr_1.type, info);
+                                }
+                            }
+                        }
+                    });
+                    var input;
+                    if (inputName) {
+                        input = block.appendValueInput(inputName);
+                        input.setAlign(Blockly.ALIGN_LEFT);
+                    }
+                    else if (expanded) {
+                        var prefix = hasParameter ? blocks.optionalInputWithFieldPrefix : blocks.optionalDummyInputPrefix;
+                        input = block.appendDummyInput(prefix + (anonIndex++));
+                    }
+                    else {
+                        input = block.appendDummyInput();
+                    }
+                    if (inputCheck) {
+                        input.setCheck(inputCheck);
+                    }
+                    fields.forEach(function (f) { return input.appendField(f.field, f.name); });
+                });
+                imgConv.logTime();
+            }
+        }
+        function getParameterFromDef(part, comp, isThis) {
+            if (isThis === void 0) { isThis = false; }
+            if (part.ref) {
+                var result = (part.name === "this") ? comp.thisParameter : comp.actualNameToParam[part.name];
+                if (!result) {
+                    var ha_1;
+                    comp.handlerArgs.forEach(function (arg) {
+                        if (arg.name === part.name)
+                            ha_1 = arg;
+                    });
+                    if (ha_1)
+                        return ha_1;
+                }
+                return result;
+            }
+            else {
+                return isThis ? comp.thisParameter : comp.definitionNameToParam[part.name];
+            }
+        }
+        function isHandlerArg(arg) {
+            return !arg.definitionName;
+        }
+        function hasArrowFunction(fn) {
+            var r = fn.parameters
+                ? fn.parameters.filter(function (pr) { return pr.type === "Action" || /^\([^\)]*\)\s*=>/.test(pr.type); })[0]
+                : undefined;
+            return !!r;
+        }
+        blocks.hasArrowFunction = hasArrowFunction;
+        function cleanBlocks() {
+            pxt.debug('removing all custom blocks');
+            for (var b in cachedBlocks)
+                removeBlock(cachedBlocks[b].fn);
+        }
+        blocks.cleanBlocks = cleanBlocks;
+        /**
+         * Used by pxtrunner to initialize blocks in the docs
+         */
+        function initializeAndInject(blockInfo) {
+            init();
+            injectBlocks(blockInfo);
+        }
+        blocks.initializeAndInject = initializeAndInject;
+        /**
+         * Used by main app to initialize blockly blocks.
+         * Blocks are injected separately by called injectBlocks
+         */
+        function initialize(blockInfo) {
+            init();
+            initJresIcons(blockInfo);
+        }
+        blocks.initialize = initialize;
+        var blocklyInitialized = false;
+        function init() {
+            if (blocklyInitialized)
+                return;
+            blocklyInitialized = true;
+            goog.provide('Blockly.Blocks.device');
+            goog.require('Blockly.Blocks');
+            Blockly.FieldCheckbox.CHECK_CHAR = '■';
+            Blockly.BlockSvg.START_HAT = !!pxt.appTarget.appTheme.blockHats;
+            blocks.initFieldEditors();
+            initContextMenu();
+            initOnStart();
+            initMath();
+            initVariables();
+            initFunctions();
+            initLists();
+            initLoops();
+            initLogic();
+            initText();
+            initDrag();
+            initDebugger();
+            initComments();
+            initTooltip();
+            // PXT is in charge of disabling, don't record undo for disabled events
+            Blockly.Block.prototype.setEnabled = function (enabled) {
+                if (this.disabled == enabled) {
+                    var oldRecordUndo = Blockly.Events.recordUndo;
+                    Blockly.Events.recordUndo = false;
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'disabled', null, this.disabled, !enabled));
+                    Blockly.Events.recordUndo = oldRecordUndo;
+                    this.disabled = !enabled;
+                }
+            };
+        }
+        /**
+         * Converts a TypeScript type into an array of type checks for Blockly inputs/outputs. Use
+         * with block.setOutput() and input.setCheck().
+         *
+         * @returns An array of checks if the type is valid, undefined if there are no valid checks
+         *      (e.g. type is void), and null if all checks should be accepted (e.g. type is generic)
+         */
+        function getBlocklyCheckForType(type, info) {
+            var types = type.split(/\s*\|\s*/);
+            var output = [];
+            for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
+                var subtype = types_1[_i];
+                switch (subtype) {
+                    // Blockly capitalizes primitive types for its builtin math/string/logic blocks
+                    case "number":
+                        output.push("Number");
+                        break;
+                    case "string":
+                        output.push("String");
+                        break;
+                    case "boolean":
+                        output.push("Boolean");
+                        break;
+                    case "T":
+                    // The type is generic, so accept any checks. This is mostly used with functions that
+                    // get values from arrays. This could be improved if we ever add proper type
+                    // inference for generic types
+                    case "any":
+                        return null;
+                    case "void":
+                        return undefined;
+                    default:
+                        // We add "Array" to the front for array types so that they can be connected
+                        // to the blocks that accept any array (e.g. length, push, pop, etc)
+                        if (isArrayType(subtype)) {
+                            if (types.length > 1) {
+                                // type inference will potentially break non-trivial arrays in intersections
+                                // until we have better type handling in blocks,
+                                // so escape and allow any block to be dropped in.
+                                return null;
+                            }
+                            else {
+                                output.push("Array");
+                            }
+                        }
+                        // Blockly has no concept of inheritance, so we need to add all
+                        // super classes to the check array
+                        var si_r = info.apis.byQName[subtype];
+                        if (si_r && si_r.extendsTypes && 0 < si_r.extendsTypes.length) {
+                            output.push.apply(output, si_r.extendsTypes);
+                        }
+                        else {
+                            output.push(subtype);
+                        }
+                }
+            }
+            return output;
+        }
+        function setOutputCheck(block, retType, info) {
+            var check = getBlocklyCheckForType(retType, info);
+            if (check || check === null) {
+                block.setOutput(true, check);
+            }
+        }
+        function setBuiltinHelpInfo(block, id) {
+            var info = pxt.blocks.getBlockDefinition(id);
+            setHelpResources(block, id, info.name, info.tooltip, info.url, pxt.toolbox.getNamespaceColor(info.category));
+        }
+        function installBuiltinHelpInfo(id) {
+            var info = pxt.blocks.getBlockDefinition(id);
+            installHelpResources(id, info.name, info.tooltip, info.url, pxt.toolbox.getNamespaceColor(info.category));
+        }
+        function setHelpResources(block, id, name, tooltip, url, colour, colourSecondary, colourTertiary, undeletable) {
+            if (tooltip && (typeof tooltip === "string" || typeof tooltip === "function"))
+                block.setTooltip(tooltip);
+            if (url)
+                block.setHelpUrl(url);
+            if (colour)
+                block.setColour(colour, colourSecondary, colourTertiary);
+            if (undeletable)
+                block.setDeletable(false);
+            var tb = document.getElementById('blocklyToolboxDefinition');
+            var xml = tb ? blocks.getFirstChildWithAttr(tb, "block", "type", id) : undefined;
+            block.codeCard = {
+                header: name,
+                name: name,
+                software: 1,
+                description: goog.isFunction(tooltip) ? tooltip(block) : tooltip,
+                blocksXml: xml ? ("<xml xmlns=\"http://www.w3.org/1999/xhtml\">" + (cleanOuterHTML(xml) || "<block type=\"" + id + "\"></block>") + "</xml>") : undefined,
+                url: url
+            };
+            if (pxt.Util.isTranslationMode()
+                && pxt.blocks.promptTranslateBlock) {
+                block.customContextMenu = function (options) {
+                    var blockd = pxt.blocks.getBlockDefinition(block.type);
+                    if (blockd && blockd.translationIds) {
+                        options.push({
+                            enabled: true,
+                            text: lf("Translate this block"),
+                            callback: function () {
+                                pxt.blocks.promptTranslateBlock(id, blockd.translationIds);
+                            }
+                        });
+                    }
+                };
+            }
+        }
+        function installHelpResources(id, name, tooltip, url, colour, colourSecondary, colourTertiary) {
+            var block = Blockly.Blocks[id];
+            var old = block.init;
+            if (!old)
+                return;
+            block.init = function () {
+                old.call(this);
+                var block = this;
+                setHelpResources(this, id, name, tooltip, url, colour, colourSecondary, colourTertiary);
+            };
+        }
+        blocks.installHelpResources = installHelpResources;
+        function initLists() {
+            var msg = Blockly.Msg;
+            // lists_create_with
+            var listsCreateWithId = "lists_create_with";
+            var listsCreateWithDef = pxt.blocks.getBlockDefinition(listsCreateWithId);
+            msg.LISTS_CREATE_EMPTY_TITLE = listsCreateWithDef.block["LISTS_CREATE_EMPTY_TITLE"];
+            msg.LISTS_CREATE_WITH_INPUT_WITH = listsCreateWithDef.block["LISTS_CREATE_WITH_INPUT_WITH"];
+            msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD = listsCreateWithDef.block["LISTS_CREATE_WITH_CONTAINER_TITLE_ADD"];
+            msg.LISTS_CREATE_WITH_ITEM_TITLE = listsCreateWithDef.block["LISTS_CREATE_WITH_ITEM_TITLE"];
+            installBuiltinHelpInfo(listsCreateWithId);
+            // lists_length
+            var listsLengthId = "lists_length";
+            var listsLengthDef = pxt.blocks.getBlockDefinition(listsLengthId);
+            msg.LISTS_LENGTH_TITLE = listsLengthDef.block["LISTS_LENGTH_TITLE"];
+            // We have to override this block definition because the builtin block
+            // allows both Strings and Arrays in its input check and that confuses
+            // our Blockly compiler
+            var block = Blockly.Blocks[listsLengthId];
+            block.init = function () {
+                this.jsonInit({
+                    "message0": msg.LISTS_LENGTH_TITLE,
+                    "args0": [
+                        {
+                            "type": "input_value",
+                            "name": "VALUE",
+                            "check": ['Array']
+                        }
+                    ],
+                    "output": 'Number',
+                    "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+                });
+            };
+            installBuiltinHelpInfo(listsLengthId);
+        }
+        function initLoops() {
+            var msg = Blockly.Msg;
+            // controls_repeat_ext
+            var controlsRepeatExtId = "controls_repeat_ext";
+            var controlsRepeatExtDef = pxt.blocks.getBlockDefinition(controlsRepeatExtId);
+            msg.CONTROLS_REPEAT_TITLE = controlsRepeatExtDef.block["CONTROLS_REPEAT_TITLE"];
+            msg.CONTROLS_REPEAT_INPUT_DO = controlsRepeatExtDef.block["CONTROLS_REPEAT_INPUT_DO"];
+            installBuiltinHelpInfo(controlsRepeatExtId);
+            // device_while
+            var deviceWhileId = "device_while";
+            var deviceWhileDef = pxt.blocks.getBlockDefinition(deviceWhileId);
+            Blockly.Blocks[deviceWhileId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": deviceWhileDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "COND",
+                                "check": "Boolean"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('loops')
+                    });
+                    this.appendStatementInput("DO")
+                        .appendField(deviceWhileDef.block["appendField"]);
+                    setBuiltinHelpInfo(this, deviceWhileId);
+                }
+            };
+            // pxt_controls_for
+            var pxtControlsForId = "pxt_controls_for";
+            var pxtControlsForDef = pxt.blocks.getBlockDefinition(pxtControlsForId);
+            Blockly.Blocks[pxtControlsForId] = {
+                /**
+                 * Block for 'for' loop.
+                 * @this Blockly.Block
+                 */
+                init: function () {
+                    this.jsonInit({
+                        "message0": pxtControlsForDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "VAR",
+                                "variable": pxtControlsForDef.block["variable"],
+                                "check": "Variable"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "TO",
+                                "check": "Number"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('loops'),
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(pxtControlsForDef.block["appendField"]);
+                    var thisBlock = this;
+                    setHelpResources(this, pxtControlsForId, pxtControlsForDef.name, function () {
+                        return pxt.U.rlf(pxtControlsForDef.tooltip, thisBlock.getInputTargetBlock('VAR') ? thisBlock.getInputTargetBlock('VAR').getField('VAR').getText() : '');
+                    }, pxtControlsForDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                },
+                /**
+                 * Return all variables referenced by this block.
+                 * @return {!Array.<string>} List of variable names.
+                 * @this Blockly.Block
+                 */
+                getVars: function () {
+                    return [this.getField('VAR').getText()];
+                },
+                /**
+                 * Notification that a variable is renaming.
+                 * If the name matches one of this block's variables, rename it.
+                 * @param {string} oldName Previous name of variable.
+                 * @param {string} newName Renamed variable.
+                 * @this Blockly.Block
+                 */
+                renameVar: function (oldName, newName) {
+                    var varField = this.getField('VAR');
+                    if (Blockly.Names.equals(oldName, varField.getText())) {
+                        varField.setText(newName);
+                        varField.setValue(newName);
+                    }
+                },
+                /**
+                 * Add menu option to create getter block for loop variable.
+                 * @param {!Array} options List of menu options to add to.
+                 * @this Blockly.Block
+                 */
+                customContextMenu: function (options) {
+                    if (!this.isCollapsed()) {
+                        var option = { enabled: true };
+                        option.text = lf("Create 'get {0}'", name);
+                        var xmlField = goog.dom.createDom('field', null, name);
+                        xmlField.setAttribute('name', 'VAR');
+                        var xmlBlock = goog.dom.createDom('block', null, xmlField);
+                        xmlBlock.setAttribute('type', 'variables_get');
+                        option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+                        options.push(option);
+                    }
+                }
+            };
+            // controls_simple_for
+            var controlsSimpleForId = "controls_simple_for";
+            var controlsSimpleForDef = pxt.blocks.getBlockDefinition(controlsSimpleForId);
+            Blockly.Blocks[controlsSimpleForId] = {
+                /**
+                 * Block for 'for' loop.
+                 * @this Blockly.Block
+                 */
+                init: function () {
+                    this.jsonInit({
+                        "message0": controlsSimpleForDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "field_variable",
+                                "name": "VAR",
+                                "variable": controlsSimpleForDef.block["variable"]
+                                // Please note that most multilingual characters
+                                // cannot be used as variable name at this point.
+                                // Translate or decide the default variable name
+                                // with care.
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "TO",
+                                "check": "Number"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('loops'),
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(controlsSimpleForDef.block["appendField"]);
+                    var thisBlock = this;
+                    setHelpResources(this, controlsSimpleForId, controlsSimpleForDef.name, function () {
+                        return pxt.U.rlf(controlsSimpleForDef.tooltip, thisBlock.getField('VAR').getText());
+                    }, controlsSimpleForDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                },
+                /**
+                 * Return all variables referenced by this block.
+                 * @return {!Array.<string>} List of variable names.
+                 * @this Blockly.Block
+                 */
+                getVars: function () {
+                    return [this.getField('VAR').getText()];
+                },
+                /**
+                 * Notification that a variable is renaming.
+                 * If the name matches one of this block's variables, rename it.
+                 * @param {string} oldName Previous name of variable.
+                 * @param {string} newName Renamed variable.
+                 * @this Blockly.Block
+                 */
+                renameVar: function (oldName, newName) {
+                    var varField = this.getField('VAR');
+                    if (Blockly.Names.equals(oldName, varField.getText())) {
+                        varField.setText(newName);
+                        varField.setValue(newName);
+                    }
+                },
+                /**
+                 * Add menu option to create getter block for loop variable.
+                 * @param {!Array} options List of menu options to add to.
+                 * @this Blockly.Block
+                 */
+                customContextMenu: function (options) {
+                    if (!this.isCollapsed()) {
+                        var option = { enabled: true };
+                        var name_1 = this.getField('VAR').getText();
+                        option.text = lf("Create 'get {0}'", name_1);
+                        var xmlField = goog.dom.createDom('field', null, name_1);
+                        xmlField.setAttribute('name', 'VAR');
+                        var xmlBlock = goog.dom.createDom('block', null, xmlField);
+                        xmlBlock.setAttribute('type', 'variables_get');
+                        option.callback = Blockly.ContextMenu.callbackFactory(this, xmlBlock);
+                        options.push(option);
+                    }
+                }
+            };
+            // break statement
+            var breakBlockDef = pxt.blocks.getBlockDefinition(ts.pxtc.TS_BREAK_TYPE);
+            Blockly.Blocks[pxtc.TS_BREAK_TYPE] = {
+                init: function () {
+                    var color = pxt.toolbox.getNamespaceColor('loops');
+                    this.jsonInit({
+                        "message0": breakBlockDef.block["message0"],
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": color
+                    });
+                    setHelpResources(this, ts.pxtc.TS_BREAK_TYPE, breakBlockDef.name, breakBlockDef.tooltip, breakBlockDef.url, color, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                }
+            };
+            // continue statement
+            var continueBlockDef = pxt.blocks.getBlockDefinition(ts.pxtc.TS_CONTINUE_TYPE);
+            Blockly.Blocks[pxtc.TS_CONTINUE_TYPE] = {
+                init: function () {
+                    var color = pxt.toolbox.getNamespaceColor('loops');
+                    this.jsonInit({
+                        "message0": continueBlockDef.block["message0"],
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": color
+                    });
+                    setHelpResources(this, ts.pxtc.TS_CONTINUE_TYPE, continueBlockDef.name, continueBlockDef.tooltip, continueBlockDef.url, color, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                }
+            };
+            var collapsedColor = "#cccccc";
+            Blockly.Blocks[pxtc.COLLAPSED_BLOCK] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": "...",
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": collapsedColor
+                    });
+                    setHelpResources(this, ts.pxtc.COLLAPSED_BLOCK, "...", lf("a few blocks"), undefined, collapsedColor, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                }
+            };
+        }
+        blocks.onShowContextMenu = undefined;
+        /**
+         * The following patch to blockly is to add the Trash icon on top of the toolbox,
+         * the trash icon should only show when a user drags a block that is already in the workspace.
+         */
+        function initDrag() {
+            var calculateDistance = function (elemBounds, mouseX) {
+                return Math.abs(mouseX - (elemBounds.left + (elemBounds.width / 2)));
+            };
+            /**
+             * Execute a step of block dragging, based on the given event.  Update the
+             * display accordingly.
+             * @param {!Event} e The most recent move event.
+             * @param {!goog.math.Coordinate} currentDragDeltaXY How far the pointer has
+             *     moved from the position at the start of the drag, in pixel units.
+             * @package
+             */
+            var blockDrag = Blockly.BlockDragger.prototype.dragBlock;
+            Blockly.BlockDragger.prototype.dragBlock = function (e, currentDragDeltaXY) {
+                var blocklyToolboxDiv = document.getElementsByClassName('blocklyToolboxDiv')[0];
+                var blocklyTreeRoot = document.getElementsByClassName('blocklyTreeRoot')[0]
+                    || document.getElementsByClassName('blocklyFlyout')[0];
+                var trashIcon = document.getElementById("blocklyTrashIcon");
+                if (blocklyTreeRoot && trashIcon) {
+                    var distance = calculateDistance(blocklyTreeRoot.getBoundingClientRect(), e.clientX);
+                    if (distance < 200) {
+                        var opacity = distance / 200;
+                        trashIcon.style.opacity = "" + (1 - opacity);
+                        trashIcon.style.display = 'block';
+                        if (blocklyToolboxDiv) {
+                            blocklyTreeRoot.style.opacity = "" + opacity;
+                            if (distance < 50) {
+                                pxt.BrowserUtils.addClass(blocklyToolboxDiv, 'blocklyToolboxDeleting');
+                            }
+                        }
+                    }
+                    else {
+                        trashIcon.style.display = 'none';
+                        blocklyTreeRoot.style.opacity = '1';
+                        if (blocklyToolboxDiv)
+                            pxt.BrowserUtils.removeClass(blocklyToolboxDiv, 'blocklyToolboxDeleting');
+                    }
+                }
+                return blockDrag.call(this, e, currentDragDeltaXY);
+            };
+            /**
+             * Finish dragging the workspace and put everything back where it belongs.
+             * @param {!goog.math.Coordinate} currentDragDeltaXY How far the pointer has
+             *     moved from the position at the start of the drag, in pixel coordinates.
+             * @package
+             */
+            var blockEndDrag = Blockly.BlockDragger.prototype.endBlockDrag;
+            Blockly.BlockDragger.prototype.endBlockDrag = function (e, currentDragDeltaXY) {
+                blockEndDrag.call(this, e, currentDragDeltaXY);
+                var blocklyToolboxDiv = document.getElementsByClassName('blocklyToolboxDiv')[0];
+                var blocklyTreeRoot = document.getElementsByClassName('blocklyTreeRoot')[0]
+                    || document.getElementsByClassName('blocklyFlyout')[0];
+                var trashIcon = document.getElementById("blocklyTrashIcon");
+                if (trashIcon && blocklyTreeRoot) {
+                    trashIcon.style.display = 'none';
+                    blocklyTreeRoot.style.opacity = '1';
+                    if (blocklyToolboxDiv)
+                        pxt.BrowserUtils.removeClass(blocklyToolboxDiv, 'blocklyToolboxDeleting');
+                }
+            };
+        }
+        function initContextMenu() {
+            // Translate the context menu for blocks.
+            var msg = Blockly.Msg;
+            msg.DUPLICATE_BLOCK = lf("{id:block}Duplicate");
+            msg.REMOVE_COMMENT = lf("Remove Comment");
+            msg.ADD_COMMENT = lf("Add Comment");
+            msg.EXTERNAL_INPUTS = lf("External Inputs");
+            msg.INLINE_INPUTS = lf("Inline Inputs");
+            msg.EXPAND_BLOCK = lf("Expand Block");
+            msg.COLLAPSE_BLOCK = lf("Collapse Block");
+            msg.ENABLE_BLOCK = lf("Enable Block");
+            msg.DISABLE_BLOCK = lf("Disable Block");
+            msg.DELETE_BLOCK = lf("Delete Block");
+            msg.DELETE_X_BLOCKS = lf("Delete Blocks");
+            msg.DELETE_ALL_BLOCKS = lf("Delete All Blocks");
+            msg.HELP = lf("Help");
+            // inject hook to handle openings docs
+            Blockly.BlockSvg.prototype.showHelp_ = function () {
+                var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
+                if (url)
+                    (pxt.blocks.openHelpUrl || window.open)(url);
+            };
+            /**
+             * Show the context menu for the workspace.
+             * @param {!Event} e Mouse event.
+             * @private
+             */
+            Blockly.WorkspaceSvg.prototype.showContextMenu_ = function (e) {
+                var _this = this;
+                if (this.options.readOnly || this.isFlyout) {
+                    return;
+                }
+                var menuOptions = [];
+                var topBlocks = this.getTopBlocks();
+                var topComments = this.getTopComments();
+                var eventGroup = Blockly.utils.genUid();
+                var ws = this;
+                // Option to add a workspace comment.
+                if (this.options.comments && !pxt.BrowserUtils.isIE()) {
+                    menuOptions.push(Blockly.ContextMenu.workspaceCommentOption(ws, e));
+                }
+                // Add a little animation to deleting.
+                var DELAY = 10;
+                // Option to delete all blocks.
+                // Count the number of blocks that are deletable.
+                var deleteList = Blockly.WorkspaceSvg.buildDeleteList_(topBlocks);
+                var deleteCount = 0;
+                for (var i = 0; i < deleteList.length; i++) {
+                    if (!deleteList[i].isShadow()) {
+                        deleteCount++;
+                    }
+                }
+                function deleteNext() {
+                    Blockly.Events.setGroup(eventGroup);
+                    var block = deleteList.shift();
+                    if (block) {
+                        if (block.workspace) {
+                            block.dispose(false, true);
+                            setTimeout(deleteNext, DELAY);
+                        }
+                        else {
+                            deleteNext();
+                        }
+                    }
+                    Blockly.Events.setGroup(false);
+                }
+                var deleteOption = {
+                    text: deleteCount == 1 ? msg.DELETE_BLOCK : msg.DELETE_ALL_BLOCKS,
+                    enabled: deleteCount > 0,
+                    callback: function () {
+                        pxt.tickEvent("blocks.context.delete", undefined, { interactiveConsent: true });
+                        if (deleteCount < 2) {
+                            deleteNext();
+                        }
+                        else {
+                            Blockly.confirm(lf("Delete all {0} blocks?", deleteCount), function (ok) {
+                                if (ok) {
+                                    deleteNext();
+                                }
+                            });
+                        }
+                    }
+                };
+                menuOptions.push(deleteOption);
+                var formatCodeOption = {
+                    text: lf("Format Code"),
+                    enabled: true,
+                    callback: function () {
+                        pxt.tickEvent("blocks.context.format", undefined, { interactiveConsent: true });
+                        pxt.blocks.layout.flow(_this, { useViewWidth: true });
+                    }
+                };
+                menuOptions.push(formatCodeOption);
+                if (pxt.blocks.layout.screenshotEnabled()) {
+                    var screenshotOption = {
+                        text: lf("Snapshot"),
+                        enabled: topBlocks.length > 0 || topComments.length > 0,
+                        callback: function () {
+                            pxt.tickEvent("blocks.context.screenshot", undefined, { interactiveConsent: true });
+                            pxt.blocks.layout.screenshotAsync(_this)
+                                .done(function (uri) {
+                                if (pxt.BrowserUtils.isSafari())
+                                    uri = uri.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+                                pxt.BrowserUtils.browserDownloadDataUri(uri, (pxt.appTarget.nickname || pxt.appTarget.id) + "-" + lf("screenshot") + ".png");
+                            });
+                        }
+                    };
+                    menuOptions.push(screenshotOption);
+                }
+                // custom options...
+                if (blocks.onShowContextMenu)
+                    blocks.onShowContextMenu(this, menuOptions);
+                Blockly.ContextMenu.show(e, menuOptions, this.RTL);
+            };
+            // Get rid of bumping behavior
+            Blockly.Constants.Logic.LOGIC_COMPARE_ONCHANGE_MIXIN.onchange = function () { };
+        }
+        function initOnStart() {
+            // on_start
+            var onStartDef = pxt.blocks.getBlockDefinition(ts.pxtc.ON_START_TYPE);
+            Blockly.Blocks[ts.pxtc.ON_START_TYPE] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": onStartDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_dummy"
+                            },
+                            {
+                                "type": "input_statement",
+                                "name": "HANDLER"
+                            }
+                        ],
+                        "colour": (pxt.appTarget.runtime ? pxt.appTarget.runtime.onStartColor : '') || pxt.toolbox.getNamespaceColor('loops')
+                    });
+                    setHelpResources(this, ts.pxtc.ON_START_TYPE, onStartDef.name, onStartDef.tooltip, onStartDef.url, String((pxt.appTarget.runtime ? pxt.appTarget.runtime.onStartColor : '') || pxt.toolbox.getNamespaceColor('loops')), undefined, undefined, pxt.appTarget.runtime ? pxt.appTarget.runtime.onStartUnDeletable : false);
+                }
+            };
+            Blockly.Blocks[pxtc.TS_STATEMENT_TYPE] = {
+                init: function () {
+                    var _this = this;
+                    var that = this;
+                    that.setColour("#717171");
+                    that.setPreviousStatement(true);
+                    that.setNextStatement(true);
+                    that.setInputsInline(false);
+                    var pythonMode;
+                    var lines;
+                    that.domToMutation = function (element) {
+                        var n = parseInt(element.getAttribute("numlines"));
+                        that.declaredVariables = element.getAttribute("declaredvars");
+                        lines = [];
+                        for (var i = 0; i < n; i++) {
+                            var line = element.getAttribute("line" + i);
+                            lines.push(line);
+                        }
+                        // Add the initial TS inputs
+                        that.setPythonEnabled(false);
+                    };
+                    that.mutationToDom = function () {
+                        var mutation = document.createElement("mutation");
+                        if (lines) {
+                            lines.forEach(function (line, index) { return mutation.setAttribute("line" + index, line); });
+                            mutation.setAttribute("numlines", lines.length.toString());
+                        }
+                        if (that.declaredVariables) {
+                            mutation.setAttribute("declaredvars", _this.declaredVariables);
+                        }
+                        return mutation;
+                    };
+                    // Consumed by the webapp
+                    that.setPythonEnabled = function (enabled) {
+                        if (pythonMode === enabled)
+                            return;
+                        // Remove all inputs
+                        while (that.inputList.length) {
+                            that.removeInput(that.inputList[0].name);
+                        }
+                        pythonMode = enabled;
+                        if (enabled) {
+                            // This field must be named LINE0 because otherwise Blockly will crash
+                            // when trying to make an insertion marker. All insertion marker blocks
+                            // need to have the same fields as the real block, and this field will
+                            // always be created by domToMutation regardless of TS or Python mode
+                            that.appendDummyInput().appendField(pxt.Util.lf("<python code>"), "LINE0");
+                            that.setTooltip(lf("A Python statement that could not be converted to blocks"));
+                        }
+                        else {
+                            lines.forEach(function (line, index) {
+                                that.appendDummyInput().appendField(line, "LINE" + index);
+                            });
+                            that.setTooltip(lf("A JavaScript statement that could not be converted to blocks"));
+                        }
+                    };
+                    // Consumed by BlocklyCompiler
+                    that.getLines = function () { return lines; };
+                    that.setEditable(false);
+                    setHelpResources(this, pxtc.TS_STATEMENT_TYPE, lf("JavaScript statement"), lf("A JavaScript statement that could not be converted to blocks"), '/blocks/javascript-blocks', '#717171');
+                }
+            };
+            Blockly.Blocks[pxtc.TS_OUTPUT_TYPE] = {
+                init: function () {
+                    var that = this;
+                    that.setColour("#717171");
+                    that.setPreviousStatement(false);
+                    that.setNextStatement(false);
+                    that.setOutput(true);
+                    that.setEditable(false);
+                    that.appendDummyInput().appendField(new pxtblockly.FieldTsExpression(""), "EXPRESSION");
+                    that.setPythonEnabled = function (enabled) {
+                        that.getField("EXPRESSION").setPythonEnabled(enabled);
+                        if (enabled) {
+                            that.setTooltip(lf("A Python expression that could not be converted to blocks"));
+                        }
+                        else {
+                            that.setTooltip(lf("A JavaScript expression that could not be converted to blocks"));
+                        }
+                    };
+                    setHelpResources(that, pxtc.TS_OUTPUT_TYPE, lf("JavaScript expression"), lf("A JavaScript expression that could not be converted to blocks"), '/blocks/javascript-blocks', "#717171");
+                }
+            };
+            if (pxt.appTarget.runtime && pxt.appTarget.runtime.pauseUntilBlock) {
+                var blockOptions_1 = pxt.appTarget.runtime.pauseUntilBlock;
+                var blockDef_1 = pxt.blocks.getBlockDefinition(ts.pxtc.PAUSE_UNTIL_TYPE);
+                Blockly.Blocks[pxtc.PAUSE_UNTIL_TYPE] = {
+                    init: function () {
+                        var color = blockOptions_1.color || pxt.toolbox.getNamespaceColor('loops');
+                        this.jsonInit({
+                            "message0": blockDef_1.block["message0"],
+                            "args0": [
+                                {
+                                    "type": "input_value",
+                                    "name": "PREDICATE",
+                                    "check": "Boolean"
+                                }
+                            ],
+                            "inputsInline": true,
+                            "previousStatement": null,
+                            "nextStatement": null,
+                            "colour": color
+                        });
+                        setHelpResources(this, ts.pxtc.PAUSE_UNTIL_TYPE, blockDef_1.name, blockDef_1.tooltip, blockDef_1.url, color, undefined /*colourSecondary*/, undefined /*colourTertiary*/, false /*undeletable*/);
+                    }
+                };
+            }
+            // pxt_controls_for_of
+            var pxtControlsForOfId = "pxt_controls_for_of";
+            var pxtControlsForOfDef = pxt.blocks.getBlockDefinition(pxtControlsForOfId);
+            Blockly.Blocks[pxtControlsForOfId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": pxtControlsForOfDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "VAR",
+                                "variable": pxtControlsForOfDef.block["variable"],
+                                "check": "Variable"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.blockColors['loops'],
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(pxtControlsForOfDef.block["appendField"]);
+                    var thisBlock = this;
+                    setHelpResources(this, pxtControlsForOfId, pxtControlsForOfDef.name, function () {
+                        return pxt.U.rlf(pxtControlsForOfDef.tooltip, thisBlock.getInputTargetBlock('VAR') ? thisBlock.getInputTargetBlock('VAR').getField('VAR').getText() : '');
+                    }, pxtControlsForOfDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                }
+            };
+            // controls_for_of
+            var controlsForOfId = "controls_for_of";
+            var controlsForOfDef = pxt.blocks.getBlockDefinition(controlsForOfId);
+            Blockly.Blocks[controlsForOfId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": controlsForOfDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "field_variable",
+                                "name": "VAR",
+                                "variable": controlsForOfDef.block["variable"]
+                                // Please note that most multilingual characters
+                                // cannot be used as variable name at this point.
+                                // Translate or decide the default variable name
+                                // with care.
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.blockColors['loops'],
+                        "inputsInline": true
+                    });
+                    this.appendStatementInput('DO')
+                        .appendField(controlsForOfDef.block["appendField"]);
+                    var thisBlock = this;
+                    setHelpResources(this, controlsForOfId, controlsForOfDef.name, function () {
+                        return pxt.U.rlf(controlsForOfDef.tooltip, thisBlock.getField('VAR').getText());
+                    }, controlsForOfDef.url, String(pxt.toolbox.getNamespaceColor('loops')));
+                }
+            };
+            // lists_index_get
+            var listsIndexGetId = "lists_index_get";
+            var listsIndexGetDef = pxt.blocks.getBlockDefinition(listsIndexGetId);
+            Blockly.Blocks["lists_index_get"] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": listsIndexGetDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "INDEX",
+                                "check": "Number"
+                            }
+                        ],
+                        "colour": pxt.toolbox.blockColors['arrays'],
+                        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+                        "inputsInline": true
+                    });
+                    this.setPreviousStatement(false);
+                    this.setNextStatement(false);
+                    this.setOutput(true);
+                    setBuiltinHelpInfo(this, listsIndexGetId);
+                }
+            };
+            // lists_index_set
+            var listsIndexSetId = "lists_index_set";
+            var listsIndexSetDef = pxt.blocks.getBlockDefinition(listsIndexSetId);
+            Blockly.Blocks[listsIndexSetId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": listsIndexSetDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "LIST",
+                                "check": "Array"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "INDEX",
+                                "check": "Number"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "VALUE",
+                                "check": null
+                            }
+                        ],
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.blockColors['arrays'],
+                        "inputsInline": true
+                    });
+                    setBuiltinHelpInfo(this, listsIndexSetId);
+                }
+            };
+        }
+        function initMath() {
+            // math_op2
+            var mathOp2Id = "math_op2";
+            var mathOp2Def = pxt.blocks.getBlockDefinition(mathOp2Id);
+            var mathOp2Tooltips = mathOp2Def.tooltip;
+            Blockly.Blocks[mathOp2Id] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": lf("%1 of %2 and %3"),
+                        "args0": [
+                            {
+                                "type": "field_dropdown",
+                                "name": "op",
+                                "options": [
+                                    [lf("{id:op}min"), "min"],
+                                    [lf("{id:op}max"), "max"]
+                                ]
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "x",
+                                "check": "Number"
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "y",
+                                "check": "Number"
+                            }
+                        ],
+                        "inputsInline": true,
+                        "output": "Number",
+                        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+                        "colour": pxt.toolbox.getNamespaceColor('math')
+                    });
+                    var thisBlock = this;
+                    setHelpResources(this, mathOp2Id, mathOp2Def.name, function (block) {
+                        return mathOp2Tooltips[block.getFieldValue('op')];
+                    }, mathOp2Def.url, pxt.toolbox.getNamespaceColor(mathOp2Def.category));
+                }
+            };
+            // math_op3
+            var mathOp3Id = "math_op3";
+            var mathOp3Def = pxt.blocks.getBlockDefinition(mathOp3Id);
+            Blockly.Blocks[mathOp3Id] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": mathOp3Def.block["message0"],
+                        "args0": [
+                            {
+                                "type": "input_value",
+                                "name": "x",
+                                "check": "Number"
+                            }
+                        ],
+                        "inputsInline": true,
+                        "output": "Number",
+                        "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+                        "colour": pxt.toolbox.getNamespaceColor('math')
+                    });
+                    setBuiltinHelpInfo(this, mathOp3Id);
+                }
+            };
+            // builtin math_number, math_integer, math_whole_number, math_number_minmax
+            //XXX Integer validation needed.
+            var numberBlocks = ['math_number', 'math_integer', 'math_whole_number', 'math_number_minmax'];
+            numberBlocks.forEach(function (num_id) {
+                var mInfo = pxt.blocks.getBlockDefinition(num_id);
+                installHelpResources(num_id, mInfo.name, mInfo.tooltip, mInfo.url, Blockly.Colours.textField, Blockly.Colours.textField, Blockly.Colours.textField);
+            });
+            // builtin math_arithmetic
+            var msg = Blockly.Msg;
+            var mathArithmeticId = "math_arithmetic";
+            var mathArithmeticDef = pxt.blocks.getBlockDefinition(mathArithmeticId);
+            var mathArithmeticTooltips = mathArithmeticDef.tooltip;
+            msg.MATH_ADDITION_SYMBOL = mathArithmeticDef.block["MATH_ADDITION_SYMBOL"];
+            msg.MATH_SUBTRACTION_SYMBOL = mathArithmeticDef.block["MATH_SUBTRACTION_SYMBOL"];
+            msg.MATH_MULTIPLICATION_SYMBOL = mathArithmeticDef.block["MATH_MULTIPLICATION_SYMBOL"];
+            msg.MATH_DIVISION_SYMBOL = mathArithmeticDef.block["MATH_DIVISION_SYMBOL"];
+            msg.MATH_POWER_SYMBOL = mathArithmeticDef.block["MATH_POWER_SYMBOL"];
+            installHelpResources(mathArithmeticId, mathArithmeticDef.name, function (block) {
+                return mathArithmeticTooltips[block.getFieldValue('OP')];
+            }, mathArithmeticDef.url, pxt.toolbox.getNamespaceColor(mathArithmeticDef.category));
+            // builtin math_modulo
+            var mathModuloId = "math_modulo";
+            var mathModuloDef = pxt.blocks.getBlockDefinition(mathModuloId);
+            msg.MATH_MODULO_TITLE = mathModuloDef.block["MATH_MODULO_TITLE"];
+            installBuiltinHelpInfo(mathModuloId);
+            blocks.initMathOpBlock();
+            blocks.initMathRoundBlock();
+        }
+        function initVariables() {
+            // We only give types to "special" variables like enum members and we don't
+            // want those showing up in the variable dropdown so filter the variables
+            // that show up to only ones that have an empty type
+            Blockly.FieldVariable.prototype.getVariableTypes_ = function () { return [""]; };
+            var varname = lf("{id:var}item");
+            Blockly.Variables.flyoutCategory = function (workspace) {
+                var xmlList = [];
+                if (!pxt.appTarget.appTheme.hideFlyoutHeadings) {
+                    // Add the Heading label
+                    var headingLabel = createFlyoutHeadingLabel(lf("Variables"), pxt.toolbox.getNamespaceColor('variables'), pxt.toolbox.getNamespaceIcon('variables'));
+                    xmlList.push(headingLabel);
+                }
+                var button = document.createElement('button');
+                button.setAttribute('text', lf("Make a Variable..."));
+                button.setAttribute('callbackKey', 'CREATE_VARIABLE');
+                workspace.registerButtonCallback('CREATE_VARIABLE', function (button) {
+                    Blockly.Variables.createVariable(button.getTargetWorkspace());
+                });
+                xmlList.push(button);
+                var blockList = Blockly.Variables.flyoutCategoryBlocks(workspace);
+                xmlList = xmlList.concat(blockList);
+                return xmlList;
+            };
+            Blockly.Variables.flyoutCategoryBlocks = function (workspace) {
+                var variableModelList = workspace.getVariablesOfType('');
+                var xmlList = [];
+                if (variableModelList.length > 0) {
+                    var mostRecentVariable = variableModelList[variableModelList.length - 1];
+                    variableModelList.sort(Blockly.VariableModel.compareByName);
+                    // variables getters first
+                    for (var i = 0; i < variableModelList.length; i++) {
+                        var variable = variableModelList[i];
+                        if (Blockly.Blocks['variables_get']) {
+                            var blockText = '<xml>' +
+                                '<block type="variables_get" gap="8">' +
+                                Blockly.Variables.generateVariableFieldXmlString(variable) +
+                                '</block>' +
+                                '</xml>';
+                            var block = Blockly.Xml.textToDom(blockText).firstChild;
+                            xmlList.push(block);
+                        }
+                    }
+                    xmlList[xmlList.length - 1].setAttribute('gap', '24');
+                    if (Blockly.Blocks['variables_set']) {
+                        var gap = Blockly.Blocks['variables_change'] ? 8 : 24;
+                        var blockText = '<xml>' +
+                            '<block type="variables_set" gap="' + gap + '">' +
+                            Blockly.Variables.generateVariableFieldXmlString(mostRecentVariable) +
+                            '</block>' +
+                            '</xml>';
+                        var block = Blockly.Xml.textToDom(blockText).firstChild;
+                        {
+                            var value = goog.dom.createDom('value');
+                            value.setAttribute('name', 'VALUE');
+                            var shadow = goog.dom.createDom('shadow');
+                            shadow.setAttribute("type", "math_number");
+                            value.appendChild(shadow);
+                            var field = goog.dom.createDom('field');
+                            field.setAttribute('name', 'NUM');
+                            field.appendChild(document.createTextNode("0"));
+                            shadow.appendChild(field);
+                            block.appendChild(value);
+                        }
+                        xmlList.push(block);
+                    }
+                    if (Blockly.Blocks['variables_change']) {
+                        var gap = Blockly.Blocks['variables_get'] ? 20 : 8;
+                        var blockText = '<xml>' +
+                            '<block type="variables_change" gap="' + gap + '">' +
+                            Blockly.Variables.generateVariableFieldXmlString(mostRecentVariable) +
+                            '<value name="DELTA">' +
+                            '<shadow type="math_number">' +
+                            '<field name="NUM">1</field>' +
+                            '</shadow>' +
+                            '</value>' +
+                            '</block>' +
+                            '</xml>';
+                        var block = Blockly.Xml.textToDom(blockText).firstChild;
+                        {
+                            var value = goog.dom.createDom('value');
+                            value.setAttribute('name', 'VALUE');
+                            var shadow = goog.dom.createDom('shadow');
+                            shadow.setAttribute("type", "math_number");
+                            value.appendChild(shadow);
+                            var field = goog.dom.createDom('field');
+                            field.setAttribute('name', 'NUM');
+                            field.appendChild(document.createTextNode("1"));
+                            shadow.appendChild(field);
+                            block.appendChild(value);
+                        }
+                        xmlList.push(block);
+                    }
+                }
+                return xmlList;
+            };
+            // builtin variables_get
+            var msg = Blockly.Msg;
+            var variablesGetId = "variables_get";
+            var variablesGetDef = pxt.blocks.getBlockDefinition(variablesGetId);
+            msg.VARIABLES_GET_CREATE_SET = variablesGetDef.block["VARIABLES_GET_CREATE_SET"];
+            installBuiltinHelpInfo(variablesGetId);
+            var variablesReporterGetId = "variables_get_reporter";
+            installBuiltinHelpInfo(variablesReporterGetId);
+            // Dropdown menu of variables_get
+            msg.RENAME_VARIABLE = lf("Rename variable...");
+            msg.DELETE_VARIABLE = lf("Delete the \"%1\" variable");
+            msg.DELETE_VARIABLE_CONFIRMATION = lf("Delete %1 uses of the \"%2\" variable?");
+            msg.NEW_VARIABLE_DROPDOWN = lf("New variable...");
+            // builtin variables_set
+            var variablesSetId = "variables_set";
+            var variablesSetDef = pxt.blocks.getBlockDefinition(variablesSetId);
+            msg.VARIABLES_SET = variablesSetDef.block["VARIABLES_SET"];
+            msg.VARIABLES_DEFAULT_NAME = varname;
+            msg.VARIABLES_SET_CREATE_GET = lf("Create 'get %1'");
+            installBuiltinHelpInfo(variablesSetId);
+            // pxt variables_change
+            var variablesChangeId = "variables_change";
+            var variablesChangeDef = pxt.blocks.getBlockDefinition(variablesChangeId);
+            Blockly.Blocks[variablesChangeId] = {
+                init: function () {
+                    this.jsonInit({
+                        "message0": variablesChangeDef.block["message0"],
+                        "args0": [
+                            {
+                                "type": "field_variable",
+                                "name": "VAR",
+                                "variable": varname
+                            },
+                            {
+                                "type": "input_value",
+                                "name": "VALUE",
+                                "check": "Number"
+                            }
+                        ],
+                        "inputsInline": true,
+                        "previousStatement": null,
+                        "nextStatement": null,
+                        "colour": pxt.toolbox.getNamespaceColor('variables')
+                    });
+                    setBuiltinHelpInfo(this, variablesChangeId);
+                }
+            };
+            // New variable dialog
+            msg.NEW_VARIABLE_TITLE = lf("New variable name:");
+            // Rename variable dialog
+            msg.RENAME_VARIABLE_TITLE = lf("Rename all '%1' variables to:");
+        }
+        function initFunctions() {
+            var msg = Blockly.Msg;
+            // New functions implementation messages
+            msg.FUNCTION_CREATE_NEW = lf("Make a Function...");
+            msg.FUNCTION_WARNING_DUPLICATE_ARG = lf("Functions cannot use the same argument name more than once.");
+            msg.FUNCTION_WARNING_ARG_NAME_IS_FUNCTION_NAME = lf("Argument names must not be the same as the function name.");
+            msg.FUNCTION_WARNING_EMPTY_NAME = lf("Function and argument names cannot be empty.");
+            msg.FUNCTIONS_DEFAULT_FUNCTION_NAME = lf("doSomething");
+            msg.FUNCTIONS_DEFAULT_BOOLEAN_ARG_NAME = lf("bool");
+            msg.FUNCTIONS_DEFAULT_STRING_ARG_NAME = lf("text");
+            msg.FUNCTIONS_DEFAULT_NUMBER_ARG_NAME = lf("num");
+            msg.FUNCTIONS_DEFAULT_CUSTOM_ARG_NAME = lf("arg");
+            msg.PROCEDURES_HUE = pxt.toolbox.getNamespaceColor("functions");
+            msg.REPORTERS_HUE = pxt.toolbox.getNamespaceColor("variables");
+            // builtin procedures_defnoreturn
+            var proceduresDefId = "procedures_defnoreturn";
+            var proceduresDef = pxt.blocks.getBlockDefinition(proceduresDefId);
+            msg.PROCEDURES_DEFNORETURN_TITLE = proceduresDef.block["PROCEDURES_DEFNORETURN_TITLE"];
+            msg.PROCEDURE_ALREADY_EXISTS = proceduresDef.block["PROCEDURE_ALREADY_EXISTS"];
+            Blockly.Blocks['procedures_defnoreturn'].init = function () {
+                var nameField = new Blockly.FieldTextInput('', Blockly.Procedures.rename);
+                //nameField.setSpellcheck(false); //TODO
+                this.appendDummyInput()
+                    .appendField(Blockly.Msg.PROCEDURES_DEFNORETURN_TITLE)
+                    .appendField(nameField, 'NAME')
+                    .appendField('', 'PARAMS');
+                this.setColour(pxt.toolbox.getNamespaceColor('functions'));
+                this.arguments_ = [];
+                this.argumentVarModels_ = [];
+                this.setStartHat(true);
+                this.setStatements_(true);
+                this.statementConnection_ = null;
+            };
+            installBuiltinHelpInfo(proceduresDefId);
+            // builtin procedures_defnoreturn
+            var proceduresCallId = "procedures_callnoreturn";
+            var proceduresCallDef = pxt.blocks.getBlockDefinition(proceduresCallId);
+            msg.PROCEDURES_CALLRETURN_TOOLTIP = proceduresDef.tooltip;
+            Blockly.Blocks['procedures_callnoreturn'] = {
+                init: function () {
+                    var nameField = new pxtblockly.FieldProcedure('');
+                    this.appendDummyInput('TOPROW')
+                        .appendField(proceduresCallDef.block['PROCEDURES_CALLNORETURN_TITLE'])
+                        .appendField(nameField, 'NAME');
+                    this.setPreviousStatement(true);
+                    this.setNextStatement(true);
+                    this.setColour(pxt.toolbox.getNamespaceColor('functions'));
+                    this.arguments_ = [];
+                    this.quarkConnections_ = {};
+                    this.quarkIds_ = null;
+                },
+                /**
+                 * Returns the name of the procedure this block calls.
+                 * @return {string} Procedure name.
+                 * @this Blockly.Block
+                 */
+                getProcedureCall: function () {
+                    // The NAME field is guaranteed to exist, null will never be returned.
+                    return /** @type {string} */ (this.getFieldValue('NAME'));
+                },
+                /**
+                 * Notification that a procedure is renaming.
+                 * If the name matches this block's procedure, rename it.
+                 * @param {string} oldName Previous name of procedure.
+                 * @param {string} newName Renamed procedure.
+                 * @this Blockly.Block
+                 */
+                renameProcedure: function (oldName, newName) {
+                    if (Blockly.Names.equals(oldName, this.getProcedureCall())) {
+                        this.setFieldValue(newName, 'NAME');
+                    }
+                },
+                /**
+                 * Procedure calls cannot exist without the corresponding procedure
+                 * definition.  Enforce this link whenever an event is fired.
+                 * @param {!Blockly.Events.Abstract} event Change event.
+                 * @this Blockly.Block
+                 */
+                onchange: function (event) {
+                    if (!this.workspace || this.workspace.isFlyout || this.isInsertionMarker()) {
+                        // Block is deleted or is in a flyout or insertion marker.
+                        return;
+                    }
+                    if (event.type == Blockly.Events.CREATE &&
+                        event.ids.indexOf(this.id) != -1) {
+                        // Look for the case where a procedure call was created (usually through
+                        // paste) and there is no matching definition.  In this case, create
+                        // an empty definition block with the correct signature.
+                        var name_2 = this.getProcedureCall();
+                        var def = Blockly.Procedures.getDefinition(name_2, this.workspace);
+                        if (def && (def.type != this.defType_ ||
+                            JSON.stringify(def.arguments_) != JSON.stringify(this.arguments_))) {
+                            // The signatures don't match.
+                            def = null;
+                        }
+                        if (!def) {
+                            Blockly.Events.setGroup(event.group);
+                            /**
+                             * Create matching definition block.
+                             * <xml>
+                             *   <block type="procedures_defreturn" x="10" y="20">
+                             *     <field name="NAME">test</field>
+                             *   </block>
+                             * </xml>
+                             */
+                            var xml = Blockly.utils.xml.createElement('xml');
+                            var block = Blockly.utils.xml.createElement('block');
+                            block.setAttribute('type', this.defType_);
+                            var xy = this.getRelativeToSurfaceXY();
+                            var x = xy.x + Blockly.SNAP_RADIUS * (this.RTL ? -1 : 1);
+                            var y = xy.y + Blockly.SNAP_RADIUS * 2;
+                            block.setAttribute('x', x);
+                            block.setAttribute('y', y);
+                            var field = Blockly.utils.xml.createElement('field');
+                            field.setAttribute('name', 'NAME');
+                            field.appendChild(document.createTextNode(this.getProcedureCall()));
+                            block.appendChild(field);
+                            xml.appendChild(block);
+                            pxt.blocks.domToWorkspaceNoEvents(xml, this.workspace);
+                            Blockly.Events.setGroup(false);
+                        }
+                    }
+                    else if (event.type == Blockly.Events.DELETE) {
+                        // Look for the case where a procedure definition has been deleted,
+                        // leaving this block (a procedure call) orphaned.  In this case, delete
+                        // the orphan.
+                        var name_3 = this.getProcedureCall();
+                        var def = Blockly.Procedures.getDefinition(name_3, this.workspace);
+                        if (!def) {
+                            Blockly.Events.setGroup(event.group);
+                            this.dispose(true, false);
+                            Blockly.Events.setGroup(false);
+                        }
+                    }
+                },
+                mutationToDom: function () {
+                    var mutationElement = document.createElement("mutation");
+                    mutationElement.setAttribute("name", this.getProcedureCall());
+                    return mutationElement;
+                },
+                domToMutation: function (element) {
+                    var name = element.getAttribute("name");
+                    this.renameProcedure(this.getProcedureCall(), name);
+                },
+                /**
+                 * Add menu option to find the definition block for this call.
+                 * @param {!Array} options List of menu options to add to.
+                 * @this Blockly.Block
+                 */
+                customContextMenu: function (options) {
+                    var option = { enabled: true };
+                    option.text = Blockly.Msg.PROCEDURES_HIGHLIGHT_DEF;
+                    var name = this.getProcedureCall();
+                    var workspace = this.workspace;
+                    option.callback = function () {
+                        var def = Blockly.Procedures.getDefinition(name, workspace);
+                        if (def)
+                            def.select();
+                    };
+                    options.push(option);
+                },
+                defType_: 'procedures_defnoreturn'
+            };
+            installBuiltinHelpInfo(proceduresCallId);
+            // New functions implementation function_definition
+            var functionDefinitionId = "function_definition";
+            var functionDefinition = pxt.blocks.getBlockDefinition(functionDefinitionId);
+            msg.FUNCTIONS_EDIT_OPTION = functionDefinition.block["FUNCTIONS_EDIT_OPTION"];
+            installBuiltinHelpInfo(functionDefinitionId);
+            // New functions implementation function_call
+            var functionCallId = "function_call";
+            var functionCall = pxt.blocks.getBlockDefinition(functionCallId);
+            msg.FUNCTIONS_CALL_TITLE = functionCall.block["FUNCTIONS_CALL_TITLE"];
+            installBuiltinHelpInfo(functionCallId);
+            Blockly.Procedures.flyoutCategory = function (workspace) {
+                var xmlList = [];
+                if (!pxt.appTarget.appTheme.hideFlyoutHeadings) {
+                    // Add the Heading label
+                    var headingLabel = createFlyoutHeadingLabel(lf("Functions"), pxt.toolbox.getNamespaceColor('functions'), pxt.toolbox.getNamespaceIcon('functions'), 'blocklyFlyoutIconfunctions');
+                    xmlList.push(headingLabel);
+                }
+                var newFunction = lf("Make a Function...");
+                var newFunctionTitle = lf("New function name:");
+                // Add the "Make a function" button
+                var button = Blockly.utils.xml.createElement('button');
+                button.setAttribute('text', newFunction);
+                button.setAttribute('callbackKey', 'CREATE_FUNCTION');
+                var createFunction = function (name) {
+                    /**
+                     * Create matching definition block.
+                     * <xml>
+                     *   <block type="procedures_defreturn" x="10" y="20">
+                     *     <field name="NAME">test</field>
+                     *   </block>
+                     * </xml>
+                     */
+                    var topBlock = workspace.getTopBlocks(true)[0];
+                    var x = 10, y = 10;
+                    if (topBlock) {
+                        var xy = topBlock.getRelativeToSurfaceXY();
+                        x = xy.x + Blockly.SNAP_RADIUS * (topBlock.RTL ? -1 : 1);
+                        y = xy.y + Blockly.SNAP_RADIUS * 2;
+                    }
+                    var xml = Blockly.utils.xml.createElement('xml');
+                    var block = Blockly.utils.xml.createElement('block');
+                    block.setAttribute('type', 'procedures_defnoreturn');
+                    block.setAttribute('x', String(x));
+                    block.setAttribute('y', String(y));
+                    var field = Blockly.utils.xml.createElement('field');
+                    field.setAttribute('name', 'NAME');
+                    field.appendChild(document.createTextNode(name));
+                    block.appendChild(field);
+                    xml.appendChild(block);
+                    var newBlockIds = pxt.blocks.domToWorkspaceNoEvents(xml, workspace);
+                    // Close flyout and highlight block
+                    Blockly.hideChaff();
+                    var newBlock = workspace.getBlockById(newBlockIds[0]);
+                    newBlock.select();
+                    // Center on the new block so we know where it is
+                    workspace.centerOnBlock(newBlock.id);
+                };
+                workspace.registerButtonCallback('CREATE_FUNCTION', function (button) {
+                    var promptAndCheckWithAlert = function (defaultName) {
+                        Blockly.prompt(newFunctionTitle, defaultName, function (newFunc) {
+                            pxt.tickEvent('blocks.makeafunction');
+                            // Merge runs of whitespace.  Strip leading and trailing whitespace.
+                            // Beyond this, all names are legal.
+                            if (newFunc) {
+                                newFunc = newFunc.replace(/[\s\xa0]+/g, ' ').replace(/^ | $/g, '');
+                                if (newFunc == newFunction) {
+                                    // Ok, not ALL names are legal...
+                                    newFunc = null;
+                                }
+                            }
+                            if (newFunc) {
+                                if (workspace.getVariable(newFunc)) {
+                                    Blockly.alert(Blockly.Msg.VARIABLE_ALREADY_EXISTS.replace('%1', newFunc.toLowerCase()), function () {
+                                        promptAndCheckWithAlert(newFunc); // Recurse
+                                    });
+                                }
+                                else if (!Blockly.Procedures.isLegalName_(newFunc, workspace)) {
+                                    Blockly.alert(Blockly.Msg.PROCEDURE_ALREADY_EXISTS.replace('%1', newFunc.toLowerCase()), function () {
+                                        promptAndCheckWithAlert(newFunc); // Recurse
+                                    });
+                                }
+                                else {
+                                    createFunction(newFunc);
+                                }
+                            }
+                        });
+                    };
+                    promptAndCheckWithAlert('doSomething');
+                });
+                xmlList.push(button);
+                function populateProcedures(procedureList, templateName) {
+                    for (var i = 0; i < procedureList.length; i++) {
+                        var name_4 = procedureList[i][0];
+                        var args = procedureList[i][1];
+                        // <block type="procedures_callnoreturn" gap="16">
+                        //   <field name="NAME">name</field>
+                        // </block>
+                        var block = Blockly.utils.xml.createElement('block');
+                        block.setAttribute('type', templateName);
+                        block.setAttribute('gap', '16');
+                        block.setAttribute('colour', pxt.toolbox.getNamespaceColor('functions'));
+                        var field = goog.dom.createDom('field', null, name_4);
+                        field.setAttribute('name', 'NAME');
+                        block.appendChild(field);
+                        xmlList.push(block);
+                    }
+                }
+                var tuple = Blockly.Procedures.allProcedures(workspace);
+                populateProcedures(tuple[0], 'procedures_callnoreturn');
+                return xmlList;
+            };
+            // Patch new functions flyout to add the heading
+            var oldFlyout = Blockly.Functions.flyoutCategory;
+            Blockly.Functions.flyoutCategory = function (workspace) {
+                var elems = oldFlyout(workspace);
+                var headingLabel = createFlyoutHeadingLabel(lf("Functions"), pxt.toolbox.getNamespaceColor('functions'), pxt.toolbox.getNamespaceIcon('functions'), 'blocklyFlyoutIconfunctions');
+                elems.unshift(headingLabel);
+                return elems;
+            };
+            // Configure function editor argument icons
+            var iconsMap = {
+                number: pxt.blocks.defaultIconForArgType("number"),
+                boolean: pxt.blocks.defaultIconForArgType("boolean"),
+                string: pxt.blocks.defaultIconForArgType("string")
+            };
+            var customNames = {};
+            var functionOptions = pxt.appTarget.runtime && pxt.appTarget.runtime.functionsOptions;
+            if (functionOptions && functionOptions.extraFunctionEditorTypes) {
+                functionOptions.extraFunctionEditorTypes.forEach(function (t) {
+                    iconsMap[t.typeName] = t.icon || pxt.blocks.defaultIconForArgType();
+                    if (t.defaultName) {
+                        customNames[t.typeName] = t.defaultName;
+                    }
+                });
+            }
+            Blockly.PXTBlockly.FunctionUtils.argumentIcons = iconsMap;
+            Blockly.PXTBlockly.FunctionUtils.argumentDefaultNames = customNames;
+            if (Blockly.Blocks["argument_reporter_custom"]) {
+                // The logic for setting the output check relies on the internals of PXT
+                // too much to be refactored into pxt-blockly, so we need to monkey patch
+                // it here
+                Blockly.Blocks["argument_reporter_custom"].domToMutation = function (xmlElement) {
+                    var typeName = xmlElement.getAttribute('typename');
+                    this.typeName_ = typeName;
+                    setOutputCheck(this, typeName, cachedBlockInfo);
+                };
+            }
+        }
+        function initLogic() {
+            var msg = Blockly.Msg;
+            // builtin controls_if
+            var controlsIfId = "controls_if";
+            var controlsIfDef = pxt.blocks.getBlockDefinition(controlsIfId);
+            var controlsIfTooltips = controlsIfDef.tooltip;
+            msg.CONTROLS_IF_MSG_IF = controlsIfDef.block["CONTROLS_IF_MSG_IF"];
+            msg.CONTROLS_IF_MSG_THEN = controlsIfDef.block["CONTROLS_IF_MSG_THEN"];
+            msg.CONTROLS_IF_MSG_ELSE = controlsIfDef.block["CONTROLS_IF_MSG_ELSE"];
+            msg.CONTROLS_IF_MSG_ELSEIF = controlsIfDef.block["CONTROLS_IF_MSG_ELSEIF"];
+            msg.CONTROLS_IF_TOOLTIP_1 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_1"];
+            msg.CONTROLS_IF_TOOLTIP_2 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_2"];
+            msg.CONTROLS_IF_TOOLTIP_3 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_3"];
+            msg.CONTROLS_IF_TOOLTIP_4 = controlsIfTooltips["CONTROLS_IF_TOOLTIP_4"];
+            installBuiltinHelpInfo(controlsIfId);
+            // builtin logic_compare
+            var logicCompareId = "logic_compare";
+            var logicCompareDef = pxt.blocks.getBlockDefinition(logicCompareId);
+            var logicCompareTooltips = logicCompareDef.tooltip;
+            msg.LOGIC_COMPARE_TOOLTIP_EQ = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_EQ"];
+            msg.LOGIC_COMPARE_TOOLTIP_NEQ = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_NEQ"];
+            msg.LOGIC_COMPARE_TOOLTIP_LT = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_LT"];
+            msg.LOGIC_COMPARE_TOOLTIP_LTE = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_LTE"];
+            msg.LOGIC_COMPARE_TOOLTIP_GT = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_GT"];
+            msg.LOGIC_COMPARE_TOOLTIP_GTE = logicCompareTooltips["LOGIC_COMPARE_TOOLTIP_GTE"];
+            installBuiltinHelpInfo(logicCompareId);
+            // builtin logic_operation
+            var logicOperationId = "logic_operation";
+            var logicOperationDef = pxt.blocks.getBlockDefinition(logicOperationId);
+            var logicOperationTooltips = logicOperationDef.tooltip;
+            msg.LOGIC_OPERATION_AND = logicOperationDef.block["LOGIC_OPERATION_AND"];
+            msg.LOGIC_OPERATION_OR = logicOperationDef.block["LOGIC_OPERATION_OR"];
+            msg.LOGIC_OPERATION_TOOLTIP_AND = logicOperationTooltips["LOGIC_OPERATION_TOOLTIP_AND"];
+            msg.LOGIC_OPERATION_TOOLTIP_OR = logicOperationTooltips["LOGIC_OPERATION_TOOLTIP_OR"];
+            installBuiltinHelpInfo(logicOperationId);
+            // builtin logic_negate
+            var logicNegateId = "logic_negate";
+            var logicNegateDef = pxt.blocks.getBlockDefinition(logicNegateId);
+            msg.LOGIC_NEGATE_TITLE = logicNegateDef.block["LOGIC_NEGATE_TITLE"];
+            installBuiltinHelpInfo(logicNegateId);
+            // builtin logic_boolean
+            var logicBooleanId = "logic_boolean";
+            var logicBooleanDef = pxt.blocks.getBlockDefinition(logicBooleanId);
+            msg.LOGIC_BOOLEAN_TRUE = logicBooleanDef.block["LOGIC_BOOLEAN_TRUE"];
+            msg.LOGIC_BOOLEAN_FALSE = logicBooleanDef.block["LOGIC_BOOLEAN_FALSE"];
+            installBuiltinHelpInfo(logicBooleanId);
+        }
+        function initText() {
+            // builtin text
+            var textInfo = pxt.blocks.getBlockDefinition('text');
+            installHelpResources('text', textInfo.name, textInfo.tooltip, textInfo.url, Blockly.Colours.textField, Blockly.Colours.textField, Blockly.Colours.textField);
+            // builtin text_length
+            var msg = Blockly.Msg;
+            var textLengthId = "text_length";
+            var textLengthDef = pxt.blocks.getBlockDefinition(textLengthId);
+            msg.TEXT_LENGTH_TITLE = textLengthDef.block["TEXT_LENGTH_TITLE"];
+            // We have to override this block definition because the builtin block
+            // allows both Strings and Arrays in its input check and that confuses
+            // our Blockly compiler
+            var block = Blockly.Blocks[textLengthId];
+            block.init = function () {
+                this.jsonInit({
+                    "message0": msg.TEXT_LENGTH_TITLE,
+                    "args0": [
+                        {
+                            "type": "input_value",
+                            "name": "VALUE",
+                            "check": ['String']
+                        }
+                    ],
+                    "output": 'Number',
+                    "outputShape": Blockly.OUTPUT_SHAPE_ROUND
+                });
+            };
+            installBuiltinHelpInfo(textLengthId);
+            // builtin text_join
+            var textJoinId = "text_join";
+            var textJoinDef = pxt.blocks.getBlockDefinition(textJoinId);
+            msg.TEXT_JOIN_TITLE_CREATEWITH = textJoinDef.block["TEXT_JOIN_TITLE_CREATEWITH"];
+            installBuiltinHelpInfo(textJoinId);
+        }
+        function initDebugger() {
+            Blockly.Blocks[pxtc.TS_DEBUGGER_TYPE] = {
+                init: function () {
+                    var that = this;
+                    that.setColour(pxt.toolbox.getNamespaceColor('debug'));
+                    that.setPreviousStatement(true);
+                    that.setNextStatement(true);
+                    that.setInputsInline(false);
+                    that.appendDummyInput('ON_OFF')
+                        .appendField(new Blockly.FieldLabel(lf("breakpoint"), undefined), "DEBUGGER")
+                        .appendField(new pxtblockly.FieldBreakpoint("1", { 'type': 'number' }), "ON_OFF");
+                    setHelpResources(this, pxtc.TS_DEBUGGER_TYPE, lf("Debugger statement"), lf("A debugger statement invokes any available debugging functionality"), '/javascript/debugger', pxt.toolbox.getNamespaceColor('debug'));
+                }
+            };
+        }
+        function initComments() {
+            Blockly.Msg.WORKSPACE_COMMENT_DEFAULT_TEXT = '';
+        }
+        function initTooltip() {
+            var renderTip = function (el) {
+                if (el.disabled)
+                    return lf("This block is disabled and will not run. Attach this block to an event to enable it.");
+                var tip = el.tooltip;
+                while (goog.isFunction(tip)) {
+                    tip = tip(el);
+                }
+                return tip;
+            };
+            // TODO: update this when pulling new blockly
+            /**
+             * Create the tooltip and show it.
+             * @private
+             */
+            Blockly.Tooltip.show_ = function () {
+                Blockly.Tooltip.poisonedElement_ = Blockly.Tooltip.element_;
+                if (!Blockly.Tooltip.DIV) {
+                    return;
+                }
+                // Erase all existing text.
+                goog.dom.removeChildren(/** @type {!Element} */ (Blockly.Tooltip.DIV));
+                // Get the new text.
+                var card = Blockly.Tooltip.element_.codeCard;
+                function render() {
+                    var rtl = Blockly.Tooltip.element_.RTL;
+                    var windowSize = goog.dom.getViewportSize();
+                    // Display the tooltip.
+                    var tooltip = Blockly.Tooltip.DIV;
+                    tooltip.style.direction = rtl ? 'rtl' : 'ltr';
+                    tooltip.style.display = 'block';
+                    Blockly.Tooltip.visible = true;
+                    // Move the tooltip to just below the cursor.
+                    var anchorX = Blockly.Tooltip.lastX_;
+                    if (rtl) {
+                        anchorX -= Blockly.Tooltip.OFFSET_X + tooltip.offsetWidth;
+                    }
+                    else {
+                        anchorX += Blockly.Tooltip.OFFSET_X;
+                    }
+                    var anchorY = Blockly.Tooltip.lastY_ + Blockly.Tooltip.OFFSET_Y;
+                    if (anchorY + tooltip.offsetHeight >
+                        windowSize.height + window.scrollY) {
+                        // Falling off the bottom of the screen; shift the tooltip up.
+                        anchorY -= tooltip.offsetHeight + 2 * Blockly.Tooltip.OFFSET_Y;
+                    }
+                    if (rtl) {
+                        // Prevent falling off left edge in RTL mode.
+                        anchorX = Math.max(Blockly.Tooltip.MARGINS - window.scrollX, anchorX);
+                    }
+                    else {
+                        if (anchorX + tooltip.offsetWidth >
+                            windowSize.width + window.scrollX - 2 * Blockly.Tooltip.MARGINS) {
+                            // Falling off the right edge of the screen;
+                            // clamp the tooltip on the edge.
+                            anchorX = windowSize.width - tooltip.offsetWidth -
+                                2 * Blockly.Tooltip.MARGINS;
+                        }
+                    }
+                    tooltip.style.top = anchorY + 'px';
+                    tooltip.style.left = anchorX + 'px';
+                }
+                if (card) {
+                    var cardEl = pxt.docs.codeCard.render({
+                        header: renderTip(Blockly.Tooltip.element_)
+                    });
+                    Blockly.Tooltip.DIV.appendChild(cardEl);
+                    render();
+                }
+                else {
+                    var tip = renderTip(Blockly.Tooltip.element_);
+                    tip = Blockly.utils._string.wrap(tip, Blockly.Tooltip.LIMIT);
+                    // Create new text, line by line.
+                    var lines = tip.split('\n');
+                    for (var i = 0; i < lines.length; i++) {
+                        var div = document.createElement('div');
+                        div.appendChild(document.createTextNode(lines[i]));
+                        Blockly.Tooltip.DIV.appendChild(div);
+                    }
+                    render();
+                }
+            };
+        }
+        function removeBlock(fn) {
+            delete Blockly.Blocks[fn.attributes.blockId];
+            delete cachedBlocks[fn.attributes.blockId];
+        }
+        /**
+         * <block type="pxt_wait_until">
+         *     <value name="PREDICATE">
+         *          <shadow type="logic_boolean">
+         *              <field name="BOOL">TRUE</field>
+         *          </shadow>
+         *     </value>
+         * </block>
+         */
+        function mkPredicateBlock(type) {
+            var block = document.createElement("block");
+            block.setAttribute("type", type);
+            var value = document.createElement("value");
+            value.setAttribute("name", "PREDICATE");
+            block.appendChild(value);
+            var shadow = mkFieldBlock("logic_boolean", "BOOL", "TRUE", true);
+            value.appendChild(shadow);
+            return block;
+        }
+        blocks.mkPredicateBlock = mkPredicateBlock;
+        function mkFieldBlock(type, fieldName, fieldValue, isShadow) {
+            var fieldBlock = document.createElement(isShadow ? "shadow" : "block");
+            fieldBlock.setAttribute("type", pxt.Util.htmlEscape(type));
+            var field = document.createElement("field");
+            field.setAttribute("name", pxt.Util.htmlEscape(fieldName));
+            field.textContent = pxt.Util.htmlEscape(fieldValue);
+            fieldBlock.appendChild(field);
+            return fieldBlock;
+        }
+        blocks.mkFieldBlock = mkFieldBlock;
+        var jresIconCache = {};
+        function iconToFieldImage(id) {
+            var url = jresIconCache[id];
+            if (!url) {
+                pxt.log("missing jres icon " + id);
+                return undefined;
+            }
+            return new Blockly.FieldImage(url, 40, 40, '', null, pxt.Util.isUserLanguageRtl());
+        }
+        function initJresIcons(blockInfo) {
+            jresIconCache = {}; // clear previous cache
+            var jres = blockInfo.apis.jres;
+            if (!jres)
+                return;
+            Object.keys(jres).forEach(function (jresId) {
+                var jresObject = jres[jresId];
+                if (jresObject && jresObject.icon)
+                    jresIconCache[jresId] = jresObject.icon;
+            });
+        }
+        function splitInputs(def) {
+            var res = [];
+            var current = [];
+            def.parts.forEach(function (part) {
+                switch (part.kind) {
+                    case "break":
+                        newInput();
+                        break;
+                    case "param":
+                        current.push(part);
+                        newInput();
+                        break;
+                    case "image":
+                    case "label":
+                        current.push(part);
+                        break;
+                }
+            });
+            newInput();
+            return res;
+            function newInput() {
+                if (current.length) {
+                    res.push(current);
+                    current = [];
+                }
+            }
+        }
+        function namedField(field, name) {
+            return { field: field, name: name };
+        }
+        function getEnumDropdownValues(apis, enumName) {
+            return pxt.Util.values(apis.byQName).filter(function (sym) { return sym.namespace === enumName && !sym.attributes.blockHidden; });
+        }
+        function getFixedInstanceDropdownValues(apis, qName) {
+            return pxt.Util.values(apis.byQName).filter(function (sym) { return sym.kind === 4 /* Variable */
+                && sym.attributes.fixedInstance
+                && isSubtype(apis, sym.retType, qName); });
+        }
+        blocks.getFixedInstanceDropdownValues = getFixedInstanceDropdownValues;
+        function generateIcons(instanceSymbols) {
+            var imgConv = new pxt.ImageConverter();
+            instanceSymbols.forEach(function (v) {
+                if (v.attributes.jresURL && !v.attributes.iconURL && pxt.U.startsWith(v.attributes.jresURL, "data:image/x-mkcd-f")) {
+                    v.attributes.iconURL = imgConv.convert(v.attributes.jresURL);
+                }
+            });
+        }
+        blocks.generateIcons = generateIcons;
+        function getConstantDropdownValues(apis, qName) {
+            return pxt.Util.values(apis.byQName).filter(function (sym) { return sym.attributes.blockIdentity === qName; });
+        }
+        // Trims off a single space from beginning and end (if present)
+        function removeOuterSpace(str) {
+            if (str === " ") {
+                return "";
+            }
+            else if (str.length > 1) {
+                var startSpace = str.charAt(0) == " ";
+                var endSpace = str.charAt(str.length - 1) == " ";
+                if (startSpace || endSpace) {
+                    return str.substring(startSpace ? 1 : 0, endSpace ? str.length - 1 : str.length);
+                }
+            }
+            return str;
+        }
+        /**
+         * Blockly variable fields can't be set directly; you either have to use the
+         * variable ID or set the value of the model and not the field
+         */
+        function setVarFieldValue(block, fieldName, newName) {
+            var varField = block.getField(fieldName);
+            // Check for an existing model with this name; otherwise we'll create
+            // a second variable with the same name and it will show up twice in the UI
+            var vars = block.workspace.getAllVariables();
+            var foundIt = false;
+            if (vars && vars.length) {
+                for (var v = 0; v < vars.length; v++) {
+                    var model = vars[v];
+                    if (model.name === newName) {
+                        varField.setValue(model.getId());
+                        foundIt = true;
+                    }
+                }
+            }
+            if (!foundIt) {
+                varField.initModel();
+                var model = varField.getVariable();
+                model.name = newName;
+                varField.setText(newName);
+                varField.setValue(model.getId());
+            }
+        }
+        blocks.setVarFieldValue = setVarFieldValue;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        var MutatorTypes;
+        (function (MutatorTypes) {
+            MutatorTypes.ObjectDestructuringMutator = "objectdestructuring";
+            MutatorTypes.RestParameterMutator = "restparameter";
+            MutatorTypes.DefaultInstanceMutator = "defaultinstance";
+        })(MutatorTypes = blocks.MutatorTypes || (blocks.MutatorTypes = {}));
+        function addMutation(b, info, mutationType) {
+            var m;
+            switch (mutationType) {
+                case MutatorTypes.ObjectDestructuringMutator:
+                    if (!info.parameters || info.parameters.length < 1) {
+                        console.error("Destructuring mutations require at least one parameter");
+                    }
+                    else {
+                        var found = false;
+                        for (var _i = 0, _a = info.parameters; _i < _a.length; _i++) {
+                            var param = _a[_i];
+                            if (param.type.indexOf("=>") !== -1) {
+                                if (!param.properties || param.properties.length === 0) {
+                                    console.error("Destructuring mutations only supported for functions with an event parameter that has multiple properties");
+                                    return;
+                                }
+                                found = true;
+                            }
+                        }
+                        if (!found) {
+                            console.error("Destructuring mutations must have an event parameter");
+                            return;
+                        }
+                    }
+                    m = new DestructuringMutator(b, info);
+                    break;
+                case MutatorTypes.RestParameterMutator:
+                    m = new ArrayMutator(b, info);
+                    break;
+                case MutatorTypes.DefaultInstanceMutator:
+                    m = new DefaultInstanceMutator(b, info);
+                    break;
+                default:
+                    console.warn("Ignoring unknown mutation type: " + mutationType);
+                    return;
+            }
+            b.mutationToDom = m.mutationToDom.bind(m);
+            b.domToMutation = m.domToMutation.bind(m);
+            b.compose = m.compose.bind(m);
+            b.decompose = m.decompose.bind(m);
+            b.mutation = m;
+        }
+        blocks.addMutation = addMutation;
+        function mutateToolboxBlock(block, mutationType, mutation) {
+            var mutationElement = document.createElement("mutation");
+            switch (mutationType) {
+                case MutatorTypes.ObjectDestructuringMutator:
+                    mutationElement.setAttribute(DestructuringMutator.propertiesAttributeName, mutation);
+                    break;
+                case MutatorTypes.RestParameterMutator:
+                    mutationElement.setAttribute(ArrayMutator.countAttributeName, mutation);
+                    break;
+                case MutatorTypes.DefaultInstanceMutator:
+                    mutationElement.setAttribute(DefaultInstanceMutator.attributeName, mutation);
+                default:
+                    console.warn("Ignoring unknown mutation type: " + mutationType);
+                    return;
+            }
+            block.appendChild(mutationElement);
+        }
+        blocks.mutateToolboxBlock = mutateToolboxBlock;
+        var MutatorHelper = /** @class */ (function () {
+            function MutatorHelper(b, info) {
+                this.info = info;
+                this.block = b;
+                this.topBlockType = this.block.type + "_mutator";
+                var subBlocks = this.getSubBlockNames();
+                this.initializeMutatorTopBlock();
+                this.initializeMutatorSubBlocks(subBlocks);
+                var mutatorToolboxTypes = subBlocks.map(function (s) { return s.type; });
+                this.block.setMutator(new Blockly.Mutator(mutatorToolboxTypes));
+            }
+            // Should be set to modify a block after a mutator dialog is updated
+            MutatorHelper.prototype.compose = function (topBlock) {
+                var allBlocks = topBlock.getDescendants(false).map(function (subBlock) {
+                    return {
+                        type: subBlock.type,
+                        name: subBlock.inputList[0].name
+                    };
+                });
+                // Toss the top block
+                allBlocks.shift();
+                this.updateBlock(allBlocks);
+            };
+            // Should be set to initialize the workspace inside a mutator dialog and return the top block
+            MutatorHelper.prototype.decompose = function (workspace) {
+                // Initialize flyout workspace's top block and add sub-blocks based on visible parameters
+                var topBlock = workspace.newBlock(this.topBlockType);
+                topBlock.initSvg();
+                var _loop_1 = function (input) {
+                    if (input.name === MutatorHelper.mutatorStatmentInput) {
+                        var currentConnection_1 = input.connection;
+                        this_1.getVisibleBlockTypes().forEach(function (sub) {
+                            var subBlock = workspace.newBlock(sub);
+                            subBlock.initSvg();
+                            currentConnection_1.connect(subBlock.previousConnection);
+                            currentConnection_1 = subBlock.nextConnection;
+                        });
+                        return "break";
+                    }
+                };
+                var this_1 = this;
+                for (var _i = 0, _a = topBlock.inputList; _i < _a.length; _i++) {
+                    var input = _a[_i];
+                    var state_1 = _loop_1(input);
+                    if (state_1 === "break")
+                        break;
+                }
+                return topBlock;
+            };
+            MutatorHelper.prototype.compileMutation = function (e, comments) {
+                return undefined;
+            };
+            MutatorHelper.prototype.getDeclaredVariables = function () {
+                return undefined;
+            };
+            MutatorHelper.prototype.isDeclaredByMutation = function (varName) {
+                return false;
+            };
+            MutatorHelper.prototype.initializeMutatorSubBlock = function (sub, parameter, colour) {
+                sub.appendDummyInput(parameter)
+                    .appendField(parameter);
+                sub.setColour(colour);
+                sub.setNextStatement(true);
+                sub.setPreviousStatement(true);
+            };
+            MutatorHelper.prototype.initializeMutatorTopBlock = function () {
+                var topBlockTitle = this.info.attributes.mutateText;
+                var colour = this.block.getColour();
+                Blockly.Blocks[this.topBlockType] = Blockly.Blocks[this.topBlockType] || {
+                    init: function () {
+                        var top = this;
+                        top.appendDummyInput()
+                            .appendField(topBlockTitle);
+                        top.setColour(colour);
+                        top.appendStatementInput(MutatorHelper.mutatorStatmentInput);
+                    }
+                };
+            };
+            MutatorHelper.prototype.initializeMutatorSubBlocks = function (subBlocks) {
+                var colour = this.block.getColour();
+                var initializer = this.initializeMutatorSubBlock.bind(this);
+                subBlocks.forEach(function (blockName) {
+                    Blockly.Blocks[blockName.type] = Blockly.Blocks[blockName.type] || {
+                        init: function () { initializer(this, blockName.name, colour); }
+                    };
+                });
+            };
+            MutatorHelper.mutatorStatmentInput = "PROPERTIES";
+            MutatorHelper.mutatedVariableInputName = "properties";
+            return MutatorHelper;
+        }());
+        var DestructuringMutator = /** @class */ (function (_super) {
+            __extends(DestructuringMutator, _super);
+            function DestructuringMutator(b, info) {
+                var _this = _super.call(this, b, info) || this;
+                _this.currentlyVisible = [];
+                _this.parameterRenames = {};
+                _this.prefix = _this.info.attributes.mutatePrefix;
+                _this.block.appendDummyInput(MutatorHelper.mutatedVariableInputName);
+                _this.block.appendStatementInput("HANDLER")
+                    .setCheck("null");
+                return _this;
+            }
+            DestructuringMutator.prototype.getMutationType = function () {
+                return MutatorTypes.ObjectDestructuringMutator;
+            };
+            DestructuringMutator.prototype.compileMutation = function (e, comments) {
+                var _this = this;
+                if (!this.info.attributes.mutatePropertyEnum && !this.parameters.length) {
+                    return undefined;
+                }
+                var declarationString = this.parameters.map(function (param) {
+                    var varField = _this.block.getField(param);
+                    var declaredName = varField && varField.getText();
+                    var escapedParam = blocks.escapeVarName(param, e);
+                    if (declaredName !== param) {
+                        _this.parameterRenames[param] = declaredName;
+                        return param + ": " + blocks.escapeVarName(declaredName, e);
+                    }
+                    return escapedParam;
+                }).join(", ");
+                var functionString = "function ({ " + declarationString + " })";
+                if (this.info.attributes.mutatePropertyEnum) {
+                    return blocks.mkText(" [" + this.parameters.map(function (p) { return _this.info.attributes.mutatePropertyEnum + "." + p; }).join(", ") + "]," + functionString);
+                }
+                else {
+                    return blocks.mkText(functionString);
+                }
+            };
+            DestructuringMutator.prototype.getDeclaredVariables = function () {
+                var _this = this;
+                var result = {};
+                this.parameters.forEach(function (param) {
+                    result[_this.getVarFieldValue(param)] = _this.parameterTypes[param];
+                });
+                return result;
+            };
+            DestructuringMutator.prototype.isDeclaredByMutation = function (varName) {
+                var _this = this;
+                return this.parameters.some(function (param) { return _this.getVarFieldValue(param) === varName; });
+            };
+            DestructuringMutator.prototype.mutationToDom = function () {
+                var _this = this;
+                // Save the parameters that are currently visible to the DOM along with their names
+                var mutation = document.createElement("mutation");
+                var attr = this.parameters.map(function (param) {
+                    var varName = _this.getVarFieldValue(param);
+                    if (varName !== param) {
+                        _this.parameterRenames[param] = pxt.Util.htmlEscape(varName);
+                    }
+                    return pxt.Util.htmlEscape(param);
+                }).join(",");
+                mutation.setAttribute(DestructuringMutator.propertiesAttributeName, attr);
+                for (var parameter in this.parameterRenames) {
+                    if (parameter === this.parameterRenames[parameter]) {
+                        delete this.parameterRenames[parameter];
+                    }
+                }
+                mutation.setAttribute(DestructuringMutator.renameAttributeName, JSON.stringify(this.parameterRenames));
+                return mutation;
+            };
+            DestructuringMutator.prototype.domToMutation = function (xmlElement) {
+                var _this = this;
+                // Restore visible parameters based on saved DOM
+                var savedParameters = xmlElement.getAttribute(DestructuringMutator.propertiesAttributeName);
+                if (savedParameters) {
+                    var split = savedParameters.split(",");
+                    var properties_1 = [];
+                    if (this.paramIndex === undefined) {
+                        this.paramIndex = this.getParameterIndex();
+                    }
+                    split.forEach(function (saved) {
+                        // Parse the old way of storing renames to maintain backwards compatibility
+                        var parts = saved.split(":");
+                        if (_this.info.parameters[_this.paramIndex].properties.some(function (p) { return p.name === parts[0]; })) {
+                            properties_1.push({
+                                property: parts[0],
+                                newName: parts[1]
+                            });
+                        }
+                    });
+                    this.parameterRenames = undefined;
+                    if (xmlElement.hasAttribute(DestructuringMutator.renameAttributeName)) {
+                        try {
+                            this.parameterRenames = JSON.parse(xmlElement.getAttribute(DestructuringMutator.renameAttributeName));
+                        }
+                        catch (e) {
+                            console.warn("Ignoring invalid rename map in saved block mutation");
+                        }
+                    }
+                    this.parameterRenames = this.parameterRenames || {};
+                    // Create the fields for each property with default variable names
+                    this.parameters = [];
+                    properties_1.forEach(function (prop) {
+                        _this.parameters.push(prop.property);
+                        if (prop.newName && prop.newName !== prop.property) {
+                            _this.parameterRenames[prop.property] = prop.newName;
+                        }
+                    });
+                    this.updateVisibleProperties();
+                    // Override any names that the user has changed
+                    properties_1.filter(function (p) { return !!p.newName; }).forEach(function (p) { return _this.setVarFieldValue(p.property, p.newName); });
+                }
+            };
+            DestructuringMutator.prototype.getVarFieldValue = function (fieldName) {
+                var varField = this.block.getField(fieldName);
+                return varField && varField.getText();
+            };
+            DestructuringMutator.prototype.setVarFieldValue = function (fieldName, newValue) {
+                var varField = this.block.getField(fieldName);
+                if (this.block.getField(fieldName)) {
+                    blocks.setVarFieldValue(this.block, fieldName, newValue);
+                }
+            };
+            DestructuringMutator.prototype.updateBlock = function (subBlocks) {
+                var _this = this;
+                this.parameters = [];
+                // Ignore duplicate blocks
+                subBlocks.forEach(function (p) {
+                    if (_this.parameters.indexOf(p.name) === -1) {
+                        _this.parameters.push(p.name);
+                    }
+                });
+                this.updateVisibleProperties();
+            };
+            DestructuringMutator.prototype.getSubBlockNames = function () {
+                var _this = this;
+                this.parameters = [];
+                this.parameterTypes = {};
+                if (this.paramIndex === undefined) {
+                    this.paramIndex = this.getParameterIndex();
+                }
+                return this.info.parameters[this.paramIndex].properties.map(function (property) {
+                    // Used when compiling the destructured arguments
+                    _this.parameterTypes[property.name] = property.type;
+                    return {
+                        type: _this.propertyId(property.name),
+                        name: property.name
+                    };
+                });
+            };
+            DestructuringMutator.prototype.getVisibleBlockTypes = function () {
+                var _this = this;
+                return this.currentlyVisible.map(function (p) { return _this.propertyId(p); });
+            };
+            DestructuringMutator.prototype.updateVisibleProperties = function () {
+                var _this = this;
+                if (pxt.Util.listsEqual(this.currentlyVisible, this.parameters)) {
+                    return;
+                }
+                var dummyInput = this.block.inputList.find(function (i) { return i.name === MutatorHelper.mutatedVariableInputName; });
+                if (this.prefix && this.currentlyVisible.length === 0) {
+                    dummyInput.appendField(this.prefix, DestructuringMutator.prefixLabel);
+                }
+                this.currentlyVisible.forEach(function (param) {
+                    if (_this.parameters.indexOf(param) === -1) {
+                        var name_5 = _this.getVarFieldValue(param);
+                        // Persist renames
+                        if (name_5 !== param) {
+                            _this.parameterRenames[param] = name_5;
+                        }
+                        dummyInput.removeField(param);
+                    }
+                });
+                this.parameters.forEach(function (param) {
+                    if (_this.currentlyVisible.indexOf(param) === -1) {
+                        var fieldValue = _this.parameterRenames[param] || param;
+                        dummyInput.appendField(new Blockly.FieldVariable(fieldValue), param);
+                    }
+                });
+                if (this.prefix && this.parameters.length === 0) {
+                    dummyInput.removeField(DestructuringMutator.prefixLabel);
+                }
+                this.currentlyVisible = this.parameters;
+            };
+            DestructuringMutator.prototype.propertyId = function (property) {
+                return this.block.type + "_" + property;
+            };
+            DestructuringMutator.prototype.getParameterIndex = function () {
+                for (var i = 0; i < this.info.parameters.length; i++) {
+                    if (this.info.parameters[i].type.indexOf("=>") !== -1) {
+                        return i;
+                    }
+                }
+                return undefined;
+            };
+            DestructuringMutator.propertiesAttributeName = "callbackproperties";
+            DestructuringMutator.renameAttributeName = "renamemap";
+            // Avoid clashes by starting labels with a number
+            DestructuringMutator.prefixLabel = "0prefix_label_";
+            return DestructuringMutator;
+        }(MutatorHelper));
+        var ArrayMutator = /** @class */ (function (_super) {
+            __extends(ArrayMutator, _super);
+            function ArrayMutator() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.count = 0;
+                return _this;
+            }
+            ArrayMutator.prototype.getMutationType = function () {
+                return MutatorTypes.RestParameterMutator;
+            };
+            ArrayMutator.prototype.compileMutation = function (e, comments) {
+                var values = [];
+                this.forEachInput(function (block) { return values.push(blocks.compileExpression(e, block, comments)); });
+                return blocks.mkGroup(values);
+            };
+            ArrayMutator.prototype.mutationToDom = function () {
+                var mutation = document.createElement("mutation");
+                mutation.setAttribute(ArrayMutator.countAttributeName, this.count.toString());
+                return mutation;
+            };
+            ArrayMutator.prototype.domToMutation = function (xmlElement) {
+                var attribute = xmlElement.getAttribute(ArrayMutator.countAttributeName);
+                if (attribute) {
+                    try {
+                        this.count = parseInt(attribute);
+                    }
+                    catch (e) {
+                        return;
+                    }
+                    for (var i = 0; i < this.count; i++) {
+                        this.addNumberField(false, i);
+                    }
+                }
+            };
+            ArrayMutator.prototype.updateBlock = function (subBlocks) {
+                if (subBlocks) {
+                    var diff = Math.abs(this.count - subBlocks.length);
+                    if (this.count < subBlocks.length) {
+                        for (var i = 0; i < diff; i++)
+                            this.addNumberField(true, this.count);
+                    }
+                    else if (this.count > subBlocks.length) {
+                        for (var i = 0; i < diff; i++)
+                            this.removeNumberField();
+                    }
+                }
+            };
+            ArrayMutator.prototype.getSubBlockNames = function () {
+                return [{
+                        name: "Value",
+                        type: ArrayMutator.entryTypeName
+                    }];
+            };
+            ArrayMutator.prototype.getVisibleBlockTypes = function () {
+                var result = [];
+                this.forEachInput(function () { return result.push(ArrayMutator.entryTypeName); });
+                return result;
+            };
+            ArrayMutator.prototype.addNumberField = function (isNewField, index) {
+                var input = this.block.appendValueInput(ArrayMutator.valueInputPrefix + index).setCheck("Number");
+                if (isNewField) {
+                    var valueBlock = this.block.workspace.newBlock("math_number");
+                    valueBlock.initSvg();
+                    valueBlock.setShadow(true);
+                    input.connection.connect(valueBlock.outputConnection);
+                    this.block.workspace.render();
+                    this.count++;
+                }
+            };
+            ArrayMutator.prototype.removeNumberField = function () {
+                if (this.count > 0) {
+                    this.block.removeInput(ArrayMutator.valueInputPrefix + (this.count - 1));
+                }
+                this.count--;
+            };
+            ArrayMutator.prototype.forEachInput = function (cb) {
+                for (var i = 0; i < this.count; i++) {
+                    cb(this.block.getInputTargetBlock(ArrayMutator.valueInputPrefix + i), i);
+                }
+            };
+            ArrayMutator.countAttributeName = "count";
+            ArrayMutator.entryTypeName = "entry";
+            ArrayMutator.valueInputPrefix = "value_input_";
+            return ArrayMutator;
+        }(MutatorHelper));
+        var DefaultInstanceMutator = /** @class */ (function (_super) {
+            __extends(DefaultInstanceMutator, _super);
+            function DefaultInstanceMutator() {
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.showing = false;
+                return _this;
+            }
+            DefaultInstanceMutator.prototype.getMutationType = function () {
+                return MutatorTypes.DefaultInstanceMutator;
+            };
+            DefaultInstanceMutator.prototype.compileMutation = function (e, comments) {
+                if (this.showing) {
+                    var target = this.block.getInputTargetBlock(DefaultInstanceMutator.instanceInputName);
+                    if (target) {
+                        return blocks.compileExpression(e, target, comments);
+                    }
+                }
+                return undefined;
+            };
+            DefaultInstanceMutator.prototype.mutationToDom = function () {
+                var mutation = document.createElement("mutation");
+                mutation.setAttribute(DefaultInstanceMutator.attributeName, this.showing ? "true" : "false");
+                return mutation;
+            };
+            DefaultInstanceMutator.prototype.domToMutation = function (xmlElement) {
+                var attribute = xmlElement.getAttribute(DefaultInstanceMutator.attributeName);
+                if (attribute) {
+                    this.updateShape(attribute === "true");
+                }
+                else {
+                    this.updateShape(false);
+                }
+            };
+            DefaultInstanceMutator.prototype.updateBlock = function (subBlocks) {
+                this.updateShape(!!(subBlocks && subBlocks.length));
+            };
+            DefaultInstanceMutator.prototype.getSubBlockNames = function () {
+                return [{
+                        name: "Instance",
+                        type: DefaultInstanceMutator.instanceSubBlockType
+                    }];
+            };
+            DefaultInstanceMutator.prototype.getVisibleBlockTypes = function () {
+                var result = [];
+                if (this.showing) {
+                    result.push(DefaultInstanceMutator.instanceSubBlockType);
+                }
+                return result;
+            };
+            DefaultInstanceMutator.prototype.updateShape = function (show) {
+                if (this.showing !== show) {
+                    if (show && !this.block.getInputTargetBlock(DefaultInstanceMutator.instanceInputName)) {
+                        this.block.appendValueInput(DefaultInstanceMutator.instanceInputName);
+                    }
+                    else {
+                        this.block.removeInput(DefaultInstanceMutator.instanceInputName);
+                    }
+                    this.showing = show;
+                }
+            };
+            DefaultInstanceMutator.attributeName = "showing";
+            DefaultInstanceMutator.instanceInputName = "__instance__";
+            DefaultInstanceMutator.instanceSubBlockType = "instance";
+            return DefaultInstanceMutator;
+        }(MutatorHelper));
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/pxtblockly.d.ts" />
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_5) {
+        var workspace;
+        var blocklyDiv;
+        var BlockLayout;
+        (function (BlockLayout) {
+            BlockLayout[BlockLayout["None"] = 0] = "None";
+            BlockLayout[BlockLayout["Align"] = 1] = "Align";
+            // Shuffle deprecated
+            BlockLayout[BlockLayout["Clean"] = 3] = "Clean";
+            BlockLayout[BlockLayout["Flow"] = 4] = "Flow";
+        })(BlockLayout = blocks_5.BlockLayout || (blocks_5.BlockLayout = {}));
+        function initRenderingWorkspace() {
+            if (!workspace) {
+                blocklyDiv = document.createElement("div");
+                blocklyDiv.style.position = "absolute";
+                blocklyDiv.style.top = "0";
+                blocklyDiv.style.left = "0";
+                blocklyDiv.style.width = "1px";
+                blocklyDiv.style.height = "1px";
+                document.body.appendChild(blocklyDiv);
+                workspace = Blockly.inject(blocklyDiv, {
+                    scrollbars: false,
+                    readOnly: true,
+                    sound: false,
+                    media: pxt.webConfig.commitCdnUrl + "blockly/media/",
+                    rtl: pxt.Util.isUserLanguageRtl()
+                });
+            }
+            pxt.blocks.clearWithoutEvents(workspace);
+            return workspace;
+        }
+        blocks_5.initRenderingWorkspace = initRenderingWorkspace;
+        function cleanRenderingWorkspace() {
+            // We re-use the workspace across renders, catch any errors so we know to 
+            // create a new workspace if there was an error
+            if (workspace)
+                workspace.dispose();
+            workspace = undefined;
+        }
+        blocks_5.cleanRenderingWorkspace = cleanRenderingWorkspace;
+        function renderWorkspace(options) {
+            if (options === void 0) { options = { emPixels: 18, layout: BlockLayout.Align }; }
+            var layout = options.splitSvg ? BlockLayout.Align : (options.layout || BlockLayout.Flow);
+            switch (layout) {
+                case BlockLayout.Align:
+                    pxt.blocks.layout.verticalAlign(workspace, options.emPixels || 18);
+                    break;
+                case BlockLayout.Flow:
+                    pxt.blocks.layout.flow(workspace, { ratio: options.aspectRatio, useViewWidth: options.useViewWidth });
+                    break;
+                case BlockLayout.Clean:
+                    if (workspace.cleanUp_)
+                        workspace.cleanUp_();
+                    break;
+                default:// do nothing
+                    break;
+            }
+            var metrics = workspace.getMetrics();
+            var svg = blocklyDiv.querySelectorAll('svg')[0].cloneNode(true);
+            pxt.blocks.layout.cleanUpBlocklySvg(svg);
+            pxt.U.toArray(svg.querySelectorAll('.blocklyBlockCanvas,.blocklyBubbleCanvas'))
+                .forEach(function (el) { return el.setAttribute('transform', "translate(" + -metrics.contentLeft + ", " + -metrics.contentTop + ") scale(1)"); });
+            svg.setAttribute('viewBox', "0 0 " + metrics.contentWidth + " " + metrics.contentHeight);
+            if (options.emPixels) {
+                svg.style.width = (metrics.contentWidth / options.emPixels) + 'em';
+                svg.style.height = (metrics.contentHeight / options.emPixels) + 'em';
+            }
+            return options.splitSvg
+                ? pxt.blocks.layout.splitSvg(svg, workspace, options.emPixels)
+                : svg;
+        }
+        blocks_5.renderWorkspace = renderWorkspace;
+        function render(blocksXml, options) {
+            if (options === void 0) { options = { emPixels: 18, layout: BlockLayout.Align }; }
+            initRenderingWorkspace();
+            try {
+                var text = blocksXml || "<xml xmlns=\"http://www.w3.org/1999/xhtml\"></xml>";
+                var xml = Blockly.Xml.textToDom(text);
+                pxt.blocks.domToWorkspaceNoEvents(xml, workspace);
+                return renderWorkspace(options);
+            }
+            catch (e) {
+                pxt.reportException(e);
+                cleanRenderingWorkspace();
+                return undefined;
+            }
+        }
+        blocks_5.render = render;
+        function blocksMetrics(ws) {
+            var blocks = ws.getTopBlocks(false);
+            if (!blocks.length)
+                return { width: 0, height: 0 };
+            var m = undefined;
+            blocks.forEach(function (b) {
+                var r = b.getBoundingRectangle();
+                if (!m)
+                    m = { l: r.left, r: r.right, t: r.top, b: r.bottom };
+                else {
+                    m.l = Math.min(m.l, r.left);
+                    m.r = Math.max(m.r, r.right);
+                    m.t = Math.min(m.t, r.top);
+                    m.b = Math.min(m.b, r.bottom);
+                }
+            });
+            return {
+                width: m.r - m.l,
+                height: m.b - m.t
+            };
+        }
+        blocks_5.blocksMetrics = blocksMetrics;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/blockly.d.ts" />
+/// <reference path="../built/pxtlib.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks_6) {
+        function findRootBlocks(xmlDOM, type) {
+            var blocks = [];
+            for (var child in xmlDOM.children) {
+                var xmlChild = xmlDOM.children[child];
+                if (xmlChild.tagName === 'block') {
+                    if (type) {
+                        var childType = xmlChild.getAttribute('type');
+                        if (childType && childType === type) {
+                            blocks.push(xmlChild);
+                        }
+                    }
+                    else {
+                        blocks.push(xmlChild);
+                    }
+                }
+                else {
+                    var childChildren = findRootBlock(xmlChild);
+                    if (childChildren) {
+                        blocks = blocks.concat(childChildren);
+                    }
+                }
+            }
+            return blocks;
+        }
+        blocks_6.findRootBlocks = findRootBlocks;
+        function findRootBlock(xmlDOM, type) {
+            var blks = findRootBlocks(xmlDOM, type);
+            if (blks.length)
+                return blks[0];
+            return null;
+        }
+        blocks_6.findRootBlock = findRootBlock;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var docs;
+    (function (docs) {
+        var codeCard;
+        (function (codeCard) {
+            var repeat = pxt.Util.repeatMap;
+            function render(card, options) {
+                if (options === void 0) { options = {}; }
+                var repeat = pxt.Util.repeatMap;
+                var color = card.color || "";
+                if (!color) {
+                    if (card.hardware && !card.software)
+                        color = 'black';
+                    else if (card.software && !card.hardware)
+                        color = 'teal';
+                }
+                var url = card.url ? /^[^:]+:\/\//.test(card.url) ? card.url : ('/' + card.url.replace(/^\.?\/?/, ''))
+                    : card.youTubeId ? "https://youtu.be/" + card.youTubeId : undefined;
+                var link = !!url;
+                var div = function (parent, cls, tag, text) {
+                    if (tag === void 0) { tag = "div"; }
+                    if (text === void 0) { text = ''; }
+                    var d = document.createElement(tag);
+                    if (cls)
+                        d.className = cls;
+                    if (parent)
+                        parent.appendChild(d);
+                    if (text)
+                        d.appendChild(document.createTextNode(text + ''));
+                    return d;
+                };
+                var a = function (parent, href, text, cls) {
+                    var d = document.createElement('a');
+                    d.className = cls;
+                    d.href = href;
+                    d.appendChild(document.createTextNode(text));
+                    d.target = '_blank';
+                    parent.appendChild(d);
+                    return d;
+                };
+                var r = div(null, 'ui card ' + (card.color || '') + (link ? ' link' : ''), link ? "a" : "div");
+                r.setAttribute("role", "option");
+                r.setAttribute("aria-selected", "true");
+                if (url)
+                    r.href = url;
+                if (!options.hideHeader && (card.header || card.blocks || card.javascript || card.hardware || card.software || card.any)) {
+                    var h = div(r, "ui content " + (card.responsive ? " tall desktop only" : ""));
+                    var hr_1 = div(h, "right floated meta");
+                    if (card.any)
+                        div(hr_1, "ui grey circular label tiny", "i", card.any > 0 ? card.any : "");
+                    repeat(card.blocks, function (k) { return div(hr_1, "puzzle orange icon", "i"); });
+                    repeat(card.javascript, function (k) { return div(hr_1, "align left blue icon", "i"); });
+                    repeat(card.hardware, function (k) { return div(hr_1, "certificate black icon", "i"); });
+                    repeat(card.software, function (k) { return div(hr_1, "square teal icon", "i"); });
+                    if (card.header)
+                        div(h, 'description', 'span', card.header);
+                }
+                var name = (options.shortName ? card.shortName : '') || card.name;
+                var img = div(r, "ui image" + (card.responsive ? " tall landscape only" : ""));
+                if (card.label) {
+                    var lbl = document.createElement("label");
+                    lbl.className = "ui " + (card.labelClass ? card.labelClass : "orange right ribbon") + " label";
+                    lbl.textContent = card.label;
+                    img.appendChild(lbl);
+                }
+                if (card.blocksXml) {
+                    var svg = pxt.blocks.render(card.blocksXml);
+                    if (!svg) {
+                        console.error("failed to render blocks");
+                        pxt.debug(card.blocksXml);
+                    }
+                    else {
+                        var holder = div(img, '');
+                        holder.setAttribute('style', 'width:100%; min-height:10em');
+                        holder.appendChild(svg);
+                    }
+                }
+                if (card.typeScript) {
+                    var pre = document.createElement("pre");
+                    pre.appendChild(document.createTextNode(card.typeScript));
+                    img.appendChild(pre);
+                }
+                var imgUrl = card.imageUrl || (card.youTubeId && "https://img.youtube.com/vi/" + card.youTubeId + "/0.jpg");
+                if (imgUrl) {
+                    var imageWrapper = document.createElement("div");
+                    imageWrapper.className = "ui imagewrapper";
+                    var image = document.createElement("div");
+                    image.className = "ui cardimage";
+                    image.style.backgroundImage = "url(\"" + card.imageUrl + "\")";
+                    image.title = name;
+                    image.setAttribute("role", "presentation");
+                    imageWrapper.appendChild(image);
+                    img.appendChild(imageWrapper);
+                }
+                if (card.cardType == "file") {
+                    var file = div(r, "ui fileimage");
+                    img.appendChild(file);
+                }
+                if (name || card.description) {
+                    var ct = div(r, "ui content");
+                    if (name) {
+                        r.setAttribute("aria-label", name);
+                        if (url && !link)
+                            a(ct, url, name, 'header');
+                        else
+                            div(ct, 'header', 'div', name);
+                    }
+                    if (card.description) {
+                        var descr = div(ct, 'ui description');
+                        var shortenedDescription = card.description.split('.')[0] + '.';
+                        descr.appendChild(document.createTextNode(shortenedDescription));
+                    }
+                }
+                if (card.time) {
+                    var meta = div(r, "meta");
+                    if (card.time) {
+                        var m = div(meta, "date", "span");
+                        m.appendChild(document.createTextNode(pxt.Util.timeSince(card.time)));
+                    }
+                }
+                if (card.extracontent) {
+                    var extracontent = div(r, "extra content", "div");
+                    extracontent.appendChild(document.createTextNode(card.extracontent));
+                }
+                return r;
+            }
+            codeCard.render = render;
+        })(codeCard = docs.codeCard || (docs.codeCard = {}));
+    })(docs = pxt.docs || (pxt.docs = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../localtypings/blockly.d.ts" />
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        function appendMutation(block, mutation) {
+            var b = block;
+            var oldMTD = b.mutationToDom;
+            var oldDTM = b.domToMutation;
+            b.mutationToDom = function () {
+                var el = oldMTD ? oldMTD() : document.createElement("mutation");
+                return mutation.mutationToDom(el);
+            };
+            b.domToMutation = function (saved) {
+                if (oldDTM) {
+                    oldDTM(saved);
+                }
+                mutation.domToMutation(saved);
+            };
+        }
+        blocks.appendMutation = appendMutation;
+        function initVariableArgsBlock(b, handlerArgs) {
+            var currentlyVisible = 0;
+            var actuallyVisible = 0;
+            var i = b.appendDummyInput();
+            var updateShape = function () {
+                if (currentlyVisible === actuallyVisible) {
+                    return;
+                }
+                if (currentlyVisible > actuallyVisible) {
+                    var diff = currentlyVisible - actuallyVisible;
+                    for (var j = 0; j < diff; j++) {
+                        var arg = handlerArgs[actuallyVisible + j];
+                        i.insertFieldAt(i.fieldRow.length - 1, new Blockly.FieldVariable(arg.name), "HANDLER_" + arg.name);
+                    }
+                }
+                else {
+                    var diff = actuallyVisible - currentlyVisible;
+                    for (var j = 0; j < diff; j++) {
+                        var arg = handlerArgs[actuallyVisible - j - 1];
+                        i.removeField("HANDLER_" + arg.name);
+                    }
+                }
+                if (currentlyVisible >= handlerArgs.length) {
+                    i.removeField("_HANDLER_ADD");
+                }
+                else if (actuallyVisible >= handlerArgs.length) {
+                    addPlusButton();
+                }
+                actuallyVisible = currentlyVisible;
+            };
+            Blockly.Extensions.apply('inline-svgs', b, false);
+            addPlusButton();
+            appendMutation(b, {
+                mutationToDom: function (el) {
+                    el.setAttribute("numArgs", currentlyVisible.toString());
+                    for (var j = 0; j < currentlyVisible; j++) {
+                        var varField = b.getField("HANDLER_" + handlerArgs[j].name);
+                        var varName = varField && varField.getText();
+                        el.setAttribute("arg" + j, varName);
+                    }
+                    return el;
+                },
+                domToMutation: function (saved) {
+                    var numArgs = parseInt(saved.getAttribute("numargs"));
+                    currentlyVisible = Math.min(isNaN(numArgs) ? 0 : numArgs, handlerArgs.length);
+                    updateShape();
+                    for (var j = 0; j < currentlyVisible; j++) {
+                        var varName = saved.getAttribute("arg" + j);
+                        var fieldName = "HANDLER_" + handlerArgs[j].name;
+                        if (b.getField(fieldName)) {
+                            blocks.setVarFieldValue(b, fieldName, varName);
+                        }
+                    }
+                }
+            });
+            function addPlusButton() {
+                i.appendField(new Blockly.FieldImage(b.ADD_IMAGE_DATAURI, 24, 24, lf("Add argument"), function () {
+                    currentlyVisible = Math.min(currentlyVisible + 1, handlerArgs.length);
+                    updateShape();
+                }, false), "_HANDLER_ADD");
+            }
+        }
+        blocks.initVariableArgsBlock = initVariableArgsBlock;
+        function initExpandableBlock(info, b, def, comp, toggle, addInputs) {
+            // Add numbers before input names to prevent clashes with the ones added
+            // by BlocklyLoader. The number makes it an invalid JS identifier
+            var buttonAddName = "0_add_button";
+            var buttonRemName = "0_rem_button";
+            var numVisibleAttr = "_expanded";
+            var inputInitAttr = "_input_init";
+            var optionNames = def.parameters.map(function (p) { return p.name; });
+            var totalOptions = def.parameters.length;
+            var buttonDelta = toggle ? totalOptions : 1;
+            var state = new MutationState(b);
+            state.setEventsEnabled(false);
+            state.setValue(numVisibleAttr, 0);
+            state.setValue(inputInitAttr, false);
+            state.setEventsEnabled(true);
+            var addShown = false;
+            var remShown = false;
+            Blockly.Extensions.apply('inline-svgs', b, false);
+            addPlusButton();
+            appendMutation(b, {
+                mutationToDom: function (el) {
+                    // The reason we store the inputsInitialized variable separately from visibleOptions
+                    // is because it's possible for the block to get into a state where all inputs are
+                    // initialized but they aren't visible (i.e. the user hit the - button). Blockly
+                    // gets upset if a block has a different number of inputs when it is saved and restored.
+                    el.setAttribute(numVisibleAttr, state.getString(numVisibleAttr));
+                    el.setAttribute(inputInitAttr, state.getString(inputInitAttr));
+                    return el;
+                },
+                domToMutation: function (saved) {
+                    state.setEventsEnabled(false);
+                    if (saved.hasAttribute(inputInitAttr) && saved.getAttribute(inputInitAttr) == "true" && !state.getBoolean(inputInitAttr)) {
+                        state.setValue(inputInitAttr, true);
+                        initOptionalInputs();
+                    }
+                    if (saved.hasAttribute(numVisibleAttr)) {
+                        var val = parseInt(saved.getAttribute(numVisibleAttr));
+                        if (!isNaN(val)) {
+                            var delta = val - (state.getNumber(numVisibleAttr) || 0);
+                            if (state.getBoolean(inputInitAttr)) {
+                                if (b.rendered) {
+                                    updateShape(delta, true);
+                                }
+                                else {
+                                    state.setValue(numVisibleAttr, addDelta(delta));
+                                }
+                            }
+                            else {
+                                updateShape(delta, true);
+                            }
+                        }
+                    }
+                    state.setEventsEnabled(true);
+                }
+            });
+            // Blockly only lets you hide an input once it is rendered, so we can't
+            // hide the inputs in init() or domToMutation(). This will get executed after
+            // the block is rendered
+            setTimeout(function () {
+                if (b.rendered && !b.workspace.isDragging()) {
+                    updateShape(0, undefined, true);
+                    updateButtons();
+                }
+            }, 1);
+            // Set skipRender to true if the block is still initializing. Otherwise
+            // the inputs will render before their shadow blocks are created and
+            // leave behind annoying artifacts
+            function updateShape(delta, skipRender, force) {
+                if (skipRender === void 0) { skipRender = false; }
+                if (force === void 0) { force = false; }
+                var newValue = addDelta(delta);
+                if (!force && !skipRender && newValue === state.getNumber(numVisibleAttr))
+                    return;
+                state.setValue(numVisibleAttr, newValue);
+                var visibleOptions = newValue;
+                if (!state.getBoolean(inputInitAttr) && visibleOptions > 0) {
+                    initOptionalInputs();
+                    if (!b.rendered) {
+                        return;
+                    }
+                }
+                var optIndex = 0;
+                for (var i = 0; i < b.inputList.length; i++) {
+                    var input = b.inputList[i];
+                    if (pxt.Util.startsWith(input.name, blocks.optionalDummyInputPrefix)) {
+                        // The behavior for dummy inputs (i.e. labels) is that whenever a parameter is revealed,
+                        // all earlier labels are made visible as well. If the parameter is the last one in the
+                        // block then all labels are made visible
+                        setInputVisible(input, optIndex < visibleOptions || visibleOptions === totalOptions);
+                    }
+                    else if (pxt.Util.startsWith(input.name, blocks.optionalInputWithFieldPrefix) || optionNames.indexOf(input.name) !== -1) {
+                        var visible = optIndex < visibleOptions;
+                        setInputVisible(input, visible);
+                        if (visible && input.connection && !input.connection.isConnected() && !b.isInsertionMarker()) {
+                            var param = comp.definitionNameToParam[def.parameters[optIndex].name];
+                            var shadow = blocks.createShadowValue(info, param);
+                            if (shadow.tagName.toLowerCase() === "value") {
+                                // Unwrap the block
+                                shadow = shadow.firstElementChild;
+                            }
+                            Blockly.Events.disable();
+                            var nb = Blockly.Xml.domToBlock(shadow, b.workspace);
+                            if (nb) {
+                                input.connection.connect(nb.outputConnection);
+                            }
+                            Blockly.Events.enable();
+                        }
+                        ++optIndex;
+                    }
+                }
+                updateButtons();
+                if (!skipRender)
+                    b.render();
+            }
+            function addButton(name, uri, alt, delta) {
+                b.appendDummyInput(name)
+                    .appendField(new Blockly.FieldImage(uri, 24, 24, alt, function () { return updateShape(delta); }, false));
+            }
+            function updateButtons() {
+                var visibleOptions = state.getNumber(numVisibleAttr);
+                var showAdd = visibleOptions !== totalOptions;
+                var showRemove = visibleOptions !== 0;
+                if (!showAdd) {
+                    addShown = false;
+                    b.removeInput(buttonAddName, true);
+                }
+                if (!showRemove) {
+                    remShown = false;
+                    b.removeInput(buttonRemName, true);
+                }
+                if (showRemove && !remShown) {
+                    if (addShown) {
+                        b.removeInput(buttonAddName, true);
+                        addMinusButton();
+                        addPlusButton();
+                    }
+                    else {
+                        addMinusButton();
+                    }
+                }
+                if (showAdd && !addShown) {
+                    addPlusButton();
+                }
+            }
+            function addPlusButton() {
+                addShown = true;
+                addButton(buttonAddName, b.ADD_IMAGE_DATAURI, lf("Reveal optional arguments"), buttonDelta);
+            }
+            function addMinusButton() {
+                remShown = true;
+                addButton(buttonRemName, b.REMOVE_IMAGE_DATAURI, lf("Hide optional arguments"), -1 * buttonDelta);
+            }
+            function initOptionalInputs() {
+                state.setValue(inputInitAttr, true);
+                addInputs();
+                updateButtons();
+            }
+            function addDelta(delta) {
+                return Math.min(Math.max(state.getNumber(numVisibleAttr) + delta, 0), totalOptions);
+            }
+            function setInputVisible(input, visible) {
+                // If the block isn't rendered, Blockly will crash
+                if (b.rendered) {
+                    var renderList = input.setVisible(visible);
+                    renderList.forEach(function (block) {
+                        block.render();
+                    });
+                }
+            }
+        }
+        blocks.initExpandableBlock = initExpandableBlock;
+        var MutationState = /** @class */ (function () {
+            function MutationState(block, initState) {
+                this.block = block;
+                this.fireEvents = true;
+                this.state = initState || {};
+            }
+            MutationState.prototype.setValue = function (attr, value) {
+                var _this = this;
+                if (this.fireEvents && this.block.mutationToDom) {
+                    var oldMutation_1 = this.block.mutationToDom();
+                    this.state[attr] = value.toString();
+                    var newMutation_1 = this.block.mutationToDom();
+                    Object.keys(this.state).forEach(function (key) {
+                        if (oldMutation_1.getAttribute(key) !== _this.state[key]) {
+                            newMutation_1.setAttribute(key, _this.state[key]);
+                        }
+                    });
+                    var oldText = Blockly.Xml.domToText(oldMutation_1);
+                    var newText = Blockly.Xml.domToText(newMutation_1);
+                    if (oldText != newText) {
+                        Blockly.Events.fire(new Blockly.Events.BlockChange(this.block, "mutation", null, oldText, newText));
+                    }
+                }
+                else {
+                    this.state[attr] = value.toString();
+                }
+            };
+            MutationState.prototype.getNumber = function (attr) {
+                return parseInt(this.state[attr]);
+            };
+            MutationState.prototype.getBoolean = function (attr) {
+                return this.state[attr] != "false";
+            };
+            MutationState.prototype.getString = function (attr) {
+                return this.state[attr];
+            };
+            MutationState.prototype.setEventsEnabled = function (enabled) {
+                this.fireEvents = enabled;
+            };
+            return MutationState;
+        }());
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        var allOperations = pxt.blocks.MATH_FUNCTIONS.unary.concat(pxt.blocks.MATH_FUNCTIONS.binary).concat(pxt.blocks.MATH_FUNCTIONS.infix);
+        function initMathOpBlock() {
+            var mathOpId = "math_js_op";
+            var mathOpDef = pxt.blocks.getBlockDefinition(mathOpId);
+            Blockly.Blocks[mathOpId] = {
+                init: function () {
+                    var b = this;
+                    b.setPreviousStatement(false);
+                    b.setNextStatement(false);
+                    b.setOutput(true, "Number");
+                    b.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+                    b.setInputsInline(true);
+                    var ddi = b.appendDummyInput("op_dropdown");
+                    ddi.appendField(new Blockly.FieldDropdown(allOperations.map(function (op) { return [mathOpDef.block[op], op]; }), function (op) { return onOperatorSelect(b, op); }), "OP");
+                    addArgInput(b, false);
+                    // Because the shape of inputs changes, we need a mutation. Technically the op tells us
+                    // how many inputs we should have but we can't read its value at init time
+                    blocks.appendMutation(b, {
+                        mutationToDom: function (mutation) {
+                            var infix;
+                            for (var i = 0; i < b.inputList.length; i++) {
+                                var input = b.inputList[i];
+                                if (input.name === "op_dropdown") {
+                                    infix = false;
+                                    break;
+                                }
+                                else if (input.name === "ARG0") {
+                                    infix = true;
+                                    break;
+                                }
+                            }
+                            mutation.setAttribute("op-type", (b.getInput("ARG1") ? (infix ? "infix" : "binary") : "unary").toString());
+                            return mutation;
+                        },
+                        domToMutation: function (saved) {
+                            if (saved.hasAttribute("op-type")) {
+                                var type = saved.getAttribute("op-type");
+                                if (type != "unary") {
+                                    addArgInput(b, true);
+                                }
+                                changeInputOrder(b, type === "infix");
+                            }
+                        }
+                    });
+                }
+            };
+            blocks.installHelpResources(mathOpId, mathOpDef.name, function (block) {
+                return mathOpDef.tooltip[block.getFieldValue("OP")];
+            }, mathOpDef.url, pxt.toolbox.getNamespaceColor(mathOpDef.category));
+            function onOperatorSelect(b, op) {
+                if (isUnaryOp(op)) {
+                    b.removeInput("ARG1", true);
+                }
+                else if (!b.getInput("ARG1")) {
+                    addArgInput(b, true);
+                }
+                changeInputOrder(b, isInfixOp(op));
+            }
+            function addArgInput(b, second) {
+                var i = b.appendValueInput("ARG" + (second ? 1 : 0));
+                i.setCheck("Number");
+                if (second) {
+                    i.connection.setShadowDom(numberShadowDom());
+                    i.connection.respawnShadow_();
+                }
+            }
+            function changeInputOrder(b, infix) {
+                var hasTwoArgs = !!b.getInput("ARG1");
+                if (infix) {
+                    if (hasTwoArgs) {
+                        b.moveInputBefore("op_dropdown", "ARG1");
+                    }
+                    b.moveInputBefore("ARG0", "op_dropdown");
+                }
+                else {
+                    if (hasTwoArgs) {
+                        b.moveInputBefore("ARG0", "ARG1");
+                    }
+                    b.moveInputBefore("op_dropdown", "ARG0");
+                }
+            }
+        }
+        blocks.initMathOpBlock = initMathOpBlock;
+        function isUnaryOp(op) {
+            return pxt.blocks.MATH_FUNCTIONS.unary.indexOf(op) !== -1;
+        }
+        function isInfixOp(op) {
+            return pxt.blocks.MATH_FUNCTIONS.infix.indexOf(op) !== -1;
+        }
+        var cachedDom;
+        function numberShadowDom() {
+            // <shadow type="math_number"><field name="NUM">0</field></shadow>
+            if (!cachedDom) {
+                cachedDom = document.createElement("shadow");
+                cachedDom.setAttribute("type", "math_number");
+                var field = document.createElement("field");
+                field.setAttribute("name", "NUM");
+                field.textContent = "0";
+                cachedDom.appendChild(field);
+            }
+            return cachedDom;
+        }
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var blocks;
+    (function (blocks) {
+        var allOperations = pxt.blocks.ROUNDING_FUNCTIONS;
+        function initMathRoundBlock() {
+            var mathRoundId = "math_js_round";
+            var mathRoundDef = pxt.blocks.getBlockDefinition(mathRoundId);
+            Blockly.Blocks[mathRoundId] = {
+                init: function () {
+                    var b = this;
+                    b.setPreviousStatement(false);
+                    b.setNextStatement(false);
+                    b.setOutput(true, "Number");
+                    b.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
+                    b.setInputsInline(true);
+                    var ddi = b.appendDummyInput("round_dropdown");
+                    ddi.appendField(new Blockly.FieldDropdown(allOperations.map(function (op) { return [mathRoundDef.block[op], op]; }), function (op) { return onOperatorSelect(b, op); }), "OP");
+                    addArgInput(b);
+                }
+            };
+            blocks.installHelpResources(mathRoundId, mathRoundDef.name, function (block) {
+                return mathRoundDef.tooltip[block.getFieldValue("OP")];
+            }, mathRoundDef.url, pxt.toolbox.getNamespaceColor(mathRoundDef.category));
+            function onOperatorSelect(b, op) {
+                // No-op
+            }
+            function addArgInput(b) {
+                var i = b.appendValueInput("ARG0");
+                i.setCheck("Number");
+            }
+        }
+        blocks.initMathRoundBlock = initMathRoundBlock;
+    })(blocks = pxt.blocks || (pxt.blocks = {}));
+})(pxt || (pxt = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    // 32 is specifically chosen so that we can scale the images for the default
+    // sprite sizes without getting browser anti-aliasing
+    var PREVIEW_WIDTH = 32;
+    var PADDING = 5;
+    var BG_PADDING = 4;
+    var BG_WIDTH = BG_PADDING * 2 + PREVIEW_WIDTH;
+    var ICON_WIDTH = 30;
+    var TOTAL_HEIGHT = PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH;
+    var TOTAL_WIDTH = TOTAL_HEIGHT + ICON_WIDTH;
+    var FieldAnimationEditor = /** @class */ (function (_super) {
+        __extends(FieldAnimationEditor, _super);
+        function FieldAnimationEditor(text, params, validator) {
+            var _this = _super.call(this, text, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.SERIALIZABLE = true;
+            _this.onMouseEnter = function () {
+                if (_this.animateRef)
+                    return;
+                var interval = _this.state.interval > 50 ? _this.state.interval : 50;
+                var index = 0;
+                _this.animateRef = setInterval(function () {
+                    if (_this.preview && _this.frames[index])
+                        _this.preview.src(_this.frames[index]);
+                    index = (index + 1) % _this.frames.length;
+                }, interval);
+            };
+            _this.onMouseLeave = function () {
+                if (_this.animateRef)
+                    clearInterval(_this.animateRef);
+                _this.animateRef = undefined;
+                if (_this.preview && _this.frames[0]) {
+                    _this.preview.src(_this.frames[0]);
+                }
+            };
+            _this.lightMode = params.lightMode;
+            _this.params = parseFieldOptions(params);
+            _this.blocksInfo = params.blocksInfo;
+            _this.initState();
+            return _this;
+        }
+        FieldAnimationEditor.prototype.init = function () {
+            if (this.fieldGroup_) {
+                // Field has already been initialized once.
+                return;
+            }
+            // Build the DOM.
+            this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+            if (!this.visible_) {
+                this.fieldGroup_.style.display = 'none';
+            }
+            this.initState();
+            this.redrawPreview();
+            this.sourceBlock_.getSvgRoot().addEventListener("mouseenter", this.onMouseEnter);
+            this.sourceBlock_.getSvgRoot().addEventListener("mouseleave", this.onMouseLeave);
+            this.updateEditable();
+            this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+            // Force a render.
+            this.render_();
+            this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(this.getClickTarget_(), "mousedown", this, this.onMouseDown_);
+            this.state.interval = this.getParentInterval();
+        };
+        FieldAnimationEditor.prototype.showEditor_ = function () {
+            var _this = this;
+            this.params.blocksInfo = this.blocksInfo;
+            this.initState();
+            var parentInterval = this.getParentInterval();
+            if (!isNaN(parentInterval))
+                this.state.interval = parentInterval;
+            var fv = pxt.react.getFieldEditorView("animation-editor", this.state, this.params);
+            if (this.undoRedoState) {
+                fv.restorePersistentData(this.undoRedoState);
+            }
+            fv.onHide(function () {
+                var result = fv.getResult();
+                if (result) {
+                    var old = _this.getValue();
+                    _this.state = result;
+                    if (!isNaN(_this.state.interval)) {
+                        _this.setParentInterval(_this.state.interval);
+                    }
+                    _this.redrawPreview();
+                    _this.undoRedoState = fv.getPersistentData();
+                    if (_this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                        Blockly.Events.fire(new Blockly.Events.BlockChange(_this.sourceBlock_, 'field', _this.name, old, _this.getValue()));
+                    }
+                }
+            });
+            fv.show();
+        };
+        FieldAnimationEditor.prototype.render_ = function () {
+            _super.prototype.render_.call(this);
+            this.size_.height = TOTAL_HEIGHT;
+            this.size_.width = TOTAL_WIDTH;
+        };
+        FieldAnimationEditor.prototype.getValue = function () {
+            if (!this.state)
+                return "[]";
+            return "[" + this.state.frames.map(function (frame) {
+                return pxt.sprite.bitmapToImageLiteral(pxt.sprite.Bitmap.fromData(frame), "typescript" /* TypeScript */);
+            }).join(",") + "]";
+        };
+        FieldAnimationEditor.prototype.doValueUpdate_ = function (newValue) {
+            if (newValue == null) {
+                return;
+            }
+            this.value_ = newValue;
+            var frames = parseImageArrayString(newValue);
+            if (frames && frames.length) {
+                this.initState();
+                this.state.frames = frames;
+            }
+            this.redrawPreview();
+            _super.prototype.doValueUpdate_.call(this, newValue);
+        };
+        FieldAnimationEditor.prototype.redrawPreview = function () {
+            var _this = this;
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            var bg = new svg.Rect()
+                .at(PADDING + ICON_WIDTH, PADDING)
+                .size(BG_WIDTH, BG_WIDTH)
+                .fill("#dedede")
+                .stroke("#898989", 1)
+                .corner(4);
+            this.fieldGroup_.appendChild(bg.el);
+            var icon = new svg.Text("\uf008")
+                .at(PADDING, 5 + (TOTAL_HEIGHT >> 1))
+                .fill(this.sourceBlock_.getColourSecondary())
+                .setClass("semanticIcon");
+            this.fieldGroup_.appendChild(icon.el);
+            if (this.state) {
+                this.frames = this.state.frames.map(function (frame) { return pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(frame), PREVIEW_WIDTH, _this.lightMode); });
+                this.preview = new svg.Image()
+                    .src(this.frames[0])
+                    .at(PADDING + BG_PADDING + ICON_WIDTH, PADDING + BG_PADDING)
+                    .size(PREVIEW_WIDTH, PREVIEW_WIDTH);
+                this.fieldGroup_.appendChild(this.preview.el);
+            }
+        };
+        FieldAnimationEditor.prototype.getParentIntervalBlock = function () {
+            var s = this.sourceBlock_;
+            if (s.parentBlock_) {
+                var p = s.parentBlock_;
+                for (var _i = 0, _a = p.inputList; _i < _a.length; _i++) {
+                    var input = _a[_i];
+                    if (input.name === "frameInterval") {
+                        return input.connection.targetBlock();
+                    }
+                }
+            }
+            return undefined;
+        };
+        FieldAnimationEditor.prototype.setParentInterval = function (interval) {
+            var target = this.getParentIntervalBlock();
+            if (target) {
+                var fieldName = getFieldName(target);
+                if (fieldName) {
+                    target.setFieldValue(String(interval), fieldName);
+                }
+            }
+        };
+        FieldAnimationEditor.prototype.getParentInterval = function () {
+            var target = this.getParentIntervalBlock();
+            if (target) {
+                var fieldName = getFieldName(target);
+                if (fieldName) {
+                    return Number(target.getFieldValue(fieldName));
+                }
+            }
+            return 100;
+        };
+        FieldAnimationEditor.prototype.initState = function () {
+            if (!this.state) {
+                if (this.params) {
+                    this.state = {
+                        frames: [new pxt.sprite.Bitmap(this.params.initWidth, this.params.initHeight).data()],
+                        interval: 100
+                    };
+                }
+                else {
+                    this.state = {
+                        frames: [],
+                        interval: 100
+                    };
+                }
+            }
+        };
+        return FieldAnimationEditor;
+    }(Blockly.Field));
+    pxtblockly.FieldAnimationEditor = FieldAnimationEditor;
+    function parseFieldOptions(opts) {
+        var parsed = {
+            initWidth: 16,
+            initHeight: 16,
+        };
+        if (!opts) {
+            return parsed;
+        }
+        if (opts.filter) {
+            parsed.filter = opts.filter;
+        }
+        parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+        parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+        return parsed;
+        function withDefault(raw, def) {
+            var res = parseInt(raw);
+            if (isNaN(res)) {
+                return def;
+            }
+            return res;
+        }
+    }
+    function parseImageArrayString(str) {
+        str = str.replace(/[\[\]]/mg, "");
+        return str.split(",").map(function (s) { return pxt.sprite.imageLiteralToBitmap(s).data(); }).filter(function (b) { return b.height && b.width; });
+    }
+    function isNumberType(type) {
+        return type === "math_number" || type === "math_integer" || type === "math_whole_number";
+    }
+    function getFieldName(target) {
+        if (target.type === "math_number_minmax") {
+            return "SLIDER";
+        }
+        else if (isNumberType(target.type)) {
+            return "NUM";
+        }
+        else if (target.type === "timePicker") {
+            return "ms";
+        }
+        return null;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="../../built/pxtsim.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldBreakpoint = /** @class */ (function (_super) {
+        __extends(FieldBreakpoint, _super);
+        function FieldBreakpoint(state, params, opt_validator) {
+            var _this = _super.call(this, state, undefined, undefined, undefined, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.CURSOR = 'pointer';
+            _this.params = params;
+            _this.setValue(state);
+            _this.addArgType('toggle');
+            _this.type_ = params.type;
+            return _this;
+        }
+        FieldBreakpoint.prototype.init = function () {
+            if (this.fieldGroup_) {
+                // Field has already been initialized once.
+                return;
+            }
+            // Build the DOM.
+            this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+            if (!this.visible_) {
+                this.fieldGroup_.style.display = 'none';
+            }
+            // Add an attribute to cassify the type of field.
+            if (this.getArgTypes() !== null) {
+                if (this.sourceBlock_.isShadow()) {
+                    this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+                else {
+                    // Fields without a shadow wrapper, like square dropdowns.
+                    this.fieldGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+            }
+            // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
+            var size = this.getSize();
+            this.checkElement_ = Blockly.utils.dom.createSvgElement('g', {
+                'class': "blocklyToggle " + (this.state_ ? 'blocklyToggleOnBreakpoint' : 'blocklyToggleOffBreakpoint'),
+                'transform': "translate(8, " + size.height / 2 + ")",
+            }, this.fieldGroup_);
+            this.toggleThumb_ = Blockly.utils.dom.createSvgElement('polygon', {
+                'class': 'blocklyToggleRect',
+                'points': '50,5 100,5 125,30 125,80 100,105 50,105 25,80 25,30'
+            }, this.checkElement_);
+            var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
+            /** @type {!Element} */
+            this.textElement_ = Blockly.utils.dom.createSvgElement('text', {
+                'class': 'blocklyText',
+                'x': fieldX,
+                'dy': '0.6ex',
+                'y': size.height / 2
+            }, this.fieldGroup_);
+            this.updateEditable();
+            this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+            this.switchToggle(this.state_);
+            this.setValue(this.getValue());
+            // Force a render.
+            this.render_();
+            this.size_.width = 0;
+            this.mouseDownWrapper_ =
+                Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
+        };
+        FieldBreakpoint.prototype.updateSize_ = function () {
+            this.size_.width = 30;
+            this.arrowWidth_ = 0;
+        };
+        /**
+         * Return 'TRUE' if the toggle is ON, 'FALSE' otherwise.
+         * @return {string} Current state.
+         */
+        FieldBreakpoint.prototype.getValue = function () {
+            return this.toVal(this.state_);
+        };
+        ;
+        /**
+         * Set the checkbox to be checked if newBool is 'TRUE' or true,
+         * unchecks otherwise.
+         * @param {string|boolean} newBool New state.
+         */
+        FieldBreakpoint.prototype.setValue = function (newBool) {
+            var newState = this.fromVal(newBool);
+            if (this.state_ !== newState) {
+                if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.state_, newState));
+                }
+                this.state_ = newState;
+                this.switchToggle(this.state_);
+            }
+        };
+        FieldBreakpoint.prototype.switchToggle = function (newState) {
+            if (this.checkElement_) {
+                this.updateSize_();
+                if (newState) {
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOnBreakpoint');
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOffBreakpoint');
+                }
+                else {
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOnBreakpoint');
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOffBreakpoint');
+                }
+                this.checkElement_.setAttribute('transform', "translate(-7, -1) scale(0.3)");
+            }
+        };
+        FieldBreakpoint.prototype.updateTextNode_ = function () {
+            _super.prototype.updateTextNode_.call(this);
+            if (this.textElement_)
+                pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
+        };
+        FieldBreakpoint.prototype.render_ = function () {
+            if (this.visible_ && this.textElement_) {
+                // Replace the text.
+                goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+                this.updateSize_();
+            }
+        };
+        /**
+         * Toggle the state of the toggle.
+         * @private
+         */
+        FieldBreakpoint.prototype.showEditor_ = function () {
+            var newState = !this.state_;
+            /*
+            if (this.sourceBlock_) {
+              // Call any validation function, and allow it to override.
+              newState = this.callValidator(newState);
+            }*/
+            if (newState !== null) {
+                this.setValue(this.toVal(newState));
+            }
+        };
+        FieldBreakpoint.prototype.toVal = function (newState) {
+            if (this.type_ == "number")
+                return String(newState ? '1' : '0');
+            else
+                return String(newState ? 'true' : 'false');
+        };
+        FieldBreakpoint.prototype.fromVal = function (val) {
+            if (typeof val == "string") {
+                if (val == "1" || val.toUpperCase() == "TRUE")
+                    return true;
+                return false;
+            }
+            return !!val;
+        };
+        return FieldBreakpoint;
+    }(Blockly.FieldNumber));
+    pxtblockly.FieldBreakpoint = FieldBreakpoint;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldColorWheel = /** @class */ (function (_super) {
+        __extends(FieldColorWheel, _super);
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        function FieldColorWheel(value_, params, opt_validator) {
+            var _this = _super.call(this, String(value_), '0', '255', '1', '10', 'Color', opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.params = params;
+            if (_this.params['min'])
+                _this.min_ = parseFloat(_this.params['min']);
+            if (_this.params['max'])
+                _this.max_ = parseFloat(_this.params['max']);
+            if (_this.params['label'])
+                _this.labelText_ = _this.params['label'];
+            if (_this.params['channel'])
+                _this.channel_ = _this.params['channel'];
+            return _this;
+        }
+        /**
+         * Set the gradient CSS properties for the given node and channel
+         * @param {Node} node - The DOM node the gradient will be set on.
+         * @private
+         */
+        FieldColorWheel.prototype.setBackground_ = function (node) {
+            var gradient = this.createColourStops_().join(',');
+            goog.style.setStyle(node, 'background', '-moz-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', '-webkit-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', '-o-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', '-ms-linear-gradient(left, ' + gradient + ')');
+            goog.style.setStyle(node, 'background', 'linear-gradient(left, ' + gradient + ')');
+            if (this.params['sliderWidth'])
+                goog.style.setStyle(node, 'width', this.params['sliderWidth'] + "px");
+        };
+        ;
+        FieldColorWheel.prototype.setReadout_ = function (readout, value) {
+            var hexValue = this.colorWheel(parseInt(value), this.channel_);
+            // <span class="blocklyColorReadout" style="background-color: ${hexValue};"></span>
+            var readoutSpan = document.createElement('span');
+            readoutSpan.className = "blocklyColorReadout";
+            readoutSpan.style.backgroundColor = "" + hexValue;
+            pxsim.U.clear(readout);
+            readout.appendChild(readoutSpan);
+        };
+        FieldColorWheel.prototype.createColourStops_ = function () {
+            var stops = [];
+            for (var n = 0; n <= 255; n += 20) {
+                stops.push(this.colorWheel(n, this.channel_));
+            }
+            return stops;
+        };
+        ;
+        FieldColorWheel.prototype.colorWheel = function (wheelPos, channel) {
+            if (channel == "hsvfast") {
+                return this.hsvFast(wheelPos, 255, 255);
+            }
+            else {
+                wheelPos = 255 - wheelPos;
+                if (wheelPos < 85) {
+                    return this.hex(wheelPos * 3, 255, 255 - wheelPos * 3);
+                }
+                if (wheelPos < 170) {
+                    wheelPos -= 85;
+                    return this.hex(255, 255 - wheelPos * 3, wheelPos * 3);
+                }
+                wheelPos -= 170;
+                return this.hex(255 - wheelPos * 3, wheelPos * 3, 255);
+            }
+        };
+        FieldColorWheel.prototype.hsvFast = function (hue, sat, val) {
+            var h = (hue % 255) >> 0;
+            if (h < 0)
+                h += 255;
+            // scale down to 0..192
+            h = (h * 192 / 255) >> 0;
+            //reference: based on FastLED's hsv2rgb rainbow algorithm [https://github.com/FastLED/FastLED](MIT)
+            var invsat = 255 - sat;
+            var brightness_floor = ((val * invsat) / 255) >> 0;
+            var color_amplitude = val - brightness_floor;
+            var section = (h / 0x40) >> 0; // [0..2]
+            var offset = (h % 0x40) >> 0; // [0..63]
+            var rampup = offset;
+            var rampdown = (0x40 - 1) - offset;
+            var rampup_amp_adj = ((rampup * color_amplitude) / (255 / 4)) >> 0;
+            var rampdown_amp_adj = ((rampdown * color_amplitude) / (255 / 4)) >> 0;
+            var rampup_adj_with_floor = (rampup_amp_adj + brightness_floor);
+            var rampdown_adj_with_floor = (rampdown_amp_adj + brightness_floor);
+            var r;
+            var g;
+            var b;
+            if (section) {
+                if (section == 1) {
+                    // section 1: 0x40..0x7F
+                    r = brightness_floor;
+                    g = rampdown_adj_with_floor;
+                    b = rampup_adj_with_floor;
+                }
+                else {
+                    // section 2; 0x80..0xBF
+                    r = rampup_adj_with_floor;
+                    g = brightness_floor;
+                    b = rampdown_adj_with_floor;
+                }
+            }
+            else {
+                // section 0: 0x00..0x3F
+                r = rampdown_adj_with_floor;
+                g = rampup_adj_with_floor;
+                b = brightness_floor;
+            }
+            return this.hex(r, g, b);
+        };
+        FieldColorWheel.prototype.hex = function (red, green, blue) {
+            return "#" + this.componentToHex(red & 0xFF) + this.componentToHex(green & 0xFF) + this.componentToHex(blue & 0xFF);
+        };
+        FieldColorWheel.prototype.componentToHex = function (c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        };
+        return FieldColorWheel;
+    }(Blockly.FieldSlider));
+    pxtblockly.FieldColorWheel = FieldColorWheel;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldColorNumber = /** @class */ (function (_super) {
+        __extends(FieldColorNumber, _super);
+        function FieldColorNumber(text, params, opt_validator) {
+            var _this = _super.call(this, text, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.valueMode_ = "rgb";
+            if (params.colours)
+                _this.setColours(JSON.parse(params.colours));
+            else if (pxt.appTarget.runtime && pxt.appTarget.runtime.palette) {
+                var p = pxt.Util.clone(pxt.appTarget.runtime.palette);
+                p[0] = "#dedede";
+                var t = void 0;
+                if (pxt.appTarget.runtime.paletteNames) {
+                    t = pxt.Util.clone(pxt.appTarget.runtime.paletteNames);
+                    t[0] = lf("transparent");
+                }
+                _this.setColours(p, t);
+            }
+            if (params.columns)
+                _this.setColumns(parseInt(params.columns));
+            if (params.className)
+                _this.className_ = params.className;
+            if (params.valueMode)
+                _this.valueMode_ = params.valueMode;
+            return _this;
+        }
+        /**
+         * Return the current colour.
+         * @param {boolean} opt_asHex optional field if the returned value should be a hex
+         * @return {string} Current colour in '#rrggbb' format.
+         */
+        FieldColorNumber.prototype.getValue = function (opt_asHex) {
+            if (opt_asHex)
+                return this.value_;
+            switch (this.valueMode_) {
+                case "hex":
+                    return "\"" + this.value_ + "\"";
+                case "rgb":
+                    if (this.value_.indexOf('#') > -1) {
+                        return "0x" + this.value_.replace(/^#/, '');
+                    }
+                    else {
+                        return this.value_;
+                    }
+                case "index":
+                    if (!this.value_)
+                        return "-1";
+                    var allColours = this.getColours_();
+                    for (var i = 0; i < allColours.length; i++) {
+                        if (this.value_.toUpperCase() === allColours[i].toUpperCase()) {
+                            return i + "";
+                        }
+                    }
+            }
+            return this.value_;
+        };
+        /**
+         * Set the colour.
+         * @param {string} colour The new colour in '#rrggbb' format.
+         */
+        FieldColorNumber.prototype.setValue = function (colour) {
+            colour = parseColour(colour, this.getColours_());
+            if (!colour)
+                return;
+            if (this.sourceBlock_ && Blockly.Events.isEnabled() &&
+                this.value_ != colour) {
+                Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.value_, colour));
+            }
+            this.value_ = colour;
+            if (this.sourceBlock_) {
+                this.sourceBlock_.setColour(colour, colour, colour);
+            }
+        };
+        FieldColorNumber.prototype.showEditor_ = function () {
+            _super.prototype.showEditor_.call(this);
+            if (this.className_ && this.colorPicker_)
+                pxt.BrowserUtils.addClass(this.colorPicker_, this.className_);
+        };
+        FieldColorNumber.prototype.getColours_ = function () {
+            return this.colours_;
+        };
+        return FieldColorNumber;
+    }(Blockly.FieldColour));
+    pxtblockly.FieldColorNumber = FieldColorNumber;
+    function parseColour(colour, allColours) {
+        if (colour) {
+            var enumSplit = /Colors\.([a-zA-Z]+)/.exec(colour);
+            var hexSplit = /(0x|#)([0-9a-fA-F]+)/.exec(colour);
+            if (enumSplit) {
+                switch (enumSplit[1].toLocaleLowerCase()) {
+                    case "red": return "#FF0000";
+                    case "orange": return "#FF7F00";
+                    case "yellow": return "#FFFF00";
+                    case "green": return "#00FF00";
+                    case "blue": return "#0000FF";
+                    case "indigo": return "#4B0082";
+                    case "violet": return "#8A2BE2";
+                    case "purple": return "#A033E5";
+                    case "pink": return "#FF007F";
+                    case "white": return "#FFFFFF";
+                    case "black": return "#000000";
+                    default: return colour;
+                }
+            }
+            else if (hexSplit) {
+                var hexLiteralNumber = hexSplit[2];
+                if (hexLiteralNumber.length === 3) {
+                    // if shorthand color, return standard hex triple
+                    var output = "#";
+                    for (var i = 0; i < hexLiteralNumber.length; i++) {
+                        var digit = hexLiteralNumber.charAt(i);
+                        output += digit + digit;
+                    }
+                    return output;
+                }
+                else if (hexLiteralNumber.length === 6) {
+                    return "#" + hexLiteralNumber;
+                }
+            }
+            if (allColours) {
+                var parsedAsInt = parseInt(colour);
+                // Might be the index and not the color
+                if (!isNaN(parsedAsInt) && allColours[parsedAsInt] != undefined) {
+                    return allColours[parsedAsInt];
+                }
+                else {
+                    return allColours[0];
+                }
+            }
+        }
+        return colour;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldGridPicker = /** @class */ (function (_super) {
+        __extends(FieldGridPicker, _super);
+        function FieldGridPicker(text, options, validator) {
+            var _this = _super.call(this, options.data) || this;
+            _this.isFieldCustom_ = true;
+            /**
+             * Callback for when a button is clicked inside the drop-down.
+             * Should be bound to the FieldIconMenu.
+             * @param {Event} e DOM event for the click/touch
+             * @private
+             */
+            _this.buttonClick_ = function (e) {
+                var value = e.target.getAttribute('data-value');
+                if (value !== null) {
+                    this.setValue(value);
+                    // Close the picker
+                    if (this.closeModal_) {
+                        this.close();
+                        this.closeModal_ = false;
+                    }
+                }
+            };
+            _this.buttonClickAndClose_ = function (e) {
+                this.closeModal_ = true;
+                this.buttonClick_(e);
+            };
+            _this.columns_ = parseInt(options.columns) || 4;
+            _this.maxRows_ = parseInt(options.maxRows) || 0;
+            _this.width_ = parseInt(options.width) || 200;
+            _this.backgroundColour_ = pxtblockly.parseColour(options.colour);
+            _this.borderColour_ = pxt.toolbox.fadeColor(_this.backgroundColour_, 0.4, false);
+            var tooltipCfg = {
+                xOffset: parseInt(options.tooltipsXOffset) || 15,
+                yOffset: parseInt(options.tooltipsYOffset) || -10
+            };
+            _this.tooltipConfig_ = tooltipCfg;
+            _this.hasSearchBar_ = !!options.hasSearchBar || false;
+            _this.hideRect_ = !!options.hideRect || false;
+            return _this;
+        }
+        /**
+         * When disposing the grid picker, make sure the tooltips are disposed too.
+         * @public
+         */
+        FieldGridPicker.prototype.dispose = function () {
+            _super.prototype.dispose.call(this);
+            this.disposeTooltip();
+            this.disposeIntersectionObserver();
+        };
+        FieldGridPicker.prototype.createTooltip_ = function () {
+            if (this.gridTooltip_)
+                return;
+            // Create tooltip
+            this.gridTooltip_ = document.createElement('div');
+            this.gridTooltip_.className = 'goog-tooltip blocklyGridPickerTooltip';
+            this.gridTooltip_.style.position = 'absolute';
+            this.gridTooltip_.style.display = 'none';
+            this.gridTooltip_.style.visibility = 'hidden';
+            document.body.appendChild(this.gridTooltip_);
+        };
+        /**
+         * Create blocklyGridPickerRows and add them to table container
+         * @param options
+         * @param tableContainer
+         */
+        FieldGridPicker.prototype.populateTableContainer = function (options, tableContainer, scrollContainer) {
+            pxsim.U.removeChildren(tableContainer);
+            if (options.length == 0) {
+                this.firstItem_ = undefined;
+            }
+            for (var i = 0; i < options.length / this.columns_; i++) {
+                var row = this.populateRow(i, options, tableContainer);
+                tableContainer.appendChild(row);
+            }
+        };
+        /**
+         * Populate a single row and add it to table container
+         * @param row
+         * @param options
+         * @param tableContainer
+         */
+        FieldGridPicker.prototype.populateRow = function (row, options, tableContainer) {
+            var _this = this;
+            var columns = this.columns_;
+            var rowContent = document.createElement('div');
+            rowContent.className = 'blocklyGridPickerRow';
+            var _loop_2 = function (i) {
+                var content = options[i][0]; // Human-readable text or image.
+                var value = options[i][1]; // Language-neutral value.
+                var menuItem = document.createElement('div');
+                menuItem.className = 'goog-menuitem goog-option';
+                menuItem.setAttribute('id', ':' + i); // For aria-activedescendant
+                menuItem.setAttribute('role', 'menuitem');
+                menuItem.style.userSelect = 'none';
+                menuItem.title = content['alt'] || content;
+                menuItem.setAttribute('data-value', value);
+                var menuItemContent = document.createElement('div');
+                menuItemContent.setAttribute('class', 'goog-menuitem-content');
+                menuItemContent.title = content['alt'] || content;
+                menuItemContent.setAttribute('data-value', value);
+                var hasImages = typeof content == 'object';
+                // Set colour
+                var backgroundColour = this_2.backgroundColour_;
+                if (value == this_2.getValue()) {
+                    // This option is selected
+                    menuItem.setAttribute('aria-selected', 'true');
+                    pxt.BrowserUtils.addClass(menuItem, 'goog-option-selected');
+                    backgroundColour = this_2.sourceBlock_.getColourTertiary();
+                    // Save so we can scroll to it later
+                    this_2.selectedItemDom = menuItem;
+                    if (hasImages && !this_2.shouldShowTooltips()) {
+                        this_2.updateSelectedBar_(content, value);
+                    }
+                }
+                menuItem.style.backgroundColor = backgroundColour;
+                menuItem.style.borderColor = this_2.borderColour_;
+                if (hasImages) {
+                    // An image, not text.
+                    var buttonImg = new Image(content['width'], content['height']);
+                    buttonImg.setAttribute('draggable', 'false');
+                    if (!('IntersectionObserver' in window)) {
+                        // No intersection observer support, set the image url immediately
+                        buttonImg.src = content['src'];
+                    }
+                    else {
+                        buttonImg.src = FieldGridPicker.DEFAULT_IMG;
+                        buttonImg.setAttribute('data-src', content['src']);
+                        this_2.observer.observe(buttonImg);
+                    }
+                    buttonImg.alt = content['alt'] || '';
+                    buttonImg.setAttribute('data-value', value);
+                    menuItemContent.appendChild(buttonImg);
+                }
+                else {
+                    // text
+                    menuItemContent.textContent = content;
+                }
+                if (this_2.shouldShowTooltips()) {
+                    Blockly.bindEvent_(menuItem, 'click', this_2, this_2.buttonClickAndClose_);
+                    // Setup hover tooltips
+                    var xOffset_1 = (this_2.sourceBlock_.RTL ? -this_2.tooltipConfig_.xOffset : this_2.tooltipConfig_.xOffset);
+                    var yOffset_1 = this_2.tooltipConfig_.yOffset;
+                    Blockly.bindEvent_(menuItem, 'mousemove', this_2, function (e) {
+                        if (hasImages) {
+                            _this.gridTooltip_.style.top = e.clientY + yOffset_1 + "px";
+                            _this.gridTooltip_.style.left = e.clientX + xOffset_1 + "px";
+                            // Set tooltip text
+                            var touchTarget = document.elementFromPoint(e.clientX, e.clientY);
+                            var title = touchTarget.title || touchTarget.alt;
+                            _this.gridTooltip_.textContent = title;
+                            // Show the tooltip
+                            _this.gridTooltip_.style.visibility = title ? 'visible' : 'hidden';
+                            _this.gridTooltip_.style.display = title ? '' : 'none';
+                        }
+                        pxt.BrowserUtils.addClass(menuItem, 'goog-menuitem-highlight');
+                        tableContainer.setAttribute('aria-activedescendant', menuItem.id);
+                    });
+                    Blockly.bindEvent_(menuItem, 'mouseout', this_2, function (e) {
+                        if (hasImages) {
+                            // Hide the tooltip
+                            _this.gridTooltip_.style.visibility = 'hidden';
+                            _this.gridTooltip_.style.display = 'none';
+                        }
+                        pxt.BrowserUtils.removeClass(menuItem, 'goog-menuitem-highlight');
+                        tableContainer.removeAttribute('aria-activedescendant');
+                    });
+                }
+                else {
+                    if (hasImages) {
+                        // Show the selected bar
+                        this_2.selectedBar_.style.display = '';
+                        // Show the selected item (in the selected bar)
+                        Blockly.bindEvent_(menuItem, 'click', this_2, function (e) {
+                            if (_this.closeModal_) {
+                                _this.buttonClick_(e);
+                            }
+                            else {
+                                // Clear all current hovers.
+                                var currentHovers = tableContainer.getElementsByClassName('goog-menuitem-highlight');
+                                for (var i_3 = 0; i_3 < currentHovers.length; i_3++) {
+                                    pxt.BrowserUtils.removeClass(currentHovers[i_3], 'goog-menuitem-highlight');
+                                }
+                                // Set hover on current item
+                                pxt.BrowserUtils.addClass(menuItem, 'goog-menuitem-highlight');
+                                _this.updateSelectedBar_(content, value);
+                            }
+                        });
+                    }
+                    else {
+                        Blockly.bindEvent_(menuItem, 'click', this_2, this_2.buttonClickAndClose_);
+                        Blockly.bindEvent_(menuItem, 'mouseup', this_2, this_2.buttonClickAndClose_);
+                    }
+                }
+                menuItem.appendChild(menuItemContent);
+                rowContent.appendChild(menuItem);
+                if (i == 0) {
+                    this_2.firstItem_ = menuItem;
+                }
+            };
+            var this_2 = this;
+            for (var i = (columns * row); i < Math.min((columns * row) + columns, options.length); i++) {
+                _loop_2(i);
+            }
+            return rowContent;
+        };
+        /**
+         * Whether or not to show a box around the dropdown menu.
+         * @return {boolean} True if we should show a box (rect) around the dropdown menu. Otherwise false.
+         * @private
+         */
+        FieldGridPicker.prototype.shouldShowRect_ = function () {
+            return !this.hideRect_ ? !this.sourceBlock_.isShadow() : false;
+        };
+        /**
+         * Set the language-neutral value for this dropdown menu.
+         * We have to override this from field.js because the grid picker needs to redraw the selected item's image.
+         * @param {string} newValue New value to set.
+         */
+        FieldGridPicker.prototype.setValue = function (newValue) {
+            if (newValue === null || newValue === this.value_) {
+                return; // No change if null.
+            }
+            if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.value_, newValue));
+            }
+            this.value_ = newValue;
+            // Look up and display the human-readable text.
+            var options = this.getOptions();
+            for (var i = 0; i < options.length; i++) {
+                // Options are tuples of human-readable text and language-neutral values.
+                if (options[i][1] == newValue) {
+                    var content = options[i][0];
+                    if (typeof content == 'object') {
+                        this.imageJson_ = content;
+                        this.setText(content.alt); // Use setText() because it handles displaying image selection
+                    }
+                    else {
+                        this.imageJson_ = null;
+                        this.setText(content); // Use setText() because it handles displaying image selection
+                    }
+                    return;
+                }
+            }
+            // Value not found.  Add it, maybe it will become valid once set
+            // (like variable names).
+            this.setText(newValue); // Use setText() because it handles displaying image selection
+        };
+        ;
+        /**
+         * Closes the gridpicker.
+         */
+        FieldGridPicker.prototype.close = function () {
+            this.disposeTooltip();
+            Blockly.WidgetDiv.hideIfOwner(this);
+            Blockly.Events.setGroup(false);
+        };
+        /**
+         * Getter method
+         */
+        FieldGridPicker.prototype.getFirstItem = function () {
+            return this.firstItem_;
+        };
+        /**
+         * Highlight first item in menu, de-select and de-highlight all others
+         */
+        FieldGridPicker.prototype.highlightFirstItem = function (tableContainerDom) {
+            var menuItemsDom = tableContainerDom.childNodes;
+            if (menuItemsDom.length && menuItemsDom[0].childNodes) {
+                for (var row = 0; row < menuItemsDom.length; ++row) {
+                    var rowLength = menuItemsDom[row].childNodes.length;
+                    for (var col = 0; col < rowLength; ++col) {
+                        var menuItem = menuItemsDom[row].childNodes[col];
+                        pxt.BrowserUtils.removeClass(menuItem, "goog-menuitem-highlight");
+                        pxt.BrowserUtils.removeClass(menuItem, "goog-option-selected");
+                    }
+                }
+                var firstItem = menuItemsDom[0].childNodes[0];
+                firstItem.className += " goog-menuitem-highlight";
+            }
+        };
+        /**
+         * Scroll menu to item that equals current value of gridpicker
+         */
+        FieldGridPicker.prototype.highlightAndScrollSelected = function (tableContainerDom, scrollContainerDom) {
+            if (!this.selectedItemDom)
+                return;
+            goog.style.scrollIntoContainerView(this.selectedItemDom, scrollContainerDom, true);
+        };
+        /**
+         * Create a dropdown menu under the text.
+         * @private
+         */
+        FieldGridPicker.prototype.showEditor_ = function () {
+            var _this = this;
+            Blockly.WidgetDiv.show(this, this.sourceBlock_.RTL, function () {
+                _this.onClose_();
+            });
+            this.setupIntersectionObserver_();
+            this.createTooltip_();
+            var tableContainer = document.createElement("div");
+            this.positionMenu_(tableContainer);
+        };
+        FieldGridPicker.prototype.positionMenu_ = function (tableContainer) {
+            // Record viewport dimensions before adding the dropdown.
+            var viewportBBox = Blockly.utils.getViewportBBox();
+            var anchorBBox = this.getAnchorDimensions_();
+            var _a = this.createWidget_(tableContainer), paddingContainer = _a.paddingContainer, scrollContainer = _a.scrollContainer;
+            var containerSize = {
+                width: paddingContainer.offsetWidth,
+                height: paddingContainer.offsetHeight
+            }; //goog.style.getSize(paddingContainer);
+            // Set width
+            var windowSize = goog.dom.getViewportSize();
+            if (this.width_ > windowSize.width) {
+                this.width_ = windowSize.width;
+            }
+            tableContainer.style.width = this.width_ + 'px';
+            var addedHeight = 0;
+            if (this.hasSearchBar_)
+                addedHeight += 50; // Account for search bar
+            if (this.selectedBar_)
+                addedHeight += 50; // Account for the selected bar
+            // Set height
+            if (this.maxRows_) {
+                // Calculate height
+                var firstRowDom = tableContainer.children[0];
+                var rowHeight = firstRowDom.offsetHeight;
+                // Compute maxHeight using maxRows + 0.3 to partially show next row, to hint at scrolling
+                var maxHeight = rowHeight * (this.maxRows_ + 0.3);
+                if (windowSize.height < (maxHeight + addedHeight)) {
+                    maxHeight = windowSize.height - addedHeight;
+                }
+                if (containerSize.height > maxHeight) {
+                    scrollContainer.style.overflowY = "auto";
+                    goog.style.setHeight(scrollContainer, maxHeight);
+                    containerSize.height = maxHeight;
+                }
+            }
+            containerSize.height += addedHeight;
+            if (this.sourceBlock_.RTL) {
+                Blockly.utils.uiMenu.adjustBBoxesForRTL(viewportBBox, anchorBBox, containerSize);
+            }
+            // Position the menu.
+            Blockly.WidgetDiv.positionWithAnchor(viewportBBox, anchorBBox, containerSize, this.sourceBlock_.RTL);
+            //            (<any>scrollContainer).focus();
+            this.highlightAndScrollSelected(tableContainer, scrollContainer);
+        };
+        ;
+        FieldGridPicker.prototype.shouldShowTooltips = function () {
+            return !pxt.BrowserUtils.isMobile();
+        };
+        FieldGridPicker.prototype.getAnchorDimensions_ = function () {
+            var boundingBox = this.getScaledBBox_();
+            if (this.sourceBlock_.RTL) {
+                boundingBox.right += Blockly.FieldDropdown.CHECKMARK_OVERHANG;
+            }
+            else {
+                boundingBox.left -= Blockly.FieldDropdown.CHECKMARK_OVERHANG;
+            }
+            return boundingBox;
+        };
+        ;
+        FieldGridPicker.prototype.createWidget_ = function (tableContainer) {
+            var div = Blockly.WidgetDiv.DIV;
+            var options = this.getOptions();
+            // Container for the menu rows
+            tableContainer.setAttribute("role", "menu");
+            tableContainer.setAttribute("aria-haspopup", "true");
+            // Container used to limit the height of the tableContainer, because the tableContainer uses
+            // display: table, which ignores height and maxHeight
+            var scrollContainer = document.createElement("div");
+            // Needed to correctly style borders and padding around the scrollContainer, because the padding around the
+            // scrollContainer is part of the scrollable area and will not be correctly shown at the top and bottom
+            // when scrolling
+            var paddingContainer = document.createElement("div");
+            paddingContainer.style.border = "solid 1px " + this.borderColour_;
+            tableContainer.style.backgroundColor = this.backgroundColour_;
+            scrollContainer.style.backgroundColor = this.backgroundColour_;
+            paddingContainer.style.backgroundColor = this.backgroundColour_;
+            tableContainer.className = 'blocklyGridPickerMenu';
+            scrollContainer.className = 'blocklyGridPickerScroller';
+            paddingContainer.className = 'blocklyGridPickerPadder';
+            paddingContainer.appendChild(scrollContainer);
+            scrollContainer.appendChild(tableContainer);
+            div.appendChild(paddingContainer);
+            // Search bar
+            if (this.hasSearchBar_) {
+                var searchBar = this.createSearchBar_(tableContainer, scrollContainer, options);
+                paddingContainer.insertBefore(searchBar, paddingContainer.childNodes[0]);
+            }
+            // Selected bar
+            if (!this.shouldShowTooltips()) {
+                this.selectedBar_ = this.createSelectedBar_();
+                paddingContainer.appendChild(this.selectedBar_);
+            }
+            // Render elements
+            this.populateTableContainer(options, tableContainer, scrollContainer);
+            return { paddingContainer: paddingContainer, scrollContainer: scrollContainer };
+        };
+        FieldGridPicker.prototype.createSearchBar_ = function (tableContainer, scrollContainer, options) {
+            var _this = this;
+            var searchBarDiv = document.createElement("div");
+            searchBarDiv.setAttribute("class", "ui fluid icon input");
+            var searchIcon = document.createElement("i");
+            searchIcon.setAttribute("class", "search icon");
+            var searchBar = document.createElement("input");
+            searchBar.setAttribute("type", "search");
+            searchBar.setAttribute("id", "search-bar");
+            searchBar.setAttribute("class", "blocklyGridPickerSearchBar");
+            searchBar.setAttribute("placeholder", pxt.Util.lf("Search"));
+            searchBar.addEventListener("click", function () {
+                searchBar.focus();
+                searchBar.setSelectionRange(0, searchBar.value.length);
+            });
+            // Search on key change
+            searchBar.addEventListener("keyup", pxt.Util.debounce(function () {
+                var text = searchBar.value;
+                var re = new RegExp(text, "i");
+                var filteredOptions = options.filter(function (block) {
+                    var alt = block[0].alt; // Human-readable text or image.
+                    var value = block[1]; // Language-neutral value.
+                    return alt ? re.test(alt) : re.test(value);
+                });
+                _this.populateTableContainer.bind(_this)(filteredOptions, tableContainer, scrollContainer);
+                if (text) {
+                    _this.highlightFirstItem(tableContainer);
+                }
+                else {
+                    _this.highlightAndScrollSelected(tableContainer, scrollContainer);
+                }
+                // Hide the tooltip
+                _this.gridTooltip_.style.visibility = 'hidden';
+                _this.gridTooltip_.style.display = 'none';
+            }, 300, false));
+            // Select the first item if the enter key is pressed
+            searchBar.addEventListener("keyup", function (e) {
+                var code = e.which;
+                if (code == 13) {
+                    // Select the first item in the list
+                    var firstRow = tableContainer.childNodes[0];
+                    if (firstRow) {
+                        var firstItem = firstRow.childNodes[0];
+                        if (firstItem) {
+                            _this.closeModal_ = true;
+                            firstItem.click();
+                        }
+                    }
+                }
+            });
+            searchBarDiv.appendChild(searchBar);
+            searchBarDiv.appendChild(searchIcon);
+            return searchBarDiv;
+        };
+        FieldGridPicker.prototype.createSelectedBar_ = function () {
+            var _this = this;
+            var selectedBar = document.createElement("div");
+            selectedBar.setAttribute("class", "blocklyGridPickerSelectedBar");
+            selectedBar.style.display = 'none';
+            var selectedWrapper = document.createElement("div");
+            var selectedImgWrapper = document.createElement("div");
+            selectedImgWrapper.className = 'blocklyGridPickerSelectedImage';
+            selectedWrapper.appendChild(selectedImgWrapper);
+            this.selectedImg_ = document.createElement("img");
+            this.selectedImg_.setAttribute('width', '30px');
+            this.selectedImg_.setAttribute('height', '30px');
+            this.selectedImg_.setAttribute('draggable', 'false');
+            this.selectedImg_.style.display = 'none';
+            this.selectedImg_.src = FieldGridPicker.DEFAULT_IMG;
+            selectedImgWrapper.appendChild(this.selectedImg_);
+            this.selectedBarText_ = document.createElement("span");
+            this.selectedBarText_.className = 'blocklyGridPickerTooltip';
+            selectedWrapper.appendChild(this.selectedBarText_);
+            var buttonsWrapper = document.createElement("div");
+            var buttonsDiv = document.createElement("div");
+            buttonsDiv.className = 'ui buttons mini';
+            buttonsWrapper.appendChild(buttonsDiv);
+            var selectButton = document.createElement("button");
+            selectButton.className = "ui button icon green";
+            var selectButtonIcon = document.createElement("i");
+            selectButtonIcon.className = 'icon check';
+            selectButton.appendChild(selectButtonIcon);
+            Blockly.bindEvent_(selectButton, 'click', this, function () {
+                _this.setValue(_this.selectedBarValue_);
+                _this.close();
+            });
+            var cancelButton = document.createElement("button");
+            cancelButton.className = "ui button icon red";
+            var cancelButtonIcon = document.createElement("i");
+            cancelButtonIcon.className = 'icon cancel';
+            cancelButton.appendChild(cancelButtonIcon);
+            Blockly.bindEvent_(cancelButton, 'click', this, function () {
+                _this.close();
+            });
+            buttonsDiv.appendChild(selectButton);
+            buttonsDiv.appendChild(cancelButton);
+            selectedBar.appendChild(selectedWrapper);
+            selectedBar.appendChild(buttonsWrapper);
+            return selectedBar;
+        };
+        FieldGridPicker.prototype.updateSelectedBar_ = function (content, value) {
+            if (content['src']) {
+                this.selectedImg_.src = content['src'];
+                this.selectedImg_.style.display = '';
+            }
+            this.selectedImg_.alt = content['alt'] || content;
+            this.selectedBarText_.textContent = content['alt'] || content;
+            this.selectedBarValue_ = value;
+        };
+        FieldGridPicker.prototype.setupIntersectionObserver_ = function () {
+            var _this = this;
+            if (!('IntersectionObserver' in window))
+                return;
+            this.disposeIntersectionObserver();
+            // setup intersection observer for the image
+            var preloadImage = function (el) {
+                var lazyImageUrl = el.getAttribute('data-src');
+                if (lazyImageUrl) {
+                    el.src = lazyImageUrl;
+                    el.removeAttribute('data-src');
+                }
+            };
+            var config = {
+                // If the image gets within 50px in the Y axis, start the download.
+                rootMargin: '20px 0px',
+                threshold: 0.01
+            };
+            var onIntersection = function (entries) {
+                entries.forEach(function (entry) {
+                    // Are we in viewport?
+                    if (entry.intersectionRatio > 0) {
+                        // Stop watching and load the image
+                        _this.observer.unobserve(entry.target);
+                        preloadImage(entry.target);
+                    }
+                });
+            };
+            this.observer = new IntersectionObserver(onIntersection, config);
+        };
+        FieldGridPicker.prototype.disposeIntersectionObserver = function () {
+            if (this.observer) {
+                this.observer = null;
+            }
+        };
+        /**
+         * Disposes the tooltip DOM.
+         * @private
+         */
+        FieldGridPicker.prototype.disposeTooltip = function () {
+            if (this.gridTooltip_) {
+                pxsim.U.remove(this.gridTooltip_);
+                this.gridTooltip_ = null;
+            }
+        };
+        FieldGridPicker.prototype.onClose_ = function () {
+            this.disposeTooltip();
+        };
+        /**
+         * Sets the text in this field.  Trigger a rerender of the source block.
+         * @param {?string} text New text.
+         */
+        FieldGridPicker.prototype.setText = function (text) {
+            if (text === null || text === this.text_) {
+                // No change if null.
+                return;
+            }
+            this.text_ = text;
+            this.updateTextNode_();
+            if (this.imageJson_ && this.textElement_) {
+                // Update class for dropdown text.
+                // This class is reset every time updateTextNode_ is called.
+                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyHidden');
+                this.imageElement_.parentNode.appendChild(this.arrow_);
+            }
+            else if (this.textElement_) {
+                // Update class for dropdown text.
+                // This class is reset every time updateTextNode_ is called.
+                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyDropdownText');
+                this.textElement_.parentNode.appendChild(this.arrow_);
+            }
+            var sourceBlock = this.sourceBlock_;
+            if (sourceBlock && sourceBlock.rendered) {
+                sourceBlock.render();
+                sourceBlock.bumpNeighbours_();
+            }
+        };
+        ;
+        /**
+         * Updates the width of the field. This calls getCachedWidth which won't cache
+         * the approximated width on IE/Microsoft Edge when `getComputedTextLength` fails. Once
+         * it eventually does succeed, the result will be cached.
+         **/
+        FieldGridPicker.prototype.updateSize_ = function () {
+            var width;
+            if (this.imageJson_) {
+                width = this.imageJson_.width + 5;
+                this.arrowY_ = this.imageJson_.height / 2;
+            }
+            else {
+                // Calculate width of field
+                width = Blockly.Field.getCachedWidth(this.textElement_);
+            }
+            // Add padding to left and right of text.
+            if (this.EDITABLE) {
+                width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
+            }
+            // Adjust width for drop-down arrows.
+            this.arrowWidth_ = 0;
+            if (this.positionArrow) {
+                this.arrowWidth_ = this.positionArrow(width);
+                width += this.arrowWidth_;
+            }
+            // Add padding to any drawn box.
+            if (this.box_) {
+                width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
+            }
+            // Set width of the field.
+            this.size_.width = width;
+        };
+        ;
+        /**
+         * Update the text node of this field to display the current text.
+         * @private
+         */
+        FieldGridPicker.prototype.updateTextNode_ = function () {
+            if (!this.textElement_ && !this.imageElement_) {
+                // Not rendered yet.
+                return;
+            }
+            var text = this.text_;
+            if (text.length > this.maxDisplayLength) {
+                // Truncate displayed string and add an ellipsis ('...').
+                text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
+                // Add special class for sizing font when truncated
+                this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
+            }
+            else {
+                this.textElement_.setAttribute('class', 'blocklyText');
+            }
+            // Empty the text element.
+            goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+            goog.dom.removeNode(this.imageElement_);
+            this.imageElement_ = null;
+            if (this.imageJson_) {
+                // Image option is selected.
+                this.imageElement_ = Blockly.utils.dom.createSvgElement('image', {
+                    'y': 5, 'x': 8, 'height': this.imageJson_.height + 'px',
+                    'width': this.imageJson_.width + 'px', cursor: 'pointer'
+                }, null);
+                this.imageElement_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.imageJson_.src);
+                this.size_.height = Number(this.imageJson_.height) + 10;
+                if (this.sourceBlock_.RTL)
+                    this.imageElement_.setAttribute('transform', 'translate(' + this.arrowWidth_ + ', 0)');
+                this.textElement_.parentNode.appendChild(this.imageElement_);
+            }
+            else {
+                // Replace whitespace with non-breaking spaces so the text doesn't collapse.
+                text = text.replace(/\s/g, Blockly.Field.NBSP);
+                if (this.sourceBlock_.RTL && text) {
+                    // The SVG is LTR, force text to be RTL.
+                    text += '\u200F';
+                }
+                if (!text) {
+                    // Prevent the field from disappearing if empty.
+                    text = Blockly.Field.NBSP;
+                }
+                var textNode = document.createTextNode(text);
+                this.textElement_.appendChild(textNode);
+            }
+            // Cached width is obsolete.  Clear it.
+            this.size_.width = 0;
+        };
+        ;
+        FieldGridPicker.DEFAULT_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+        return FieldGridPicker;
+    }(Blockly.FieldDropdown));
+    pxtblockly.FieldGridPicker = FieldGridPicker;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldImageDropdown = /** @class */ (function (_super) {
+        __extends(FieldImageDropdown, _super);
+        function FieldImageDropdown(text, options, validator) {
+            var _this = _super.call(this, options.data) || this;
+            _this.isFieldCustom_ = true;
+            /**
+             * Callback for when a button is clicked inside the drop-down.
+             * Should be bound to the FieldIconMenu.
+             * @param {Event} e DOM event for the click/touch
+             * @private
+             */
+            _this.buttonClick_ = function (e) {
+                var value = e.target.getAttribute('data-value');
+                if (!value)
+                    return;
+                this.setValue(value);
+                this.setText(value);
+                Blockly.DropDownDiv.hide();
+            };
+            _this.columns_ = parseInt(options.columns);
+            _this.maxRows_ = parseInt(options.maxRows) || 0;
+            _this.width_ = parseInt(options.width) || 300;
+            _this.backgroundColour_ = pxtblockly.parseColour(options.colour);
+            _this.borderColour_ = pxt.toolbox.fadeColor(_this.backgroundColour_, 0.4, false);
+            return _this;
+        }
+        /**
+         * Create a dropdown menu under the text.
+         * @private
+         */
+        FieldImageDropdown.prototype.showEditor_ = function () {
+            // If there is an existing drop-down we own, this is a request to hide the drop-down.
+            if (Blockly.DropDownDiv.hideIfOwner(this)) {
+                return;
+            }
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            // Populate the drop-down with the icons for this field.
+            var dropdownDiv = Blockly.DropDownDiv.getContentDiv();
+            var contentDiv = document.createElement('div');
+            // Accessibility properties
+            contentDiv.setAttribute('role', 'menu');
+            contentDiv.setAttribute('aria-haspopup', 'true');
+            var options = this.getOptions();
+            var maxButtonHeight = 0;
+            for (var i = 0; i < options.length; i++) {
+                var content = options[i][0]; // Human-readable text or image.
+                var value = options[i][1]; // Language-neutral value.
+                // Icons with the type property placeholder take up space but don't have any functionality
+                // Use for special-case layouts
+                if (content.type == 'placeholder') {
+                    var placeholder = document.createElement('span');
+                    placeholder.setAttribute('class', 'blocklyDropDownPlaceholder');
+                    placeholder.style.width = content.width + 'px';
+                    placeholder.style.height = content.height + 'px';
+                    contentDiv.appendChild(placeholder);
+                    continue;
+                }
+                var button = document.createElement('button');
+                button.setAttribute('id', ':' + i); // For aria-activedescendant
+                button.setAttribute('role', 'menuitem');
+                button.setAttribute('class', 'blocklyDropDownButton');
+                button.title = content.alt;
+                var buttonSize = content.height;
+                if (this.columns_) {
+                    buttonSize = ((this.width_ / this.columns_) - 8);
+                    button.style.width = buttonSize + 'px';
+                    button.style.height = buttonSize + 'px';
+                }
+                else {
+                    button.style.width = content.width + 'px';
+                    button.style.height = content.height + 'px';
+                }
+                if (buttonSize > maxButtonHeight) {
+                    maxButtonHeight = buttonSize;
+                }
+                var backgroundColor = this.backgroundColour_;
+                if (value == this.getValue()) {
+                    // This icon is selected, show it in a different colour
+                    backgroundColor = this.sourceBlock_.getColourTertiary();
+                    button.setAttribute('aria-selected', 'true');
+                }
+                button.style.backgroundColor = backgroundColor;
+                button.style.borderColor = this.borderColour_;
+                Blockly.bindEvent_(button, 'click', this, this.buttonClick_);
+                Blockly.bindEvent_(button, 'mouseover', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
+                    contentDiv.setAttribute('aria-activedescendant', this.id);
+                });
+                Blockly.bindEvent_(button, 'mouseout', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton');
+                    contentDiv.removeAttribute('aria-activedescendant');
+                });
+                var buttonImg = document.createElement('img');
+                buttonImg.src = content.src;
+                //buttonImg.alt = icon.alt;
+                // Upon click/touch, we will be able to get the clicked element as e.target
+                // Store a data attribute on all possible click targets so we can match it to the icon.
+                button.setAttribute('data-value', value);
+                buttonImg.setAttribute('data-value', value);
+                button.appendChild(buttonImg);
+                contentDiv.appendChild(button);
+            }
+            contentDiv.style.width = this.width_ + 'px';
+            dropdownDiv.appendChild(contentDiv);
+            if (this.maxRows_) {
+                // Limit the number of rows shown, but add a partial next row to indicate scrolling
+                dropdownDiv.style.maxHeight = (this.maxRows_ + 0.4) * (maxButtonHeight + 8) + 'px';
+            }
+            if (pxt.BrowserUtils.isFirefox()) {
+                // This is to compensate for the scrollbar that overlays content in Firefox. It
+                // gets removed in onHide_()
+                dropdownDiv.style.paddingRight = "20px";
+            }
+            Blockly.DropDownDiv.setColour(this.backgroundColour_, this.borderColour_);
+            Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_, this.onHide_.bind(this));
+            if (this.sourceBlock_.isShadow()) {
+                this.savedPrimary_ = this.sourceBlock_.getColour();
+                this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(), this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+            }
+            else if (this.box_) {
+                this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+            }
+        };
+        /**
+         * Callback for when the drop-down is hidden.
+         */
+        FieldImageDropdown.prototype.onHide_ = function () {
+            var content = Blockly.DropDownDiv.getContentDiv();
+            content.removeAttribute('role');
+            content.removeAttribute('aria-haspopup');
+            content.removeAttribute('aria-activedescendant');
+            content.style.width = '';
+            content.style.paddingRight = '';
+            if (this.sourceBlock_) {
+                if (this.sourceBlock_.isShadow()) {
+                    this.sourceBlock_.setColour(this.savedPrimary_, this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+                }
+                else if (this.box_) {
+                    this.box_.setAttribute('fill', this.sourceBlock_.getColour());
+                }
+            }
+        };
+        ;
+        /**
+         * Sets the text in this field.  Trigger a rerender of the source block.
+         * @param {?string} text New text.
+         */
+        FieldImageDropdown.prototype.setText = function (text) {
+            if (text === null || text === this.text_) {
+                // No change if null.
+                return;
+            }
+            this.text_ = text;
+            this.updateTextNode_();
+            if (this.imageJson_ && this.textElement_) {
+                // Update class for dropdown text.
+                // This class is reset every time updateTextNode_ is called.
+                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyHidden');
+                this.imageElement_.parentNode.appendChild(this.arrow_);
+            }
+            else if (this.textElement_) {
+                // Update class for dropdown text.
+                // This class is reset every time updateTextNode_ is called.
+                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyDropdownText');
+                this.textElement_.parentNode.appendChild(this.arrow_);
+            }
+            var sourceBlock = this.sourceBlock_;
+            if (sourceBlock && sourceBlock.rendered) {
+                sourceBlock.render();
+                sourceBlock.bumpNeighbours_();
+            }
+        };
+        ;
+        /**
+         * Updates the width of the field. This calls getCachedWidth which won't cache
+         * the approximated width on IE/Microsoft Edge when `getComputedTextLength` fails. Once
+         * it eventually does succeed, the result will be cached.
+         **/
+        FieldImageDropdown.prototype.updateSize_ = function () {
+            // Calculate width of field
+            var width = this.imageJson_.width + 5;
+            // Add padding to left and right of text.
+            if (this.EDITABLE) {
+                width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
+            }
+            this.arrowY_ = this.imageJson_.height / 2;
+            // Adjust width for drop-down arrows.
+            this.arrowWidth_ = 0;
+            if (this.positionArrow) {
+                this.arrowWidth_ = this.positionArrow(width);
+                width += this.arrowWidth_;
+            }
+            // Add padding to any drawn box.
+            if (this.box_) {
+                width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
+            }
+            // Set width of the field.
+            this.size_.width = width;
+        };
+        ;
+        /**
+         * Update the text node of this field to display the current text.
+         * @private
+         */
+        FieldImageDropdown.prototype.updateTextNode_ = function () {
+            if (!this.textElement_ && !this.imageElement_) {
+                // Not rendered yet.
+                return;
+            }
+            var text = this.text_;
+            if (text.length > this.maxDisplayLength) {
+                // Truncate displayed string and add an ellipsis ('...').
+                text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
+                // Add special class for sizing font when truncated
+                this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
+            }
+            else {
+                this.textElement_.setAttribute('class', 'blocklyText');
+            }
+            // Empty the text element.
+            goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+            goog.dom.removeNode(this.imageElement_);
+            this.imageElement_ = null;
+            if (this.imageJson_) {
+                // Image option is selected.
+                this.imageElement_ = Blockly.utils.dom.createSvgElement('image', {
+                    'y': 5, 'x': 8, 'height': this.imageJson_.height + 'px',
+                    'width': this.imageJson_.width + 'px'
+                }, null);
+                this.imageElement_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.imageJson_.src);
+                this.size_.height = Number(this.imageJson_.height) + 10;
+                this.textElement_.parentNode.appendChild(this.imageElement_);
+            }
+            else {
+                // Replace whitespace with non-breaking spaces so the text doesn't collapse.
+                text = text.replace(/\s/g, Blockly.Field.NBSP);
+                if (this.sourceBlock_.RTL && text) {
+                    // The SVG is LTR, force text to be RTL.
+                    text += '\u200F';
+                }
+                if (!text) {
+                    // Prevent the field from disappearing if empty.
+                    text = Blockly.Field.NBSP;
+                }
+                var textNode = document.createTextNode(text);
+                this.textElement_.appendChild(textNode);
+            }
+            // Cached width is obsolete.  Clear it.
+            this.size_.width = 0;
+        };
+        ;
+        return FieldImageDropdown;
+    }(Blockly.FieldDropdown));
+    pxtblockly.FieldImageDropdown = FieldImageDropdown;
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldImages = /** @class */ (function (_super) {
+        __extends(FieldImages, _super);
+        function FieldImages(text, options, validator) {
+            var _this = _super.call(this, text, options, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.shouldSort_ = options.sort;
+            _this.addLabel_ = !!options.addLabel;
+            return _this;
+        }
+        /**
+         * Create a dropdown menu under the text.
+         * @private
+         */
+        FieldImages.prototype.showEditor_ = function () {
+            // If there is an existing drop-down we own, this is a request to hide the drop-down.
+            if (Blockly.DropDownDiv.hideIfOwner(this)) {
+                return;
+            }
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            // Populate the drop-down with the icons for this field.
+            var dropdownDiv = Blockly.DropDownDiv.getContentDiv();
+            var contentDiv = document.createElement('div');
+            // Accessibility properties
+            contentDiv.setAttribute('role', 'menu');
+            contentDiv.setAttribute('aria-haspopup', 'true');
+            var options = this.getOptions();
+            if (this.shouldSort_)
+                options.sort();
+            for (var i = 0; i < options.length; i++) {
+                var content = options[i][0]; // Human-readable text or image.
+                var value = options[i][1]; // Language-neutral value.
+                // Icons with the type property placeholder take up space but don't have any functionality
+                // Use for special-case layouts
+                if (content.type == 'placeholder') {
+                    var placeholder = document.createElement('span');
+                    placeholder.setAttribute('class', 'blocklyDropDownPlaceholder');
+                    placeholder.style.width = content.width + 'px';
+                    placeholder.style.height = content.height + 'px';
+                    contentDiv.appendChild(placeholder);
+                    continue;
+                }
+                var button = document.createElement('button');
+                button.setAttribute('id', ':' + i); // For aria-activedescendant
+                button.setAttribute('role', 'menuitem');
+                button.setAttribute('class', 'blocklyDropDownButton');
+                button.title = content.alt;
+                if (this.columns_) {
+                    button.style.width = ((this.width_ / this.columns_) - 8) + 'px';
+                    //button.style.height = ((this.width_ / this.columns_) - 8) + 'px';
+                }
+                else {
+                    button.style.width = content.width + 'px';
+                    button.style.height = content.height + 'px';
+                }
+                var backgroundColor = this.sourceBlock_.getColour();
+                if (value == this.getValue()) {
+                    // This icon is selected, show it in a different colour
+                    backgroundColor = this.sourceBlock_.getColourTertiary();
+                    button.setAttribute('aria-selected', 'true');
+                }
+                button.style.backgroundColor = backgroundColor;
+                button.style.borderColor = this.sourceBlock_.getColourTertiary();
+                Blockly.bindEvent_(button, 'click', this, this.buttonClick_);
+                Blockly.bindEvent_(button, 'mouseover', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
+                    contentDiv.setAttribute('aria-activedescendant', this.id);
+                });
+                Blockly.bindEvent_(button, 'mouseout', button, function () {
+                    this.setAttribute('class', 'blocklyDropDownButton');
+                    contentDiv.removeAttribute('aria-activedescendant');
+                });
+                var buttonImg = document.createElement('img');
+                buttonImg.src = content.src;
+                //buttonImg.alt = icon.alt;
+                // Upon click/touch, we will be able to get the clicked element as e.target
+                // Store a data attribute on all possible click targets so we can match it to the icon.
+                button.setAttribute('data-value', value);
+                buttonImg.setAttribute('data-value', value);
+                button.appendChild(buttonImg);
+                if (this.addLabel_) {
+                    var buttonText = this.createTextNode_(content.alt);
+                    buttonText.setAttribute('data-value', value);
+                    button.appendChild(buttonText);
+                }
+                contentDiv.appendChild(button);
+            }
+            contentDiv.style.width = this.width_ + 'px';
+            dropdownDiv.appendChild(contentDiv);
+            Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
+            // Calculate positioning based on the field position.
+            var scale = this.sourceBlock_.workspace.scale;
+            var bBox = { width: this.size_.width, height: this.size_.height };
+            bBox.width *= scale;
+            bBox.height *= scale;
+            var position = this.fieldGroup_.getBoundingClientRect();
+            var primaryX = position.left + bBox.width / 2;
+            var primaryY = position.top + bBox.height;
+            var secondaryX = primaryX;
+            var secondaryY = position.top;
+            // Set bounds to workspace; show the drop-down.
+            Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
+            Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
+            // Update colour to look selected.
+            if (this.sourceBlock_.isShadow()) {
+                this.savedPrimary_ = this.sourceBlock_.getColour();
+                this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(), this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+            }
+            else if (this.box_) {
+                this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+            }
+        };
+        FieldImages.prototype.createTextNode_ = function (text) {
+            var textSpan = document.createElement('span');
+            textSpan.setAttribute('class', 'blocklyDropdownTextLabel');
+            textSpan.textContent = text;
+            return textSpan;
+        };
+        return FieldImages;
+    }(pxtblockly.FieldImageDropdown));
+    pxtblockly.FieldImages = FieldImages;
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldKind = /** @class */ (function (_super) {
+        __extends(FieldKind, _super);
+        function FieldKind(opts) {
+            var _this = _super.call(this, createMenuGenerator(opts)) || this;
+            _this.opts = opts;
+            return _this;
+        }
+        FieldKind.prototype.init = function () {
+            _super.prototype.init.call(this);
+            this.initVariables();
+        };
+        FieldKind.prototype.onItemSelected = function (menu, menuItem) {
+            var _this = this;
+            var value = menuItem.getValue();
+            if (value === "CREATE") {
+                promptAndCreateKind(this.sourceBlock_.workspace, this.opts, lf("New {0}:", this.opts.memberName), function (newName) { return newName && _this.setValue(newName); });
+            }
+            else {
+                _super.prototype.onItemSelected.call(this, menu, menuItem);
+            }
+        };
+        FieldKind.prototype.initVariables = function () {
+            var _this = this;
+            if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+                if (this.sourceBlock_.isInFlyout) {
+                    // Can't create variables from within the flyout, so we just have to fake it
+                    // by setting the text instead of the value
+                    this.setText(this.opts.initialMembers[0]);
+                }
+                else {
+                    var ws_1 = this.sourceBlock_.workspace;
+                    var existing_1 = getExistingKindMembers(ws_1, this.opts.name);
+                    this.opts.initialMembers.forEach(function (memberName) {
+                        if (existing_1.indexOf(memberName) === -1) {
+                            createVariableForKind(ws_1, _this.opts, memberName);
+                        }
+                    });
+                    if (this.getValue() === "CREATE") {
+                        if (this.opts.initialMembers.length) {
+                            this.setValue(this.opts.initialMembers[0]);
+                        }
+                    }
+                }
+            }
+        };
+        return FieldKind;
+    }(Blockly.FieldDropdown));
+    pxtblockly.FieldKind = FieldKind;
+    function createMenuGenerator(opts) {
+        return function () {
+            var res = [];
+            var that = this;
+            if (that.sourceBlock_ && that.sourceBlock_.workspace) {
+                var options = that.sourceBlock_.workspace.getVariablesOfType(kindType(opts.name));
+                options.forEach(function (model) {
+                    res.push([model.name, model.name]);
+                });
+            }
+            res.push([lf("Add a new {0}...", opts.memberName), "CREATE"]);
+            return res;
+        };
+    }
+    function promptAndCreateKind(ws, opts, message, cb) {
+        Blockly.prompt(message, opts.promptHint, function (response) {
+            if (response) {
+                var nameIsValid = false;
+                if (pxtc.isIdentifierStart(response.charCodeAt(0), 2)) {
+                    nameIsValid = true;
+                    for (var i = 1; i < response.length; i++) {
+                        if (!pxtc.isIdentifierPart(response.charCodeAt(i), 2)) {
+                            nameIsValid = false;
+                        }
+                    }
+                }
+                if (!nameIsValid) {
+                    Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."), function () { return promptAndCreateKind(ws, opts, message, cb); });
+                    return;
+                }
+                var existing = getExistingKindMembers(ws, opts.name);
+                for (var i = 0; i < existing.length; i++) {
+                    var name_6 = existing[i];
+                    if (name_6 === response) {
+                        Blockly.alert(lf("A {0} named '{1}' already exists.", opts.memberName, response), function () { return promptAndCreateKind(ws, opts, message, cb); });
+                        return;
+                    }
+                }
+                if (response === opts.createFunctionName) {
+                    Blockly.alert(lf("'{0}' is a reserved name.", opts.createFunctionName), function () { return promptAndCreateKind(ws, opts, message, cb); });
+                }
+                cb(createVariableForKind(ws, opts, response));
+            }
+        });
+    }
+    function getExistingKindMembers(ws, kindName) {
+        var existing = ws.getVariablesOfType(kindType(kindName));
+        if (existing && existing.length) {
+            return existing.map(function (m) { return m.name; });
+        }
+        else {
+            return [];
+        }
+    }
+    function createVariableForKind(ws, opts, newName) {
+        Blockly.Variables.getOrCreateVariablePackage(ws, null, newName, kindType(opts.name));
+        return newName;
+    }
+    function kindType(name) {
+        return "KIND_" + name;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtsim.d.ts"/>
+var rowRegex = /^.*[\.#].*$/;
+var LabelMode;
+(function (LabelMode) {
+    LabelMode[LabelMode["None"] = 0] = "None";
+    LabelMode[LabelMode["Number"] = 1] = "Number";
+    LabelMode[LabelMode["Letter"] = 2] = "Letter";
+})(LabelMode || (LabelMode = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldMatrix = /** @class */ (function (_super) {
+        __extends(FieldMatrix, _super);
+        function FieldMatrix(text, params, validator) {
+            var _this = _super.call(this, text, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.SERIALIZABLE = true;
+            _this.onColor = "#FFFFFF";
+            // The number of columns
+            _this.matrixWidth = 5;
+            // The number of rows
+            _this.matrixHeight = 5;
+            _this.yAxisLabel = LabelMode.None;
+            _this.xAxisLabel = LabelMode.None;
+            _this.cellState = [];
+            _this.cells = [];
+            _this.dontHandleMouseEvent_ = function (ev) {
+                ev.stopPropagation();
+                ev.preventDefault();
+            };
+            _this.clearLedDragHandler = function (ev) {
+                var svgRoot = _this.sourceBlock_.getSvgRoot();
+                pxsim.pointerEvents.down.forEach(function (evid) { return svgRoot.removeEventListener(evid, _this.dontHandleMouseEvent_); });
+                svgRoot.removeEventListener(pxsim.pointerEvents.move, _this.dontHandleMouseEvent_);
+                document.removeEventListener(pxsim.pointerEvents.up, _this.clearLedDragHandler);
+                document.removeEventListener(pxsim.pointerEvents.leave, _this.clearLedDragHandler);
+                Blockly.Touch.clearTouchIdentifier();
+                _this.elt.removeEventListener(pxsim.pointerEvents.move, _this.handleRootMouseMoveListener);
+                ev.stopPropagation();
+                ev.preventDefault();
+            };
+            _this.toggleRect = function (x, y) {
+                _this.cellState[x][y] = _this.currentDragState_;
+                _this.updateValue();
+            };
+            _this.handleRootMouseMoveListener = function (ev) {
+                var clientX;
+                var clientY;
+                if (ev.changedTouches && ev.changedTouches.length == 1) {
+                    // Handle touch events
+                    clientX = ev.changedTouches[0].clientX;
+                    clientY = ev.changedTouches[0].clientY;
+                }
+                else {
+                    // All other events (pointer + mouse)
+                    clientX = ev.clientX;
+                    clientY = ev.clientY;
+                }
+                var target = document.elementFromPoint(clientX, clientY);
+                if (!target)
+                    return;
+                var x = target.getAttribute('data-x');
+                var y = target.getAttribute('data-y');
+                if (x != null && y != null) {
+                    _this.toggleRect(parseInt(x), parseInt(y));
+                }
+            };
+            _this.params = params;
+            if (_this.params.rows !== undefined) {
+                var val = parseInt(_this.params.rows);
+                if (!isNaN(val)) {
+                    _this.matrixHeight = val;
+                }
+            }
+            if (_this.params.columns !== undefined) {
+                var val = parseInt(_this.params.columns);
+                if (!isNaN(val)) {
+                    _this.matrixWidth = val;
+                }
+            }
+            if (_this.params.onColor !== undefined) {
+                _this.onColor = _this.params.onColor;
+            }
+            if (_this.params.offColor !== undefined) {
+                _this.offColor = _this.params.offColor;
+            }
+            return _this;
+        }
+        /**
+         * Show the inline free-text editor on top of the text.
+         * @private
+         */
+        FieldMatrix.prototype.showEditor_ = function () {
+            // Intentionally left empty
+        };
+        FieldMatrix.prototype.initMatrix = function () {
+            if (!this.sourceBlock_.isInsertionMarker()) {
+                this.elt = pxsim.svg.parseString("<svg xmlns=\"http://www.w3.org/2000/svg\" id=\"field-matrix\" />");
+                // Initialize the matrix that holds the state
+                for (var i = 0; i < this.matrixWidth; i++) {
+                    this.cellState.push([]);
+                    this.cells.push([]);
+                    for (var j = 0; j < this.matrixHeight; j++) {
+                        this.cellState[i].push(false);
+                    }
+                }
+                this.restoreStateFromString();
+                // Create the cells of the matrix that is displayed
+                for (var i = 0; i < this.matrixWidth; i++) {
+                    for (var j = 0; j < this.matrixHeight; j++) {
+                        this.createCell(i, j);
+                    }
+                }
+                this.updateValue();
+                if (this.xAxisLabel !== LabelMode.None) {
+                    var y = this.matrixHeight * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN;
+                    var xAxis = pxsim.svg.child(this.elt, "g", { transform: "translate(" + 0 + " " + y + ")" });
+                    for (var i = 0; i < this.matrixWidth; i++) {
+                        var x = this.getYAxisWidth() + i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_HORIZONTAL_MARGIN / 2;
+                        var lbl = pxsim.svg.child(xAxis, "text", { x: x, class: "blocklyText" });
+                        lbl.textContent = this.getLabel(i, this.xAxisLabel);
+                    }
+                }
+                if (this.yAxisLabel !== LabelMode.None) {
+                    var yAxis = pxsim.svg.child(this.elt, "g", {});
+                    for (var i = 0; i < this.matrixHeight; i++) {
+                        var y = i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_VERTICAL_MARGIN * 2;
+                        var lbl = pxsim.svg.child(yAxis, "text", { x: 0, y: y, class: "blocklyText" });
+                        lbl.textContent = this.getLabel(i, this.yAxisLabel);
+                    }
+                }
+                this.fieldGroup_.appendChild(this.elt);
+            }
+        };
+        FieldMatrix.prototype.getLabel = function (index, mode) {
+            switch (mode) {
+                case LabelMode.Letter:
+                    return String.fromCharCode(index + /*char code for A*/ 65);
+                default:
+                    return (index + 1).toString();
+            }
+        };
+        FieldMatrix.prototype.createCell = function (x, y) {
+            var _this = this;
+            var tx = x * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_HORIZONTAL_MARGIN + this.getYAxisWidth();
+            var ty = y * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN;
+            var cellG = pxsim.svg.child(this.elt, "g", { transform: "translate(" + tx + " " + ty + ")" });
+            var cellRect = pxsim.svg.child(cellG, "rect", {
+                'class': "blocklyLed" + (this.cellState[x][y] ? 'On' : 'Off'),
+                'cursor': 'pointer',
+                width: FieldMatrix.CELL_WIDTH, height: FieldMatrix.CELL_WIDTH,
+                fill: this.getColor(x, y),
+                'data-x': x,
+                'data-y': y,
+                rx: FieldMatrix.CELL_CORNER_RADIUS
+            });
+            this.cells[x][y] = cellRect;
+            if (this.sourceBlock_.workspace.isFlyout)
+                return;
+            pxsim.pointerEvents.down.forEach(function (evid) { return cellRect.addEventListener(evid, function (ev) {
+                var svgRoot = _this.sourceBlock_.getSvgRoot();
+                _this.currentDragState_ = !_this.cellState[x][y];
+                // select and hide chaff
+                Blockly.hideChaff();
+                _this.sourceBlock_.select();
+                _this.toggleRect(x, y);
+                pxsim.pointerEvents.down.forEach(function (evid) { return svgRoot.addEventListener(evid, _this.dontHandleMouseEvent_); });
+                svgRoot.addEventListener(pxsim.pointerEvents.move, _this.dontHandleMouseEvent_);
+                document.addEventListener(pxsim.pointerEvents.up, _this.clearLedDragHandler);
+                document.addEventListener(pxsim.pointerEvents.leave, _this.clearLedDragHandler);
+                // Begin listening on the canvas and toggle any matches
+                _this.elt.addEventListener(pxsim.pointerEvents.move, _this.handleRootMouseMoveListener);
+                ev.stopPropagation();
+                ev.preventDefault();
+            }, false); });
+        };
+        FieldMatrix.prototype.getColor = function (x, y) {
+            return this.cellState[x][y] ? this.onColor : (this.offColor || FieldMatrix.DEFAULT_OFF_COLOR);
+        };
+        FieldMatrix.prototype.getOpacity = function (x, y) {
+            return this.cellState[x][y] ? '1.0' : '0.2';
+        };
+        FieldMatrix.prototype.updateCell = function (x, y) {
+            var cellRect = this.cells[x][y];
+            cellRect.setAttribute("fill", this.getColor(x, y));
+            cellRect.setAttribute("fill-opacity", this.getOpacity(x, y));
+            cellRect.setAttribute('class', "blocklyLed" + (this.cellState[x][y] ? 'On' : 'Off'));
+        };
+        FieldMatrix.prototype.setValue = function (newValue, restoreState) {
+            if (restoreState === void 0) { restoreState = true; }
+            _super.prototype.setValue.call(this, String(newValue));
+            if (this.elt) {
+                if (restoreState)
+                    this.restoreStateFromString();
+                for (var x = 0; x < this.matrixWidth; x++) {
+                    for (var y = 0; y < this.matrixHeight; y++) {
+                        this.updateCell(x, y);
+                    }
+                }
+            }
+        };
+        FieldMatrix.prototype.render_ = function () {
+            if (!this.visible_) {
+                this.size_.width = 0;
+                return;
+            }
+            if (!this.elt) {
+                this.initMatrix();
+            }
+            // The height and width must be set by the render function
+            this.size_.height = Number(this.matrixHeight) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN + this.getXAxisHeight();
+            this.size_.width = Number(this.matrixWidth) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + this.getYAxisWidth();
+        };
+        // The return value of this function is inserted in the code
+        FieldMatrix.prototype.getValue = function () {
+            // getText() returns the value that is set by calls to setValue()
+            var text = removeQuotes(this.getText());
+            return "`\n" + FieldMatrix.TAB + text + "\n" + FieldMatrix.TAB + "`";
+        };
+        // Restores the block state from the text value of the field
+        FieldMatrix.prototype.restoreStateFromString = function () {
+            var r = this.getText();
+            if (r) {
+                var rows = r.split("\n").filter(function (r) { return rowRegex.test(r); });
+                for (var y = 0; y < rows.length && y < this.matrixHeight; y++) {
+                    var x = 0;
+                    var row = rows[y];
+                    for (var j = 0; j < row.length && x < this.matrixWidth; j++) {
+                        if (isNegativeCharacter(row[j])) {
+                            this.cellState[x][y] = false;
+                            x++;
+                        }
+                        else if (isPositiveCharacter(row[j])) {
+                            this.cellState[x][y] = true;
+                            x++;
+                        }
+                    }
+                }
+            }
+        };
+        // Composes the state into a string an updates the field's state
+        FieldMatrix.prototype.updateValue = function () {
+            var res = "";
+            for (var y = 0; y < this.matrixHeight; y++) {
+                for (var x = 0; x < this.matrixWidth; x++) {
+                    res += (this.cellState[x][y] ? "#" : ".") + " ";
+                }
+                res += "\n" + FieldMatrix.TAB;
+            }
+            // Blockly stores the state of the field as a string
+            this.setValue(res, false);
+        };
+        FieldMatrix.prototype.getYAxisWidth = function () {
+            return this.yAxisLabel === LabelMode.None ? 0 : FieldMatrix.Y_AXIS_WIDTH;
+        };
+        FieldMatrix.prototype.getXAxisHeight = function () {
+            return this.xAxisLabel === LabelMode.None ? 0 : FieldMatrix.X_AXIS_HEIGHT;
+        };
+        FieldMatrix.CELL_WIDTH = 25;
+        FieldMatrix.CELL_HORIZONTAL_MARGIN = 7;
+        FieldMatrix.CELL_VERTICAL_MARGIN = 5;
+        FieldMatrix.CELL_CORNER_RADIUS = 5;
+        FieldMatrix.BOTTOM_MARGIN = 9;
+        FieldMatrix.Y_AXIS_WIDTH = 9;
+        FieldMatrix.X_AXIS_HEIGHT = 10;
+        FieldMatrix.TAB = "        ";
+        FieldMatrix.DEFAULT_OFF_COLOR = "#000000";
+        return FieldMatrix;
+    }(Blockly.Field));
+    pxtblockly.FieldMatrix = FieldMatrix;
+    function isPositiveCharacter(c) {
+        return c === "#" || c === "*" || c === "1";
+    }
+    function isNegativeCharacter(c) {
+        return c === "." || c === "_" || c === "0";
+    }
+    var allQuotes = ["'", '"', "`"];
+    function removeQuotes(str) {
+        str = str.trim();
+        var start = str.charAt(0);
+        if (start === str.charAt(str.length - 1) && allQuotes.indexOf(start) !== -1) {
+            return str.substr(1, str.length - 2).trim();
+        }
+        return str;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    pxtblockly.HEADER_HEIGHT = 50;
+    pxtblockly.TOTAL_WIDTH = 300;
+    var FieldCustomMelody = /** @class */ (function (_super) {
+        __extends(FieldCustomMelody, _super);
+        function FieldCustomMelody(value, params, validator) {
+            var _this = _super.call(this, value, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.SERIALIZABLE = true;
+            _this.soundingKeys = 0;
+            _this.numRow = 8;
+            _this.numCol = 8;
+            _this.tempo = 120;
+            _this.isPlaying = false;
+            _this.timeouts = []; // keep track of timeouts
+            _this.params = params;
+            _this.createMelodyIfDoesntExist();
+            return _this;
+        }
+        FieldCustomMelody.prototype.init = function () {
+            _super.prototype.init.call(this);
+            this.onInit();
+        };
+        FieldCustomMelody.prototype.showEditor_ = function () {
+            var _this = this;
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            Blockly.DropDownDiv.setColour(this.getDropdownBackgroundColour(), this.getDropdownBorderColour());
+            var contentDiv = Blockly.DropDownDiv.getContentDiv();
+            pxt.BrowserUtils.addClass(contentDiv, "melody-content-div");
+            pxt.BrowserUtils.addClass(contentDiv.parentElement, "melody-editor-dropdown");
+            this.gallery = new pxtmelody.MelodyGallery();
+            this.renderEditor(contentDiv);
+            this.prevString = this.getValue();
+            // The webapp listens to this event and stops the simulator so that you don't get the melody
+            // playing twice (once in the editor and once when the code runs in the sim)
+            Blockly.Events.fire(new Blockly.Events.Ui(this.sourceBlock_, "melody-editor", false, true));
+            Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_, function () {
+                _this.onEditorClose();
+                // revert all style attributes for dropdown div
+                pxt.BrowserUtils.removeClass(contentDiv, "melody-content-div");
+                pxt.BrowserUtils.removeClass(contentDiv.parentElement, "melody-editor-dropdown");
+                Blockly.Events.fire(new Blockly.Events.Ui(_this.sourceBlock_, "melody-editor", true, false));
+            });
+        };
+        FieldCustomMelody.prototype.getValue = function () {
+            this.stringRep = this.getTypeScriptValue();
+            return this.stringRep;
+        };
+        FieldCustomMelody.prototype.doValueUpdate_ = function (newValue) {
+            if (newValue == null || newValue == "" || newValue == "\"\"" || (this.stringRep && this.stringRep === newValue)) {
+                return;
+            }
+            this.stringRep = newValue;
+            this.parseTypeScriptValue(newValue);
+            _super.prototype.doValueUpdate_.call(this, this.getValue());
+        };
+        // This will be run when the field is created (i.e. when it appears on the workspace)
+        FieldCustomMelody.prototype.onInit = function () {
+            this.render_();
+            this.createMelodyIfDoesntExist();
+            if (this.invalidString) {
+                Blockly.FieldLabel.prototype.setText.call(this, pxt.Util.lf("Invalid Input"));
+            }
+            else {
+                if (!this.fieldGroup_) {
+                    // Build the DOM.
+                    this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+                }
+                if (!this.visible_) {
+                    this.fieldGroup_.style.display = 'none';
+                }
+                this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+                this.updateFieldLabel();
+            }
+        };
+        FieldCustomMelody.prototype.render_ = function () {
+            _super.prototype.render_.call(this);
+            if (!this.invalidString) {
+                this.size_.width = FieldCustomMelody.MUSIC_ICON_WIDTH + (FieldCustomMelody.COLOR_BLOCK_WIDTH + FieldCustomMelody.COLOR_BLOCK_SPACING) * this.numCol;
+            }
+            this.sourceBlock_.setColour("#ffffff");
+        };
+        // Render the editor that will appear in the dropdown div when the user clicks on the field
+        FieldCustomMelody.prototype.renderEditor = function (div) {
+            var _this = this;
+            var color = this.getDropdownBackgroundColour();
+            var secondaryColor = this.getDropdownBorderColour();
+            this.topDiv = document.createElement("div");
+            pxt.BrowserUtils.addClass(this.topDiv, "melody-top-bar-div");
+            // Same toggle set up as sprite editor
+            this.root = new svg.SVG(this.topDiv).id("melody-editor-header-controls");
+            this.toggle = new Toggle(this.root, { leftText: lf("Editor"), rightText: lf("Gallery"), baseColor: color });
+            this.toggle.onStateChange(function (isLeft) {
+                if (isLeft) {
+                    _this.hideGallery();
+                }
+                else {
+                    _this.showGallery();
+                }
+            });
+            this.toggle.layout();
+            this.toggle.translate((pxtblockly.TOTAL_WIDTH - this.toggle.width()) / 2, 0);
+            div.appendChild(this.topDiv);
+            div.appendChild(this.gallery.getElement());
+            this.editorDiv = document.createElement("div");
+            pxt.BrowserUtils.addClass(this.editorDiv, "melody-editor-div");
+            this.editorDiv.style.setProperty("background-color", secondaryColor);
+            this.gridDiv = this.createGridDisplay();
+            this.editorDiv.appendChild(this.gridDiv);
+            this.bottomDiv = document.createElement("div");
+            pxt.BrowserUtils.addClass(this.bottomDiv, "melody-bottom-bar-div");
+            this.doneButton = document.createElement("button");
+            pxt.BrowserUtils.addClass(this.doneButton, "melody-confirm-button");
+            this.doneButton.innerText = lf("Done");
+            this.doneButton.addEventListener("click", function () { return _this.onDone(); });
+            this.doneButton.style.setProperty("background-color", color);
+            this.playButton = document.createElement("button");
+            this.playButton.id = "melody-play-button";
+            this.playButton.addEventListener("click", function () { return _this.togglePlay(); });
+            this.playIcon = document.createElement("i");
+            this.playIcon.id = "melody-play-icon";
+            pxt.BrowserUtils.addClass(this.playIcon, "play icon");
+            this.playButton.appendChild(this.playIcon);
+            this.tempoInput = document.createElement("input");
+            pxt.BrowserUtils.addClass(this.tempoInput, "ui input");
+            this.tempoInput.type = "number";
+            this.tempoInput.title = lf("tempo");
+            this.tempoInput.id = "melody-tempo-input";
+            this.tempoInput.addEventListener("input", function () { return _this.setTempo(+_this.tempoInput.value); });
+            this.syncTempoField(true);
+            this.bottomDiv.appendChild(this.tempoInput);
+            this.bottomDiv.appendChild(this.playButton);
+            this.bottomDiv.appendChild(this.doneButton);
+            this.editorDiv.appendChild(this.bottomDiv);
+            div.appendChild(this.editorDiv);
+        };
+        // Runs when the editor is closed by clicking on the Blockly workspace
+        FieldCustomMelody.prototype.onEditorClose = function () {
+            this.stopMelody();
+            if (this.gallery) {
+                this.gallery.stopMelody();
+            }
+            this.clearDomReferences();
+            if (this.sourceBlock_ && Blockly.Events.isEnabled() && this.getValue() !== this.prevString) {
+                Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.prevString, this.getValue()));
+            }
+            this.prevString = undefined;
+        };
+        // when click done
+        FieldCustomMelody.prototype.onDone = function () {
+            Blockly.DropDownDiv.hideIfOwner(this);
+            this.onEditorClose();
+        };
+        FieldCustomMelody.prototype.clearDomReferences = function () {
+            this.topDiv = null;
+            this.editorDiv = null;
+            this.gridDiv = null;
+            this.bottomDiv = null;
+            this.doneButton = null;
+            this.playButton = null;
+            this.playIcon = null;
+            this.tempoInput = null;
+            this.elt = null;
+            this.cells = null;
+            this.toggle = null;
+            this.root = null;
+            this.gallery.clearDomReferences();
+        };
+        // This is the string that will be inserted into the user's TypeScript code
+        FieldCustomMelody.prototype.getTypeScriptValue = function () {
+            if (this.invalidString) {
+                return this.invalidString;
+            }
+            if (this.melody) {
+                return "\"" + this.melody.getStringRepresentation() + "\"";
+            }
+            return "";
+        };
+        // This should parse the string returned by getTypeScriptValue() and restore the state based on that
+        FieldCustomMelody.prototype.parseTypeScriptValue = function (value) {
+            var _this = this;
+            var oldValue = value;
+            try {
+                value = value.slice(1, -1); // remove the boundary quotes
+                value = value.trim(); // remove boundary white space
+                this.createMelodyIfDoesntExist();
+                var notes = value.split(" ");
+                notes.forEach(function (n) {
+                    if (!_this.isValidNote(n))
+                        throw new Error(lf("Invalid note '{0}'. Notes can be C D E F G A B C5", n));
+                });
+                this.melody.resetMelody();
+                for (var j = 0; j < notes.length; j++) {
+                    if (notes[j] != "-") {
+                        var rowPos = pxtmelody.noteToRow(notes[j]);
+                        this.melody.updateMelody(rowPos, j);
+                    }
+                }
+                this.updateFieldLabel();
+            }
+            catch (e) {
+                pxt.log(e);
+                this.invalidString = oldValue;
+            }
+        };
+        FieldCustomMelody.prototype.isValidNote = function (note) {
+            switch (note) {
+                case "C":
+                case "D":
+                case "E":
+                case "F":
+                case "G":
+                case "A":
+                case "B":
+                case "C5":
+                case "-": return true;
+            }
+            return false;
+        };
+        // The width of the preview on the block itself
+        FieldCustomMelody.prototype.getPreviewWidth = function () {
+            this.updateSize_();
+            return this.size_.width;
+        };
+        // The height of the preview on the block itself
+        FieldCustomMelody.prototype.getPreviewHeight = function () {
+            return Blockly.BlockSvg.FIELD_HEIGHT;
+        };
+        FieldCustomMelody.prototype.getDropdownBackgroundColour = function () {
+            return this.sourceBlock_.parentBlock_.getColour();
+        };
+        FieldCustomMelody.prototype.getDropdownBorderColour = function () {
+            return this.sourceBlock_.parentBlock_.getColourTertiary();
+        };
+        FieldCustomMelody.prototype.updateFieldLabel = function () {
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            var musicIcon = mkText("\uf001")
+                .appendClass("melody-editor-field-icon")
+                .at(6, 15);
+            this.fieldGroup_.appendChild(musicIcon.el);
+            var notes = this.melody.getStringRepresentation().trim().split(" ");
+            for (var i = 0; i < notes.length; i++) {
+                var className = pxtmelody.getColorClass(pxtmelody.noteToRow(notes[i]));
+                var cb = new svg.Rect()
+                    .at((FieldCustomMelody.COLOR_BLOCK_WIDTH + FieldCustomMelody.COLOR_BLOCK_SPACING) * i + FieldCustomMelody.COLOR_BLOCK_X, FieldCustomMelody.COLOR_BLOCK_Y)
+                    .size(FieldCustomMelody.COLOR_BLOCK_WIDTH, FieldCustomMelody.COLOR_BLOCK_HEIGHT)
+                    .stroke("#898989", 1)
+                    .corners(3, 2);
+                pxt.BrowserUtils.addClass(cb.el, className);
+                this.fieldGroup_.appendChild(cb.el);
+            }
+        };
+        FieldCustomMelody.prototype.setTempo = function (tempo) {
+            // reset text input if input is invalid
+            if ((isNaN(tempo) || tempo <= 0) && this.tempoInput) {
+                this.tempoInput.value = this.tempo + "";
+                return;
+            }
+            // update tempo and display to reflect new tempo
+            if (this.tempo != tempo) {
+                this.tempo = tempo;
+                if (this.melody) {
+                    this.melody.setTempo(this.tempo);
+                }
+                if (this.tempoInput) {
+                    this.tempoInput.value = this.tempo + "";
+                }
+                this.syncTempoField(false);
+            }
+        };
+        // sync value from tempo field on block with tempo in field editor
+        FieldCustomMelody.prototype.syncTempoField = function (blockToEditor) {
+            var s = this.sourceBlock_;
+            if (s.parentBlock_) {
+                var p = s.parentBlock_;
+                for (var _i = 0, _a = p.inputList; _i < _a.length; _i++) {
+                    var input = _a[_i];
+                    if (input.name === "tempo") {
+                        var tempoBlock = input.connection.targetBlock();
+                        if (tempoBlock) {
+                            if (blockToEditor)
+                                if (tempoBlock.getFieldValue("SLIDER")) {
+                                    this.tempoInput.value = tempoBlock.getFieldValue("SLIDER");
+                                    this.tempo = +this.tempoInput.value;
+                                }
+                                else {
+                                    this.tempoInput.value = this.tempo + "";
+                                }
+                            else {
+                                if (tempoBlock.type === "math_number_minmax") {
+                                    tempoBlock.setFieldValue(this.tempoInput.value, "SLIDER");
+                                }
+                                else {
+                                    tempoBlock.setFieldValue(this.tempoInput.value, "NUM");
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        };
+        // ms to hold note
+        FieldCustomMelody.prototype.getDuration = function () {
+            return 60000 / this.tempo;
+        };
+        FieldCustomMelody.prototype.createMelodyIfDoesntExist = function () {
+            if (!this.melody) {
+                this.melody = new pxtmelody.MelodyArray();
+                return true;
+            }
+            return false;
+        };
+        FieldCustomMelody.prototype.onNoteSelect = function (row, col) {
+            // update melody array
+            this.invalidString = null;
+            this.melody.updateMelody(row, col);
+            if (this.melody.getValue(row, col) && !this.isPlaying) {
+                this.playNote(row, col);
+            }
+            this.updateGrid();
+            this.updateFieldLabel();
+        };
+        FieldCustomMelody.prototype.updateGrid = function () {
+            for (var row = 0; row < this.numRow; row++) {
+                var rowClass = pxtmelody.getColorClass(row);
+                for (var col = 0; col < this.numCol; col++) {
+                    var cell = this.cells[row][col];
+                    if (this.melody.getValue(row, col)) {
+                        pxt.BrowserUtils.removeClass(cell, "melody-default");
+                        pxt.BrowserUtils.addClass(cell, rowClass);
+                    }
+                    else {
+                        pxt.BrowserUtils.addClass(cell, "melody-default");
+                        pxt.BrowserUtils.removeClass(cell, rowClass);
+                    }
+                }
+            }
+        };
+        FieldCustomMelody.prototype.playNote = function (rowNumber, colNumber) {
+            var _this = this;
+            var count = ++this.soundingKeys;
+            if (this.isPlaying) {
+                this.timeouts.push(setTimeout(function () {
+                    _this.playToneCore(rowNumber);
+                }, colNumber * this.getDuration()));
+                this.timeouts.push(setTimeout(function () {
+                    pxt.AudioContextManager.stop();
+                }, (colNumber + 1) * this.getDuration()));
+            }
+            else {
+                this.playToneCore(rowNumber);
+                this.timeouts.push(setTimeout(function () {
+                    if (_this.soundingKeys == count)
+                        pxt.AudioContextManager.stop();
+                }, this.getDuration()));
+            }
+        };
+        FieldCustomMelody.prototype.queueToneForColumn = function (column, delay, duration) {
+            var _this = this;
+            var start = setTimeout(function () {
+                ++_this.soundingKeys;
+                pxt.AudioContextManager.stop();
+                for (var i = 0; i < _this.numRow; i++) {
+                    if (_this.melody.getValue(i, column)) {
+                        _this.playToneCore(i);
+                    }
+                }
+                _this.highlightColumn(column, true);
+                _this.timeouts = _this.timeouts.filter(function (t) { return t !== start; });
+            }, delay);
+            var end = setTimeout(function () {
+                // pxt.AudioContextManager.stop();
+                _this.timeouts = _this.timeouts.filter(function (t) { return t !== end; });
+                _this.highlightColumn(column, false);
+            }, delay + duration);
+            this.timeouts.push(start);
+            this.timeouts.push(end);
+        };
+        FieldCustomMelody.prototype.playToneCore = function (row) {
+            var tone = 0;
+            switch (row) {
+                case 0:
+                    tone = 523;
+                    break; // Tenor C
+                case 1:
+                    tone = 494;
+                    break; // Middle B
+                case 2:
+                    tone = 440;
+                    break; // Middle A
+                case 3:
+                    tone = 392;
+                    break; // Middle G
+                case 4:
+                    tone = 349;
+                    break; // Middle F
+                case 5:
+                    tone = 330;
+                    break; // Middle E
+                case 6:
+                    tone = 294;
+                    break; // Middle D
+                case 7:
+                    tone = 262;
+                    break; // Middle C
+            }
+            pxt.AudioContextManager.tone(tone);
+        };
+        FieldCustomMelody.prototype.highlightColumn = function (col, on) {
+            var cells = this.cells.map(function (row) { return row[col]; });
+            cells.forEach(function (cell) {
+                if (on)
+                    pxt.BrowserUtils.addClass(cell, "playing");
+                else
+                    pxt.BrowserUtils.removeClass(cell, "playing");
+            });
+        };
+        FieldCustomMelody.prototype.createGridDisplay = function () {
+            FieldCustomMelody.VIEWBOX_WIDTH = (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_VERTICAL_MARGIN) * this.numCol + FieldCustomMelody.CELL_VERTICAL_MARGIN;
+            if (pxt.BrowserUtils.isEdge())
+                FieldCustomMelody.VIEWBOX_WIDTH += 37;
+            FieldCustomMelody.VIEWBOX_HEIGHT = (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_HORIZONTAL_MARGIN) * this.numRow + FieldCustomMelody.CELL_HORIZONTAL_MARGIN;
+            this.elt = pxsim.svg.parseString("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"melody-grid-div\" viewBox=\"0 0 " + FieldCustomMelody.VIEWBOX_WIDTH + " " + FieldCustomMelody.VIEWBOX_HEIGHT + "\"/>");
+            // Create the cells of the matrix that is displayed
+            this.cells = []; // initialize array that holds rect svg elements
+            for (var i = 0; i < this.numRow; i++) {
+                this.cells.push([]);
+            }
+            for (var i = 0; i < this.numRow; i++) {
+                for (var j = 0; j < this.numCol; j++) {
+                    this.createCell(i, j);
+                }
+            }
+            return this.elt;
+        };
+        FieldCustomMelody.prototype.createCell = function (x, y) {
+            var _this = this;
+            var tx = x * (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_HORIZONTAL_MARGIN) + FieldCustomMelody.CELL_HORIZONTAL_MARGIN;
+            var ty = y * (FieldCustomMelody.CELL_WIDTH + FieldCustomMelody.CELL_VERTICAL_MARGIN) + FieldCustomMelody.CELL_VERTICAL_MARGIN;
+            var cellG = pxsim.svg.child(this.elt, "g", { transform: "translate(" + ty + " " + tx + ")" });
+            var cellRect = pxsim.svg.child(cellG, "rect", {
+                'cursor': 'pointer',
+                'width': FieldCustomMelody.CELL_WIDTH,
+                'height': FieldCustomMelody.CELL_WIDTH,
+                'stroke': 'white',
+                'data-x': x,
+                'data-y': y,
+                'rx': FieldCustomMelody.CELL_CORNER_RADIUS
+            });
+            // add appropriate class so the cell has the correct fill color
+            if (this.melody.getValue(x, y))
+                pxt.BrowserUtils.addClass(cellRect, pxtmelody.getColorClass(x));
+            else
+                pxt.BrowserUtils.addClass(cellRect, "melody-default");
+            if (this.sourceBlock_.workspace.isFlyout)
+                return;
+            pxsim.pointerEvents.down.forEach(function (evid) { return cellRect.addEventListener(evid, function (ev) {
+                _this.onNoteSelect(x, y);
+                ev.stopPropagation();
+                ev.preventDefault();
+            }, false); });
+            this.cells[x][y] = cellRect;
+        };
+        FieldCustomMelody.prototype.togglePlay = function () {
+            if (!this.isPlaying) {
+                this.isPlaying = true;
+                this.playMelody();
+            }
+            else {
+                this.stopMelody();
+            }
+            this.updatePlayButton();
+        };
+        FieldCustomMelody.prototype.updatePlayButton = function () {
+            if (this.isPlaying) {
+                pxt.BrowserUtils.removeClass(this.playIcon, "play icon");
+                pxt.BrowserUtils.addClass(this.playIcon, "stop icon");
+            }
+            else {
+                pxt.BrowserUtils.removeClass(this.playIcon, "stop icon");
+                pxt.BrowserUtils.addClass(this.playIcon, "play icon");
+            }
+        };
+        FieldCustomMelody.prototype.playMelody = function () {
+            var _this = this;
+            if (this.isPlaying) {
+                for (var i = 0; i < this.numCol; i++) {
+                    this.queueToneForColumn(i, i * this.getDuration(), this.getDuration());
+                }
+                this.timeouts.push(setTimeout(// call the melody again after it finishes
+                function () { return _this.playMelody(); }, (this.numCol) * this.getDuration()));
+            }
+            else {
+                this.stopMelody();
+            }
+        };
+        FieldCustomMelody.prototype.stopMelody = function () {
+            if (this.isPlaying) {
+                while (this.timeouts.length)
+                    clearTimeout(this.timeouts.shift());
+                pxt.AudioContextManager.stop();
+                this.isPlaying = false;
+                this.cells.forEach(function (row) { return row.forEach(function (cell) { return pxt.BrowserUtils.removeClass(cell, "playing"); }); });
+            }
+        };
+        FieldCustomMelody.prototype.showGallery = function () {
+            var _this = this;
+            this.stopMelody();
+            this.updatePlayButton();
+            this.gallery.show(function (result) {
+                if (result) {
+                    _this.melody.parseNotes(result);
+                    _this.gallery.hide();
+                    _this.toggle.toggle();
+                    _this.updateFieldLabel();
+                    _this.updateGrid();
+                }
+            });
+        };
+        FieldCustomMelody.prototype.hideGallery = function () {
+            this.gallery.hide();
+        };
+        // grid elements
+        FieldCustomMelody.CELL_WIDTH = 25;
+        FieldCustomMelody.CELL_HORIZONTAL_MARGIN = 7;
+        FieldCustomMelody.CELL_VERTICAL_MARGIN = 5;
+        FieldCustomMelody.CELL_CORNER_RADIUS = 5;
+        // preview field elements
+        FieldCustomMelody.COLOR_BLOCK_WIDTH = 10;
+        FieldCustomMelody.COLOR_BLOCK_HEIGHT = 20;
+        FieldCustomMelody.COLOR_BLOCK_X = 20;
+        FieldCustomMelody.COLOR_BLOCK_Y = 5;
+        FieldCustomMelody.COLOR_BLOCK_SPACING = 2;
+        FieldCustomMelody.MUSIC_ICON_WIDTH = 20;
+        return FieldCustomMelody;
+    }(Blockly.Field));
+    pxtblockly.FieldCustomMelody = FieldCustomMelody;
+    var TOGGLE_WIDTH = 200;
+    var TOGGLE_HEIGHT = 40;
+    var TOGGLE_BORDER_WIDTH = 2;
+    var TOGGLE_CORNER_RADIUS = 4;
+    var BUTTON_CORNER_RADIUS = 2;
+    var BUTTON_BORDER_WIDTH = 1;
+    var BUTTON_BOTTOM_BORDER_WIDTH = 2;
+    var Toggle = /** @class */ (function () {
+        function Toggle(parent, props) {
+            this.props = defaultColors(props);
+            this.root = parent.group();
+            this.buildDom();
+            this.isLeft = true;
+        }
+        Toggle.prototype.buildDom = function () {
+            var _this = this;
+            // Our css minifier mangles animation names so they need to be injected manually
+            this.root.style().content("\n            .toggle-left {\n                transform: translateX(0px);\n                animation: mvleft 0.2s 0s ease;\n            }\n\n            .toggle-right {\n                transform: translateX(100px);\n                animation: mvright 0.2s 0s ease;\n            }\n\n            @keyframes mvright {\n                0% {\n                    transform: translateX(0px);\n                }\n                100% {\n                    transform: translateX(100px);\n                }\n            }\n\n            @keyframes mvleft {\n                0% {\n                    transform: translateX(100px);\n                }\n                100% {\n                    transform: translateX(0px);\n                }\n            }\n            ");
+            // The outer border has an inner-stroke so we need to clip out the outer part
+            // because SVG's don't support "inner borders"
+            var clip = this.root.def().create("clipPath", "sprite-editor-toggle-border")
+                .clipPathUnits(true);
+            clip.draw("rect")
+                .at(0, 0)
+                .corners(TOGGLE_CORNER_RADIUS / TOGGLE_WIDTH, TOGGLE_CORNER_RADIUS / TOGGLE_HEIGHT)
+                .size(1, 1);
+            // Draw the outer border
+            this.root.draw("rect")
+                .size(TOGGLE_WIDTH, TOGGLE_HEIGHT)
+                .fill(this.props.baseColor)
+                .stroke(this.props.borderColor, TOGGLE_BORDER_WIDTH * 2)
+                .corners(TOGGLE_CORNER_RADIUS, TOGGLE_CORNER_RADIUS)
+                .clipPath("url(#sprite-editor-toggle-border)");
+            // Draw the background
+            this.root.draw("rect")
+                .at(TOGGLE_BORDER_WIDTH, TOGGLE_BORDER_WIDTH)
+                .size(TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH * 2, TOGGLE_HEIGHT - TOGGLE_BORDER_WIDTH * 2)
+                .fill(this.props.backgroundColor)
+                .corners(TOGGLE_CORNER_RADIUS, TOGGLE_CORNER_RADIUS);
+            // Draw the switch
+            this.switch = this.root.draw("rect")
+                .at(TOGGLE_BORDER_WIDTH, TOGGLE_BORDER_WIDTH)
+                .size((TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH * 2) / 2, TOGGLE_HEIGHT - TOGGLE_BORDER_WIDTH * 2)
+                .fill(this.props.switchColor)
+                .corners(TOGGLE_CORNER_RADIUS, TOGGLE_CORNER_RADIUS);
+            // Draw the left option
+            this.leftElement = this.root.group();
+            this.leftText = mkText(this.props.leftText)
+                .appendClass("sprite-editor-text")
+                .fill(this.props.selectedTextColor);
+            this.leftElement.appendChild(this.leftText);
+            // Draw the right option
+            this.rightElement = this.root.group();
+            this.rightText = mkText(this.props.rightText)
+                .appendClass("sprite-editor-text")
+                .fill(this.props.unselectedTextColor);
+            this.rightElement.appendChild(this.rightText);
+            this.root.onClick(function () { return _this.toggle(); });
+        };
+        Toggle.prototype.toggle = function (quiet) {
+            if (quiet === void 0) { quiet = false; }
+            if (this.isLeft) {
+                this.switch.removeClass("toggle-left");
+                this.switch.appendClass("toggle-right");
+                this.leftText.fill(this.props.unselectedTextColor);
+                this.rightText.fill(this.props.selectedTextColor);
+            }
+            else {
+                this.switch.removeClass("toggle-right");
+                this.switch.appendClass("toggle-left");
+                this.leftText.fill(this.props.selectedTextColor);
+                this.rightText.fill(this.props.unselectedTextColor);
+            }
+            this.isLeft = !this.isLeft;
+            if (!quiet && this.changeHandler) {
+                this.changeHandler(this.isLeft);
+            }
+        };
+        Toggle.prototype.onStateChange = function (handler) {
+            this.changeHandler = handler;
+        };
+        Toggle.prototype.layout = function () {
+            var centerOffset = (TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH * 2) / 4;
+            this.leftText.moveTo(centerOffset + TOGGLE_BORDER_WIDTH, TOGGLE_HEIGHT / 2);
+            this.rightText.moveTo(TOGGLE_WIDTH - TOGGLE_BORDER_WIDTH - centerOffset, TOGGLE_HEIGHT / 2);
+        };
+        Toggle.prototype.translate = function (x, y) {
+            this.root.translate(x, y);
+        };
+        Toggle.prototype.height = function () {
+            return TOGGLE_HEIGHT;
+        };
+        Toggle.prototype.width = function () {
+            return TOGGLE_WIDTH;
+        };
+        return Toggle;
+    }());
+    function mkText(text) {
+        return new svg.Text(text)
+            .anchor("middle")
+            .setAttribute("dominant-baseline", "middle")
+            .setAttribute("dy", (pxt.BrowserUtils.isIE() || pxt.BrowserUtils.isEdge()) ? "0.3em" : "0.1em");
+    }
+    function defaultColors(props) {
+        if (!props.baseColor)
+            props.baseColor = "#e95153";
+        if (!props.backgroundColor)
+            props.backgroundColor = "rgba(52,73,94,.2)";
+        if (!props.borderColor)
+            props.borderColor = "rgba(52,73,94,.4)";
+        if (!props.selectedTextColor)
+            props.selectedTextColor = props.baseColor;
+        if (!props.unselectedTextColor)
+            props.unselectedTextColor = "hsla(0,0%,100%,.9)";
+        if (!props.switchColor)
+            props.switchColor = "#ffffff";
+        return props;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var Note;
+    (function (Note) {
+        Note[Note["C"] = 262] = "C";
+        Note[Note["CSharp"] = 277] = "CSharp";
+        Note[Note["D"] = 294] = "D";
+        Note[Note["Eb"] = 311] = "Eb";
+        Note[Note["E"] = 330] = "E";
+        Note[Note["F"] = 349] = "F";
+        Note[Note["FSharp"] = 370] = "FSharp";
+        Note[Note["G"] = 392] = "G";
+        Note[Note["GSharp"] = 415] = "GSharp";
+        Note[Note["A"] = 440] = "A";
+        Note[Note["Bb"] = 466] = "Bb";
+        Note[Note["B"] = 494] = "B";
+        Note[Note["C3"] = 131] = "C3";
+        Note[Note["CSharp3"] = 139] = "CSharp3";
+        Note[Note["D3"] = 147] = "D3";
+        Note[Note["Eb3"] = 156] = "Eb3";
+        Note[Note["E3"] = 165] = "E3";
+        Note[Note["F3"] = 175] = "F3";
+        Note[Note["FSharp3"] = 185] = "FSharp3";
+        Note[Note["G3"] = 196] = "G3";
+        Note[Note["GSharp3"] = 208] = "GSharp3";
+        Note[Note["A3"] = 220] = "A3";
+        Note[Note["Bb3"] = 233] = "Bb3";
+        Note[Note["B3"] = 247] = "B3";
+        Note[Note["C4"] = 262] = "C4";
+        Note[Note["CSharp4"] = 277] = "CSharp4";
+        Note[Note["D4"] = 294] = "D4";
+        Note[Note["Eb4"] = 311] = "Eb4";
+        Note[Note["E4"] = 330] = "E4";
+        Note[Note["F4"] = 349] = "F4";
+        Note[Note["FSharp4"] = 370] = "FSharp4";
+        Note[Note["G4"] = 392] = "G4";
+        Note[Note["GSharp4"] = 415] = "GSharp4";
+        Note[Note["A4"] = 440] = "A4";
+        Note[Note["Bb4"] = 466] = "Bb4";
+        Note[Note["B4"] = 494] = "B4";
+        Note[Note["C5"] = 523] = "C5";
+        Note[Note["CSharp5"] = 555] = "CSharp5";
+        Note[Note["D5"] = 587] = "D5";
+        Note[Note["Eb5"] = 622] = "Eb5";
+        Note[Note["E5"] = 659] = "E5";
+        Note[Note["F5"] = 698] = "F5";
+        Note[Note["FSharp5"] = 740] = "FSharp5";
+        Note[Note["G5"] = 784] = "G5";
+        Note[Note["GSharp5"] = 831] = "GSharp5";
+        Note[Note["A5"] = 880] = "A5";
+        Note[Note["Bb5"] = 932] = "Bb5";
+        Note[Note["B5"] = 988] = "B5";
+        Note[Note["C6"] = 1047] = "C6";
+        Note[Note["CSharp6"] = 1109] = "CSharp6";
+        Note[Note["D6"] = 1175] = "D6";
+        Note[Note["Eb6"] = 1245] = "Eb6";
+        Note[Note["E6"] = 1319] = "E6";
+        Note[Note["F6"] = 1397] = "F6";
+        Note[Note["FSharp6"] = 1480] = "FSharp6";
+        Note[Note["G6"] = 1568] = "G6";
+        Note[Note["GSharp6"] = 1568] = "GSharp6";
+        Note[Note["A6"] = 1760] = "A6";
+        Note[Note["Bb6"] = 1865] = "Bb6";
+        Note[Note["B6"] = 1976] = "B6";
+        Note[Note["C7"] = 2093] = "C7";
+    })(Note || (Note = {}));
+    var FieldNote = /** @class */ (function (_super) {
+        __extends(FieldNote, _super);
+        function FieldNote(text, params, validator) {
+            var _this = 
+            // passing null as we need more state before we properly set value.
+            _super.call(this, null, 0, null, null, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.SERIALIZABLE = true;
+            _this.isTextValid_ = true;
+            /**
+             * default number of piano keys
+             */
+            _this.nKeys_ = 36;
+            _this.minNote_ = 28;
+            _this.maxNote_ = 63;
+            /** Absolute error for note frequency identification (Hz) **/
+            _this.eps = 2;
+            _this.setSpellcheck(false);
+            _this.prepareNotes();
+            _this.isExpanded = false;
+            _this.currentPage = 0;
+            _this.totalPlayCount = 0;
+            if (params.editorColour) {
+                _this.primaryColour = pxtblockly.parseColour(params.editorColour);
+                _this.borderColour = Blockly.utils.colour.darken(_this.primaryColour, 0.2);
+            }
+            var eps = parseInt(params.eps);
+            if (!Number.isNaN(eps) && eps >= 0) {
+                _this.eps = eps;
+            }
+            var minNote = parseInt(params.minNote) || _this.minNote_;
+            var maxNote = parseInt(params.maxNote) || _this.maxNote_;
+            if (minNote >= 28 && maxNote <= 75 && maxNote > minNote) {
+                _this.minNote_ = minNote;
+                _this.maxNote_ = maxNote;
+                _this.nKeys_ = _this.maxNote_ - _this.minNote_ + 1;
+            }
+            _this.setValue(text);
+            return _this;
+        }
+        /**
+         * Ensure that only a non negative number may be entered.
+         * @param {string} text The user's text.
+         * @return A string representing a valid positive number, or null if invalid.
+         */
+        FieldNote.prototype.doClassValidation_ = function (text) {
+            // accommodate note strings like "Note.GSharp5" as well as numbers
+            var match = /^Note\.(.+)$/.exec(text);
+            var noteName = (match && match.length > 1) ? match[1] : null;
+            text = Note[noteName] ? Note[noteName] : String(parseFloat(text || "0"));
+            if (text === null) {
+                return null;
+            }
+            var n = parseFloat(text || "0");
+            if (isNaN(n) || n < 0) {
+                return null;
+            }
+            var showDecimal = Math.floor(n) != n;
+            return "" + n.toFixed(showDecimal ? 2 : 0);
+        };
+        /**
+         * Return the current note frequency.
+         * @return Current note in string format.
+         */
+        FieldNote.prototype.getValue = function () {
+            return this.value_ + "";
+        };
+        /**
+         * Called by setValue if the text input is valid. Updates the value of the
+         * field, and updates the text of the field if it is not currently being
+         * edited (i.e. handled by the htmlInput_).
+         * @param {string} note The new note in string format.
+         */
+        FieldNote.prototype.doValueUpdate_ = function (note) {
+            if (isNaN(Number(note)) || Number(note) < 0)
+                return;
+            if (this.sourceBlock_ && Blockly.Events.isEnabled() && this.value_ != note) {
+                Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_, "field", this.name, this.value_, note));
+            }
+            this.value_ = note;
+            this.refreshText();
+        };
+        /**
+         * Get the text from this field
+         * @return Current text.
+         */
+        FieldNote.prototype.getText = function () {
+            if (this.isExpanded) {
+                return "" + this.value_;
+            }
+            else {
+                var note = +this.value_;
+                for (var i = 0; i < this.nKeys_; i++) {
+                    if (Math.abs(this.getKeyFreq(i) - note) < this.eps) {
+                        return this.getKeyName(i);
+                    }
+                }
+                var text = note.toString();
+                if (!isNaN(note))
+                    text += " Hz";
+                return text;
+            }
+        };
+        /**
+         * This block shows up differently when it's being edited;
+         * on any transition between `editing <--> not-editing`
+         * or other change in state,
+         * refresh the text to get back into a valid state.
+         **/
+        FieldNote.prototype.refreshText = function () {
+            this.setText(this.getText());
+            this.forceRerender();
+        };
+        FieldNote.prototype.onHtmlInputChange_ = function (e) {
+            _super.prototype.onHtmlInputChange_.call(this, e);
+            Blockly.DropDownDiv.hideWithoutAnimation();
+        };
+        FieldNote.prototype.onFinishEditing_ = function (text) {
+            this.refreshText();
+        };
+        FieldNote.prototype.onHide = function () {
+            this.isExpanded = false;
+            this.refreshText();
+        };
+        ;
+        /**
+         * Create a piano under the note field.
+         */
+        FieldNote.prototype.showEditor_ = function (e) {
+            var _this = this;
+            this.isExpanded = true;
+            this.updateColor();
+            // If there is an existing drop-down someone else owns, hide it immediately and clear it.
+            Blockly.DropDownDiv.hideWithoutAnimation();
+            Blockly.DropDownDiv.clearContent();
+            var isMobile = pxt.BrowserUtils.isMobile() || pxt.BrowserUtils.isIOS();
+            // invoke FieldTextInputs showeditor, so we can set quiet explicitly / not have a pop up dialogue
+            FieldNote.superClass_.showEditor_.call(this, e, /** quiet **/ isMobile, /** readonly **/ isMobile);
+            this.refreshText();
+            // save all changes in the same group of events
+            Blockly.Events.setGroup(true);
+            this.piano = [];
+            this.currentSelectedKey = undefined;
+            var totalWhiteKeys = this.nKeys_ - (this.nKeys_ / FieldNote.notesPerOctave * FieldNote.blackKeysPerOctave);
+            var whiteKeysPerOctave = FieldNote.notesPerOctave - FieldNote.blackKeysPerOctave;
+            var pianoWidth = FieldNote.keyWidth * totalWhiteKeys;
+            var pianoHeight = FieldNote.keyHeight + FieldNote.labelHeight;
+            var pagination = window.innerWidth < pianoWidth;
+            if (pagination) {
+                pianoWidth = whiteKeysPerOctave * FieldNote.keyWidth;
+                pianoHeight = FieldNote.keyHeight + FieldNote.labelHeight + FieldNote.prevNextHeight;
+            }
+            var pianoDiv = createStyledDiv("blocklyPianoDiv", "width: " + pianoWidth + "px;\n                height: " + pianoHeight + "px;");
+            Blockly.DropDownDiv.getContentDiv().appendChild(pianoDiv);
+            // render note label
+            this.noteLabel = createStyledDiv("blocklyNoteLabel", "top: " + FieldNote.keyHeight + "px;\n                width: " + pianoWidth + "px;\n                background-color: " + this.primaryColour + ";\n                border-color: " + this.primaryColour + ";");
+            pianoDiv.appendChild(this.noteLabel);
+            this.noteLabel.textContent = "-";
+            var startingPage = 0;
+            for (var i = 0; i < this.nKeys_; i++) {
+                var currentOctave = Math.floor(i / FieldNote.notesPerOctave);
+                var position = this.getPosition(i);
+                // modify original position in pagination
+                if (pagination && i >= FieldNote.notesPerOctave)
+                    position -= whiteKeysPerOctave * currentOctave * FieldNote.keyWidth;
+                var key = this.getKeyDiv(i, position);
+                this.piano.push(key);
+                pianoDiv.appendChild(key);
+                // if the current value is within eps of this note, select it.
+                if (Math.abs(this.getKeyFreq(i) - Number(this.getValue())) < this.eps) {
+                    pxt.BrowserUtils.addClass(key, "selected");
+                    this.currentSelectedKey = key;
+                    startingPage = currentOctave;
+                }
+            }
+            if (pagination) {
+                this.setPage(startingPage);
+                pianoDiv.appendChild(this.getNextPrevDiv(/** prev **/ true, pianoWidth));
+                pianoDiv.appendChild(this.getNextPrevDiv(/** prev **/ false, pianoWidth));
+            }
+            Blockly.DropDownDiv.setColour(this.primaryColour, this.borderColour);
+            Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_, function () { return _this.onHide(); });
+        };
+        FieldNote.prototype.playKey = function (key, frequency) {
+            var _this = this;
+            var notePlayID = ++this.totalPlayCount;
+            if (this.currentSelectedKey !== key) {
+                if (this.currentSelectedKey)
+                    pxt.BrowserUtils.removeClass(this.currentSelectedKey, "selected");
+                pxt.BrowserUtils.addClass(key, "selected");
+                this.setValue(frequency);
+            }
+            this.currentSelectedKey = key;
+            /**
+             * force a rerender of the preview; other attempts at changing the value
+             * do not show up on the block itself until after the fieldeditor is closed,
+             * as it is currently in an editable state.
+             **/
+            this.htmlInput_.value = this.getText();
+            pxt.AudioContextManager.tone(frequency);
+            setTimeout(function () {
+                // Clear the sound if it is still playing after 300ms
+                if (_this.totalPlayCount == notePlayID)
+                    pxt.AudioContextManager.stop();
+            }, 300);
+        };
+        /**
+         * Close the note picker if this input is being deleted.
+         */
+        FieldNote.prototype.dispose = function () {
+            Blockly.DropDownDiv.hideIfOwner(this);
+            _super.prototype.dispose.call(this);
+        };
+        FieldNote.prototype.updateColor = function () {
+            if (this.sourceBlock_.parentBlock_ && (this.sourceBlock_.isShadow() || hasOnlyOneField(this.sourceBlock_))) {
+                this.primaryColour = this.sourceBlock_.parentBlock_.getColour();
+                this.borderColour = this.sourceBlock_.parentBlock_.getColourTertiary();
+            }
+            else {
+                this.primaryColour = this.sourceBlock_.getColourTertiary();
+                this.borderColour = this.sourceBlock_.getColourTertiary();
+            }
+        };
+        FieldNote.prototype.setPage = function (page) {
+            var pageCount = this.nKeys_ / FieldNote.notesPerOctave;
+            page = Math.max(Math.min(page, pageCount - 1), 0);
+            this.noteLabel.textContent = "Octave #" + (page + 1);
+            var firstKeyInOctave = page * FieldNote.notesPerOctave;
+            for (var i = 0; i < this.piano.length; ++i) {
+                var isInOctave = i >= firstKeyInOctave && i < firstKeyInOctave + FieldNote.notesPerOctave;
+                this.piano[i].style.display = isInOctave ? "block" : "none";
+            }
+            this.currentPage = page;
+        };
+        ;
+        /**
+         * create a DOM to assign a style to the previous and next buttons
+         * @param pianoWidth the width of the containing piano
+         * @param isPrev true if is previous button, false otherwise
+         * @return DOM with the new css style.s
+         */
+        FieldNote.prototype.getNextPrevDiv = function (isPrev, pianoWidth) {
+            var _this = this;
+            var xPosition = isPrev ? 0 : (pianoWidth / 2);
+            var yPosition = FieldNote.keyHeight + FieldNote.labelHeight;
+            var output = createStyledDiv("blocklyNotePrevNext", "top: " + yPosition + "px;\n                left: " + xPosition + "px;\n                width: " + Math.ceil(pianoWidth / 2) + "px;\n                " + (isPrev ? "border-left-color" : "border-right-color") + ": " + this.primaryColour + ";\n                background-color: " + this.primaryColour + ";\n                border-bottom-color: " + this.primaryColour + ";");
+            pxt.BrowserUtils.pointerEvents.down.forEach(function (ev) {
+                Blockly.bindEventWithChecks_(output, ev, _this, function () { return _this.setPage(isPrev ? _this.currentPage - 1 : _this.currentPage + 1); }, 
+                /** noCaptureIdentifier **/ true);
+            });
+            output.textContent = isPrev ? "<" : ">";
+            return output;
+        };
+        FieldNote.prototype.getKeyDiv = function (keyInd, leftPosition) {
+            var _this = this;
+            var output = createStyledDiv("blocklyNote " + (this.isWhite(keyInd) ? "" : "black"), "width: " + this.getKeyWidth(keyInd) + "px;\n                height: " + this.getKeyHeight(keyInd) + "px;\n                left: " + leftPosition + "px;\n                border-color: " + this.primaryColour + ";");
+            pxt.BrowserUtils.pointerEvents.down.forEach(function (ev) {
+                Blockly.bindEventWithChecks_(output, ev, _this, function () { return _this.playKey(output, _this.getKeyFreq(keyInd)); }, 
+                /** noCaptureIdentifier **/ true);
+            });
+            Blockly.bindEventWithChecks_(output, 'mouseover', this, function () { return _this.noteLabel.textContent = _this.getKeyName(keyInd); }, 
+            /** noCaptureIdentifier **/ true);
+            return output;
+        };
+        /**
+         * @param idx index of the key
+         * @return true if idx is white
+         */
+        FieldNote.prototype.isWhite = function (idx) {
+            switch (idx % 12) {
+                case 1:
+                case 3:
+                case 6:
+                case 8:
+                case 10:
+                    return false;
+                default:
+                    return true;
+            }
+        };
+        /**
+         * get width of the piano key
+         * @param idx index of the key
+         * @return width of the key
+         */
+        FieldNote.prototype.getKeyWidth = function (idx) {
+            if (this.isWhite(idx))
+                return FieldNote.keyWidth;
+            return FieldNote.keyWidth / 2;
+        };
+        /**
+         * get height of the piano key
+         * @param idx index of the key
+         * @return height of the key
+         */
+        FieldNote.prototype.getKeyHeight = function (idx) {
+            if (this.isWhite(idx))
+                return FieldNote.keyHeight;
+            return FieldNote.keyHeight / 2;
+        };
+        FieldNote.prototype.getKeyFreq = function (keyIndex) {
+            return this.getKeyNoteData(keyIndex).freq;
+        };
+        FieldNote.prototype.getKeyName = function (keyIndex) {
+            var note = this.getKeyNoteData(keyIndex);
+            var name = note.prefixedName;
+            if (this.nKeys_ <= FieldNote.notesPerOctave) {
+                // special case: one octave
+                name = note.name;
+            }
+            else if (this.minNote_ >= 28 && this.maxNote_ <= 63) {
+                // special case: centered
+                name = note.altPrefixedName || name;
+            }
+            return name;
+        };
+        FieldNote.prototype.getKeyNoteData = function (keyIndex) {
+            return FieldNote.Notes[keyIndex + this.minNote_];
+        };
+        /**
+         * get the position of the key in the piano
+         * @param idx index of the key
+         * @return position of the key
+         */
+        FieldNote.prototype.getPosition = function (idx) {
+            var whiteKeyCount = idx - Math.floor((idx + 1) / FieldNote.notesPerOctave * FieldNote.blackKeysPerOctave);
+            var pos = whiteKeyCount * FieldNote.keyWidth;
+            if (this.isWhite(idx))
+                return pos;
+            return pos - (FieldNote.keyWidth / 4);
+        };
+        FieldNote.prototype.prepareNotes = function () {
+            if (!FieldNote.Notes) {
+                FieldNote.Notes = {
+                    28: { name: lf("C"), prefixedName: lf("Low C"), freq: 131 },
+                    29: { name: lf("C#"), prefixedName: lf("Low C#"), freq: 139 },
+                    30: { name: lf("D"), prefixedName: lf("Low D"), freq: 147 },
+                    31: { name: lf("D#"), prefixedName: lf("Low D#"), freq: 156 },
+                    32: { name: lf("E"), prefixedName: lf("Low E"), freq: 165 },
+                    33: { name: lf("F"), prefixedName: lf("Low F"), freq: 175 },
+                    34: { name: lf("F#"), prefixedName: lf("Low F#"), freq: 185 },
+                    35: { name: lf("G"), prefixedName: lf("Low G"), freq: 196 },
+                    36: { name: lf("G#"), prefixedName: lf("Low G#"), freq: 208 },
+                    37: { name: lf("A"), prefixedName: lf("Low A"), freq: 220 },
+                    38: { name: lf("A#"), prefixedName: lf("Low A#"), freq: 233 },
+                    39: { name: lf("B"), prefixedName: lf("Low B"), freq: 247 },
+                    40: { name: lf("C"), prefixedName: lf("Middle C"), freq: 262 },
+                    41: { name: lf("C#"), prefixedName: lf("Middle C#"), freq: 277 },
+                    42: { name: lf("D"), prefixedName: lf("Middle D"), freq: 294 },
+                    43: { name: lf("D#"), prefixedName: lf("Middle D#"), freq: 311 },
+                    44: { name: lf("E"), prefixedName: lf("Middle E"), freq: 330 },
+                    45: { name: lf("F"), prefixedName: lf("Middle F"), freq: 349 },
+                    46: { name: lf("F#"), prefixedName: lf("Middle F#"), freq: 370 },
+                    47: { name: lf("G"), prefixedName: lf("Middle G"), freq: 392 },
+                    48: { name: lf("G#"), prefixedName: lf("Middle G#"), freq: 415 },
+                    49: { name: lf("A"), prefixedName: lf("Middle A"), freq: 440 },
+                    50: { name: lf("A#"), prefixedName: lf("Middle A#"), freq: 466 },
+                    51: { name: lf("B"), prefixedName: lf("Middle B"), freq: 494 },
+                    52: { name: lf("C"), prefixedName: lf("Tenor C"), altPrefixedName: lf("High C"), freq: 523 },
+                    53: { name: lf("C#"), prefixedName: lf("Tenor C#"), altPrefixedName: lf("High C#"), freq: 554 },
+                    54: { name: lf("D"), prefixedName: lf("Tenor D"), altPrefixedName: lf("High D"), freq: 587 },
+                    55: { name: lf("D#"), prefixedName: lf("Tenor D#"), altPrefixedName: lf("High D#"), freq: 622 },
+                    56: { name: lf("E"), prefixedName: lf("Tenor E"), altPrefixedName: lf("High E"), freq: 659 },
+                    57: { name: lf("F"), prefixedName: lf("Tenor F"), altPrefixedName: lf("High F"), freq: 698 },
+                    58: { name: lf("F#"), prefixedName: lf("Tenor F#"), altPrefixedName: lf("High F#"), freq: 740 },
+                    59: { name: lf("G"), prefixedName: lf("Tenor G"), altPrefixedName: lf("High G"), freq: 784 },
+                    60: { name: lf("G#"), prefixedName: lf("Tenor G#"), altPrefixedName: lf("High G#"), freq: 831 },
+                    61: { name: lf("A"), prefixedName: lf("Tenor A"), altPrefixedName: lf("High A"), freq: 880 },
+                    62: { name: lf("A#"), prefixedName: lf("Tenor A#"), altPrefixedName: lf("High A#"), freq: 932 },
+                    63: { name: lf("B"), prefixedName: lf("Tenor B"), altPrefixedName: lf("High B"), freq: 988 },
+                    64: { name: lf("C"), prefixedName: lf("High C"), freq: 1046 },
+                    65: { name: lf("C#"), prefixedName: lf("High C#"), freq: 1109 },
+                    66: { name: lf("D"), prefixedName: lf("High D"), freq: 1175 },
+                    67: { name: lf("D#"), prefixedName: lf("High D#"), freq: 1245 },
+                    68: { name: lf("E"), prefixedName: lf("High E"), freq: 1319 },
+                    69: { name: lf("F"), prefixedName: lf("High F"), freq: 1397 },
+                    70: { name: lf("F#"), prefixedName: lf("High F#"), freq: 1478 },
+                    71: { name: lf("G"), prefixedName: lf("High G"), freq: 1568 },
+                    72: { name: lf("G#"), prefixedName: lf("High G#"), freq: 1661 },
+                    73: { name: lf("A"), prefixedName: lf("High A"), freq: 1760 },
+                    74: { name: lf("A#"), prefixedName: lf("High A#"), freq: 1865 },
+                    75: { name: lf("B"), prefixedName: lf("High B"), freq: 1976 }
+                };
+            }
+        };
+        FieldNote.keyWidth = 22;
+        FieldNote.keyHeight = 90;
+        FieldNote.labelHeight = 24;
+        FieldNote.prevNextHeight = 20;
+        FieldNote.notesPerOctave = 12;
+        FieldNote.blackKeysPerOctave = 5;
+        return FieldNote;
+    }(Blockly.FieldNumber));
+    pxtblockly.FieldNote = FieldNote;
+    function hasOnlyOneField(block) {
+        return block.inputList.length === 1 && block.inputList[0].fieldRow.length === 1;
+    }
+    function createStyledDiv(className, style) {
+        var output = document.createElement("div");
+        pxt.BrowserUtils.addClass(output, className);
+        output.setAttribute("style", style.replace(/\s+/g, " "));
+        return output;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldNumberDropdown = /** @class */ (function (_super) {
+        __extends(FieldNumberDropdown, _super);
+        function FieldNumberDropdown(value, options, opt_validator) {
+            var _this = _super.call(this, value, options.data, options.min, options.max, options.precision, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldNumberDropdown.prototype.getOptions = function () {
+            var newOptions;
+            if (this.menuGenerator_) {
+                newOptions = JSON.parse(this.menuGenerator_).map(function (x) {
+                    return (typeof x == 'object') ? x : [String(x), String(x)];
+                });
+            }
+            return newOptions;
+        };
+        return FieldNumberDropdown;
+    }(Blockly.FieldNumberDropdown));
+    pxtblockly.FieldNumberDropdown = FieldNumberDropdown;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldPosition = /** @class */ (function (_super) {
+        __extends(FieldPosition, _super);
+        function FieldPosition(text, params, validator) {
+            var _this = _super.call(this, text, '0', '100', '1', '100', 'Value', validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.params = params;
+            if (!_this.params.screenHeight)
+                _this.params.screenHeight = 120;
+            if (!_this.params.screenWidth)
+                _this.params.screenWidth = 160;
+            if (!_this.params.xInputName)
+                _this.params.xInputName = "x";
+            if (!_this.params.yInputName)
+                _this.params.yInputName = "y";
+            if (_this.params.min)
+                _this.min_ = parseInt(_this.params.min);
+            if (_this.params.max)
+                _this.max_ = parseInt(_this.params.max);
+            return _this;
+        }
+        FieldPosition.prototype.showEditor_ = function () {
+            // Find out which field we're in (x or y) and set the appropriate max.
+            var xField = this.getFieldByName(this.params.xInputName);
+            if (xField === this) {
+                this.max_ = this.params.screenWidth;
+                this.labelText_ = this.params.xInputName;
+            }
+            var yField = this.getFieldByName(this.params.yInputName);
+            if (yField === this) {
+                this.max_ = this.params.screenHeight;
+                this.labelText_ = this.params.yInputName;
+            }
+            // Call super to render the slider and show the dropdown div
+            _super.prototype.showEditor_.call(this);
+            // Now render the screen in the dropdown div below the slider
+            this.renderScreenPicker();
+        };
+        FieldPosition.prototype.setValue = function (value) {
+            _super.prototype.setValue.call(this, value);
+            if (this.resetCrosshair)
+                this.resetCrosshair();
+        };
+        FieldPosition.prototype.renderScreenPicker = function () {
+            var _this = this;
+            var contentDiv = Blockly.DropDownDiv.getContentDiv();
+            this.selectorDiv_ = document.createElement('div');
+            this.selectorDiv_.className = "blocklyCanvasOverlayOuter";
+            contentDiv.appendChild(this.selectorDiv_);
+            var canvasOverlayDiv = document.createElement('div');
+            canvasOverlayDiv.className = 'blocklyCanvasOverlayDiv';
+            this.selectorDiv_.appendChild(canvasOverlayDiv);
+            var crossX = document.createElement('div');
+            crossX.className = 'cross-x';
+            canvasOverlayDiv.appendChild(crossX);
+            var crossY = document.createElement('div');
+            crossY.className = 'cross-y';
+            canvasOverlayDiv.appendChild(crossY);
+            var label = document.createElement('div');
+            label.className = 'label';
+            canvasOverlayDiv.appendChild(label);
+            var width = this.params.screenWidth * 1.5;
+            var height = this.params.screenHeight * 1.5;
+            canvasOverlayDiv.style.height = height + 'px';
+            canvasOverlayDiv.style.width = width + 'px';
+            // The slider is set to a fixed width, so we have to resize it
+            // to match the screen size
+            var slider = contentDiv.getElementsByClassName("goog-slider-horizontal")[0];
+            if (slider) {
+                slider.style.width = width + "px";
+                // Because we resized the slider, we need to update the handle position. The closure
+                // slider won't update unless the value changes so change it and un-change it
+                var value = parseFloat(this.getValue());
+                if (!isNaN(value) && value > this.getMin()) {
+                    this.setValue((value - 1) + "");
+                    this.setValue(value + "");
+                }
+            }
+            var setPos = function (x, y) {
+                x = Math.round(Math.max(0, Math.min(width, x)));
+                y = Math.round(Math.max(0, Math.min(height, y)));
+                crossX.style.top = y + 'px';
+                crossY.style.left = x + 'px';
+                x = Math.round(Math.max(0, Math.min(_this.params.screenWidth, x / width * _this.params.screenWidth)));
+                y = Math.round(Math.max(0, Math.min(_this.params.screenHeight, y / height * _this.params.screenHeight)));
+                label.textContent = _this.params.xInputName + "=" + x + " " + _this.params.yInputName + "=" + y;
+                // Position the label so that it doesn't go outside the screen bounds
+                var bb = label.getBoundingClientRect();
+                if (x > _this.params.screenWidth / 2) {
+                    label.style.left = (x * (width / _this.params.screenWidth) - bb.width - 8) + 'px';
+                }
+                else {
+                    label.style.left = (x * (width / _this.params.screenWidth) + 4) + 'px';
+                }
+                if (y > _this.params.screenHeight / 2) {
+                    label.style.top = (y * (height / _this.params.screenHeight) - bb.height - 6) + "px";
+                }
+                else {
+                    label.style.top = (y * (height / _this.params.screenHeight)) + 'px';
+                }
+            };
+            // Position initial crossX and crossY
+            this.resetCrosshair = function () {
+                var _a = _this.getXY(), currentX = _a.currentX, currentY = _a.currentY;
+                setPos(currentX / _this.params.screenWidth * width, currentY / _this.params.screenHeight * height);
+            };
+            this.resetCrosshair();
+            Blockly.bindEvent_(this.selectorDiv_, 'mousemove', this, function (e) {
+                var bb = canvasOverlayDiv.getBoundingClientRect();
+                var x = e.clientX - bb.left;
+                var y = e.clientY - bb.top;
+                setPos(x, y);
+            });
+            Blockly.bindEvent_(this.selectorDiv_, 'mouseleave', this, this.resetCrosshair);
+            Blockly.bindEvent_(this.selectorDiv_, 'click', this, function (e) {
+                var bb = canvasOverlayDiv.getBoundingClientRect();
+                var x = e.clientX - bb.left;
+                var y = e.clientY - bb.top;
+                var normalizedX = Math.round(x / width * _this.params.screenWidth);
+                var normalizedY = Math.round(y / height * _this.params.screenHeight);
+                _this.close();
+                _this.setXY(normalizedX, normalizedY);
+            });
+        };
+        FieldPosition.prototype.resizeHandler = function () {
+            this.close();
+        };
+        FieldPosition.prototype.setXY = function (x, y) {
+            var xField = this.getFieldByName(this.params.xInputName);
+            if (xField && typeof xField.getValue() == "number") {
+                xField.setValue(String(x));
+                xField.setText(String(x));
+            }
+            var yField = this.getFieldByName(this.params.yInputName);
+            if (yField && typeof yField.getValue() == "number") {
+                yField.setValue(String(y));
+                yField.setText(String(y));
+            }
+        };
+        FieldPosition.prototype.getFieldByName = function (name) {
+            var parentBlock = this.sourceBlock_.parentBlock_;
+            if (!parentBlock)
+                return undefined; // warn
+            for (var i = 0; i < parentBlock.inputList.length; i++) {
+                var input = parentBlock.inputList[i];
+                if (input.name === name) {
+                    return this.getTargetField(input);
+                }
+            }
+            return undefined;
+        };
+        FieldPosition.prototype.getXY = function () {
+            var currentX;
+            var currentY;
+            var xField = this.getFieldByName(this.params.xInputName);
+            if (xField)
+                currentX = xField.getValue();
+            var yField = this.getFieldByName(this.params.yInputName);
+            if (yField)
+                currentY = yField.getValue();
+            return { currentX: parseInt(currentX), currentY: parseInt(currentY) };
+        };
+        FieldPosition.prototype.getTargetField = function (input) {
+            var targetBlock = input.connection.targetBlock();
+            if (!targetBlock)
+                return null;
+            var targetInput = targetBlock.inputList[0];
+            if (!targetInput)
+                return null;
+            var targetField = targetInput.fieldRow[0];
+            return targetField;
+        };
+        FieldPosition.prototype.widgetDispose_ = function () {
+            var that = this;
+            Blockly.FieldNumber.superClass_.widgetDispose_.call(that);
+            that.close(true);
+        };
+        FieldPosition.prototype.close = function (skipWidget) {
+            if (!skipWidget) {
+                Blockly.WidgetDiv.hideIfOwner(this);
+                Blockly.DropDownDiv.hideIfOwner(this);
+            }
+            // remove resize listener
+            window.removeEventListener("resize", this.resizeHandler);
+            this.resetCrosshair = undefined;
+            // Destroy the selector div
+            if (!this.selectorDiv_)
+                return;
+            goog.dom.removeNode(this.selectorDiv_);
+            this.selectorDiv_ = undefined;
+        };
+        return FieldPosition;
+    }(Blockly.FieldSlider));
+    pxtblockly.FieldPosition = FieldPosition;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldProcedure = /** @class */ (function (_super) {
+        __extends(FieldProcedure, _super);
+        function FieldProcedure(funcname, opt_validator) {
+            var _this = _super.call(this, null, opt_validator) || this;
+            _this.setValue(funcname || '');
+            return _this;
+        }
+        FieldProcedure.prototype.getOptions = function () {
+            return this.dropdownCreate();
+        };
+        ;
+        FieldProcedure.prototype.init = function () {
+            if (this.fieldGroup_) {
+                // Dropdown has already been initialized once.
+                return;
+            }
+            _super.prototype.init.call(this);
+        };
+        ;
+        FieldProcedure.prototype.setSourceBlock = function (block) {
+            goog.asserts.assert(!block.isShadow(), 'Procedure fields are not allowed to exist on shadow blocks.');
+            _super.prototype.setSourceBlock.call(this, block);
+        };
+        ;
+        FieldProcedure.prototype.getValue = function () {
+            return this.getText();
+        };
+        ;
+        FieldProcedure.prototype.doValueUpdate_ = function (newValue) {
+            if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_, 'field', this.name, this.value_, newValue));
+            }
+            this.value_ = newValue;
+            this.setText(newValue);
+        };
+        ;
+        /**
+         * Return a sorted list of variable names for procedure dropdown menus.
+         * Include a special option at the end for creating a new function name.
+         * @return {!Array.<string>} Array of procedure names.
+         * @this {pxtblockly.FieldProcedure}
+         */
+        FieldProcedure.prototype.dropdownCreate = function () {
+            var functionList = [];
+            if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+                var blocks = this.sourceBlock_.workspace.getAllBlocks();
+                // Iterate through every block and check the name.
+                for (var i = 0; i < blocks.length; i++) {
+                    if (blocks[i].getProcedureDef) {
+                        var procName = blocks[i].getProcedureDef();
+                        functionList.push(procName[0]);
+                    }
+                }
+            }
+            // Ensure that the currently selected variable is an option.
+            var name = this.getText();
+            if (name && functionList.indexOf(name) == -1) {
+                functionList.push(name);
+            }
+            functionList.sort(goog.string.caseInsensitiveCompare);
+            if (!functionList.length) {
+                // Add temporary list item so the dropdown doesn't break
+                functionList.push("Temp");
+            }
+            // Variables are not language-specific, use the name as both the user-facing
+            // text and the internal representation.
+            var options = [];
+            for (var i = 0; i < functionList.length; i++) {
+                options[i] = [functionList[i], functionList[i]];
+            }
+            return options;
+        };
+        FieldProcedure.prototype.onItemSelected = function (menu, menuItem) {
+            var itemText = menuItem.getValue();
+            if (this.sourceBlock_) {
+                // Call any validation function, and allow it to override.
+                itemText = this.callValidator(itemText);
+            }
+            if (itemText !== null) {
+                this.setValue(itemText);
+            }
+        };
+        return FieldProcedure;
+    }(Blockly.FieldDropdown));
+    pxtblockly.FieldProcedure = FieldProcedure;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldProtractor = /** @class */ (function (_super) {
+        __extends(FieldProtractor, _super);
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        function FieldProtractor(value_, params, opt_validator) {
+            var _this = _super.call(this, String(value_), '0', '180', '1', '15', lf("Angle"), opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.params = params;
+            return _this;
+        }
+        FieldProtractor.prototype.createLabelDom_ = function (labelText) {
+            var labelContainer = document.createElement('div');
+            this.circleSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            pxsim.svg.hydrate(this.circleSVG, {
+                viewBox: "0 0 200 100",
+                width: "170"
+            });
+            labelContainer.appendChild(this.circleSVG);
+            var outerCircle = pxsim.svg.child(this.circleSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': "fill:transparent; transition: stroke-dashoffset 0.1s linear;",
+                'stroke': '#a8aaa8', 'stroke-width': '1rem'
+            });
+            this.circleBar = pxsim.svg.child(this.circleSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': "fill:transparent; transition: stroke-dashoffset 0.1s linear;",
+                'stroke': '#f12a21', 'stroke-width': '1rem'
+            });
+            this.reporter = pxsim.svg.child(this.circleSVG, "text", {
+                'x': 100, 'y': 80,
+                'text-anchor': 'middle', 'dominant-baseline': 'middle',
+                'style': 'font-size: 50px',
+                'class': 'sim-text inverted number'
+            });
+            // labelContainer.setAttribute('class', 'blocklyFieldSliderLabel');
+            var readout = document.createElement('span');
+            readout.setAttribute('class', 'blocklyFieldSliderReadout');
+            return [labelContainer, readout];
+        };
+        ;
+        FieldProtractor.prototype.setReadout_ = function (readout, value) {
+            this.updateAngle(parseFloat(value));
+            // Update reporter
+            this.reporter.textContent = value + "\u00B0";
+        };
+        FieldProtractor.prototype.updateAngle = function (angle) {
+            angle = Math.max(0, Math.min(180, angle));
+            var radius = 90;
+            var pct = (180 - angle) / 180 * Math.PI * radius;
+            this.circleBar.setAttribute('stroke-dashoffset', "" + pct);
+        };
+        return FieldProtractor;
+    }(Blockly.FieldSlider));
+    pxtblockly.FieldProtractor = FieldProtractor;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldSpeed = /** @class */ (function (_super) {
+        __extends(FieldSpeed, _super);
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        function FieldSpeed(value_, params, opt_validator) {
+            var _this = _super.call(this, String(value_), '-100', '100', '1', '10', 'Speed', opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.params = params;
+            if (_this.params['min'])
+                _this.min_ = parseFloat(_this.params.min);
+            if (_this.params['max'])
+                _this.max_ = parseFloat(_this.params.max);
+            if (_this.params['label'])
+                _this.labelText_ = _this.params.label;
+            if (!_this.params.format)
+                _this.params.format = "{0}%";
+            return _this;
+        }
+        FieldSpeed.prototype.createLabelDom_ = function (labelText) {
+            var labelContainer = document.createElement('div');
+            this.speedSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            pxsim.svg.hydrate(this.speedSVG, {
+                viewBox: "0 0 200 100",
+                width: "170"
+            });
+            labelContainer.appendChild(this.speedSVG);
+            var outerCircle = pxsim.svg.child(this.speedSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': "fill:transparent; transition: stroke-dashoffset 0.1s linear;",
+                'stroke': '#a8aaa8', 'stroke-width': '1rem'
+            });
+            this.circleBar = pxsim.svg.child(this.speedSVG, "circle", {
+                'stroke-dasharray': '565.48', 'stroke-dashoffset': '0',
+                'cx': 100, 'cy': 100, 'r': '90', 'style': "fill:transparent; transition: stroke-dashoffset 0.1s linear;",
+                'stroke': '#f12a21', 'stroke-width': '1rem'
+            });
+            this.reporter = pxsim.svg.child(this.speedSVG, "text", {
+                'x': 100, 'y': 80,
+                'text-anchor': 'middle', 'dominant-baseline': 'middle',
+                'style': "font-size: " + Math.max(14, 50 - 5 * (this.params.format.length - 4)) + "px",
+                'class': 'sim-text inverted number'
+            });
+            // labelContainer.setAttribute('class', 'blocklyFieldSliderLabel');
+            var readout = document.createElement('span');
+            readout.setAttribute('class', 'blocklyFieldSliderReadout');
+            // var label = document.createElement('span');
+            // label.setAttribute('class', 'blocklyFieldSliderLabelText');
+            // label.innerHTML = labelText;
+            // labelContainer.appendChild(label);
+            // labelContainer.appendChild(readout);
+            return [labelContainer, readout];
+        };
+        ;
+        FieldSpeed.prototype.setReadout_ = function (readout, value) {
+            this.updateSpeed(parseFloat(value));
+            // Update reporter
+            this.reporter.textContent = ts.pxtc.U.rlf(this.params.format, value);
+        };
+        FieldSpeed.prototype.updateSpeed = function (speed) {
+            var sign = this.sign(speed);
+            speed = (Math.abs(speed) / 100 * 50) + 50;
+            if (sign == -1)
+                speed = 50 - speed;
+            var c = Math.PI * (90 * 2);
+            var pct = ((100 - speed) / 100) * c;
+            this.circleBar.setAttribute('stroke-dashoffset', "" + pct);
+        };
+        // A re-implementation of Math.sign (since IE11 doesn't support it)
+        FieldSpeed.prototype.sign = function (num) {
+            return num ? num < 0 ? -1 : 1 : 0;
+        };
+        return FieldSpeed;
+    }(Blockly.FieldSlider));
+    pxtblockly.FieldSpeed = FieldSpeed;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    // 32 is specifically chosen so that we can scale the images for the default
+    // sprite sizes without getting browser anti-aliasing
+    var PREVIEW_WIDTH = 32;
+    var PADDING = 5;
+    var BG_PADDING = 4;
+    var BG_WIDTH = BG_PADDING * 2 + PREVIEW_WIDTH;
+    var TOTAL_WIDTH = PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH;
+    var FieldSpriteEditor = /** @class */ (function (_super) {
+        __extends(FieldSpriteEditor, _super);
+        function FieldSpriteEditor(text, params, validator) {
+            var _this = _super.call(this, text, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.SERIALIZABLE = true;
+            _this.lightMode = params.lightMode;
+            _this.params = parseFieldOptions(params);
+            _this.blocksInfo = params.blocksInfo;
+            if (!_this.state) {
+                _this.state = new pxt.sprite.Bitmap(_this.params.initWidth, _this.params.initHeight);
+            }
+            return _this;
+        }
+        FieldSpriteEditor.prototype.init = function () {
+            if (this.fieldGroup_) {
+                // Field has already been initialized once.
+                return;
+            }
+            // Build the DOM.
+            this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+            if (!this.visible_) {
+                this.fieldGroup_.style.display = 'none';
+            }
+            if (!this.state) {
+                this.state = new pxt.sprite.Bitmap(this.params.initWidth, this.params.initHeight);
+            }
+            this.redrawPreview();
+            this.updateEditable();
+            this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+            // Force a render.
+            this.render_();
+            this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(this.getClickTarget_(), "mousedown", this, this.onMouseDown_);
+        };
+        FieldSpriteEditor.prototype.showEditor_ = function () {
+            var _this = this;
+            this.params.blocksInfo = this.blocksInfo;
+            var fv = pxt.react.getFieldEditorView("image-editor", this.state, this.params);
+            if (this.undoRedoState) {
+                fv.restorePersistentData(this.undoRedoState);
+            }
+            fv.onHide(function () {
+                var result = fv.getResult();
+                if (result) {
+                    var old = _this.getValue();
+                    _this.state = result;
+                    _this.redrawPreview();
+                    _this.undoRedoState = fv.getPersistentData();
+                    if (_this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                        Blockly.Events.fire(new Blockly.Events.BlockChange(_this.sourceBlock_, 'field', _this.name, old, _this.getValue()));
+                    }
+                }
+            });
+            fv.show();
+        };
+        FieldSpriteEditor.prototype.render_ = function () {
+            _super.prototype.render_.call(this);
+            this.size_.height = TOTAL_WIDTH;
+            this.size_.width = TOTAL_WIDTH;
+        };
+        FieldSpriteEditor.prototype.getValue = function () {
+            return pxt.sprite.bitmapToImageLiteral(this.state, "typescript" /* TypeScript */);
+        };
+        FieldSpriteEditor.prototype.doValueUpdate_ = function (newValue) {
+            if (newValue == null) {
+                return;
+            }
+            this.value_ = newValue;
+            this.parseBitmap(newValue);
+            this.redrawPreview();
+            _super.prototype.doValueUpdate_.call(this, newValue);
+        };
+        FieldSpriteEditor.prototype.redrawPreview = function () {
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            var bg = new svg.Rect()
+                .at(PADDING, PADDING)
+                .size(BG_WIDTH, BG_WIDTH)
+                .fill("#dedede")
+                .stroke("#898989", 1)
+                .corner(4);
+            this.fieldGroup_.appendChild(bg.el);
+            if (this.state) {
+                var data = pxtblockly.bitmapToImageURI(this.state, PREVIEW_WIDTH, this.lightMode);
+                var img = new svg.Image()
+                    .src(data)
+                    .at(PADDING + BG_PADDING, PADDING + BG_PADDING)
+                    .size(PREVIEW_WIDTH, PREVIEW_WIDTH);
+                this.fieldGroup_.appendChild(img.el);
+            }
+        };
+        FieldSpriteEditor.prototype.parseBitmap = function (newText) {
+            var bmp = pxt.sprite.imageLiteralToBitmap(newText);
+            // Ignore invalid bitmaps
+            if (bmp && bmp.width && bmp.height) {
+                this.state = bmp;
+            }
+        };
+        return FieldSpriteEditor;
+    }(Blockly.Field));
+    pxtblockly.FieldSpriteEditor = FieldSpriteEditor;
+    function parseFieldOptions(opts) {
+        var parsed = {
+            initColor: 1,
+            initWidth: 16,
+            initHeight: 16,
+            disableResize: false,
+        };
+        if (!opts) {
+            return parsed;
+        }
+        if (opts.sizes) {
+            var pairs = opts.sizes.split(";");
+            var sizes = [];
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split(",");
+                if (pair.length !== 2) {
+                    continue;
+                }
+                var width = parseInt(pair[0]);
+                var height = parseInt(pair[1]);
+                if (isNaN(width) || isNaN(height)) {
+                    continue;
+                }
+                var screenSize = pxt.appTarget.runtime && pxt.appTarget.runtime.screenSize;
+                if (width < 0 && screenSize)
+                    width = screenSize.width;
+                if (height < 0 && screenSize)
+                    height = screenSize.height;
+                sizes.push([width, height]);
+            }
+            if (sizes.length > 0) {
+                parsed.initWidth = sizes[0][0];
+                parsed.initHeight = sizes[0][1];
+            }
+        }
+        if (opts.filter) {
+            parsed.filter = opts.filter;
+        }
+        if (opts.disableResize) {
+            parsed.disableResize = opts.disableResize.toLowerCase() === "true" || opts.disableResize === "1";
+        }
+        parsed.initColor = withDefault(opts.initColor, parsed.initColor);
+        parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+        parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+        return parsed;
+        function withDefault(raw, def) {
+            var res = parseInt(raw);
+            if (isNaN(res)) {
+                return def;
+            }
+            return res;
+        }
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldStyledLabel = /** @class */ (function (_super) {
+        __extends(FieldStyledLabel, _super);
+        function FieldStyledLabel(value, options, opt_validator) {
+            var _this = _super.call(this, value, getClass(options)) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        return FieldStyledLabel;
+    }(Blockly.FieldLabel));
+    pxtblockly.FieldStyledLabel = FieldStyledLabel;
+    function getClass(options) {
+        if (options) {
+            if (options.bold && options.italics) {
+                return 'blocklyBoldItalicizedText';
+            }
+            else if (options.bold) {
+                return 'blocklyBoldText';
+            }
+            else if (options.italics) {
+                return 'blocklyItalicizedText';
+            }
+        }
+        return undefined;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldTextDropdown = /** @class */ (function (_super) {
+        __extends(FieldTextDropdown, _super);
+        function FieldTextDropdown(text, options, opt_validator) {
+            var _this = _super.call(this, text, options.values, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        return FieldTextDropdown;
+    }(Blockly.FieldTextDropdown));
+    pxtblockly.FieldTextDropdown = FieldTextDropdown;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/pxtblockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldTextInput = /** @class */ (function (_super) {
+        __extends(FieldTextInput, _super);
+        function FieldTextInput(value, options, opt_validator) {
+            var _this = _super.call(this, value, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        return FieldTextInput;
+    }(Blockly.FieldTextInput));
+    pxtblockly.FieldTextInput = FieldTextInput;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var svg = pxt.svgUtil;
+    // 32 is specifically chosen so that we can scale the images for the default
+    // sprite sizes without getting browser anti-aliasing
+    var PREVIEW_WIDTH = 32;
+    var PADDING = 5;
+    var BG_PADDING = 4;
+    var BG_WIDTH = BG_PADDING * 2 + PREVIEW_WIDTH;
+    var TOTAL_WIDTH = PADDING * 2 + BG_PADDING * 2 + PREVIEW_WIDTH;
+    var FieldTilemap = /** @class */ (function (_super) {
+        __extends(FieldTilemap, _super);
+        function FieldTilemap(text, params, validator) {
+            var _this = _super.call(this, text, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.SERIALIZABLE = true;
+            _this.lightMode = params.lightMode;
+            _this.params = parseFieldOptions(params);
+            _this.blocksInfo = params.blocksInfo;
+            // Update now that we have blocksinfo
+            if (text && !_this.state)
+                _this.doValueUpdate_(text);
+            _this.initState();
+            return _this;
+        }
+        FieldTilemap.prototype.init = function () {
+            if (this.fieldGroup_) {
+                // Field has already been initialized once.
+                return;
+            }
+            // Build the DOM.
+            this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+            if (!this.visible_) {
+                this.fieldGroup_.style.display = 'none';
+            }
+            this.initState();
+            this.redrawPreview();
+            this.updateEditable();
+            this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+            // Force a render.
+            this.render_();
+            this.mouseDownWrapper_ = Blockly.bindEventWithChecks_(this.getClickTarget_(), "mousedown", this, this.onMouseDown_);
+        };
+        FieldTilemap.prototype.showEditor_ = function () {
+            var _this = this;
+            if (this.isGreyBlock)
+                return;
+            this.params.blocksInfo = this.blocksInfo;
+            this.restoreTilesFromWorkspace(this.state);
+            var fv = pxt.react.getFieldEditorView("tilemap-editor", this.state, this.params);
+            if (this.undoRedoState) {
+                fv.restorePersistentData(this.undoRedoState);
+            }
+            fv.onHide(function () {
+                var result = fv.getResult();
+                if (result) {
+                    var old = _this.getValue();
+                    _this.state = result;
+                    // Save the tileset to the workspace
+                    _this.updateWorkspaceTiles(_this.state.tileset);
+                    // Delete the image literals froms the tileset (they will be emitted elsewhere)
+                    for (var _i = 0, _a = _this.state.tileset.tiles; _i < _a.length; _i++) {
+                        var tile = _a[_i];
+                        if (tile.projectId && tile.data) {
+                            delete tile.data;
+                        }
+                    }
+                    _this.redrawPreview();
+                    _this.undoRedoState = fv.getPersistentData();
+                    if (_this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                        Blockly.Events.fire(new Blockly.Events.BlockChange(_this.sourceBlock_, 'field', _this.name, old, _this.getValue()));
+                    }
+                }
+            });
+            fv.show();
+        };
+        FieldTilemap.prototype.render_ = function () {
+            _super.prototype.render_.call(this);
+            if (!this.isGreyBlock) {
+                this.size_.height = TOTAL_WIDTH;
+                this.size_.width = TOTAL_WIDTH;
+            }
+        };
+        FieldTilemap.prototype.getValue = function () {
+            if (this.isGreyBlock)
+                return pxt.Util.htmlUnescape(this.text_);
+            return pxt.sprite.encodeTilemap(this.state, "typescript");
+        };
+        FieldTilemap.prototype.getTileset = function () {
+            return this.state.tileset;
+        };
+        FieldTilemap.prototype.doValueUpdate_ = function (newValue) {
+            if (newValue == null) {
+                return;
+            }
+            this.value_ = newValue;
+            this.parseBitmap(newValue);
+            this.redrawPreview();
+            _super.prototype.doValueUpdate_.call(this, newValue);
+        };
+        FieldTilemap.prototype.redrawPreview = function (wsTiles) {
+            if (!this.fieldGroup_)
+                return;
+            pxsim.U.clear(this.fieldGroup_);
+            if (this.isGreyBlock) {
+                this.createTextElement_();
+                this.updateEditable();
+                return;
+            }
+            var bg = new svg.Rect()
+                .at(PADDING, PADDING)
+                .size(BG_WIDTH, BG_WIDTH)
+                .fill("#dedede")
+                .stroke("#898989", 1)
+                .corner(4);
+            this.fieldGroup_.appendChild(bg.el);
+            if (this.state) {
+                this.restoreTilesFromWorkspace(this.state, wsTiles);
+                var data = pxtblockly.tilemapToImageURI(this.state, PREVIEW_WIDTH, this.lightMode, this.blocksInfo);
+                var img = new svg.Image()
+                    .src(data)
+                    .at(PADDING + BG_PADDING, PADDING + BG_PADDING)
+                    .size(PREVIEW_WIDTH, PREVIEW_WIDTH);
+                this.fieldGroup_.appendChild(img.el);
+            }
+        };
+        FieldTilemap.prototype.parseBitmap = function (newText) {
+            if (!this.blocksInfo)
+                return;
+            var tilemap = pxt.sprite.decodeTilemap(newText, "typescript");
+            // Ignore invalid bitmaps
+            if (checkTilemap(tilemap, pxt.sprite.filterItems(pxt.sprite.getGalleryItems(this.blocksInfo, "Image"), this.params.filter.split(" ")))) {
+                this.state = tilemap;
+                this.isGreyBlock = false;
+            }
+            else if (newText.trim()) {
+                this.isGreyBlock = true;
+                this.text_ = newText;
+            }
+        };
+        FieldTilemap.prototype.initState = function () {
+            if (!this.state) {
+                this.state = new pxt.sprite.TilemapData(new pxt.sprite.Tilemap(this.params.initWidth, this.params.initHeight), { tiles: [], tileWidth: 16 }, new pxt.sprite.Bitmap(this.params.initWidth, this.params.initHeight).data());
+            }
+        };
+        FieldTilemap.prototype.updateWorkspaceTiles = function (tileset) {
+            var ws = this.sourceBlock_.workspace;
+            var existing = pxtblockly.getAllTilesetTiles(ws);
+            var newtiles = tileset.tiles;
+            var deleted = [];
+            existing.filter(function (e) { return e.projectId != undefined; }).forEach(function (old) {
+                if (!newtiles.some(function (e) { return e.projectId === old.projectId; })) {
+                    deleted.push(old);
+                }
+            });
+            Blockly.Events.setGroup(true);
+            if (deleted.length) {
+                var allRefs = pxtblockly.getAllBlocksWithTilemaps(ws);
+                var _loop_3 = function (old) {
+                    pxtblockly.deleteTilesetTileIfExists(ws, old);
+                    for (var _i = 0, allRefs_1 = allRefs; _i < allRefs_1.length; _i++) {
+                        var ref = allRefs_1[_i];
+                        if (!ref.parsed) {
+                            var existing_2 = ref.block.getFieldValue(ref.field);
+                            ref.parsed = pxt.sprite.decodeTilemap(existing_2, "typescript");
+                        }
+                        var index = ref.parsed.tileset.tiles.findIndex(function (t) { return t.projectId === old.projectId; });
+                        if (index != -1) {
+                            ref.parsed.tileset.tiles.splice(index, 1);
+                            deleteTile(index, ref.parsed.tilemap);
+                        }
+                    }
+                };
+                for (var _i = 0, deleted_1 = deleted; _i < deleted_1.length; _i++) {
+                    var old = deleted_1[_i];
+                    _loop_3(old);
+                }
+                for (var _a = 0, allRefs_2 = allRefs; _a < allRefs_2.length; _a++) {
+                    var ref = allRefs_2[_a];
+                    if (ref.parsed) {
+                        ref.block.setFieldValue(pxt.sprite.encodeTilemap(ref.parsed, "typescript"), ref.field);
+                    }
+                }
+            }
+            newtiles.filter(function (t) { return t.projectId !== undefined; })
+                .forEach(function (tile) { return pxtblockly.saveTilesetTile(ws, tile); });
+            pxtblockly.FieldTileset.rebuildTileCache(this.sourceBlock_.workspace, this.blocksInfo);
+            // Redraw previews on all of the tilemaps in case a tile changed
+            var allTiles = pxtblockly.getAllTilesetTiles(ws);
+            pxtblockly.getAllBlocksWithTilemaps(ws).forEach(function (_a) {
+                var ref = _a.ref;
+                return ref.redrawPreview(allTiles);
+            });
+            Blockly.Events.setGroup(false);
+        };
+        FieldTilemap.prototype.restoreTilesFromWorkspace = function (tilemap, wsTiles) {
+            var all = wsTiles || pxtblockly.getAllTilesetTiles(this.sourceBlock_.workspace);
+            var _loop_4 = function (t) {
+                if (t.projectId != undefined) {
+                    var projectTile = all.find(function (pt) { return pt.projectId === t.projectId; });
+                    if (projectTile) {
+                        t.data = projectTile.data;
+                    }
+                }
+            };
+            for (var _i = 0, _a = tilemap.tileset.tiles; _i < _a.length; _i++) {
+                var t = _a[_i];
+                _loop_4(t);
+            }
+            var id = 0;
+            var _loop_5 = function (t) {
+                id = t.projectId ? Math.max(t.projectId, id) : id;
+                if (!tilemap.tileset.tiles.some(function (pt) { return pt.projectId === t.projectId; })) {
+                    tilemap.tileset.tiles.push(t);
+                }
+            };
+            for (var _b = 0, all_1 = all; _b < all_1.length; _b++) {
+                var t = all_1[_b];
+                _loop_5(t);
+            }
+            tilemap.nextId = id + 1;
+            var prefix = pxt.sprite.TILE_NAMESPACE + "." + pxt.sprite.TILE_PREFIX;
+            var tilesetRefs = pxtblockly.getAllBlocksWithTilesets(this.sourceBlock_.workspace);
+            tilemap.projectReferences = tilesetRefs
+                .map(function (_a) {
+                var ref = _a.ref;
+                return ref.getValue();
+            })
+                .filter(function (qname) { return pxt.U.startsWith(qname, prefix); })
+                .map(function (qname) { return Number(qname.substr(prefix.length)); });
+        };
+        FieldTilemap.prototype.getDisplayText_ = function () {
+            var text = pxt.Util.htmlUnescape(this.text_);
+            return text.substr(0, text.indexOf("(")) + "(...)";
+            ;
+        };
+        FieldTilemap.prototype.updateEditable = function () {
+            if (this.isGreyBlock && this.fieldGroup_) {
+                var group = this.fieldGroup_;
+                Blockly.utils.dom.removeClass(group, 'blocklyNonEditableText');
+                Blockly.utils.dom.removeClass(group, 'blocklyEditableText');
+                group.style.cursor = '';
+            }
+            else {
+                _super.prototype.updateEditable.call(this);
+            }
+        };
+        return FieldTilemap;
+    }(Blockly.Field));
+    pxtblockly.FieldTilemap = FieldTilemap;
+    function parseFieldOptions(opts) {
+        var parsed = {
+            initWidth: 16,
+            initHeight: 16,
+        };
+        if (!opts) {
+            return parsed;
+        }
+        if (opts.filter) {
+            parsed.filter = opts.filter;
+        }
+        parsed.initWidth = withDefault(opts.initWidth, parsed.initWidth);
+        parsed.initHeight = withDefault(opts.initHeight, parsed.initHeight);
+        return parsed;
+        function withDefault(raw, def) {
+            var res = parseInt(raw);
+            if (isNaN(res)) {
+                return def;
+            }
+            return res;
+        }
+    }
+    function deleteTile(localIndex, tilemap) {
+        for (var x = 0; x < tilemap.width; x++) {
+            for (var y = 0; y < tilemap.height; y++) {
+                var value = tilemap.get(x, y);
+                if (value === localIndex) {
+                    tilemap.set(x, y, 0);
+                }
+                else if (value > localIndex) {
+                    tilemap.set(x, y, value - 1);
+                }
+            }
+        }
+    }
+    function checkTilemap(tilemap, galleryItems) {
+        if (!tilemap || !tilemap.tilemap || !tilemap.tilemap.width || !tilemap.tilemap.height)
+            return false;
+        if (!tilemap.layers || tilemap.layers.width !== tilemap.tilemap.width || tilemap.layers.height !== tilemap.tilemap.height)
+            return false;
+        if (!tilemap.tileset)
+            return false;
+        var _loop_6 = function (tile) {
+            if (tile && (tile.projectId >= 0 || (tile.qualifiedName && galleryItems.some(function (g) { return g.qName === tile.qualifiedName; })))) {
+                return "continue";
+            }
+            return { value: false };
+        };
+        for (var _i = 0, _a = tilemap.tileset.tiles; _i < _a.length; _i++) {
+            var tile = _a[_i];
+            var state_2 = _loop_6(tile);
+            if (typeof state_2 === "object")
+                return state_2.value;
+        }
+        return true;
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../built/pxtlib.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var PREVIEW_SIDE_LENGTH = 32;
+    var FieldTileset = /** @class */ (function (_super) {
+        __extends(FieldTileset, _super);
+        function FieldTileset(text, options, validator) {
+            var _this = _super.call(this, text, options, validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.menuGenerator_ = function () {
+                if (!_this.transparent) {
+                    _this.transparent = [{
+                            src: mkTransparentTileImage(16),
+                            width: PREVIEW_SIDE_LENGTH,
+                            height: PREVIEW_SIDE_LENGTH,
+                            alt: pxt.U.lf("transparency")
+                        }, "myTiles.tile0"];
+                }
+                var options = [_this.transparent];
+                if (_this.sourceBlock_) {
+                    // projectId 0 is reserved for transparency, which is always included
+                    var projectTiles = pxtblockly.getAllTilesetTiles(_this.sourceBlock_.workspace).filter(function (t) { return t.projectId !== 0; });
+                    options.push.apply(options, projectTiles.map(function (info) { return [FieldTileset.getTileImageJSON(info, _this.sourceBlock_.workspace, _this.blocksInfo), FieldTileset.getTileKey(info)]; }).filter(function (_a) {
+                        var b = _a[1];
+                        return !!b;
+                    }));
+                    var galleryTiles = FieldTileset.getGalleryTiles();
+                    if (_this.value_ && !(options.concat(galleryTiles)).some(function (_a) {
+                        var id = _a[1];
+                        return id === _this.value_;
+                    })) {
+                        FieldTileset.rebuildTileCache(_this.sourceBlock_.workspace, _this.blocksInfo);
+                    }
+                    options.push.apply(options, FieldTileset.getGalleryTiles());
+                }
+                return options;
+            };
+            _this.blocksInfo = options.blocksInfo;
+            if (!text) {
+                _this.setValue(_this.getOptions()[0][1]);
+            }
+            return _this;
+        }
+        FieldTileset.rebuildTileCache = function (ws, blocksInfo) {
+            var tiles = pxtblockly.getAllTilesetTiles(ws);
+            if (!FieldTileset.tileCache)
+                FieldTileset.tileCache = {};
+            for (var _i = 0, tiles_1 = tiles; _i < tiles_1.length; _i++) {
+                var t = tiles_1[_i];
+                var key = FieldTileset.getTileKey(t);
+                if (key) {
+                    FieldTileset.tileCache[key] = pxtblockly.bitmapToImageURI(pxt.sprite.Bitmap.fromData(t.data), 16, false);
+                }
+            }
+            FieldTileset.galleryTiles = [];
+            if (!blocksInfo)
+                return;
+            var tilemaps = pxtblockly.getAllBlocksWithTilemaps(ws);
+            for (var _a = 0, tilemaps_1 = tilemaps; _a < tilemaps_1.length; _a++) {
+                var t = tilemaps_1[_a];
+                var ts_1 = t.ref.getTileset();
+                var _loop_7 = function (tile) {
+                    if (tile.qualifiedName) {
+                        if (!FieldTileset.tileCache[tile.qualifiedName]) {
+                            FieldTileset.tileCache[tile.qualifiedName] = pxtblockly.bitmapToImageURI(pxt.sprite.getBitmap(blocksInfo, tile.qualifiedName), ts_1.tileWidth, false);
+                        }
+                        if (!FieldTileset.galleryTiles.some(function (_a) {
+                            var qname = _a[1];
+                            return qname === tile.qualifiedName;
+                        })) {
+                            FieldTileset.galleryTiles.push([FieldTileset.getTileImageJSON(tile, ws, blocksInfo), tile.qualifiedName]);
+                        }
+                    }
+                };
+                for (var _b = 0, _c = ts_1.tiles; _b < _c.length; _b++) {
+                    var tile = _c[_b];
+                    _loop_7(tile);
+                }
+            }
+            var tsRefs = pxtblockly.getAllBlocksWithTilesets(ws)
+                .map(function (_a) {
+                var ref = _a.ref;
+                return ref.getValue();
+            })
+                .filter(function (qname) { return qname !== "null" && !pxt.Util.startsWith(qname, pxt.sprite.TILE_NAMESPACE); });
+            var _loop_8 = function (galleryRef) {
+                if (!FieldTileset.tileCache[galleryRef]) {
+                    FieldTileset.tileCache[galleryRef] = pxtblockly.bitmapToImageURI(pxt.sprite.getBitmap(blocksInfo, galleryRef), 16, false);
+                }
+                if (!FieldTileset.galleryTiles.some(function (_a) {
+                    var qname = _a[1];
+                    return qname === galleryRef;
+                })) {
+                    FieldTileset.galleryTiles.push([FieldTileset.getTileImageJSON({ qualifiedName: galleryRef, data: null }, ws, blocksInfo), galleryRef]);
+                }
+            };
+            for (var _d = 0, tsRefs_1 = tsRefs; _d < tsRefs_1.length; _d++) {
+                var galleryRef = tsRefs_1[_d];
+                _loop_8(galleryRef);
+            }
+        };
+        FieldTileset.getTileKey = function (t) {
+            if (t.qualifiedName)
+                return t.qualifiedName;
+            if (t.projectId !== undefined)
+                return pxt.sprite.TILE_NAMESPACE + "." + pxt.sprite.TILE_PREFIX + t.projectId;
+            return undefined;
+        };
+        FieldTileset.getTileImage = function (t, ws, blocksInfo) {
+            if (!FieldTileset.tileCache || !FieldTileset.tileCache[FieldTileset.getTileKey(t)]) {
+                FieldTileset.rebuildTileCache(ws, blocksInfo);
+            }
+            return FieldTileset.tileCache[FieldTileset.getTileKey(t)];
+        };
+        FieldTileset.getTileImageJSON = function (t, ws, blocksInfo) {
+            var uri = FieldTileset.getTileImage(t, ws, blocksInfo);
+            return {
+                src: uri,
+                width: PREVIEW_SIDE_LENGTH,
+                height: PREVIEW_SIDE_LENGTH,
+                alt: FieldTileset.getTileKey(t).split(".").pop()
+            };
+        };
+        FieldTileset.getGalleryTiles = function () {
+            return FieldTileset.galleryTiles || [];
+        };
+        FieldTileset.prototype.init = function () {
+            _super.prototype.init.call(this);
+            if (this.sourceBlock_ && this.sourceBlock_.workspace && !this.sourceBlock_.isInFlyout) {
+                var tiles = pxtblockly.getAllTilesetTiles(this.sourceBlock_.workspace);
+                if (!tiles.some(function (t) { return t.projectId === 0; })) {
+                    // Ensure transparency exists or else compilation will fail
+                    // TODO: Other tile sizes
+                    pxtblockly.saveTilesetTile(this.sourceBlock_.workspace, { projectId: 0, data: new pxt.sprite.Bitmap(16, 16).data() });
+                }
+            }
+        };
+        return FieldTileset;
+    }(pxtblockly.FieldImages));
+    pxtblockly.FieldTileset = FieldTileset;
+    function mkTransparentTileImage(sideLength) {
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+        canvas.width = sideLength;
+        canvas.height = sideLength;
+        context.fillStyle = "#aeaeae";
+        context.fillRect(0, 0, sideLength, sideLength);
+        context.fillStyle = "#dedede";
+        for (var x = 0; x < sideLength; x += 4) {
+            for (var y = 0; y < sideLength; y += 4) {
+                if (((x + y) >> 2) & 1)
+                    context.fillRect(x, y, 4, 4);
+            }
+        }
+        return canvas.toDataURL();
+    }
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldToggle = /** @class */ (function (_super) {
+        __extends(FieldToggle, _super);
+        function FieldToggle(state, params, opt_validator) {
+            var _this = _super.call(this, state, undefined, undefined, undefined, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.CURSOR = 'pointer';
+            _this.params = params;
+            _this.setValue(state);
+            _this.addArgType('toggle');
+            _this.type_ = params.type;
+            return _this;
+        }
+        FieldToggle.prototype.init = function () {
+            if (this.fieldGroup_) {
+                // Field has already been initialized once.
+                return;
+            }
+            // Build the DOM.
+            this.fieldGroup_ = Blockly.utils.dom.createSvgElement('g', {}, null);
+            if (!this.visible_) {
+                this.fieldGroup_.style.display = 'none';
+            }
+            // Add an attribute to cassify the type of field.
+            if (this.getArgTypes() !== null) {
+                if (this.sourceBlock_.isShadow()) {
+                    this.sourceBlock_.svgGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+                else {
+                    // Fields without a shadow wrapper, like square dropdowns.
+                    this.fieldGroup_.setAttribute('data-argument-type', this.getArgTypes());
+                }
+            }
+            // If not in a shadow block, and has more than one input, draw a box.
+            if (!this.sourceBlock_.isShadow()
+                && (this.sourceBlock_.inputList && this.sourceBlock_.inputList.length > 1)) {
+                this.box_ = Blockly.utils.dom.createSvgElement('rect', {
+                    'rx': Blockly.BlockSvg.CORNER_RADIUS,
+                    'ry': Blockly.BlockSvg.CORNER_RADIUS,
+                    'x': 0,
+                    'y': 0,
+                    'width': this.size_.width,
+                    'height': this.size_.height,
+                    'fill': Blockly.Colours.textField,
+                    'stroke': this.sourceBlock_.getColourTertiary()
+                }, null);
+                this.fieldGroup_.insertBefore(this.box_, this.textElement_);
+            }
+            // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
+            var size = this.getSize();
+            this.checkElement_ = Blockly.utils.dom.createSvgElement('g', {
+                'class': "blocklyToggle " + (this.state_ ? 'blocklyToggleOn' : 'blocklyToggleOff'),
+                'transform': "translate(8, " + size.height / 2 + ")",
+            }, this.fieldGroup_);
+            switch (this.getOutputShape()) {
+                case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+                    this.toggleThumb_ = Blockly.utils.dom.createSvgElement('polygon', {
+                        'class': 'blocklyToggleRect',
+                        'points': '-7,-14 -21,0 -7,14 7,14 21,0 7,-14',
+                        'cursor': 'pointer'
+                    }, this.checkElement_);
+                    break;
+                case Blockly.OUTPUT_SHAPE_ROUND:
+                    this.toggleThumb_ = Blockly.utils.dom.createSvgElement('rect', {
+                        'class': 'blocklyToggleCircle',
+                        'x': -6, 'y': -14, 'height': 28,
+                        'width': 28, 'rx': 14, 'ry': 14,
+                        'cursor': 'pointer'
+                    }, this.checkElement_);
+                    break;
+                case Blockly.OUTPUT_SHAPE_SQUARE:
+                    this.toggleThumb_ = Blockly.utils.dom.createSvgElement('rect', {
+                        'class': 'blocklyToggleRect',
+                        'x': -6, 'y': -14, 'height': 28,
+                        'width': 28, 'rx': 3, 'ry': 3,
+                        'cursor': 'pointer'
+                    }, this.checkElement_);
+                    break;
+            }
+            var fieldX = (this.sourceBlock_.RTL) ? -size.width / 2 : size.width / 2;
+            /** @type {!Element} */
+            this.textElement_ = Blockly.utils.dom.createSvgElement('text', {
+                'class': 'blocklyText',
+                'x': fieldX,
+                'dy': '0.6ex',
+                'y': size.height / 2
+            }, this.fieldGroup_);
+            this.updateEditable();
+            this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+            this.switchToggle(this.state_);
+            this.setValue(this.getValue());
+            // Force a render.
+            this.render_();
+            this.size_.width = 0;
+            this.mouseDownWrapper_ =
+                Blockly.bindEventWithChecks_(this.getClickTarget_(), 'mousedown', this, this.onMouseDown_);
+        };
+        FieldToggle.prototype.getDisplayText_ = function () {
+            return this.state_ ? this.getTrueText() : this.getFalseText();
+        };
+        FieldToggle.prototype.getTrueText = function () {
+            return lf("True");
+        };
+        FieldToggle.prototype.getFalseText = function () {
+            return lf("False");
+        };
+        FieldToggle.prototype.updateSize_ = function () {
+            var innerWidth = this.getInnerWidth();
+            var halfInnerWidth = innerWidth / 2;
+            switch (this.getOutputShape()) {
+                case Blockly.OUTPUT_SHAPE_ROUND:
+                    this.size_.width = this.getInnerWidth() * 2 - 7;
+                    break;
+                case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+                    this.size_.width = this.getInnerWidth() * 2 + 8 - Math.floor(this.getInnerWidth() / 2);
+                    break;
+                case Blockly.OUTPUT_SHAPE_SQUARE:
+                    this.size_.width = 9 + this.getInnerWidth() * 2;
+                    break;
+            }
+            this.arrowWidth_ = 0;
+        };
+        FieldToggle.prototype.getInnerWidth = function () {
+            return this.getMaxLength() * 10;
+        };
+        FieldToggle.prototype.getMaxLength = function () {
+            return Math.max(this.getTrueText().length, this.getFalseText().length);
+        };
+        FieldToggle.prototype.getOutputShape = function () {
+            return this.sourceBlock_.isShadow() ? this.sourceBlock_.getOutputShape() : Blockly.OUTPUT_SHAPE_SQUARE;
+        };
+        /**
+         * Return 'TRUE' if the toggle is ON, 'FALSE' otherwise.
+         * @return {string} Current state.
+         */
+        FieldToggle.prototype.getValue = function () {
+            return this.toVal(this.state_);
+        };
+        ;
+        /**
+         * Set the checkbox to be checked if newBool is 'TRUE' or true,
+         * unchecks otherwise.
+         * @param {string|boolean} newBool New state.
+         */
+        FieldToggle.prototype.setValue = function (newBool) {
+            var newState = this.fromVal(newBool);
+            if (this.state_ !== newState) {
+                if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.state_, newState));
+                }
+                this.state_ = newState;
+                this.switchToggle(this.state_);
+                this.setText(this.getDisplayText_());
+            }
+        };
+        FieldToggle.prototype.switchToggle = function (newState) {
+            if (this.checkElement_) {
+                this.updateSize_();
+                var size = this.getSize();
+                var innerWidth_1 = this.getInnerWidth();
+                if (newState) {
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOn');
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOff');
+                }
+                else {
+                    pxt.BrowserUtils.removeClass(this.checkElement_, 'blocklyToggleOn');
+                    pxt.BrowserUtils.addClass(this.checkElement_, 'blocklyToggleOff');
+                }
+                var outputShape = this.getOutputShape();
+                var width = 0, halfWidth = 0;
+                var leftPadding = 0, rightPadding = 0;
+                switch (outputShape) {
+                    case Blockly.OUTPUT_SHAPE_HEXAGONAL:
+                        width = innerWidth_1;
+                        halfWidth = width / 2;
+                        var quarterWidth = halfWidth / 2;
+                        // TODO: the left padding calculation is a hack, we should calculate left padding based on width (generic case)
+                        leftPadding = this.getMaxLength() > 3 ? -4 : 1;
+                        rightPadding = -quarterWidth;
+                        var topLeftPoint = -quarterWidth;
+                        var bottomRightPoint = quarterWidth;
+                        this.toggleThumb_.setAttribute('points', topLeftPoint + ",-14 " + (topLeftPoint - 14) + ",0 " + topLeftPoint + ",14 " + bottomRightPoint + ",14 " + (bottomRightPoint + 14) + ",0 " + bottomRightPoint + ",-14");
+                        break;
+                    case Blockly.OUTPUT_SHAPE_ROUND:
+                    case Blockly.OUTPUT_SHAPE_SQUARE:
+                        width = 5 + innerWidth_1;
+                        halfWidth = width / 2;
+                        this.toggleThumb_.setAttribute('width', "" + width);
+                        this.toggleThumb_.setAttribute('x', "-" + halfWidth);
+                        leftPadding = rightPadding = outputShape == Blockly.OUTPUT_SHAPE_SQUARE ? 2 : -6;
+                        break;
+                }
+                this.checkElement_.setAttribute('transform', "translate(" + (newState ? rightPadding + innerWidth_1 + halfWidth : halfWidth + leftPadding) + ", " + size.height / 2 + ")");
+            }
+        };
+        FieldToggle.prototype.updateTextNode_ = function () {
+            _super.prototype.updateTextNode_.call(this);
+            if (this.textElement_)
+                pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
+        };
+        FieldToggle.prototype.render_ = function () {
+            if (this.visible_ && this.textElement_) {
+                // Replace the text.
+                goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
+                var textNode = document.createTextNode(this.getDisplayText_());
+                this.textElement_.appendChild(textNode);
+                pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
+                this.updateSize_();
+                // Update text centering, based on newly calculated width.
+                var halfWidth = this.size_.width / 2;
+                var centerTextX = this.state_ ? halfWidth + halfWidth / 2 : halfWidth / 2;
+                // Apply new text element x position.
+                var width = Blockly.Field.getCachedWidth(this.textElement_);
+                var newX = centerTextX - width / 2;
+                this.textElement_.setAttribute('x', "" + newX);
+            }
+            // Update any drawn box to the correct width and height.
+            if (this.box_) {
+                this.box_.setAttribute('width', "" + this.size_.width);
+                this.box_.setAttribute('height', "" + this.size_.height);
+            }
+        };
+        /**
+         * Toggle the state of the toggle.
+         * @private
+         */
+        FieldToggle.prototype.showEditor_ = function () {
+            var newState = !this.state_;
+            /*
+            if (this.sourceBlock_) {
+              // Call any validation function, and allow it to override.
+              newState = this.callValidator(newState);
+            }*/
+            if (newState !== null) {
+                this.setValue(this.toVal(newState));
+            }
+        };
+        FieldToggle.prototype.toVal = function (newState) {
+            if (this.type_ == "number")
+                return String(newState ? '1' : '0');
+            else
+                return String(newState ? 'true' : 'false');
+        };
+        FieldToggle.prototype.fromVal = function (val) {
+            if (typeof val == "string") {
+                if (val == "1" || val.toUpperCase() == "TRUE")
+                    return true;
+                return false;
+            }
+            return !!val;
+        };
+        return FieldToggle;
+    }(Blockly.FieldNumber));
+    pxtblockly.FieldToggle = FieldToggle;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldToggleHighLow = /** @class */ (function (_super) {
+        __extends(FieldToggleHighLow, _super);
+        function FieldToggleHighLow(state, params, opt_validator) {
+            var _this = _super.call(this, state, params, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldToggleHighLow.prototype.getTrueText = function () {
+            return lf("HIGH");
+        };
+        FieldToggleHighLow.prototype.getFalseText = function () {
+            return lf("LOW");
+        };
+        return FieldToggleHighLow;
+    }(pxtblockly.FieldToggle));
+    pxtblockly.FieldToggleHighLow = FieldToggleHighLow;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldToggleOnOff = /** @class */ (function (_super) {
+        __extends(FieldToggleOnOff, _super);
+        function FieldToggleOnOff(state, params, opt_validator) {
+            var _this = _super.call(this, state, params, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldToggleOnOff.prototype.getTrueText = function () {
+            return lf("ON");
+        };
+        FieldToggleOnOff.prototype.getFalseText = function () {
+            return lf("OFF");
+        };
+        return FieldToggleOnOff;
+    }(pxtblockly.FieldToggle));
+    pxtblockly.FieldToggleOnOff = FieldToggleOnOff;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldToggleUpDown = /** @class */ (function (_super) {
+        __extends(FieldToggleUpDown, _super);
+        function FieldToggleUpDown(state, params, opt_validator) {
+            var _this = _super.call(this, state, params, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldToggleUpDown.prototype.getTrueText = function () {
+            return lf("UP");
+        };
+        FieldToggleUpDown.prototype.getFalseText = function () {
+            return lf("DOWN");
+        };
+        return FieldToggleUpDown;
+    }(pxtblockly.FieldToggle));
+    pxtblockly.FieldToggleUpDown = FieldToggleUpDown;
+    var FieldToggleDownUp = /** @class */ (function (_super) {
+        __extends(FieldToggleDownUp, _super);
+        function FieldToggleDownUp(state, params, opt_validator) {
+            var _this = _super.call(this, state, params, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldToggleDownUp.prototype.getTrueText = function () {
+            return lf("DOWN");
+        };
+        FieldToggleDownUp.prototype.getFalseText = function () {
+            return lf("UP");
+        };
+        return FieldToggleDownUp;
+    }(pxtblockly.FieldToggle));
+    pxtblockly.FieldToggleDownUp = FieldToggleDownUp;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldToggleWinLose = /** @class */ (function (_super) {
+        __extends(FieldToggleWinLose, _super);
+        function FieldToggleWinLose(state, params, opt_validator) {
+            var _this = _super.call(this, state, params, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldToggleWinLose.prototype.getTrueText = function () {
+            return lf("WIN");
+        };
+        FieldToggleWinLose.prototype.getFalseText = function () {
+            return lf("LOSE");
+        };
+        return FieldToggleWinLose;
+    }(pxtblockly.FieldToggle));
+    pxtblockly.FieldToggleWinLose = FieldToggleWinLose;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+/// <reference path="./field_toggle.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldToggleYesNo = /** @class */ (function (_super) {
+        __extends(FieldToggleYesNo, _super);
+        function FieldToggleYesNo(state, params, opt_validator) {
+            var _this = _super.call(this, state, params, opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            return _this;
+        }
+        FieldToggleYesNo.prototype.getTrueText = function () {
+            return lf("Yes");
+        };
+        FieldToggleYesNo.prototype.getFalseText = function () {
+            return lf("No");
+        };
+        return FieldToggleYesNo;
+    }(pxtblockly.FieldToggle));
+    pxtblockly.FieldToggleYesNo = FieldToggleYesNo;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts" />
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldTsExpression = /** @class */ (function (_super) {
+        __extends(FieldTsExpression, _super);
+        function FieldTsExpression() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.isFieldCustom_ = true;
+            _this.pythonMode = false;
+            return _this;
+        }
+        /**
+         * Same as parent, but adds a different class to text when disabled
+         */
+        FieldTsExpression.prototype.updateEditable = function () {
+            var group = this.fieldGroup_;
+            if (!this.EDITABLE || !group) {
+                return;
+            }
+            if (this.sourceBlock_.isEditable()) {
+                pxt.BrowserUtils.addClass(group, 'blocklyEditableText');
+                pxt.BrowserUtils.removeClass(group, 'blocklyGreyExpressionBlockText');
+                this.fieldGroup_.style.cursor = this.CURSOR;
+            }
+            else {
+                pxt.BrowserUtils.addClass(group, 'blocklyGreyExpressionBlockText');
+                pxt.BrowserUtils.removeClass(group, 'blocklyEditableText');
+                this.fieldGroup_.style.cursor = '';
+            }
+        };
+        FieldTsExpression.prototype.doValueUpdate_ = function (newValue) {
+            _super.prototype.doValueUpdate_.call(this, newValue);
+            if (this.pythonMode)
+                this.setPythonText();
+        };
+        FieldTsExpression.prototype.setPythonEnabled = function (enabled) {
+            if (enabled === this.pythonMode)
+                return;
+            this.pythonMode = enabled;
+            if (enabled) {
+                this.setPythonText();
+            }
+            else {
+                this.setText(this.getValue());
+            }
+        };
+        FieldTsExpression.prototype.setPythonText = function () {
+            this.setText(pxt.Util.lf("<python code>"));
+        };
+        return FieldTsExpression;
+    }(Blockly.FieldTextInput));
+    pxtblockly.FieldTsExpression = FieldTsExpression;
+})(pxtblockly || (pxtblockly = {}));
+/// <reference path="../../localtypings/blockly.d.ts"/>
+/// <reference path="../../built/pxtsim.d.ts"/>
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldTurnRatio = /** @class */ (function (_super) {
+        __extends(FieldTurnRatio, _super);
+        /**
+         * Class for a color wheel field.
+         * @param {number|string} value The initial content of the field.
+         * @param {Function=} opt_validator An optional function that is called
+         *     to validate any constraints on what the user entered.  Takes the new
+         *     text as an argument and returns either the accepted text, a replacement
+         *     text, or null to abort the change.
+         * @extends {Blockly.FieldNumber}
+         * @constructor
+         */
+        function FieldTurnRatio(value_, params, opt_validator) {
+            var _this = _super.call(this, String(value_), '-200', '200', '1', '10', 'TurnRatio', opt_validator) || this;
+            _this.isFieldCustom_ = true;
+            _this.params = params;
+            _this.sliderColor_ = '#a8aaa8';
+            return _this;
+        }
+        FieldTurnRatio.prototype.createLabelDom_ = function (labelText) {
+            var labelContainer = document.createElement('div');
+            var svg = Blockly.utils.dom.createSvgElement('svg', {
+                'xmlns': 'http://www.w3.org/2000/svg',
+                'xmlns:html': 'http://www.w3.org/1999/xhtml',
+                'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+                'version': '1.1',
+                'height': (FieldTurnRatio.HALF + FieldTurnRatio.HANDLE_RADIUS + 10) + 'px',
+                'width': (FieldTurnRatio.HALF * 2) + 'px'
+            }, labelContainer);
+            var defs = Blockly.utils.dom.createSvgElement('defs', {}, svg);
+            var marker = Blockly.utils.dom.createSvgElement('marker', {
+                'id': 'head',
+                'orient': "auto",
+                'markerWidth': '2',
+                'markerHeight': '4',
+                'refX': '0.1', 'refY': '1.5'
+            }, defs);
+            var markerPath = Blockly.utils.dom.createSvgElement('path', {
+                'd': 'M0,0 V3 L1.5,1.5 Z',
+                'fill': '#f12a21'
+            }, marker);
+            this.reporter_ = pxsim.svg.child(svg, "text", {
+                'x': FieldTurnRatio.HALF, 'y': 96,
+                'text-anchor': 'middle', 'dominant-baseline': 'middle',
+                'style': 'font-size: 50px',
+                'class': 'sim-text inverted number'
+            });
+            this.path_ = Blockly.utils.dom.createSvgElement('path', {
+                'x1': FieldTurnRatio.HALF,
+                'y1': FieldTurnRatio.HALF,
+                'marker-end': 'url(#head)',
+                'style': 'fill: none; stroke: #f12a21; stroke-width: 10'
+            }, svg);
+            this.updateGraph_();
+            var readout = document.createElement('span');
+            readout.setAttribute('class', 'blocklyFieldSliderReadout');
+            return [labelContainer, readout];
+        };
+        ;
+        FieldTurnRatio.prototype.updateGraph_ = function () {
+            if (!this.path_) {
+                return;
+            }
+            var v = goog.math.clamp(this.getValue() || 0, -200, 200);
+            var x = v / 100;
+            var nx = Math.max(-1, Math.min(1, x));
+            var theta = Math.max(nx) * Math.PI / 2;
+            var r = FieldTurnRatio.RADIUS - 6;
+            var cx = FieldTurnRatio.HALF;
+            var cy = FieldTurnRatio.HALF - 22;
+            if (Math.abs(x) > 1) {
+                cx -= (x - (x > 0 ? 1 : -1)) * r / 2; // move center of circle
+            }
+            var alpha = 0.2 + Math.abs(nx) * 0.5;
+            var y1 = r * alpha;
+            var y2 = r * Math.sin(Math.PI / 2 - theta);
+            var x2 = r * Math.cos(Math.PI / 2 - theta);
+            var y3 = y2 - r * alpha * Math.cos(2 * theta);
+            var x3 = x2 - r * alpha * Math.sin(2 * theta);
+            var d = "M " + cx + " " + cy + " C " + cx + " " + (cy - y1) + " " + (cx + x3) + " " + (cy - y3) + " " + (cx + x2) + " " + (cy - y2);
+            this.path_.setAttribute('d', d);
+            this.reporter_.textContent = "" + v;
+        };
+        FieldTurnRatio.prototype.setReadout_ = function (readout, value) {
+            this.updateGraph_();
+        };
+        FieldTurnRatio.HALF = 80;
+        FieldTurnRatio.HANDLE_RADIUS = 30;
+        FieldTurnRatio.RADIUS = FieldTurnRatio.HALF - FieldTurnRatio.HANDLE_RADIUS - 1;
+        return FieldTurnRatio;
+    }(Blockly.FieldSlider));
+    pxtblockly.FieldTurnRatio = FieldTurnRatio;
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    var FieldUserEnum = /** @class */ (function (_super) {
+        __extends(FieldUserEnum, _super);
+        function FieldUserEnum(opts) {
+            var _this = _super.call(this, createMenuGenerator(opts)) || this;
+            _this.opts = opts;
+            return _this;
+        }
+        FieldUserEnum.prototype.init = function () {
+            _super.prototype.init.call(this);
+            this.initVariables();
+        };
+        FieldUserEnum.prototype.onItemSelected = function (menu, menuItem) {
+            var _this = this;
+            var value = menuItem.getValue();
+            if (value === "CREATE") {
+                promptAndCreateEnum(this.sourceBlock_.workspace, this.opts, lf("New {0}:", this.opts.memberName), function (newName) { return newName && _this.setValue(newName); });
+            }
+            else {
+                _super.prototype.onItemSelected.call(this, menu, menuItem);
+            }
+        };
+        FieldUserEnum.prototype.initVariables = function () {
+            var _this = this;
+            if (this.sourceBlock_ && this.sourceBlock_.workspace) {
+                if (this.sourceBlock_.isInFlyout) {
+                    // Can't create variables from within the flyout, so we just have to fake it
+                    // by setting the text instead of the value
+                    this.setText(this.opts.initialMembers[0]);
+                }
+                else {
+                    var ws_2 = this.sourceBlock_.workspace;
+                    var existing_3 = getMembersForEnum(ws_2, this.opts.name);
+                    this.opts.initialMembers.forEach(function (memberName) {
+                        if (!existing_3.some(function (_a) {
+                            var name = _a[0], value = _a[1];
+                            return name === memberName;
+                        })) {
+                            createNewEnumMember(ws_2, _this.opts, memberName);
+                        }
+                    });
+                    if (this.getValue() === "CREATE") {
+                        var newValue = getVariableNameForMember(ws_2, this.opts.name, this.opts.initialMembers[0]);
+                        if (newValue) {
+                            this.setValue(newValue);
+                        }
+                    }
+                }
+            }
+        };
+        return FieldUserEnum;
+    }(Blockly.FieldDropdown));
+    pxtblockly.FieldUserEnum = FieldUserEnum;
+    function createMenuGenerator(opts) {
+        return function () {
+            var res = [];
+            var that = this;
+            if (that.sourceBlock_ && that.sourceBlock_.workspace) {
+                var options = that.sourceBlock_.workspace.getVariablesOfType(opts.name);
+                options.forEach(function (model) {
+                    // The format of the name is 10mem where "10" is the value and "mem" is the enum member
+                    var withoutValue = model.name.replace(/^\d+/, "");
+                    res.push([withoutValue, model.name]);
+                });
+            }
+            res.push([lf("Add a new {0}...", opts.memberName), "CREATE"]);
+            return res;
+        };
+    }
+    function promptAndCreateEnum(ws, opts, message, cb) {
+        Blockly.prompt(message, opts.promptHint, function (response) {
+            if (response) {
+                var nameIsValid = false;
+                if (pxtc.isIdentifierStart(response.charCodeAt(0), 2)) {
+                    nameIsValid = true;
+                    for (var i = 1; i < response.length; i++) {
+                        if (!pxtc.isIdentifierPart(response.charCodeAt(i), 2)) {
+                            nameIsValid = false;
+                        }
+                    }
+                }
+                if (!nameIsValid) {
+                    Blockly.alert(lf("Names must start with a letter and can only contain letters, numbers, '$', and '_'."), function () { return promptAndCreateEnum(ws, opts, message, cb); });
+                    return;
+                }
+                var existing = getMembersForEnum(ws, opts.name);
+                for (var i = 0; i < existing.length; i++) {
+                    var _a = existing[i], name_7 = _a[0], value = _a[1];
+                    if (name_7 === response) {
+                        Blockly.alert(lf("A {0} named '{1}' already exists.", opts.memberName, response), function () { return promptAndCreateEnum(ws, opts, message, cb); });
+                        return;
+                    }
+                }
+                cb(createNewEnumMember(ws, opts, response));
+            }
+        });
+    }
+    function parseName(model) {
+        var match = /^(\d+)([^0-9].*)$/.exec(model.name);
+        if (match) {
+            return [match[2], parseInt(match[1])];
+        }
+        return [model.name, -1];
+    }
+    function getMembersForEnum(ws, enumName) {
+        var existing = ws.getVariablesOfType(enumName);
+        if (existing && existing.length) {
+            return existing.map(parseName);
+        }
+        else {
+            return [];
+        }
+    }
+    function getNextValue(members, opts) {
+        var existing = members.map(function (_a) {
+            var name = _a[0], value = _a[1];
+            return value;
+        });
+        if (opts.isBitMask) {
+            for (var i = 0; i < existing.length; i++) {
+                var current = 1 << i;
+                if (existing.indexOf(current) < 0) {
+                    return current;
+                }
+            }
+            return 1 << existing.length;
+        }
+        else if (opts.isHash) {
+            return 0; // overriden when compiled
+        }
+        else {
+            var start = opts.firstValue || 0;
+            for (var i = 0; i < existing.length; i++) {
+                if (existing.indexOf(start + i) < 0) {
+                    return start + i;
+                }
+            }
+            return start + existing.length;
+        }
+    }
+    pxtblockly.getNextValue = getNextValue;
+    function createNewEnumMember(ws, opts, newName) {
+        var ex = getMembersForEnum(ws, opts.name);
+        var val = getNextValue(ex, opts);
+        var variableName = val + newName;
+        Blockly.Variables.getOrCreateVariablePackage(ws, null, variableName, opts.name);
+        return variableName;
+    }
+    function getVariableNameForMember(ws, enumName, memberName) {
+        var existing = ws.getVariablesOfType(enumName);
+        if (existing && existing.length) {
+            for (var i = 0; i < existing.length; i++) {
+                var name_8 = parseName(existing[i])[0];
+                if (name_8 === memberName) {
+                    return existing[i].name;
+                }
+            }
+        }
+        return undefined;
+    }
+})(pxtblockly || (pxtblockly = {}));
+var pxtblockly;
+(function (pxtblockly) {
+    var svg;
+    (function (svg) {
+        function hasClass(el, cls) {
+            return pxt.BrowserUtils.containsClass(el, cls);
+        }
+        svg.hasClass = hasClass;
+        function addClass(el, cls) {
+            pxt.BrowserUtils.addClass(el, cls);
+        }
+        svg.addClass = addClass;
+        function removeClass(el, cls) {
+            pxt.BrowserUtils.removeClass(el, cls);
+        }
+        svg.removeClass = removeClass;
+    })(svg = pxtblockly.svg || (pxtblockly.svg = {}));
+    function parseColour(colour) {
+        var hue = Number(colour);
+        if (!isNaN(hue)) {
+            return Blockly.hueToRgb(hue);
+        }
+        else if (goog.isString(colour) && colour.match(/^#[0-9a-fA-F]{6}$/)) {
+            return colour;
+        }
+        else {
+            return '#000';
+        }
+    }
+    pxtblockly.parseColour = parseColour;
+    /**
+     * Converts a bitmap into a square image suitable for display. In light mode the preview
+     * is drawn with no transparency (alpha is filled with background color)
+     */
+    function bitmapToImageURI(frame, sideLength, lightMode) {
+        var colors = pxt.appTarget.runtime.palette.slice(1);
+        var canvas = document.createElement("canvas");
+        canvas.width = sideLength;
+        canvas.height = sideLength;
+        // Works well for all of our default sizes, does not work well if the size is not
+        // a multiple of 2 or is greater than 32 (i.e. from the decompiler)
+        var cellSize = Math.min(sideLength / frame.width, sideLength / frame.height);
+        // Center the image if it isn't square
+        var xOffset = Math.max(Math.floor((sideLength * (1 - (frame.width / frame.height))) / 2), 0);
+        var yOffset = Math.max(Math.floor((sideLength * (1 - (frame.height / frame.width))) / 2), 0);
+        var context;
+        if (lightMode) {
+            context = canvas.getContext("2d", { alpha: false });
+            context.fillStyle = "#dedede";
+            context.fillRect(0, 0, sideLength, sideLength);
+        }
+        else {
+            context = canvas.getContext("2d");
+        }
+        for (var c = 0; c < frame.width; c++) {
+            for (var r = 0; r < frame.height; r++) {
+                var color = frame.get(c, r);
+                if (color) {
+                    context.fillStyle = colors[color - 1];
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+                else if (lightMode) {
+                    context.fillStyle = "#dedede";
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+        return canvas.toDataURL();
+    }
+    pxtblockly.bitmapToImageURI = bitmapToImageURI;
+    function tilemapToImageURI(data, sideLength, lightMode, blocksInfo) {
+        var colors = pxt.appTarget.runtime.palette.slice();
+        var canvas = document.createElement("canvas");
+        canvas.width = sideLength;
+        canvas.height = sideLength;
+        // Works well for all of our default sizes, does not work well if the size is not
+        // a multiple of 2 or is greater than 32 (i.e. from the decompiler)
+        var cellSize = Math.min(sideLength / data.tilemap.width, sideLength / data.tilemap.height);
+        // Center the image if it isn't square
+        var xOffset = Math.max(Math.floor((sideLength * (1 - (data.tilemap.width / data.tilemap.height))) / 2), 0);
+        var yOffset = Math.max(Math.floor((sideLength * (1 - (data.tilemap.height / data.tilemap.width))) / 2), 0);
+        var context;
+        if (lightMode) {
+            context = canvas.getContext("2d", { alpha: false });
+            context.fillStyle = "#dedede";
+            context.fillRect(0, 0, sideLength, sideLength);
+        }
+        else {
+            context = canvas.getContext("2d");
+        }
+        var tileColors = [];
+        for (var c = 0; c < data.tilemap.width; c++) {
+            for (var r = 0; r < data.tilemap.height; r++) {
+                var tile = data.tilemap.get(c, r);
+                if (tile) {
+                    if (!tileColors[tile]) {
+                        var tileInfo = data.tileset.tiles[tile];
+                        if (tileInfo.data) {
+                            tileColors[tile] = pxt.sprite.computeAverageColor(pxt.sprite.Bitmap.fromData(tileInfo.data), colors);
+                        }
+                        else {
+                            var bitmap = pxt.sprite.getBitmap(blocksInfo, tileInfo.qualifiedName);
+                            if (bitmap) {
+                                tileColors[tile] = pxt.sprite.computeAverageColor(bitmap, colors);
+                            }
+                            else {
+                                tileColors[tile] = "#ffffff";
+                            }
+                        }
+                    }
+                    context.fillStyle = tileColors[tile];
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+                else if (lightMode) {
+                    context.fillStyle = "#dedede";
+                    context.fillRect(xOffset + c * cellSize, yOffset + r * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+        return canvas.toDataURL();
+    }
+    pxtblockly.tilemapToImageURI = tilemapToImageURI;
+    function saveTilesetTile(ws, tile) {
+        deleteTilesetTileIfExists(ws, tile);
+        ws.createVariable(pxt.sprite.tileToBlocklyVariable(tile), pxt.sprite.BLOCKLY_TILESET_TYPE);
+    }
+    pxtblockly.saveTilesetTile = saveTilesetTile;
+    function deleteTilesetTileIfExists(ws, tile) {
+        var existing = ws.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE);
+        for (var _i = 0, existing_4 = existing; _i < existing_4.length; _i++) {
+            var model = existing_4[_i];
+            if (parseInt(model.name.substr(0, model.name.indexOf(";"))) === tile.projectId) {
+                ws.deleteVariableById(model.getId());
+                break;
+            }
+        }
+    }
+    pxtblockly.deleteTilesetTileIfExists = deleteTilesetTileIfExists;
+    function getAllTilesetTiles(ws) {
+        return ws.getVariablesOfType(pxt.sprite.BLOCKLY_TILESET_TYPE).map(function (model) { return pxt.sprite.blocklyVariableToTile(model.name); });
+    }
+    pxtblockly.getAllTilesetTiles = getAllTilesetTiles;
+    function getAllBlocksWithTilemaps(ws) {
+        return getAllFieldsCore(ws, function (f) { return f instanceof pxtblockly.FieldTilemap && !f.isGreyBlock; });
+    }
+    pxtblockly.getAllBlocksWithTilemaps = getAllBlocksWithTilemaps;
+    function getAllBlocksWithTilesets(ws) {
+        return getAllFieldsCore(ws, function (f) { return f instanceof pxtblockly.FieldTileset; });
+    }
+    pxtblockly.getAllBlocksWithTilesets = getAllBlocksWithTilesets;
+    function getAllFieldsCore(ws, predicate) {
+        var result = [];
+        var top = ws.getTopBlocks(false);
+        top.forEach(function (block) { return getAllFieldsRecursive(block); });
+        return result;
+        function getAllFieldsRecursive(block) {
+            for (var _i = 0, _a = block.inputList; _i < _a.length; _i++) {
+                var input = _a[_i];
+                for (var _b = 0, _c = input.fieldRow; _b < _c.length; _b++) {
+                    var field = _c[_b];
+                    if (predicate(field)) {
+                        result.push({ block: block, field: field.name, ref: field });
+                    }
+                }
+                if (input.connection && input.connection.targetBlock()) {
+                    getAllFieldsRecursive(input.connection.targetBlock());
+                }
+            }
+            if (block.nextConnection && block.nextConnection.targetBlock()) {
+                getAllFieldsRecursive(block.nextConnection.targetBlock());
+            }
+        }
+    }
+})(pxtblockly || (pxtblockly = {}));

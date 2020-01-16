@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="/static/courses/ucp-science/data-collection/show-data-device.jpg" />
+<meta name="twitter:image" content="https://img.youtube.com/vi/tZy9Ev21B4c/0.jpg" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="/static/courses/ucp-science/data-collection/show-data-device.jpg" />
+<meta property="og:image" content="https://img.youtube.com/vi/tZy9Ev21B4c/0.jpg" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -1683,7 +1683,22 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="setup-and-procedure">Setup and procedure</h1><h2 id="micro-bit-setup-and-coding-concepts">micro:bit setup and coding concepts</h2><p>This document describes different methods using micro:bits to collect and record data for science experiments. There are several ways to collect data from an experiment. The simplest is having the data display on the LED screen and manually record the data on a paper. Data can also be collected using the Window’s 10 MakeCode app. The third way is using 2 micro:bits with one observing the data and then radioing the results to a second micro:bit so it can allow the remote collection of data. </p>
+        <h1 id="setup-and-procedure">Setup and procedure</h1><h2 id="micro-bit-setup-and-coding-concepts">micro:bit setup and coding concepts</h2><p>This document describes different methods using micro:bits to collect and record data for science experiments. There are several ways to collect data from an experiment. The simplest is having the data display on the LED screen and manually record the data on a paper. Data can also be collected using the Window’s 10 MakeCode app. The third way is using 2 micro:bits with one observing the data and then radioing the results to a second micro:bit so it can allow the remote collection of data.</p>
+
+    <div class="ui info message">
+        <div class="content">
+            <h4 id="data-collection-overview-video">Data collection overview video</h4><p>See how data is collected from the micro:bit, viewed, and analyzed in this video.</p>
+
+    <div class="ui grid">
+        <div class="ten wide column">
+            <div class="ui embed mdvid" data-source="youtube" data-id="tZy9Ev21B4c"
+                data-placeholder="https://img.youtube.com/vi/tZy9Ev21B4c/0.jpg">
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
 <h2 id="data-collection-options">Data collection options</h2><h3 id="option-1-led-display">Option 1 - LED display</h3><p>Data collection can be setup to display data collected from different micro:bit sensors on the LEDs by using a <code>|||basic:show number||</code> block from the <code>||basic:Basic||</code> toolbox:</p>
 <pre><code class="lang-blocks">basic.showNumber(input.temperature())</code></pre>
 <p>As data is displayed it can then be recorded on a paper for further analysis.</p>
