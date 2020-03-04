@@ -1748,7 +1748,7 @@ basic.forever(() =&gt; {
 <p>If you hadn’t guessed already, a footballer represents subprogram and dribbling the ball corresponds to that subprogram executing. Only one subprogram gets to execute at a time, as there is only one ball (processor). Footballer Alice passing the ball to footballer Bob corresponds to stopping execution of Alice’s subprogram (and remembering where it stopped) and starting/resuming execution of Bob’s subprogram.</p>
 <p>We will call this “passing control of execution” rather than “passing the ball”.  However, in the world of the micro:bit, the concurrently executing subprograms are not aware of each other, so they don’t actually pass control directly to one another.  Rather they pass control of execution back to the scheduler and the scheduler determines the subprogram to pass control to next.  The programmer inserts a call to the <code>pause</code> function to indicate a point in the subprogram where control of execution passes to the scheduler. Also, when a subprogram ends execution, control passes to the scheduler.</p>
 <p>Let’s take a look at the implementation of the <code>basic.forever</code> function to see an example of cooperative scheduling:</p>
-<pre><code class="lang-typescript">function forever(body: () =&gt; void) {
+<pre><code class="lang-typescript">function forever_(body: () =&gt; void) {
     control.inBackground(() =&gt; {
         while(true) {
             body()

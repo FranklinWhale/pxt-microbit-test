@@ -1698,6 +1698,16 @@ let greaterThan = 42 &gt; 0;
 let lowerOrEqualThan =42 &lt;= 0;
 let greaterOrEqualThan = 42 &gt;= 0;</code></pre>
 <p>Boolean values and operators are often used with an <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/blocks/logic/if.html">if</a> or <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/blocks/loops/while.html">while</a> statement to determine which code will execute next. For example:</p>
+<pre><code class="lang-block">let a = 5
+let b = 87
+
+if (a &lt; b) {
+    a += 1
+}
+
+while (a &lt; b) {
+    a += 1
+}</code></pre>
 <h2 id="functions-that-return-a-boolean">Functions that return a Boolean</h2><p>Some functions return a Boolean value, which you can store in a Boolean variable. For example, the following code gets the on/off state of <code>point (1, 2)</code> and stores this in the Boolean variable named <code>on</code>. Then the code clears the screen if <code>on</code> is <code>true</code>:</p>
 <h2 id="boolean-operators">Boolean operators</h2><p>Boolean operators take Boolean inputs and evaluate to a Boolean output:</p>
 <h2 id="conjunction-a-and-b">Conjunction: <code>A and B</code></h2><p><code>A and B</code> evaluates to <code>true</code> if-and-only-if both A and B are true:</p>

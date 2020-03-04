@@ -1,6 +1,6 @@
 {
     "accentColor": "#5C005C",
-    "logoUrl": "https://microbit.org/code/",
+    "logoUrl": "https://microbit.org/",
     "logo": "docs/static/logo.portrait.white.svg",
     "docsLogo": "docs/static/logo.square.white.svg",
     "portraitLogo": "docs/static/logo.square.white.svg",
@@ -35,9 +35,7 @@
         "bluetoothUartConsole",
         "bluetoothPartialFlashing",
         "simScreenshot",
-        "simGif",
-        "qrCode",
-        "githubBlocksDiff"
+        "simGif"
     ],
     "bluetoothUartFilters": [
         {
@@ -52,14 +50,6 @@
         {
             "name": "Reference",
             "path": "/reference"
-        },
-        {
-            "name": "Blocks",
-            "path": "/blocks"
-        },
-        {
-            "name": "JavaScript",
-            "path": "/javascript"
         },
         {
             "name": "Hardware",
@@ -176,7 +166,7 @@
         "ja",
         "ko",
         "nl",
-        "no",
+        "nb",
         "pl",
         "pt-BR",
         "pt-PT",
@@ -204,8 +194,11 @@
     "simGifTransparent": "rgba(0,0,0,0)",
     "simGifMaxFrames": 44,
     "simScreenshotMaxUriLength": 300000,
+    "qrCode": true,
     "importExtensionFiles": true,
     "githubEditor": true,
+    "openProjectNewTab": true,
+    "python": true,
     "TOC": [
         {
             "name": "About",

@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="/static/github/classroom/addcollaborator.png" />
+<meta name="twitter:image" content="docs/static/icons/apple-touch-icon.png" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="/static/github/classroom/addcollaborator.png" />
+<meta property="og:image" content="docs/static/icons/apple-touch-icon.png" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -1684,47 +1684,21 @@
 					
     <div class="ui text">
         <h1 id="classroom">Classroom</h1><p>This page describes various ways to use the GitHub integration to create and collect assignments.</p>
-<p>This section assumes that all students were able to register an account in <a target="_blank" rel="nofollow noopener" href="https://github.com">https://github.com</a>.</p>
-<h2 id="assignments-as-repositories">Assignments as repositories</h2><p>This section describes a methodology to manage assignment via GitHub. 
-Each assigment is a <strong>private repository</strong> under the student account; where the teacher has been given <strong>collaborator</strong> access.
-The student does his work in a <strong>branch</strong> and returns his work by creating a <strong>pull request</strong> with the teacher as <strong>reviewer</strong>.</p>
-<p>This methodology is very close to the way professional developers use GitHub.</p>
-<p>Let’s illustrate it for a <strong>homework</strong> asignment.</p>
-<h3 id="step-1-students-create-a-new-repository">Step 1: Students create a new repository</h3><p>From the MakeCode editor, the student create a <strong>public</strong> repository for the assignment that will be hosted under their account. Students should all name the repository with the assignment name (e.g. “homework” in this example).</p>
+<p>This section assumes that all students are able to register an account on <a target="_blank" rel="nofollow noopener" href="https://github.com">https://github.com</a> first.</p>
+<h2 id="assignments-as-repositories">Assignments as repositories</h2><p>Students can create new repositories, public or private, for each assignments. Repositories provide full tracability of the changes, collaboration features, and precise access control for the teachers.</p>
+<p>There are a few different ways to use repositories, in order of complexity:</p>
+<ul>
+<li><a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/public-assignments.html">public assignments</a> using public repositories. Easy to setup but code is public.</li>
+<li><a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/private-assignments.html">private assignments</a> using private repositories. More setup steps but code is only visible to the student and the teacher.</li>
+<li><a target="_blank" rel="nofollow noopener" href="https://classroom.github.com">GitHub classroom</a> provides an integrated classroom management system that automates a lot of the repository creation steps.</li>
+</ul>
 
     <div class="ui info message">
         <div class="content">
-            <h5 id="private-repositories">Private repositories</h5><p>A repository can be also made <strong>private</strong> (at creation or later in the settings), in which case only the student can access it. See <strong>step 2</strong> to give access to the teacher.</p>
+            <h2 id="github-explorer">GitHub Explorer</h2><p>The <a target="_blank" rel="nofollow noopener" href="https://makecode.com/github-explorer">MakeCode GitHub Explorer</a> page allows you to list and browse MakeCode repositories seamlessly.</p>
 
         </div>
     </div>
-<h3 id="step-2-optional-student-invite-teacher-as-collaborator">Step 2: (optional) Student invite teacher as collaborator</h3><p>If the repository is <strong>private</strong>, the student will have to invite the teacher as <strong>collaborator</strong>.</p>
-<ul>
-<li>open the <strong>collaborators</strong> page using the collaborator button</li>
-<li>enter the teacher alias in the textbox and send the invitation. </li>
-<li>the teacher needs to accept the invitation to get access to the private repository</li>
-</ul>
-<p><img class="ui image" src="/static/github/classroom/addcollaborator.png" alt="Screenshot of the collaborator page on GitHub" loading="lazy"></p>
-
-    <div class="ui info message">
-        <div class="content">
-            <h5 id="github-and-404">GitHub and 404</h5><p>If you try the invitation link and it gives you a <strong>404</strong> error, it most likely means that you are not signed in with GitHub. </p>
-<p><img class="ui image" src="/static/github/classroom/404.png" alt="GitHub 404 page" loading="lazy"></p>
-
-        </div>
-    </div>
-<h3 id="step-3-student-creates-a-branch">Step 3: Student creates a branch</h3><p>From the GitHub view, click on <strong>#master</strong> and select <strong>create branch</strong> option. You can keep the default name of the branch.</p>
-<h3 id="step-4-student-change-commit-push-cycle">Step 4: Student change, commit, push cycle</h3><p>It’s time to work! Student can do all their work and use the <strong>commit &amp; push</strong> button to save their work. It is a good idea to encourage them to commit whenever they feel
-they have made progress and always provide a meaningful description of the changes.</p>
-<h3 id="step-5-student-open-a-pull-request">Step 5: Student open a Pull Request</h3><p>To finish the assignment, the student can click on the <strong>Pull Request</strong> button to create a pull request <strong>and assign the teacher as a reviewer</strong>.</p>
-<h3 id="step-6-teacher-reviews-the-pull-request">Step 6: Teacher reviews the Pull Request</h3><p>The teacher can go to <a target="_blank" rel="nofollow noopener" href="https://github.com/pulls">https://github.com/pulls</a> to see the list of opened Pull Requests that need reviewing. 
-Once the assignment is graded, the teacher can merge the Pull Request to finalize the flow.</p>
-<h3 id="step-7-optional-student-makes-the-repository-public">Step 7: (optional) Student makes the repository public</h3><p>If the student wants to add this project to his portfolio, he can simply make it public and it will be visible on his GitHub user page.</p>
-<h2 id="github-explorer">GitHub Explorer</h2><p>The <a target="_blank" rel="nofollow noopener" href="https://makecode.com/github-explorer">MakeCode GitHub Explorer</a> page allows to list and browse MakeCode repositories seamlessly.</p>
-<h2 id="github-classroom">GitHub classroom</h2><p>You can also use <a target="_blank" rel="nofollow noopener" href="https://classroom.github.com">GitHub classroom</a> to managed your assignments. The GitHub integration is fully compatible with the GitHub classroom system.</p>
-<ul>
-<li>Make sure to grant organization access to the <a target="_blank" rel="nofollow noopener" href="https://github.com/settings/connections/applications/1919c4da46b6e87c4469">Microsoft MakeCode for GitHub</a> application.</li>
-</ul>
 
     </div>
 

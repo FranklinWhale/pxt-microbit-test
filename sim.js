@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -70,7 +73,10 @@ var pxsim;
                     "P19": 24 /* MICROBIT_ID_IO_P19 */
                 }
             });
-            _this.builtinParts["radio"] = _this.radioState = new pxsim.RadioState(pxsim.runtime);
+            _this.builtinParts["radio"] = _this.radioState = new pxsim.RadioState(pxsim.runtime, {
+                ID_RADIO: 29 /* MICROBIT_ID_RADIO */,
+                RADIO_EVT_DATAGRAM: 1 /* MICROBIT_RADIO_EVT_DATAGRAM */
+            });
             _this.builtinParts["accelerometer"] = _this.accelerometerState = new pxsim.AccelerometerState(pxsim.runtime);
             _this.builtinParts["serial"] = _this.serialState = new pxsim.SerialState();
             _this.builtinParts["thermometer"] = _this.thermometerState = new pxsim.ThermometerState();
@@ -177,7 +183,7 @@ var pxsim;
         function accForGesture(gesture) {
             var b = pxsim.board().accelerometerState;
             b.accelerometer.activate();
-            if (gesture == 11 && !b.useShake) {
+            if (gesture == 11 && !b.useShake) { // SHAKE
                 b.useShake = true;
                 pxsim.runtime.queueDisplayUpdate();
             }
@@ -835,6 +841,13 @@ var pxsim;
             pin.servoAngle = value;
         }
         pins_1.servoWritePin = servoWritePin;
+        function servoSetContinuous(pinId, value) {
+            var pin = pxsim.getPin(pinId);
+            if (!pin)
+                return;
+            pin.servoSetContinuous(value);
+        }
+        pins_1.servoSetContinuous = servoSetContinuous;
         function servoSetPulse(pinId, micros) {
             var pin = pxsim.getPin(pinId);
             if (!pin)
@@ -903,6 +916,7 @@ var pxsim;
             this.mode = PinFlags.Unused;
             this.pitch = false;
             this.pull = 0; // PullDown
+            this.servoContinuous = false;
         }
         Pin.prototype.digitalReadPin = function () {
             this.mode = PinFlags.Digital | PinFlags.Input;
@@ -937,6 +951,9 @@ var pxsim;
             this.analogSetPeriod(20000);
             this.servoAngle = Math.max(0, Math.min(180, value));
             pxsim.runtime.queueDisplayUpdate();
+        };
+        Pin.prototype.servoSetContinuous = function (value) {
+            this.servoContinuous = !!value;
         };
         Pin.prototype.servoSetPulse = function (pinId, micros) {
             // TODO
@@ -1396,13 +1413,14 @@ var pxsim;
     var visuals;
     (function (visuals) {
         function createMicroServoElement() {
-            return pxsim.svg.parseString("\n        <svg xmlns=\"http://www.w3.org/2000/svg\" id=\"svg2\" width=\"112.188\" height=\"299.674\">\n          <g id=\"layer1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" transform=\"scale(0.8)\">\n            <path id=\"path8212\" fill=\"#0061ff\" stroke-width=\"6.6\" d=\"M.378 44.61v255.064h112.188V44.61H.378z\"/>\n            <path id=\"crankbase\" fill=\"#00f\" stroke-width=\"6.6\" d=\"M56.57 88.047C25.328 88.047 0 113.373 0 144.615c.02 22.352 11.807 42.596 32.238 51.66.03 3.318.095 5.24.088 7.938 0 13.947 11.307 25.254 25.254 25.254 13.947 0 25.254-11.307 25.254-25.254-.006-2.986-.415-5.442-.32-8.746 19.487-9.45 30.606-29.195 30.625-50.852 0-31.24-25.33-56.568-56.57-56.568z\"/>\n            <path id=\"lowertip\" fill=\"#00a2ff\" stroke-width=\"2\" d=\"M.476 260.78v38.894h53.82v-10.486a6.82 6.566 0 0 1-4.545-6.182 6.82 6.566 0 0 1 6.82-6.566 6.82 6.566 0 0 1 6.82 6.566 6.82 6.566 0 0 1-4.545 6.182v10.486h53.82V260.78H.475z\"/>\n            <path id=\"uppertip\" fill=\"#00a2ff\" stroke-width=\"2\" d=\"M112.566 83.503V44.61h-53.82v10.487a6.82 6.566 0 0 1 4.544 6.18 6.82 6.566 0 0 1-6.818 6.568 6.82 6.566 0 0 1-6.82-6.567 6.82 6.566 0 0 1 4.546-6.18V44.61H.378v38.893h112.188z\"/>\n            <path id=\"VCC\" fill=\"red\" stroke-width=\"2\" d=\"M53.72 21.93h5.504v22.627H53.72z\"/>\n            <path id=\"LOGIC\" fill=\"#fc0\" stroke-width=\"2\" d=\"M47.3 21.93h5.503v22.627H47.3z\"/>\n            <path id=\"GND\" fill=\"#a02c2c\" stroke-width=\"2\" d=\"M60.14 21.93h5.505v22.627H60.14z\"/>\n            <path id=\"connector\" fill=\"#111\" stroke-width=\"2\" d=\"M45.064 0a1.488 1.488 0 0 0-1.488 1.488v24.5a1.488 1.488 0 0 0 1.488 1.487h22.71a1.488 1.488 0 0 0 1.49-1.488v-24.5A1.488 1.488 0 0 0 67.774 0h-22.71z\"/>\n            <g id=\"crank\" transform=\"translate(0 -752.688)\">\n              <path id=\"arm\" fill=\"#ececec\" stroke=\"#000\" stroke-width=\"1.372\" d=\"M47.767 880.88c-4.447 1.162-8.412 8.278-8.412 18.492s3.77 18.312 8.412 18.494c8.024.314 78.496 5.06 78.51-16.952.012-22.013-74.377-21.117-78.51-20.035z\"/>\n              <circle id=\"path8216\" cx=\"56.661\" cy=\"899.475\" r=\"8.972\" fill=\"gray\" stroke-width=\"2\"/>\n            </g>\n          </g>\n        </svg>\n                    ").firstElementChild;
+            return pxsim.svg.parseString("\n        <svg xmlns=\"http://www.w3.org/2000/svg\" id=\"svg2\" width=\"112.188\" height=\"299.674\">\n          <g id=\"layer1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" transform=\"scale(0.8)\">\n            <path id=\"path8212\" fill=\"#0061ff\" stroke-width=\"6.6\" d=\"M.378 44.61v255.064h112.188V44.61H.378z\"/>\n            <path id=\"crankbase\" fill=\"#00f\" stroke-width=\"6.6\" d=\"M56.57 88.047C25.328 88.047 0 113.373 0 144.615c.02 22.352 11.807 42.596 32.238 51.66.03 3.318.095 5.24.088 7.938 0 13.947 11.307 25.254 25.254 25.254 13.947 0 25.254-11.307 25.254-25.254-.006-2.986-.415-5.442-.32-8.746 19.487-9.45 30.606-29.195 30.625-50.852 0-31.24-25.33-56.568-56.57-56.568z\"/>\n            <path id=\"lowertip\" fill=\"#00a2ff\" stroke-width=\"2\" d=\"M.476 260.78v38.894h53.82v-10.486a6.82 6.566 0 0 1-4.545-6.182 6.82 6.566 0 0 1 6.82-6.566 6.82 6.566 0 0 1 6.82 6.566 6.82 6.566 0 0 1-4.545 6.182v10.486h53.82V260.78H.475z\"/>\n            <path id=\"uppertip\" fill=\"#00a2ff\" stroke-width=\"2\" d=\"M112.566 83.503V44.61h-53.82v10.487a6.82 6.566 0 0 1 4.544 6.18 6.82 6.566 0 0 1-6.818 6.568 6.82 6.566 0 0 1-6.82-6.567 6.82 6.566 0 0 1 4.546-6.18V44.61H.378v38.893h112.188z\"/>\n            <path id=\"VCC\" fill=\"red\" stroke-width=\"2\" d=\"M53.72 21.93h5.504v22.627H53.72z\"/>\n            <path id=\"LOGIC\" fill=\"#fc0\" stroke-width=\"2\" d=\"M47.3 21.93h5.503v22.627H47.3z\"/>\n            <path id=\"GND\" fill=\"#a02c2c\" stroke-width=\"2\" d=\"M60.14 21.93h5.505v22.627H60.14z\"/>\n            <path id=\"connector\" stroke-width=\"2\" d=\"M45.064 0a1.488 1.488 0 0 0-1.488 1.488v24.5a1.488 1.488 0 0 0 1.488 1.487h22.71a1.488 1.488 0 0 0 1.49-1.488v-24.5A1.488 1.488 0 0 0 67.774 0h-22.71z\"/>\n            <g id=\"crank\" transform=\"translate(0 -752.688)\">\n              <path id=\"arm\" fill=\"#ececec\" stroke=\"#000\" stroke-width=\"1.372\" d=\"M47.767 880.88c-4.447 1.162-8.412 8.278-8.412 18.492s3.77 18.312 8.412 18.494c8.024.314 78.496 5.06 78.51-16.952.012-22.013-74.377-21.117-78.51-20.035z\"/>\n              <circle id=\"path8216\" cx=\"56.661\" cy=\"899.475\" r=\"8.972\" fill=\"gray\" stroke-width=\"2\"/>\n            </g>\n          </g>\n        </svg>\n                    ").firstElementChild;
         }
         function mkMicroServoPart(xy) {
             if (xy === void 0) { xy = [0, 0]; }
             return { el: createMicroServoElement(), x: xy[0], y: xy[1], w: 112.188, h: 299.674 };
         }
         visuals.mkMicroServoPart = mkMicroServoPart;
+        var SPEED = 300; // 0.1s/60 degree
         var MicroServoView = /** @class */ (function () {
             function MicroServoView() {
                 this.style = "";
@@ -1430,20 +1448,34 @@ var pxsim;
                 visuals.translateEl(this.element, [x, y]);
             };
             MicroServoView.prototype.updateState = function () {
-                this.targetAngle = 180.0 - this.state.getPin(this.pin).servoAngle;
-                if (this.targetAngle != this.currentAngle) {
+                var p = this.state.getPin(this.pin);
+                var continuous = !!p.servoContinuous;
+                var servoAngle = p.servoAngle;
+                if (continuous) {
+                    // for a continuous servo, the angle is interpreted as a rotation speed
+                    // 0 -> -100%, 90 - 0%, 180 - 100%
                     var now = pxsim.U.now();
-                    var cx = 56.661;
-                    var cy = 899.475;
-                    var speed = 300; // 0.1s/60 degree
                     var dt = Math.min(now - this.lastAngleTime, 50) / 1000;
-                    var delta = this.targetAngle - this.currentAngle;
-                    this.currentAngle += Math.min(Math.abs(delta), speed * dt) * (delta > 0 ? 1 : -1);
-                    this.crankEl.setAttribute("transform", this.crankTransform
-                        + (" rotate(" + this.currentAngle + ", " + cx + ", " + cy + ")"));
-                    this.lastAngleTime = now;
-                    setTimeout(function () { return pxsim.runtime.updateDisplay(); }, 20);
+                    this.currentAngle = this.targetAngle;
+                    this.targetAngle += ((servoAngle - 90) / 90) * SPEED * dt;
                 }
+                else {
+                    this.targetAngle = 180.0 - servoAngle;
+                }
+                if (this.targetAngle != this.currentAngle)
+                    this.renderAngle();
+            };
+            MicroServoView.prototype.renderAngle = function () {
+                var now = pxsim.U.now();
+                var cx = 56.661;
+                var cy = 899.475;
+                var dt = Math.min(now - this.lastAngleTime, 50) / 1000;
+                var delta = this.targetAngle - this.currentAngle;
+                this.currentAngle += Math.min(Math.abs(delta), SPEED * dt) * (delta > 0 ? 1 : -1);
+                this.crankEl.setAttribute("transform", this.crankTransform
+                    + (" rotate(" + this.currentAngle + ", " + cx + ", " + cy + ")"));
+                this.lastAngleTime = now;
+                setTimeout(function () { return pxsim.runtime.updateDisplay(); }, 20);
             };
             MicroServoView.prototype.updateTheme = function () {
             };
@@ -1511,6 +1543,14 @@ var pxsim;
             // TODO
         }
         control.waitMicros = waitMicros;
+        function millis() {
+            return pxsim.runtime.runningTime();
+        }
+        control.millis = millis;
+        function micros() {
+            return pxsim.runtime.runningTimeUs();
+        }
+        control.micros = micros;
         function deviceName() {
             var b = pxsim.board();
             return b && b.id
@@ -1563,14 +1603,6 @@ var pxsim;
 (function (pxsim) {
     var input;
     (function (input) {
-        function runningTime() {
-            return pxsim.runtime.runningTime();
-        }
-        input.runningTime = runningTime;
-        function runningTimeMicros() {
-            return pxsim.runtime.runningTimeUs();
-        }
-        input.runningTimeMicros = runningTimeMicros;
         function calibrateCompass() {
             // device calibrates...
         }
@@ -1748,136 +1780,6 @@ var pxsim;
         }
     }
     pxsim.sendBufferAsm = sendBufferAsm;
-})(pxsim || (pxsim = {}));
-var pxsim;
-(function (pxsim) {
-    var RadioDatagram = /** @class */ (function () {
-        function RadioDatagram(runtime) {
-            this.runtime = runtime;
-            this.datagram = [];
-            this.lastReceived = RadioDatagram.defaultPacket();
-        }
-        RadioDatagram.prototype.queue = function (packet) {
-            if (this.datagram.length < 4) {
-                this.datagram.push(packet);
-            }
-            pxsim.runtime.board.bus.queue(29 /* MICROBIT_ID_RADIO */, 1 /* MICROBIT_RADIO_EVT_DATAGRAM */);
-        };
-        RadioDatagram.prototype.send = function (payload) {
-            var b = pxsim.board();
-            pxsim.Runtime.postMessage({
-                type: "radiopacket",
-                broadcast: true,
-                rssi: -42,
-                serial: b.radioState.transmitSerialNumber ? pxsim.control.deviceSerialNumber() : 0,
-                time: new Date().getTime(),
-                payload: payload
-            });
-        };
-        RadioDatagram.prototype.recv = function () {
-            var r = this.datagram.shift();
-            if (!r)
-                r = RadioDatagram.defaultPacket();
-            return this.lastReceived = r;
-        };
-        RadioDatagram.defaultPacket = function () {
-            return {
-                rssi: -1,
-                serial: 0,
-                time: 0,
-                payload: { type: -1, groupId: 0, bufferData: new Uint8Array(0) }
-            };
-        };
-        return RadioDatagram;
-    }());
-    pxsim.RadioDatagram = RadioDatagram;
-    var RadioState = /** @class */ (function () {
-        function RadioState(runtime) {
-            this.power = 0;
-            this.transmitSerialNumber = false;
-            this.datagram = new RadioDatagram(runtime);
-            this.power = 6; // default value
-            this.groupId = 0;
-            this.band = 7; // https://github.com/lancaster-university/microbit-dal/blob/master/inc/core/MicroBitConfig.h#L320
-        }
-        RadioState.prototype.setGroup = function (id) {
-            this.groupId = id & 0xff; // byte only
-        };
-        RadioState.prototype.setTransmitPower = function (power) {
-            power = power | 0;
-            this.power = Math.max(0, Math.min(7, power));
-        };
-        RadioState.prototype.setTransmitSerialNumber = function (sn) {
-            this.transmitSerialNumber = !!sn;
-        };
-        RadioState.prototype.setFrequencyBand = function (band) {
-            band = band | 0;
-            if (band < 0 || band > 83)
-                return;
-            this.band = band;
-        };
-        RadioState.prototype.raiseEvent = function (id, eventid) {
-            pxsim.Runtime.postMessage({
-                type: "eventbus",
-                broadcast: true,
-                id: id,
-                eventid: eventid,
-                power: this.power,
-                group: this.groupId
-            });
-        };
-        RadioState.prototype.receivePacket = function (packet) {
-            if (this.groupId == packet.payload.groupId)
-                this.datagram.queue(packet);
-        };
-        return RadioState;
-    }());
-    pxsim.RadioState = RadioState;
-})(pxsim || (pxsim = {}));
-(function (pxsim) {
-    var radio;
-    (function (radio) {
-        function raiseEvent(id, eventid) {
-            pxsim.board().radioState.raiseEvent(id, eventid);
-        }
-        radio.raiseEvent = raiseEvent;
-        function setGroup(id) {
-            pxsim.board().radioState.setGroup(id);
-        }
-        radio.setGroup = setGroup;
-        function setTransmitPower(power) {
-            pxsim.board().radioState.setTransmitPower(power);
-        }
-        radio.setTransmitPower = setTransmitPower;
-        function setFrequencyBand(band) {
-            pxsim.board().radioState.setFrequencyBand(band);
-        }
-        radio.setFrequencyBand = setFrequencyBand;
-        function sendRawPacket(buf) {
-            var cb = pxsim.getResume();
-            pxsim.board().radioState.datagram.send({
-                type: 0,
-                groupId: pxsim.board().radioState.groupId,
-                bufferData: buf.data
-            });
-            setTimeout(cb, 1);
-        }
-        radio.sendRawPacket = sendRawPacket;
-        function readRawPacket() {
-            var packet = pxsim.board().radioState.datagram.recv();
-            return new pxsim.RefBuffer(packet.payload.bufferData);
-        }
-        radio.readRawPacket = readRawPacket;
-        function receivedSignalStrength() {
-            return pxsim.board().radioState.datagram.lastReceived.rssi;
-        }
-        radio.receivedSignalStrength = receivedSignalStrength;
-        function onDataReceived(handler) {
-            pxsim.pxtcore.registerWithDal(29 /* MICROBIT_ID_RADIO */, 1 /* MICROBIT_RADIO_EVT_DATAGRAM */, handler);
-            readRawPacket();
-        }
-        radio.onDataReceived = onDataReceived;
-    })(radio = pxsim.radio || (pxsim.radio = {}));
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {
@@ -2414,14 +2316,14 @@ var pxsim;
                     // keydown
                     function (ev) {
                         var charCode = (typeof ev.which == "number") ? ev.which : ev.keyCode;
-                        if (charCode === 40 || charCode === 37) {
+                        if (charCode === 40 || charCode === 37) { // Down/Left arrow
                             state.thermometerState.temperature--;
                             if (state.thermometerState.temperature < -5) {
                                 state.thermometerState.temperature = 50;
                             }
                             _this.updateTemperature();
                         }
-                        else if (charCode === 38 || charCode === 39) {
+                        else if (charCode === 38 || charCode === 39) { // Up/Right arrow
                             state.thermometerState.temperature++;
                             if (state.thermometerState.temperature > 50) {
                                 state.thermometerState.temperature = -5;
@@ -2536,14 +2438,14 @@ var pxsim;
                     // keydown
                     function (ev) {
                         var charCode = (typeof ev.which == "number") ? ev.which : ev.keyCode;
-                        if (charCode === 40 || charCode === 37) {
+                        if (charCode === 40 || charCode === 37) { // Down/Left arrow
                             _this.board.lightSensorState.lightLevel--;
                             if (_this.board.lightSensorState.lightLevel < 0) {
                                 _this.board.lightSensorState.lightLevel = 255;
                             }
                             _this.applyLightLevel();
                         }
-                        else if (charCode === 38 || charCode === 39) {
+                        else if (charCode === 38 || charCode === 39) { // Up/Right arrow
                             _this.board.lightSensorState.lightLevel++;
                             if (_this.board.lightSensorState.lightLevel > 255) {
                                 _this.board.lightSensorState.lightLevel = 0;
@@ -2856,14 +2758,14 @@ var pxsim;
                         var charCode = (typeof ev.which == "number") ? ev.which : ev.keyCode;
                         var state = _this.board;
                         var pin = state.edgeConnectorState.pins[index];
-                        if (charCode === 40 || charCode === 37) {
+                        if (charCode === 40 || charCode === 37) { // Down/Left arrow
                             pin.value -= 10;
                             if (pin.value < 0) {
                                 pin.value = 1023;
                             }
                             _this.updatePin(pin, index);
                         }
-                        else if (charCode === 38 || charCode === 39) {
+                        else if (charCode === 38 || charCode === 39) { // Up/Right arrow
                             pin.value += 10;
                             if (pin.value > 1023) {
                                 pin.value = 0;
@@ -3058,7 +2960,7 @@ var pxsim;
                         this.canvas.appendChild(pixel.el);
                     }
                     var color = colors[i];
-                    pixel.setRgb(color);
+                    pixel.setRgb([color[0], color[1], color[2]]);
                 }
                 //show the canvas if it's hidden
                 pxsim.U.removeClass(this.background, "hidden");
@@ -3145,4 +3047,156 @@ var pxsim;
         }());
         visuals.NeoPixelView = NeoPixelView;
     })(visuals = pxsim.visuals || (pxsim.visuals = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    var radio;
+    (function (radio) {
+        function raiseEvent(id, eventid) {
+            var state = pxsim.getRadioState();
+            state.raiseEvent(id, eventid);
+        }
+        radio.raiseEvent = raiseEvent;
+        function setGroup(id) {
+            var state = pxsim.getRadioState();
+            state.setGroup(id);
+        }
+        radio.setGroup = setGroup;
+        function setTransmitPower(power) {
+            var state = pxsim.getRadioState();
+            state.setTransmitPower(power);
+        }
+        radio.setTransmitPower = setTransmitPower;
+        function setFrequencyBand(band) {
+            var state = pxsim.getRadioState();
+            state.setFrequencyBand(band);
+        }
+        radio.setFrequencyBand = setFrequencyBand;
+        function sendRawPacket(buf) {
+            var cb = pxsim.getResume();
+            var state = pxsim.getRadioState();
+            state.datagram.send({
+                type: 0,
+                groupId: state.groupId,
+                bufferData: buf.data
+            });
+            setTimeout(cb, 1);
+        }
+        radio.sendRawPacket = sendRawPacket;
+        function readRawPacket() {
+            var state = pxsim.getRadioState();
+            var packet = state.datagram.recv();
+            return new pxsim.RefBuffer(packet.payload.bufferData);
+        }
+        radio.readRawPacket = readRawPacket;
+        function onDataReceived(handler) {
+            var state = pxsim.getRadioState();
+            state.datagram.onReceived(handler);
+        }
+        radio.onDataReceived = onDataReceived;
+    })(radio = pxsim.radio || (pxsim.radio = {}));
+})(pxsim || (pxsim = {}));
+var pxsim;
+(function (pxsim) {
+    function getRadioState() {
+        return pxsim.board().radioState;
+    }
+    pxsim.getRadioState = getRadioState;
+    var RadioDatagram = /** @class */ (function () {
+        function RadioDatagram(runtime, dal) {
+            this.runtime = runtime;
+            this.dal = dal;
+            this.datagram = [];
+            this.lastReceived = RadioDatagram.defaultPacket();
+        }
+        RadioDatagram.prototype.queue = function (packet) {
+            if (this.datagram.length < 4)
+                this.datagram.push(packet);
+            pxsim.runtime.board.bus.queue(this.dal.ID_RADIO, this.dal.RADIO_EVT_DATAGRAM);
+        };
+        RadioDatagram.prototype.send = function (payload) {
+            var state = getRadioState();
+            pxsim.Runtime.postMessage({
+                type: "radiopacket",
+                broadcast: true,
+                rssi: -42,
+                serial: state.transmitSerialNumber ? pxsim.control.deviceSerialNumber() : 0,
+                time: new Date().getTime(),
+                payload: payload
+            });
+        };
+        RadioDatagram.prototype.recv = function () {
+            var r = this.datagram.shift();
+            if (!r)
+                r = RadioDatagram.defaultPacket();
+            return this.lastReceived = r;
+        };
+        RadioDatagram.prototype.onReceived = function (handler) {
+            pxsim.pxtcore.registerWithDal(this.dal.ID_RADIO, this.dal.RADIO_EVT_DATAGRAM, handler);
+            this.recv();
+        };
+        RadioDatagram.defaultPacket = function () {
+            return {
+                rssi: -1,
+                serial: 0,
+                time: 0,
+                payload: { type: -1, groupId: 0, bufferData: new Uint8Array(0) }
+            };
+        };
+        return RadioDatagram;
+    }());
+    pxsim.RadioDatagram = RadioDatagram;
+    var RadioState = /** @class */ (function () {
+        function RadioState(runtime, dal) {
+            this.power = 0;
+            this.transmitSerialNumber = false;
+            this.datagram = new RadioDatagram(runtime, dal);
+            this.power = 6; // default value
+            this.groupId = 0;
+            this.band = 7; // https://github.com/lancaster-university/microbit-dal/blob/master/inc/core/MicroBitConfig.h#L320
+        }
+        RadioState.prototype.addListeners = function () {
+            var _this = this;
+            var board = pxsim.runtime.board;
+            board.addMessageListener(function (msg) { return _this.messageHandler(msg); });
+        };
+        RadioState.prototype.messageHandler = function (msg) {
+            if (msg.type == "radiopacket") {
+                var packet = msg;
+                this.receivePacket(packet);
+            }
+        };
+        RadioState.prototype.setGroup = function (id) {
+            this.groupId = id & 0xff; // byte only
+        };
+        RadioState.prototype.setTransmitPower = function (power) {
+            power = power | 0;
+            this.power = Math.max(0, Math.min(7, power));
+        };
+        RadioState.prototype.setTransmitSerialNumber = function (sn) {
+            this.transmitSerialNumber = !!sn;
+        };
+        RadioState.prototype.setFrequencyBand = function (band) {
+            band = band | 0;
+            if (band < 0 || band > 83)
+                return;
+            this.band = band;
+        };
+        RadioState.prototype.raiseEvent = function (id, eventid) {
+            pxsim.Runtime.postMessage({
+                type: "eventbus",
+                broadcast: true,
+                id: id,
+                eventid: eventid,
+                power: this.power,
+                group: this.groupId
+            });
+        };
+        RadioState.prototype.receivePacket = function (packet) {
+            if (this.groupId == packet.payload.groupId)
+                this.datagram.queue(packet);
+        };
+        return RadioState;
+    }());
+    pxsim.RadioState = RadioState;
 })(pxsim || (pxsim = {}));

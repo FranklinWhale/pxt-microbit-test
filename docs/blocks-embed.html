@@ -1737,7 +1737,7 @@ A quick solution is take screenshots of the snippets but that approach can quick
 }</code></pre>
 <ul>
 <li><code>id</code>: The identifer of the snippet element. This is used to match the document element of the snippet with the rendered blocks returned later.</li>
-<li><code>code</code>: The text of the code snippet to send, compile, and render.</li>
+<li><code>code</code>: The text of the code snippet to send, compile, and render. The snippet may be JavaScript or the Blockly XML payload.</li>
 <li><code>packageId</code>: the identifier of a project shared in the editor (without the <code>https://makecode.com/</code> prefix)</li>
 </ul>
 <h4 id="render-blocks-response-message">Render Blocks Response message</h4><p>The renderer sends back a <code>renderblocks</code> response after it has transformed the code into a block image. The block image is returned in two forms: as a SVG element and as an image data source.</p>

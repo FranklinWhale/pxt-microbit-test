@@ -1694,6 +1694,14 @@ if the temperature is 0 degrees Celsius.</li>
 <li><strong>high</strong>: a <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/types/number.html">number</a> that is the highest
 possible number (maximum) that the <strong>value</strong> parameter can be. The lines in the bar graph will reach their highest point when <strong>value</strong> reaches this number. If <strong>high</strong> is <code>0</code>, then the largest value recently plotted is used as the maximum.</li>
 </ul>
+
+    <div class="ui info message">
+        <div class="content">
+            <h4 id="serial-output">Serial Output</h4><p>The <code>||led:plot bar graph||</code> block also writes the number from <strong>value</strong> to the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/reference/serial.html">serial</a> port as a way to help you record
+values.</p>
+
+        </div>
+    </div>
 <h2 id="example-chart-acceleration">Example: chart acceleration</h2><p>Show a bar graph of the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/reference/input/acceleration.html">acceleration</a> 
 in the <code>x</code> direction of the micro:bit.
 The micro:bit’s <code>x</code> direction is from left to right (or right to left).

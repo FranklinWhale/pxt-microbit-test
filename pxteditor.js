@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -11,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 var pxt;
 (function (pxt) {
     var editor;
-    (function (editor) {
+    (function (editor_1) {
         var SimState;
         (function (SimState) {
             SimState[SimState["Stopped"] = 0] = "Stopped";
@@ -19,20 +22,20 @@ var pxt;
             SimState[SimState["Pending"] = 1] = "Pending";
             SimState[SimState["Starting"] = 2] = "Starting";
             SimState[SimState["Running"] = 3] = "Running";
-        })(SimState = editor.SimState || (editor.SimState = {}));
+        })(SimState = editor_1.SimState || (editor_1.SimState = {}));
         function isBlocks(f) {
             return pxt.U.endsWith(f.name, ".blocks");
         }
-        editor.isBlocks = isBlocks;
+        editor_1.isBlocks = isBlocks;
         var FilterState;
         (function (FilterState) {
             FilterState[FilterState["Hidden"] = 0] = "Hidden";
             FilterState[FilterState["Visible"] = 1] = "Visible";
             FilterState[FilterState["Disabled"] = 2] = "Disabled";
-        })(FilterState = editor.FilterState || (editor.FilterState = {}));
-        editor.initExtensionsAsync = function (opts) { return Promise.resolve({}); };
-        editor.initFieldExtensionsAsync = function (opts) { return Promise.resolve({}); };
-        editor.HELP_IMAGE_URI = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjYiIHZpZXdCb3g9IjAgMCAyNiAyNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTMiIGN5PSIxMyIgcj0iMTMiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNy45NTIgOS4xODQwMkMxNy45NTIgMTAuMjU2IDE3LjgxNiAxMS4wNzIgMTcuNTQ0IDExLjYzMkMxNy4yODggMTIuMTkyIDE2Ljc1MiAxMi43OTIgMTUuOTM2IDEzLjQzMkMxNS4xMiAxNC4wNzIgMTQuNTc2IDE0LjU4NCAxNC4zMDQgMTQuOTY4QzE0LjA0OCAxNS4zMzYgMTMuOTIgMTUuNzM2IDEzLjkyIDE2LjE2OFYxNi45NkgxMS44MDhDMTEuNDI0IDE2LjQ2NCAxMS4yMzIgMTUuODQgMTEuMjMyIDE1LjA4OEMxMS4yMzIgMTQuNjg4IDExLjM4NCAxNC4yODggMTEuNjg4IDEzLjg4OEMxMS45OTIgMTMuNDg4IDEyLjUzNiAxMi45NjggMTMuMzIgMTIuMzI4QzE0LjEwNCAxMS42NzIgMTQuNjI0IDExLjE2OCAxNC44OCAxMC44MTZDMTUuMTM2IDEwLjQ0OCAxNS4yNjQgOS45NjgwMiAxNS4yNjQgOS4zNzYwMkMxNS4yNjQgOC4yMDgwMiAxNC40MTYgNy42MjQwMiAxMi43MiA3LjYyNDAyQzExLjc2IDcuNjI0MDIgMTAuNzUyIDcuNzM2MDIgOS42OTYgNy45NjAwMkw5LjE0NCA4LjA4MDAyTDkgNi4wODgwMkMxMC40ODggNS41NjAwMiAxMS44NCA1LjI5NjAyIDEzLjA1NiA1LjI5NjAyQzE0LjczNiA1LjI5NjAyIDE1Ljk2OCA1LjYwODAyIDE2Ljc1MiA2LjIzMjAyQzE3LjU1MiA2Ljg0MDAyIDE3Ljk1MiA3LjgyNDAyIDE3Ljk1MiA5LjE4NDAyWk0xMS40IDIyVjE4LjY0SDE0LjE4NFYyMkgxMS40WiIgZmlsbD0iIzU5NUU3NCIvPgo8L3N2Zz4K';
+        })(FilterState = editor_1.FilterState || (editor_1.FilterState = {}));
+        editor_1.initExtensionsAsync = function (opts) { return Promise.resolve({}); };
+        editor_1.initFieldExtensionsAsync = function (opts) { return Promise.resolve({}); };
+        editor_1.HELP_IMAGE_URI = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjYiIHZpZXdCb3g9IjAgMCAyNiAyNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTMiIGN5PSIxMyIgcj0iMTMiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNy45NTIgOS4xODQwMkMxNy45NTIgMTAuMjU2IDE3LjgxNiAxMS4wNzIgMTcuNTQ0IDExLjYzMkMxNy4yODggMTIuMTkyIDE2Ljc1MiAxMi43OTIgMTUuOTM2IDEzLjQzMkMxNS4xMiAxNC4wNzIgMTQuNTc2IDE0LjU4NCAxNC4zMDQgMTQuOTY4QzE0LjA0OCAxNS4zMzYgMTMuOTIgMTUuNzM2IDEzLjkyIDE2LjE2OFYxNi45NkgxMS44MDhDMTEuNDI0IDE2LjQ2NCAxMS4yMzIgMTUuODQgMTEuMjMyIDE1LjA4OEMxMS4yMzIgMTQuNjg4IDExLjM4NCAxNC4yODggMTEuNjg4IDEzLjg4OEMxMS45OTIgMTMuNDg4IDEyLjUzNiAxMi45NjggMTMuMzIgMTIuMzI4QzE0LjEwNCAxMS42NzIgMTQuNjI0IDExLjE2OCAxNC44OCAxMC44MTZDMTUuMTM2IDEwLjQ0OCAxNS4yNjQgOS45NjgwMiAxNS4yNjQgOS4zNzYwMkMxNS4yNjQgOC4yMDgwMiAxNC40MTYgNy42MjQwMiAxMi43MiA3LjYyNDAyQzExLjc2IDcuNjI0MDIgMTAuNzUyIDcuNzM2MDIgOS42OTYgNy45NjAwMkw5LjE0NCA4LjA4MDAyTDkgNi4wODgwMkMxMC40ODggNS41NjAwMiAxMS44NCA1LjI5NjAyIDEzLjA1NiA1LjI5NjAyQzE0LjczNiA1LjI5NjAyIDE1Ljk2OCA1LjYwODAyIDE2Ljc1MiA2LjIzMjAyQzE3LjU1MiA2Ljg0MDAyIDE3Ljk1MiA3LjgyNDAyIDE3Ljk1MiA5LjE4NDAyWk0xMS40IDIyVjE4LjY0SDE0LjE4NFYyMkgxMS40WiIgZmlsbD0iIzU5NUU3NCIvPgo8L3N2Zz4K';
         var _initEditorExtensionsPromise;
         function initEditorExtensionsAsync() {
             if (!_initEditorExtensionsPromise) {
@@ -53,13 +56,13 @@ var pxt;
             }
             return _initEditorExtensionsPromise;
         }
-        editor.initEditorExtensionsAsync = initEditorExtensionsAsync;
+        editor_1.initEditorExtensionsAsync = initEditorExtensionsAsync;
     })(editor = pxt.editor || (pxt.editor = {}));
 })(pxt || (pxt = {}));
 var pxt;
 (function (pxt) {
     var editor;
-    (function (editor_1) {
+    (function (editor_2) {
         var pendingRequests = {};
         /**
          * Binds incoming window messages to the project view.
@@ -102,7 +105,7 @@ var pxt;
                     // Messages sent to the editor from the parent frame
                     var p = Promise.resolve();
                     var resp_1 = undefined;
-                    if (data.type == "pxthost") {
+                    if (data.type == "pxthost") { // response from the host
                         var req_1 = pendingRequests[data.id];
                         if (!req_1) {
                             pxt.debug("pxthost: unknown request " + data.id);
@@ -111,7 +114,7 @@ var pxt;
                             p = p.then(function () { return req_1.resolve(data); });
                         }
                     }
-                    else if (data.type == "pxteditor") {
+                    else if (data.type == "pxteditor") { // request from the editor
                         p = p.then(function () {
                             return getEditorAsync().then(function (projectView) {
                                 var req = data;
@@ -234,7 +237,7 @@ var pxt;
                 return true;
             }, false);
         }
-        editor_1.bindEditorMessages = bindEditorMessages;
+        editor_2.bindEditorMessages = bindEditorMessages;
         /**
          * Sends analytics messages upstream to container if any
          */
@@ -284,7 +287,7 @@ var pxt;
                 });
             };
         }
-        editor_1.enableControllerAnalytics = enableControllerAnalytics;
+        editor_2.enableControllerAnalytics = enableControllerAnalytics;
         function sendResponse(request, resp, success, error) {
             if (request.response) {
                 window.parent.postMessage({
@@ -310,7 +313,7 @@ var pxt;
                     resolve(undefined);
             });
         }
-        editor_1.postHostMessageAsync = postHostMessageAsync;
+        editor_2.postHostMessageAsync = postHostMessageAsync;
     })(editor = pxt.editor || (pxt.editor = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -398,12 +401,6 @@ var pxt;
                         feedbackUrl: "https://github.com/microsoft/pxt/issues/5390"
                     },
                     {
-                        id: "pythonToolbox",
-                        name: lf("Toolbox for Static Python"),
-                        description: lf("Use the code toolbox in Static Python"),
-                        feedbackUrl: "https://github.com/microsoft/pxt/issues/6291"
-                    },
-                    {
                         id: "simGif",
                         name: lf("Simulator Gifs"),
                         description: lf("Download gifs of the simulator"),
@@ -442,12 +439,6 @@ var pxt;
                         description: lf("Enable support for hardware marked 'experimental' in the hardware seletion dialog")
                     },
                     {
-                        id: "recipes",
-                        name: lf("Tutorials in Context"),
-                        description: lf("Micro-tutorials running within your program."),
-                        feedbackUrl: "https://github.com/microsoft/pxt/issues/5646"
-                    },
-                    {
                         id: "checkForHwVariantWebUSB",
                         name: lf("Detect Hardware with WebUSB"),
                         description: lf("When compiling, use WebUSB to detect hardware configuration.")
@@ -462,6 +453,21 @@ var pxt;
                         id: "githubCompiledJs",
                         name: lf("GitHub Pages JavaScript"),
                         description: lf("Commit compiled javascript when creating a release")
+                    },
+                    {
+                        id: "blocksCollapsing",
+                        name: lf("Collapse blocks"),
+                        description: lf("Collapse and expand functions or event blocks")
+                    },
+                    {
+                        id: "tutorialBlocksDiff",
+                        name: lf("Tutorial Block Diffs"),
+                        description: lf("Automatially render blocks diff in tutorials")
+                    },
+                    {
+                        id: "openProjectNewTab",
+                        name: lf("Open in New Tab"),
+                        description: lf("Open connected editors in different browser tabs.")
                     }
                 ].filter(function (experiment) { return ids.indexOf(experiment.id) > -1; });
             }
@@ -668,7 +674,22 @@ var pxt;
                 var monacoPaths = window.MonacoPaths;
                 var onGotAmdLoader = function () {
                     var req = window.require;
-                    req.config({ paths: monacoPaths });
+                    req.config({
+                        paths: monacoPaths,
+                        ignoreDuplicateModules: ["vs/basic-languages/typescript/typescript.contribution", "vs/basic-languages/javascript/javascript.contribution"]
+                    });
+                    // Mock out the JavaScript and TypeScript modules because we use our own language service
+                    var def = window.define;
+                    def("vs/basic-languages/typescript/typescript.contribution", ["require", "exports"], function () { return function () { }; });
+                    def("vs/basic-languages/javascript/javascript.contribution", ["require", "exports"], function () { return function () { }; });
+                    def("vs/language/typescript/tsMode", ["require", "exports"], function () {
+                        return {
+                            setupTypeScript: function () { },
+                            getTypeScriptWorker: function () { },
+                            setupJavaScript: function () { },
+                            getJavaScriptWorker: function () { },
+                        };
+                    });
                     // Load monaco
                     req(['vs/editor/editor.main'], function () {
                         setupMonaco();
@@ -690,28 +711,8 @@ var pxt;
         }
         vs.initMonacoAsync = initMonacoAsync;
         function setupMonaco() {
-            if (!monaco.languages.typescript)
-                return;
             initAsmMonarchLanguage();
-            // validation settings
-            monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-                noSyntaxValidation: true,
-                noSemanticValidation: true
-            });
-            // compiler options
-            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-                allowUnreachableCode: true,
-                noImplicitAny: true,
-                allowJs: false,
-                allowUnusedLabels: true,
-                target: monaco.languages.typescript.ScriptTarget.ES5,
-                outDir: "built",
-                rootDir: ".",
-                noLib: true,
-                mouseWheelZoom: false
-            });
-            // maximum idle time
-            monaco.languages.typescript.typescriptDefaults.setMaximunWorkerIdleTime(20 * 60 * 1000);
+            initTypeScriptLanguageDefinition();
         }
         function createEditor(element) {
             var inverted = pxt.appTarget.appTheme.invertedMonaco;
@@ -731,10 +732,11 @@ var pxt;
                 minimap: {
                     enabled: false
                 },
-                autoIndent: true,
+                fixedOverflowWidgets: true,
+                autoIndent: "full",
                 useTabStops: true,
                 dragAndDrop: true,
-                matchBrackets: true,
+                matchBrackets: "always",
                 occurrencesHighlight: false,
                 quickSuggestionsDelay: 200,
                 theme: inverted ? 'vs-dark' : 'vs',
@@ -825,6 +827,207 @@ var pxt;
                         [/;.*$/, 'comment'],
                     ],
                 }
+            });
+        }
+        function initTypeScriptLanguageDefinition() {
+            // Taken from https://github.com/microsoft/monaco-languages/blob/master/src/typescript/typescript.ts
+            monaco.languages.register({
+                id: "typescript",
+                extensions: [".ts", ".tsx"],
+                aliases: ["TypeScript", "ts", "typescript"],
+                mimetypes: ["text/typescript"],
+            });
+            monaco.languages.setLanguageConfiguration("typescript", {
+                wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+                comments: {
+                    lineComment: '//',
+                    blockComment: ['/*', '*/']
+                },
+                brackets: [
+                    ['{', '}'],
+                    ['[', ']'],
+                    ['(', ')']
+                ],
+                onEnterRules: [
+                    {
+                        // e.g. /** | */
+                        beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
+                        afterText: /^\s*\*\/$/,
+                        action: { indentAction: monaco.languages.IndentAction.IndentOutdent, appendText: ' * ' }
+                    },
+                    {
+                        // e.g. /** ...|
+                        beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
+                        action: { indentAction: monaco.languages.IndentAction.None, appendText: ' * ' }
+                    },
+                    {
+                        // e.g.  * ...|
+                        beforeText: /^(\t|(\ \ ))*\ \*(\ ([^\*]|\*(?!\/))*)?$/,
+                        action: { indentAction: monaco.languages.IndentAction.None, appendText: '* ' }
+                    },
+                    {
+                        // e.g.  */|
+                        beforeText: /^(\t|(\ \ ))*\ \*\/\s*$/,
+                        action: { indentAction: monaco.languages.IndentAction.None, removeText: 1 }
+                    }
+                ],
+                autoClosingPairs: [
+                    { open: '{', close: '}' },
+                    { open: '[', close: ']' },
+                    { open: '(', close: ')' },
+                    { open: '"', close: '"', notIn: ['string'] },
+                    { open: '\'', close: '\'', notIn: ['string', 'comment'] },
+                    { open: '`', close: '`', notIn: ['string', 'comment'] },
+                    { open: "/**", close: " */", notIn: ["string"] }
+                ],
+                folding: {
+                    markers: {
+                        start: new RegExp("^\\s*//\\s*#?region\\b"),
+                        end: new RegExp("^\\s*//\\s*#?endregion\\b")
+                    }
+                }
+            });
+            monaco.languages.setMonarchTokensProvider("typescript", {
+                // Set defaultToken to invalid to see what you do not tokenize yet
+                defaultToken: 'invalid',
+                tokenPostfix: '.ts',
+                keywords: [
+                    'abstract', 'as', 'break', 'case', 'catch', 'class', 'continue', 'const',
+                    'constructor', 'debugger', 'declare', 'default', 'delete', 'do', 'else',
+                    'enum', 'export', 'extends', 'false', 'finally', 'for', 'from', 'function',
+                    'get', 'if', 'implements', 'import', 'in', 'infer', 'instanceof', 'interface',
+                    'is', 'keyof', 'let', 'module', 'namespace', 'never', 'new', 'null', 'package',
+                    'private', 'protected', 'public', 'readonly', 'require', 'global', 'return',
+                    'set', 'static', 'super', 'switch', 'symbol', 'this', 'throw', 'true', 'try',
+                    'type', 'typeof', 'unique', 'var', 'void', 'while', 'with', 'yield', 'async',
+                    'await', 'of'
+                ],
+                typeKeywords: [
+                    'any', 'boolean', 'number', 'object', 'string', 'undefined'
+                ],
+                operators: [
+                    '<=', '>=', '==', '!=', '===', '!==', '=>', '+', '-', '**',
+                    '*', '/', '%', '++', '--', '<<', '</', '>>', '>>>', '&',
+                    '|', '^', '!', '~', '&&', '||', '??', '?', ':', '=', '+=', '-=',
+                    '*=', '**=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '|=',
+                    '^=', '@',
+                ],
+                // we include these common regular expressions
+                symbols: /[=><!~?:&|+\-*\/\^%]+/,
+                escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+                digits: /\d+(_+\d+)*/,
+                octaldigits: /[0-7]+(_+[0-7]+)*/,
+                binarydigits: /[0-1]+(_+[0-1]+)*/,
+                hexdigits: /[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*/,
+                regexpctl: /[(){}\[\]\$\^|\-*+?\.]/,
+                regexpesc: /\\(?:[bBdDfnrstvwWn0\\\/]|@regexpctl|c[A-Z]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})/,
+                // The main tokenizer for our languages
+                tokenizer: {
+                    root: [
+                        [/[{}]/, 'delimiter.bracket'],
+                        { include: 'common' }
+                    ],
+                    common: [
+                        // identifiers and keywords
+                        [/[a-z_$][\w$]*/, {
+                                cases: {
+                                    '@typeKeywords': 'keyword',
+                                    '@keywords': 'keyword',
+                                    '@default': 'identifier'
+                                }
+                            }],
+                        [/[A-Z][\w\$]*/, 'type.identifier'],
+                        // [/[A-Z][\w\$]*/, 'identifier'],
+                        // whitespace
+                        { include: '@whitespace' },
+                        // regular expression: ensure it is terminated before beginning (otherwise it is an opeator)
+                        [/\/(?=([^\\\/]|\\.)+\/([gimsuy]*)(\s*)(\.|;|,|\)|\]|\}|$))/, { token: 'regexp', bracket: '@open', next: '@regexp' }],
+                        // delimiters and operators
+                        [/[()\[\]]/, '@brackets'],
+                        [/[<>](?!@symbols)/, '@brackets'],
+                        [/!(?=([^=]|$))/, 'delimiter'],
+                        [/@symbols/, {
+                                cases: {
+                                    '@operators': 'delimiter',
+                                    '@default': ''
+                                }
+                            }],
+                        // numbers
+                        [/(@digits)[eE]([\-+]?(@digits))?/, 'number.float'],
+                        [/(@digits)\.(@digits)([eE][\-+]?(@digits))?/, 'number.float'],
+                        [/0[xX](@hexdigits)n?/, 'number.hex'],
+                        [/0[oO]?(@octaldigits)n?/, 'number.octal'],
+                        [/0[bB](@binarydigits)n?/, 'number.binary'],
+                        [/(@digits)n?/, 'number'],
+                        // delimiter: after number because of .\d floats
+                        [/[;,.]/, 'delimiter'],
+                        // strings
+                        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+                        [/'([^'\\]|\\.)*$/, 'string.invalid'],
+                        [/"/, 'string', '@string_double'],
+                        [/'/, 'string', '@string_single'],
+                        [/`/, 'string', '@string_backtick'],
+                    ],
+                    whitespace: [
+                        [/[ \t\r\n]+/, ''],
+                        [/\/\*\*(?!\/)/, 'comment.doc', '@jsdoc'],
+                        [/\/\*/, 'comment', '@comment'],
+                        [/\/\/.*$/, 'comment'],
+                    ],
+                    comment: [
+                        [/[^\/*]+/, 'comment'],
+                        [/\*\//, 'comment', '@pop'],
+                        [/[\/*]/, 'comment']
+                    ],
+                    jsdoc: [
+                        [/[^\/*]+/, 'comment.doc'],
+                        [/\*\//, 'comment.doc', '@pop'],
+                        [/[\/*]/, 'comment.doc']
+                    ],
+                    // We match regular expression quite precisely
+                    regexp: [
+                        [/(\{)(\d+(?:,\d*)?)(\})/, ['regexp.escape.control', 'regexp.escape.control', 'regexp.escape.control']],
+                        [/(\[)(\^?)(?=(?:[^\]\\\/]|\\.)+)/, ['regexp.escape.control', { token: 'regexp.escape.control', next: '@regexrange' }]],
+                        [/(\()(\?:|\?=|\?!)/, ['regexp.escape.control', 'regexp.escape.control']],
+                        [/[()]/, 'regexp.escape.control'],
+                        [/@regexpctl/, 'regexp.escape.control'],
+                        [/[^\\\/]/, 'regexp'],
+                        [/@regexpesc/, 'regexp.escape'],
+                        [/\\\./, 'regexp.invalid'],
+                        [/(\/)([gimsuy]*)/, [{ token: 'regexp', bracket: '@close', next: '@pop' }, 'keyword.other']],
+                    ],
+                    regexrange: [
+                        [/-/, 'regexp.escape.control'],
+                        [/\^/, 'regexp.invalid'],
+                        [/@regexpesc/, 'regexp.escape'],
+                        [/[^\]]/, 'regexp'],
+                        [/\]/, { token: 'regexp.escape.control', next: '@pop', bracket: '@close' }]
+                    ],
+                    string_double: [
+                        [/[^\\"]+/, 'string'],
+                        [/@escapes/, 'string.escape'],
+                        [/\\./, 'string.escape.invalid'],
+                        [/"/, 'string', '@pop']
+                    ],
+                    string_single: [
+                        [/[^\\']+/, 'string'],
+                        [/@escapes/, 'string.escape'],
+                        [/\\./, 'string.escape.invalid'],
+                        [/'/, 'string', '@pop']
+                    ],
+                    string_backtick: [
+                        [/\$\{/, { token: 'delimiter.bracket', next: '@bracketCounting' }],
+                        [/[^\\`$]+/, 'string'],
+                        [/@escapes/, 'string.escape'],
+                        [/\\./, 'string.escape.invalid'],
+                        [/`/, 'string', '@pop']
+                    ],
+                    bracketCounting: [
+                        [/\{/, 'delimiter.bracket', '@bracketCounting'],
+                        [/\}/, 'delimiter.bracket', '@pop'],
+                        { include: 'common' }
+                    ],
+                },
             });
         }
     })(vs = pxt.vs || (pxt.vs = {}));

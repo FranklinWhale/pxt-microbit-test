@@ -1,6 +1,6 @@
 /*!-----------------------------------------------------------------------------
  * Copyright (c) Microsoft Corporation. All rights reserved.
- * pxt-monaco-typescript version: 2.3.5(45ad097a81699d0b5270ed09f753c0ecf142e01f)
+ * pxt-monaco-typescript version: 2.3.6(3a59f9bb50c1855bc695a17cd7b9324441d90a77)
  * Released under the MIT license
  * https://github.com/Microsoft/pxt-monaco-typescript/blob/master/LICENSE.md
  *-----------------------------------------------------------------------------*/

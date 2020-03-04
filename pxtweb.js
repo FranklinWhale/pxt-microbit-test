@@ -1,3 +1,12 @@
+// redirect for IE11 (unsupported)
+(function _() {
+    if (typeof navigator !== "undefined" && /Trident/i.test(navigator.userAgent)
+        && !/skipbrowsercheck=1/i.exec(window.location.href)
+        && !/\/browsers/i.exec(window.location.href)) {
+        window.location.href = "/browsers";
+        return;
+    }
+})();
 /// <reference path="../../localtypings/mscc.d.ts" />
 /// <reference path="../../pxtwinrt/winrtrefs.d.ts"/>
 var pxt;
@@ -191,7 +200,7 @@ var pxt;
         // Warning: app.tsx overwrites the hash after reading the language so this needs
         // to be called before that happens
         var mlang = /(live)?lang=([a-z]{2,}(-[A-Z]+)?)/i.exec(window.location.href);
-        return mlang ? mlang[2] : (navigator.userLanguage || navigator.language);
+        return (mlang ? mlang[2] : (navigator.userLanguage || navigator.language)) || "en";
     }
     function getCookieBannerAsync(domain, locale, cb) {
         httpGetAsync("https://makecode.com/api/mscc/" + domain + "/" + locale, function (err, resp) {

@@ -1,13 +1,34 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var pxt;
 (function (pxt) {
     var SimpleHost = /** @class */ (function () {
@@ -1372,8 +1393,8 @@ var ts;
                                 off--;
                                 _this.write(_this.t.pop_fixed(["r" + a.idx]));
                             }
-                            for (var _c = 0, complexArgs_3 = complexArgs; _c < complexArgs_3.length; _c++) {
-                                var a = complexArgs_3[_c];
+                            for (var _c = 0, complexArgs_4 = complexArgs; _c < complexArgs_4.length; _c++) {
+                                var a = complexArgs_4[_c];
                                 if (!a.conv)
                                     _this.write(_this.loadFromExprStack("r" + a.idx, a.expr, off));
                             }
@@ -1385,8 +1406,8 @@ var ts;
                     }
                     else {
                         // not really worth a helper; some of this will be peep-holed away
-                        for (var _e = 0, complexArgs_4 = complexArgs; _e < complexArgs_4.length; _e++) {
-                            var a = complexArgs_4[_e];
+                        for (var _e = 0, complexArgs_3 = complexArgs; _e < complexArgs_3.length; _e++) {
+                            var a = complexArgs_3[_e];
                             this.write(this.loadFromExprStack("r" + a.idx, a.expr));
                         }
                     }
@@ -3401,6 +3422,11 @@ var ts;
                 // if the valus is invalid (like a grey-block would)
                 DecompileParamKeys["DecompileArgumentAsString"] = "decompileArgumentAsString";
             })(DecompileParamKeys = decompiler.DecompileParamKeys || (decompiler.DecompileParamKeys = {}));
+            var CommentKind;
+            (function (CommentKind) {
+                CommentKind[CommentKind["SingleLine"] = 0] = "SingleLine";
+                CommentKind[CommentKind["MultiLine"] = 1] = "MultiLine";
+            })(CommentKind = decompiler.CommentKind || (decompiler.CommentKind = {}));
             decompiler.FILE_TOO_LARGE_CODE = 9266;
             decompiler.DECOMPILER_ERROR = 9267;
             var SK = ts.SyntaxKind;
@@ -3580,8 +3606,13 @@ var ts;
                 var stmts = file.statements;
                 var result = {
                     blocksInfo: blocksInfo,
-                    outfiles: {}, diagnostics: [], success: true, times: {}
+                    outfiles: {},
+                    diagnostics: [],
+                    success: true,
+                    times: {}
                 };
+                if (options.generateSourceMap)
+                    result.blockSourceMap = [];
                 var env = {
                     blocks: blocksInfo,
                     declaredFunctions: {},
@@ -3601,7 +3632,9 @@ var ts;
                 var workspaceComments = [];
                 var autoDeclarations = [];
                 var getCommentRef = (function () { var currentCommentId = 0; return function () { return "" + currentCommentId++; }; })();
+                var commentMap = buildCommentMap(file);
                 var checkTopNode = function (topLevelNode) {
+                    var _a;
                     if (topLevelNode.kind === SK.FunctionDeclaration && !checkStatement(topLevelNode, env, false, true)) {
                         env.declaredFunctions[getVariableName(topLevelNode.name)] = topLevelNode;
                     }
@@ -3643,7 +3676,6 @@ var ts;
                     else if (topLevelNode.kind === SK.Block) {
                         ts.forEachChild(topLevelNode, checkTopNode);
                     }
-                    var _a;
                 };
                 Object.keys(blocksInfo.kindsByName).forEach(function (k) {
                     var kindInfo = blocksInfo.kindsByName[k];
@@ -3679,6 +3711,16 @@ var ts;
                 var n;
                 try {
                     n = codeBlock(stmts, undefined, true, undefined, !options.snippetMode);
+                    // Emit all of the orphaned comments
+                    for (var _i = 0, commentMap_1 = commentMap; _i < commentMap_1.length; _i++) {
+                        var comment = commentMap_1[_i];
+                        if (!comment.owner) {
+                            workspaceComments.push({
+                                refId: getCommentRef(),
+                                comment: [comment]
+                            });
+                        }
+                    }
                 }
                 catch (e) {
                     if (e.programTooLarge) {
@@ -3711,7 +3753,8 @@ var ts;
                     emitStatementNode(n);
                 }
                 else if (!options.snippetMode && !stmts.length) {
-                    write("<block type=\"" + ts.pxtc.ON_START_TYPE + "\"></block>");
+                    openBlockTag(ts.pxtc.ON_START_TYPE, mkStmt(ts.pxtc.ON_START_TYPE, stmts[0]));
+                    closeBlockTag();
                 }
                 workspaceComments.forEach(function (c) {
                     emitWorkspaceComment(c);
@@ -3770,17 +3813,48 @@ var ts;
                         throw e;
                     }
                 }
-                function mkStmt(type) {
-                    return {
+                // generated ids with the same entropy as blockly
+                function blocklyGenUid() {
+                    var soup_ = '!#$%()*+,-./:;=?@[]^_`{|}~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    var length = 20;
+                    var soupLength = soup_.length;
+                    var id = [];
+                    for (var i = 0; i < length; i++) {
+                        id[i] = soup_.charAt(Math.random() * soupLength);
+                    }
+                    return id.join('');
+                }
+                function mkId(type, node) {
+                    if (type == ts.pxtc.ON_START_TYPE)
+                        return "xRRgvHNlG#rZ^u`HECiY";
+                    var id = blocklyGenUid();
+                    if (node) {
+                        var startPos = node.getFullStart();
+                        result.blockSourceMap.push({
+                            id: id,
+                            startPos: startPos,
+                            endPos: startPos + node.getFullWidth()
+                        });
+                    }
+                    return id;
+                }
+                function mkStmt(type, node) {
+                    var stm = {
                         kind: "statement",
                         type: type
                     };
+                    if (result.blockSourceMap)
+                        stm.id = mkId(type, node);
+                    return stm;
                 }
-                function mkExpr(type) {
-                    return {
+                function mkExpr(type, node) {
+                    var expr = {
                         kind: "expr",
                         type: type
                     };
+                    //if (result.blockSourceMap)
+                    //    expr.id = mkId(type, node);
+                    return expr;
                 }
                 function mkValue(name, value, shadowType, shadowMutation) {
                     if ((!shadowType || shadowType === numberType) && shadowMutation && shadowMutation['min'] && shadowMutation['max']) {
@@ -3806,7 +3880,7 @@ var ts;
                     if (!n) {
                         return;
                     }
-                    openBlockTag(n.type);
+                    openBlockTag(n.type, n);
                     emitBlockNodeCore(n);
                     if (n.data !== undefined) {
                         write("<data>" + pxtc.U.htmlEscape(n.data) + "</data>");
@@ -3820,7 +3894,7 @@ var ts;
                         write("</next>");
                     }
                     if (n.comment !== undefined) {
-                        write("<comment pinned=\"false\">" + pxtc.U.htmlEscape(n.comment) + "</comment>");
+                        write("<comment pinned=\"false\">" + pxtc.U.htmlEscape(formatCommentsForBlocks(n.comment)) + "</comment>");
                     }
                     closeBlockTag();
                 }
@@ -3935,28 +4009,32 @@ var ts;
                         if (!isShadow) {
                             countBlock();
                         }
-                        write("<" + tag + " type=\"" + pxtc.U.htmlEscape(node.type) + "\">");
+                        write("<" + tag + " " + (node.id ? "id=\"" + node.id + "\" " : '') + "type=\"" + pxtc.U.htmlEscape(node.type) + "\">");
                         emitBlockNodeCore(node);
                         write("</" + tag + ">");
                     }
                 }
-                function openBlockTag(type) {
+                function openBlockTag(type, node) {
                     countBlock();
-                    write("<block type=\"" + pxtc.U.htmlEscape(type) + "\">");
+                    var id = node && node.id;
+                    write("<block " + (id ? "id=\"" + node.id + "\" " : '') + "type=\"" + pxtc.U.htmlEscape(type) + "\">");
                 }
                 function closeBlockTag() {
                     write("</block>");
                 }
                 function emitWorkspaceComment(comment) {
                     var maxLineLength = 0;
-                    var lines = comment.text.split("\n");
-                    lines.forEach(function (line) { return maxLineLength = Math.max(maxLineLength, line.length); });
-                    // These are just approximations but they are the best we can do outside the DOM
-                    var width = Math.max(Math.min(maxLineLength * 10, maxCommentWidth), minCommentWidth);
-                    var height = Math.max(Math.min(lines.length * 40, maxCommentHeight), minCommentHeight);
-                    write("<comment h=\"" + height + "\" w=\"" + width + "\" data=\"" + pxtc.U.htmlEscape(comment.refId) + "\">");
-                    write(pxtc.U.htmlEscape(comment.text));
-                    write("</comment>");
+                    var text = formatCommentsForBlocks(comment.comment);
+                    if (text.trim()) {
+                        var lines = text.split("\n");
+                        lines.forEach(function (line) { return maxLineLength = Math.max(maxLineLength, line.length); });
+                        // These are just approximations but they are the best we can do outside the DOM
+                        var width = Math.max(Math.min(maxLineLength * 10, maxCommentWidth), minCommentWidth);
+                        var height = Math.max(Math.min(lines.length * 40, maxCommentHeight), minCommentHeight);
+                        write("<comment h=\"" + height + "\" w=\"" + width + "\" data=\"" + pxtc.U.htmlEscape(comment.refId) + "\">");
+                        write(pxtc.U.htmlEscape(text));
+                        write("</comment>");
+                    }
                 }
                 function getOutputBlock(n) {
                     if (checkExpression(n, env)) {
@@ -4019,6 +4097,8 @@ var ts;
                 function getTypeScriptExpressionBlock(n) {
                     var text = applyRenamesInRange(n.getFullText(), n.getFullStart(), n.getEnd()).trim();
                     trackVariableUsagesInText(n);
+                    // Mark comments or else they are emitted twice
+                    markCommentsInRange(n, commentMap);
                     return getFieldBlock(pxtc.TS_OUTPUT_TYPE, "EXPRESSION", text);
                 }
                 function getBinaryExpression(n) {
@@ -4040,13 +4120,13 @@ var ts;
                         leftValue = getValue(leftName, n.left, numberType);
                         rightValue = getValue(rightName, n.right, numberType);
                     }
-                    var result = mkExpr(npp.type);
-                    result.fields = [];
+                    var r = mkExpr(npp.type, n);
+                    r.fields = [];
                     if (npp.op) {
-                        result.fields.push(getField("OP", npp.op));
+                        r.fields.push(getField("OP", npp.op));
                     }
-                    result.inputs = [leftValue, rightValue];
-                    return result;
+                    r.inputs = [leftValue, rightValue];
+                    return r;
                 }
                 function isTextJoin(n) {
                     if (n.kind === SK.BinaryExpression) {
@@ -4076,12 +4156,12 @@ var ts;
                             inputs.push(getValue("ADD" + inputs.length, args[i], stringType));
                         }
                     }
-                    var result = mkExpr("text_join");
-                    result.inputs = inputs;
-                    result.mutation = {
+                    var r = mkExpr("text_join", n);
+                    r.inputs = inputs;
+                    r.mutation = {
                         "items": inputs.length.toString()
                     };
-                    return result;
+                    return r;
                 }
                 function getValue(name, contents, shadowType, shadowMutation) {
                     var value;
@@ -4142,7 +4222,7 @@ var ts;
                     return getFieldBlock("logic_boolean", "BOOL", value ? "TRUE" : "FALSE");
                 }
                 function getFieldBlock(type, fieldName, value, isShadow) {
-                    var r = mkExpr(type);
+                    var r = mkExpr(type, null);
                     r.fields = [getField(fieldName, value)];
                     r.isShadow = isShadow;
                     return r;
@@ -4172,7 +4252,7 @@ var ts;
                 }
                 // TODO: Add a real negation block
                 function negateNumericNode(node) {
-                    var r = mkExpr("math_arithmetic");
+                    var r = mkExpr("math_arithmetic", node);
                     r.inputs = [
                         getValue("A", 0, numberType),
                         getValue("B", node, numberType)
@@ -4183,7 +4263,7 @@ var ts;
                 function getPrefixUnaryExpression(node) {
                     switch (node.operator) {
                         case SK.ExclamationToken:
-                            var r = mkExpr("logic_negate");
+                            var r = mkExpr("logic_negate", node);
                             r.inputs = [getConditionalInput("BOOL", node.operand)];
                             return r;
                         case SK.PlusToken:
@@ -4224,9 +4304,9 @@ var ts;
                     var attributes = attrs(callInfo);
                     blockId = attributes.blockId || blockId;
                     if (attributes.blockCombine)
-                        return getPropertyGetBlock(n);
+                        return getPropertyGetBlock(n, n);
                     if (attributes.blockId === "lists_length" || attributes.blockId === "text_length") {
-                        var r = mkExpr(pxtc.U.htmlEscape(attributes.blockId));
+                        var r = mkExpr(pxtc.U.htmlEscape(attributes.blockId), n);
                         r.inputs = [getValue("VALUE", n.expression)];
                         return r;
                     }
@@ -4244,7 +4324,7 @@ var ts;
                     }
                     var info = env.compInfo(callInfo);
                     if (blockId && info && info.thisParameter) {
-                        var r = mkExpr(blockId);
+                        var r = mkExpr(blockId, n);
                         r.inputs = [getValue(pxtc.U.htmlEscape(info.thisParameter.definitionName), n.expression, info.thisParameter.shadowBlockId)];
                         return r;
                     }
@@ -4253,7 +4333,7 @@ var ts;
                 }
                 function getEnumFieldBlock(idfn, value) {
                     var f = /(?:%|\$)([a-zA-Z0-9_]+)/.exec(idfn.attributes.block);
-                    var r = mkExpr(pxtc.U.htmlEscape(idfn.attributes.blockId));
+                    var r = mkExpr(pxtc.U.htmlEscape(idfn.attributes.blockId), undefined);
                     r.fields = [{
                             kind: "field",
                             name: pxtc.U.htmlEscape(f[1]),
@@ -4262,7 +4342,7 @@ var ts;
                     return r;
                 }
                 function getArrayLiteralExpression(n) {
-                    var r = mkExpr("lists_create_with");
+                    var r = mkExpr("lists_create_with", n);
                     r.inputs = n.elements.map(function (e, i) { return getValue("ADD" + i, e); });
                     r.mutation = {
                         "items": n.elements.length.toString()
@@ -4270,7 +4350,7 @@ var ts;
                     return r;
                 }
                 function getElementAccessExpression(n) {
-                    var r = mkExpr("lists_index_get");
+                    var r = mkExpr("lists_index_get", n);
                     r.inputs = [getValue("LIST", n.expression), getValue("INDEX", n.argumentExpression, numberType)];
                     return r;
                 }
@@ -4288,7 +4368,7 @@ var ts;
                         api = env.blocks.apis.byQName[attrs(callInfo).blockIdentity];
                     }
                     var comp = pxt.blocks.compileInfo(api);
-                    var r = mkExpr(api.attributes.blockId);
+                    var r = mkExpr(api.attributes.blockId, t);
                     var text = t.template.text;
                     // This will always be a field and not a value because we only allow no-substitution templates
                     r.fields = [getField(comp.parameters[0].actualName, text)];
@@ -4322,7 +4402,8 @@ var ts;
                     else {
                         switch (node.kind) {
                             case SK.Block:
-                                return codeBlock(node.statements, next, topLevel);
+                                var bBlock = codeBlock(node.statements, next, topLevel);
+                                return bBlock;
                             case SK.ExpressionStatement:
                                 return getStatementBlock(node.expression, next, parent || node, asExpression, topLevel);
                             case SK.VariableStatement:
@@ -4349,7 +4430,6 @@ var ts;
                                     // They are implicit within the blocks. But do track them in case they
                                     // never get used in the blocks (and thus won't be emitted again)
                                     trackAutoDeclaration(decl);
-                                    getComments(parent || node);
                                     return getNext();
                                 }
                                 stmt = getVariableDeclarationStatement(decl);
@@ -4387,6 +4467,7 @@ var ts;
                             case SK.EnumDeclaration:
                             case SK.ModuleDeclaration:
                                 // If the enum declaration made it past the checker then it is emitted elsewhere
+                                markCommentsInRange(node, commentMap);
                                 return getNext();
                             default:
                                 if (next) {
@@ -4418,20 +4499,94 @@ var ts;
                         }
                         return undefined;
                     }
+                    /**
+                     * We split up comments according to the following rules:
+                     *      1. If the comment is not top-level:
+                     *          a. Combine it with all comments for the following statement
+                     *          b. If there is no following statement in the current block, group it with the previous statement
+                     *          c. If there are no statements inside the block, group it with the parent block
+                     *          d. If trailing the same line as the statement, group it with the comments for that statement
+                     *      2. If the comment is top-level:
+                     *          b. If the comment is followed by an empty line, it becomes a workspace comment
+                     *          c. If the comment is followed by a multi-line comment, it becomes a workspace comment
+                     *          a. If the comment is a single-line comment, combine it with the next single-line comment
+                     *          d. If the comment is not followed with an empty line, group it with the next statement or event
+                     *          e. All other comments are workspace comments
+                     */
                     function getComments(commented) {
-                        var commentRanges = ts.getLeadingCommentRangesOfNode(commented, file);
-                        if (commentRanges) {
-                            var wsCommentRefs = [];
-                            var commentText = getCommentText(commentRanges, node, wsCommentRefs);
+                        var comments = [];
+                        var current;
+                        for (var i = 0; i < commentMap.length; i++) {
+                            current = commentMap[i];
+                            if (!current.owner && current.start >= commented.pos && current.end <= commented.end) {
+                                current.owner = commented;
+                                current.ownerStatement = stmt;
+                                comments.push(current);
+                            }
+                            if (current.start > commented.end)
+                                break;
+                        }
+                        if (current && current.isTrailingComment) {
+                            var endLine = ts.getLineAndCharacterOfPosition(file, commented.end);
+                            var commentLine = ts.getLineAndCharacterOfPosition(file, current.start);
+                            if (endLine.line === commentLine.line) {
+                                // If the comment is trailing and on the same line as the statement, it probably belongs
+                                // to this statement. Remove it from any statement it's already assigned to and any workspace
+                                // comments
+                                if (current.ownerStatement) {
+                                    current.ownerStatement.comment.splice(current.ownerStatement.comment.indexOf(current), 1);
+                                    for (var _i = 0, workspaceComments_1 = workspaceComments; _i < workspaceComments_1.length; _i++) {
+                                        var wsComment = workspaceComments_1[_i];
+                                        wsComment.comment.splice(wsComment.comment.indexOf(current), 1);
+                                    }
+                                }
+                                current.owner = commented;
+                                current.ownerStatement = stmt;
+                                comments.push(current);
+                            }
+                        }
+                        if (comments.length) {
+                            var wsCommentRefs_1 = [];
+                            if (isTopLevelComment(commented)) {
+                                var currentWorkspaceComment_1 = [];
+                                var localWorkspaceComments_1 = [];
+                                comments.forEach(function (comment, index) {
+                                    var beforeStatement = comment.owner && comment.start < comment.owner.getStart();
+                                    if (comment.kind === CommentKind.MultiLine && beforeStatement) {
+                                        if (currentWorkspaceComment_1.length) {
+                                            localWorkspaceComments_1.push(currentWorkspaceComment_1);
+                                            currentWorkspaceComment_1 = [];
+                                        }
+                                        if (index != comments.length - 1) {
+                                            localWorkspaceComments_1.push([comment]);
+                                            return;
+                                        }
+                                    }
+                                    currentWorkspaceComment_1.push(comment);
+                                    if (comment.followedByEmptyLine && beforeStatement) {
+                                        localWorkspaceComments_1.push(currentWorkspaceComment_1);
+                                        currentWorkspaceComment_1 = [];
+                                    }
+                                });
+                                comments = currentWorkspaceComment_1;
+                                localWorkspaceComments_1.forEach(function (comment) {
+                                    var refId = getCommentRef();
+                                    wsCommentRefs_1.push(refId);
+                                    workspaceComments.push({ comment: comment, refId: refId });
+                                });
+                            }
                             if (stmt) {
-                                if (wsCommentRefs.length) {
-                                    stmt.data = wsCommentRefs.join(";");
+                                if (wsCommentRefs_1.length) {
+                                    if (stmt.data)
+                                        stmt.data += ";" + wsCommentRefs_1.join(";");
+                                    else
+                                        stmt.data = wsCommentRefs_1.join(";");
                                 }
-                                if (commentText && stmt) {
-                                    stmt.comment = commentText;
-                                }
-                                else {
-                                    // ERROR TODO
+                                if (comments && comments.length) {
+                                    if (stmt.comment)
+                                        stmt.comment = stmt.comment.concat(comments);
+                                    else
+                                        stmt.comment = comments;
                                 }
                             }
                         }
@@ -4440,13 +4595,15 @@ var ts;
                 function getTypeScriptStatementBlock(node, prefix, err) {
                     if (options.errorOnGreyBlocks)
                         error(node);
-                    var r = mkStmt(pxtc.TS_STATEMENT_TYPE);
+                    var r = mkStmt(pxtc.TS_STATEMENT_TYPE, node);
                     r.mutation = {};
                     trackVariableUsagesInText(node);
                     var text = node.getText();
                     var start = node.getStart();
                     var end = node.getEnd();
                     text = applyRenamesInRange(text, start, end);
+                    // Mark comments or else they are emitted twice
+                    markCommentsInRange(node, commentMap);
                     if (prefix) {
                         text = prefix + text;
                     }
@@ -4474,15 +4631,15 @@ var ts;
                     return r;
                 }
                 function getContinueStatementBlock(node) {
-                    var r = mkStmt(pxtc.TS_CONTINUE_TYPE);
+                    var r = mkStmt(pxtc.TS_CONTINUE_TYPE, node);
                     return r;
                 }
                 function getBreakStatementBlock(node) {
-                    var r = mkStmt(pxtc.TS_BREAK_TYPE);
+                    var r = mkStmt(pxtc.TS_BREAK_TYPE, node);
                     return r;
                 }
                 function getDebuggerStatementBlock(node) {
-                    var r = mkStmt(pxtc.TS_DEBUGGER_TYPE);
+                    var r = mkStmt(pxtc.TS_DEBUGGER_TYPE, node);
                     return r;
                 }
                 function getImageLiteralStatement(node, info) {
@@ -4492,7 +4649,7 @@ var ts;
                         return undefined;
                     }
                     var attributes = attrs(info);
-                    var res = mkStmt(attributes.blockId);
+                    var res = mkStmt(attributes.blockId, node);
                     res.fields = [];
                     var leds = (arg.text || '').replace(/\s+/g, '');
                     var nc = (attributes.imageLiteralColumns || 5) * attributes.imageLiteral;
@@ -4517,17 +4674,17 @@ var ts;
                     switch (n.operatorToken.kind) {
                         case SK.EqualsToken:
                             if (n.left.kind === SK.Identifier) {
-                                return getVariableSetOrChangeBlock(n.left, n.right);
+                                return getVariableSetOrChangeBlock(n, n.left, n.right);
                             }
                             else if (n.left.kind == SK.PropertyAccessExpression) {
-                                return getPropertySetBlock(n.left, n.right, "@set@");
+                                return getPropertySetBlock(n, n.left, n.right, "@set@");
                             }
                             else {
-                                return getArraySetBlock(n.left, n.right);
+                                return getArraySetBlock(n, n.left, n.right);
                             }
                         case SK.PlusEqualsToken:
                             if (isTextJoin(n)) {
-                                var r_1 = mkStmt("variables_set");
+                                var r_1 = mkStmt("variables_set", n);
                                 var renamed = getVariableName(n.left);
                                 trackVariableUsage(renamed, ReferenceType.InBlocksOnly);
                                 r_1.inputs = [mkValue("VALUE", getTextJoin(n), numberType)];
@@ -4535,11 +4692,11 @@ var ts;
                                 return r_1;
                             }
                             if (n.left.kind == SK.PropertyAccessExpression)
-                                return getPropertySetBlock(n.left, n.right, "@change@");
+                                return getPropertySetBlock(n, n.left, n.right, "@change@");
                             else
-                                return getVariableSetOrChangeBlock(n.left, n.right, true);
+                                return getVariableSetOrChangeBlock(n, n.left, n.right, true);
                         case SK.MinusEqualsToken:
-                            var r = mkStmt("variables_change");
+                            var r = mkStmt("variables_change", n);
                             r.inputs = [mkValue("VALUE", negateNumericNode(n.right), numberType)];
                             r.fields = [getField("VAR", getVariableName(n.left))];
                             return r;
@@ -4549,14 +4706,14 @@ var ts;
                     }
                 }
                 function getWhileStatement(n) {
-                    var r = mkStmt("device_while");
+                    var r = mkStmt("device_while", n);
                     r.inputs = [getConditionalInput("COND", n.expression)];
                     r.handlers = [{ name: "DO", statement: getStatementBlock(n.statement) }];
                     return r;
                 }
                 function getIfStatement(n) {
                     var flatif = flattenIfStatement(n);
-                    var r = mkStmt("controls_if");
+                    var r = mkStmt("controls_if", n);
                     r.mutation = {
                         "elseif": (flatif.ifStatements.length - 1).toString(),
                         "else": flatif.elseStatement ? "1" : "0"
@@ -4564,11 +4721,13 @@ var ts;
                     r.inputs = [];
                     r.handlers = [];
                     flatif.ifStatements.forEach(function (stmt, i) {
+                        var statement = getStatementBlock(stmt.thenStatement);
                         r.inputs.push(getConditionalInput("IF" + i, stmt.expression));
-                        r.handlers.push({ name: "DO" + i, statement: getStatementBlock(stmt.thenStatement) });
+                        r.handlers.push({ name: "DO" + i, statement: statement });
                     });
                     if (flatif.elseStatement) {
-                        r.handlers.push({ name: "ELSE", statement: getStatementBlock(flatif.elseStatement) });
+                        var statement = getStatementBlock(flatif.elseStatement);
+                        r.handlers.push({ name: "ELSE", statement: statement });
                     }
                     return r;
                 }
@@ -4636,13 +4795,13 @@ var ts;
                     var renamed = getVariableName(initializer.declarations[0].name);
                     var r;
                     if (condition.operatorToken.kind === SK.LessThanToken && !checkForVariableUsages(n.statement)) {
-                        r = mkStmt("controls_repeat_ext");
+                        r = mkStmt("controls_repeat_ext", n);
                         r.fields = [];
                         r.inputs = [getValue("TIMES", condition.right, wholeNumberType)];
                         r.handlers = [];
                     }
                     else {
-                        r = mkStmt("pxt_controls_for");
+                        r = mkStmt("pxt_controls_for", n);
                         r.fields = [];
                         r.inputs = [];
                         r.handlers = [];
@@ -4655,7 +4814,7 @@ var ts;
                                 r.inputs.push(mkValue("TO", valueField, wholeNumberType));
                             }
                             else {
-                                var ex = mkExpr("math_arithmetic");
+                                var ex = mkExpr("math_arithmetic", n);
                                 ex.fields = [getField("OP", "MINUS")];
                                 ex.inputs = [
                                     getValue("A", unwrappedRightSide, numberType),
@@ -4668,7 +4827,8 @@ var ts;
                             r.inputs.push(getValue("TO", condition.right, wholeNumberType));
                         }
                     }
-                    r.handlers.push({ name: "DO", statement: getStatementBlock(n.statement) });
+                    var statement = getStatementBlock(n.statement);
+                    r.handlers = [{ name: "DO", statement: statement }];
                     return r;
                     function checkForVariableUsages(node) {
                         if (node.kind === SK.Identifier && getVariableName(node) === renamed) {
@@ -4680,24 +4840,25 @@ var ts;
                 function getForOfStatement(n) {
                     var initializer = n.initializer;
                     var renamed = getVariableName(initializer.declarations[0].name);
-                    var r = mkStmt("pxt_controls_for_of");
+                    var r = mkStmt("pxt_controls_for_of", n);
                     r.inputs = [getValue("LIST", n.expression), getDraggableVariableBlock("VAR", renamed)];
-                    r.handlers = [{ name: "DO", statement: getStatementBlock(n.statement) }];
+                    var statement = getStatementBlock(n.statement);
+                    r.handlers = [{ name: "DO", statement: statement }];
                     return r;
                 }
-                function getVariableSetOrChangeBlock(name, value, changed, overrideName) {
+                function getVariableSetOrChangeBlock(n, name, value, changed, overrideName) {
                     if (changed === void 0) { changed = false; }
                     if (overrideName === void 0) { overrideName = false; }
                     var renamed = getVariableName(name);
                     trackVariableUsage(renamed, ReferenceType.InBlocksOnly);
                     // We always do a number shadow even if the variable is not of type number
-                    var r = mkStmt(changed ? "variables_change" : "variables_set");
+                    var r = mkStmt(changed ? "variables_change" : "variables_set", n.parent || n);
                     r.inputs = [getValue("VALUE", value, numberType)];
                     r.fields = [getField("VAR", renamed)];
                     return r;
                 }
-                function getArraySetBlock(left, right) {
-                    var r = mkStmt("lists_index_set");
+                function getArraySetBlock(n, left, right) {
+                    var r = mkStmt("lists_index_set", n);
                     r.inputs = [
                         getValue("LIST", left.expression),
                         getValue("INDEX", left.argumentExpression, numberType),
@@ -4705,13 +4866,13 @@ var ts;
                     ];
                     return r;
                 }
-                function getPropertySetBlock(left, right, tp) {
-                    return getPropertyBlock(left, right, tp);
+                function getPropertySetBlock(n, left, right, tp) {
+                    return getPropertyBlock(n, left, right, tp);
                 }
-                function getPropertyGetBlock(left) {
-                    return getPropertyBlock(left, null, "@get@");
+                function getPropertyGetBlock(n, left) {
+                    return getPropertyBlock(n, left, null, "@get@");
                 }
-                function getPropertyBlock(left, right, tp) {
+                function getPropertyBlock(n, left, right, tp) {
                     var info = pxtc.pxtInfo(left).callInfo;
                     var sym = env.blocks.apis.byQName[info ? info.qName : ""];
                     if (!sym || !sym.attributes.blockCombine) {
@@ -4720,7 +4881,7 @@ var ts;
                     }
                     var qName = sym.namespace + "." + sym.retType + "." + tp;
                     var setter = env.blocks.blocks.find(function (b) { return b.qName == qName; });
-                    var r = right ? mkStmt(setter.attributes.blockId) : mkExpr(setter.attributes.blockId);
+                    var r = right ? mkStmt(setter.attributes.blockId, n) : mkExpr(setter.attributes.blockId, n);
                     var pp = setter.attributes._def.parameters;
                     var fieldValue = info.qName;
                     if (setter.combinedProperties) {
@@ -4739,7 +4900,7 @@ var ts;
                 }
                 function getVariableDeclarationStatement(n) {
                     if (addVariableDeclaration(n)) {
-                        return getVariableSetOrChangeBlock(n.name, n.initializer);
+                        return getVariableSetOrChangeBlock(n, n.name, n.initializer);
                     }
                     return undefined;
                 }
@@ -4749,7 +4910,7 @@ var ts;
                         error(node);
                         return undefined;
                     }
-                    return getVariableSetOrChangeBlock(node.operand, isPlusPlus ? 1 : -1, true);
+                    return getVariableSetOrChangeBlock(node, node.operand, isPlusPlus ? 1 : -1, true);
                 }
                 function getFunctionDeclaration(n) {
                     var name = getVariableName(n.name);
@@ -4762,7 +4923,7 @@ var ts;
                     var statements = getStatementBlock(n.body);
                     env.localReporters.pop();
                     var r;
-                    r = mkStmt("function_definition");
+                    r = mkStmt("function_definition", n);
                     r.mutation = {
                         name: name
                     };
@@ -4787,7 +4948,7 @@ var ts;
                     var info = pxtc.pxtInfo(node).callInfo;
                     var attributes = attrs(info);
                     if (info.qName == "Math.pow") {
-                        var r_2 = mkExpr("math_arithmetic");
+                        var r_2 = mkExpr("math_arithmetic", node);
                         r_2.inputs = [
                             mkValue("A", getOutputBlock(node.arguments[0]), numberType),
                             mkValue("B", getOutputBlock(node.arguments[1]), numberType)
@@ -4800,10 +4961,10 @@ var ts;
                         if (isSupportedMathFunction(op)) {
                             var r_3;
                             if (isRoundingFunction(op)) {
-                                r_3 = mkExpr("math_js_round");
+                                r_3 = mkExpr("math_js_round", node);
                             }
                             else {
-                                r_3 = mkExpr("math_js_op");
+                                r_3 = mkExpr("math_js_op", node);
                                 var opType = void 0;
                                 if (isUnaryMathFunction(op))
                                     opType = "unary";
@@ -4819,7 +4980,7 @@ var ts;
                         }
                     }
                     if (attributes.blockId === pxtc.PAUSE_UNTIL_TYPE) {
-                        var r_4 = mkStmt(pxtc.PAUSE_UNTIL_TYPE);
+                        var r_4 = mkStmt(pxtc.PAUSE_UNTIL_TYPE, node);
                         var lambda = node.arguments[0];
                         var condition = void 0;
                         if (lambda.body.kind === SK.Block) {
@@ -4838,7 +4999,7 @@ var ts;
                             var name_2 = getVariableName(node.expression);
                             if (env.declaredFunctions[name_2]) {
                                 var r_5;
-                                r_5 = mkStmt("function_call");
+                                r_5 = mkStmt("function_call", node);
                                 if (info.args.length) {
                                     r_5.mutationChildren = [];
                                     r_5.inputs = [];
@@ -4880,10 +5041,8 @@ var ts;
                     var args = paramList(info, env.blocks);
                     var api = env.blocks.apis.byQName[info.qName];
                     var comp = pxt.blocks.compileInfo(api);
-                    var r = {
-                        kind: asExpression ? "expr" : "statement",
-                        type: attributes.blockId
-                    };
+                    var r = asExpression ? mkExpr(attributes.blockId, node)
+                        : mkStmt(attributes.blockId, node);
                     var addInput = function (v) { return (r.inputs || (r.inputs = [])).push(v); };
                     var addField = function (f) { return (r.fields || (r.fields = [])).push(f); };
                     if (info.qName == "Math.max") {
@@ -4947,6 +5106,7 @@ var ts;
                         switch (e.kind) {
                             case SK.FunctionExpression:
                             case SK.ArrowFunction:
+                                var expBody = e.body;
                                 var m = getDestructuringMutation(e);
                                 var mustPopLocalScope = false;
                                 if (m) {
@@ -5001,7 +5161,8 @@ var ts;
                                         }
                                     }
                                 }
-                                (r.handlers || (r.handlers = [])).push({ name: "HANDLER", statement: getStatementBlock(e) });
+                                var statement = getStatementBlock(e);
+                                (r.handlers || (r.handlers = [])).push({ name: "HANDLER", statement: statement });
                                 if (mustPopLocalScope) {
                                     env.localReporters.pop();
                                 }
@@ -5158,10 +5319,12 @@ var ts;
                     eventStatements.map(function (n) { return getStatementBlock(n, undefined, undefined, false, topLevel); }).forEach(emitStatementNode);
                     if (blockStatements.length) {
                         // wrap statement in "on start" if top level
-                        var stmt = getStatementBlock(blockStatements.shift(), blockStatements, parent, false, topLevel);
+                        var stmtNode_1 = blockStatements.shift();
+                        var stmt = getStatementBlock(stmtNode_1, blockStatements, parent, false, topLevel);
                         if (emitOnStart) {
                             // Preserve any variable edeclarations that were never used
                             var current_1 = stmt;
+                            var currentNode_1 = stmtNode_1;
                             autoDeclarations.forEach(function (_a) {
                                 var name = _a[0], node = _a[1];
                                 if (varUsages[name] === ReferenceType.InBlocksOnly) {
@@ -5176,13 +5339,14 @@ var ts;
                                     v = getTypeScriptStatementBlock(node, "let ");
                                 }
                                 else {
-                                    v = getVariableSetOrChangeBlock(node.name, node.initializer, false, true);
+                                    v = getVariableSetOrChangeBlock(stmtNode_1, node.name, node.initializer, false, true);
                                 }
                                 v.next = current_1;
                                 current_1 = v;
+                                currentNode_1 = node;
                             });
                             if (current_1) {
-                                var r = mkStmt(ts.pxtc.ON_START_TYPE);
+                                var r = mkStmt(ts.pxtc.ON_START_TYPE, currentNode_1);
                                 r.handlers = [{
                                         name: "HANDLER",
                                         statement: current_1
@@ -5190,20 +5354,20 @@ var ts;
                                 return r;
                             }
                             else {
-                                maybeEmitEmptyOnStart();
+                                maybeEmitEmptyOnStart(stmt);
                             }
                         }
                         return stmt;
                     }
                     else if (emitOnStart) {
-                        maybeEmitEmptyOnStart();
+                        maybeEmitEmptyOnStart(undefined);
                     }
                     return undefined;
                 }
-                function maybeEmitEmptyOnStart() {
+                function maybeEmitEmptyOnStart(node) {
                     if (options.alwaysEmitOnStart) {
-                        countBlock();
-                        write("<block type=\"" + ts.pxtc.ON_START_TYPE + "\"></block>");
+                        openBlockTag(ts.pxtc.ON_START_TYPE, node);
+                        closeBlockTag();
                     }
                 }
                 function trackVariableUsage(name, type) {
@@ -5218,70 +5382,6 @@ var ts;
                         }
                         trackVariableUsagesInText(n);
                     });
-                }
-                /**
-                 * Takes a series of comment ranges and converts them into string suitable for a
-                 * comment block in blockly. All comments above a statement will be included,
-                 * regardless of single vs multi line and whitespace. Paragraphs are delineated
-                 * by empty lines between comments (a commented empty line, not an empty line
-                 * between two separate comment blocks)
-                 */
-                function getCommentText(commentRanges, node, workspaceRefs) {
-                    var text = "";
-                    var currentLine = "";
-                    var isTopLevel = isTopLevelNode(node);
-                    for (var _i = 0, commentRanges_1 = commentRanges; _i < commentRanges_1.length; _i++) {
-                        var commentRange = commentRanges_1[_i];
-                        var commentText = fileText.substr(commentRange.pos, commentRange.end - commentRange.pos);
-                        if (commentText) {
-                            // Strip windows line endings because they break the regex we use to extract content
-                            commentText = commentText.replace(/\r\n/g, "\n");
-                        }
-                        if (commentRange.kind === ts.SyntaxKind.SingleLineCommentTrivia) {
-                            appendMatch(commentText, 1, 3, singleLineCommentRegex);
-                        }
-                        else if (commentRange.kind === ts.SyntaxKind.MultiLineCommentTrivia && isTopLevel) {
-                            var lines = commentText.split("\n");
-                            for (var i = 0; i < lines.length; i++) {
-                                appendMatch(lines[i], i, lines.length, multiLineCommentRegex);
-                            }
-                            if (currentLine)
-                                text += currentLine;
-                            var ref = getCommentRef();
-                            if (workspaceRefs) {
-                                workspaceRefs.push(ref);
-                            }
-                            workspaceComments.push({ text: text, refId: ref });
-                            text = '';
-                            currentLine = '';
-                        }
-                        else {
-                            var lines = commentText.split("\n");
-                            for (var i = 0; i < lines.length; i++) {
-                                appendMatch(lines[i], i, lines.length, multiLineCommentRegex);
-                            }
-                        }
-                    }
-                    text += currentLine;
-                    return text.trim();
-                    function appendMatch(line, lineno, lineslen, regex) {
-                        var match = regex.exec(line);
-                        if (match) {
-                            var matched = match[1].trim();
-                            if (matched === pxtc.ON_START_COMMENT || matched === pxtc.HANDLER_COMMENT) {
-                                return;
-                            }
-                            if (matched) {
-                                currentLine += currentLine ? " " + matched : matched;
-                            }
-                            else {
-                                if (lineno && lineno < lineslen - 1) {
-                                    text += currentLine + "\n";
-                                    currentLine = "";
-                                }
-                            }
-                        }
-                    }
                 }
                 function trackAutoDeclaration(n) {
                     autoDeclarations.push([getVariableName(n.name), n]);
@@ -6138,6 +6238,7 @@ var ts;
                                     return undefined;
                                 }
                             }
+                            // Check if this fixedInstance is an argument passed to a function
                             else if (n.parent.kind === SK.CallExpression && n.parent.expression !== n) {
                                 return undefined;
                             }
@@ -6386,6 +6487,161 @@ var ts;
             function isCommented(node) {
                 var ranges = ts.getLeadingCommentRangesOfNode(node, node.getSourceFile());
                 return !!(ranges && ranges.length);
+            }
+            function getCommentsFromRanges(file, commentRanges, isTrailingComment) {
+                if (isTrailingComment === void 0) { isTrailingComment = false; }
+                var res = [];
+                var fileText = file.getFullText();
+                if (commentRanges && commentRanges.length) {
+                    for (var _i = 0, commentRanges_1 = commentRanges; _i < commentRanges_1.length; _i++) {
+                        var commentRange = commentRanges_1[_i];
+                        var endLine = ts.getLineOfLocalPosition(file, commentRange.end);
+                        var nextLineStart = ts.getStartPositionOfLine(endLine + 1, file) || fileText.length;
+                        var nextLineEnd = ts.getStartPositionOfLine(endLine + 2, file) || fileText.length;
+                        var followedByEmptyLine = !isTrailingComment && !fileText.substr(nextLineStart, nextLineEnd - nextLineStart).trim();
+                        var commentText = fileText.substr(commentRange.pos, commentRange.end - commentRange.pos);
+                        if (commentText) {
+                            // Strip windows line endings because they break the regex we use to extract content
+                            commentText = commentText.replace(/\r\n/g, "\n");
+                        }
+                        if (commentRange.kind === ts.SyntaxKind.SingleLineCommentTrivia) {
+                            var match = singleLineCommentRegex.exec(commentText);
+                            if (match) {
+                                res.push({
+                                    kind: CommentKind.SingleLine,
+                                    text: match[1],
+                                    start: commentRange.pos,
+                                    end: commentRange.end,
+                                    hasTrailingNewline: !!commentRange.hasTrailingNewLine,
+                                    followedByEmptyLine: followedByEmptyLine,
+                                    isTrailingComment: isTrailingComment
+                                });
+                            }
+                            else {
+                                res.push({
+                                    kind: CommentKind.SingleLine,
+                                    text: "",
+                                    start: commentRange.pos,
+                                    end: commentRange.end,
+                                    hasTrailingNewline: !!commentRange.hasTrailingNewLine,
+                                    followedByEmptyLine: followedByEmptyLine,
+                                    isTrailingComment: isTrailingComment
+                                });
+                            }
+                        }
+                        else {
+                            var lines = commentText.split("\n").map(function (line) {
+                                var match = multiLineCommentRegex.exec(line);
+                                return match ? match[1] : "";
+                            });
+                            res.push({
+                                kind: CommentKind.MultiLine,
+                                lines: lines,
+                                start: commentRange.pos,
+                                end: commentRange.end,
+                                hasTrailingNewline: !!commentRange.hasTrailingNewLine,
+                                followedByEmptyLine: followedByEmptyLine,
+                                isTrailingComment: isTrailingComment
+                            });
+                        }
+                    }
+                }
+                return res;
+            }
+            function formatCommentsForBlocks(comments) {
+                var out = "";
+                for (var _i = 0, comments_1 = comments; _i < comments_1.length; _i++) {
+                    var comment = comments_1[_i];
+                    if (comment.kind === CommentKind.SingleLine) {
+                        if (comment.text === pxtc.ON_START_COMMENT || comment.text === pxtc.HANDLER_COMMENT) {
+                            continue;
+                        }
+                        else {
+                            out += comment.text.trim() + "\n";
+                        }
+                    }
+                    else {
+                        for (var _a = 0, _b = comment.lines; _a < _b.length; _a++) {
+                            var line = _b[_a];
+                            out += line.trim() + "\n";
+                        }
+                    }
+                    if (comment.hasTrailingNewline) {
+                        out += "\n";
+                    }
+                }
+                return out.trim();
+            }
+            function isTopLevelComment(n) {
+                var parent = getParent(n)[0];
+                if (!parent || parent.kind == SK.SourceFile)
+                    return true;
+                // Expression statement
+                if (parent.kind == SK.ExpressionStatement)
+                    return isTopLevelComment(parent);
+                // Variable statement
+                if (parent.kind == SK.VariableDeclarationList)
+                    return isTopLevelComment(parent.parent);
+                return false;
+            }
+            function getLeadingComments(node, file, commentRanges) {
+                return getCommentsFromRanges(file, commentRanges || ts.getLeadingCommentRangesOfNode(node, file));
+            }
+            decompiler.getLeadingComments = getLeadingComments;
+            function getTrailingComments(node, file) {
+                return getCommentsFromRanges(file, ts.getTrailingCommentRanges(file.getFullText(), node.end));
+            }
+            decompiler.getTrailingComments = getTrailingComments;
+            function getCommentsForStatement(commented, commentMap) {
+                var comments = [];
+                var current;
+                for (var i = 0; i < commentMap.length; i++) {
+                    current = commentMap[i];
+                    if (!current.owner && current.start >= commented.pos && current.end <= commented.end) {
+                        current.owner = commented;
+                        comments.push(current);
+                    }
+                    if (current.start > commented.end)
+                        break;
+                }
+                return comments;
+            }
+            decompiler.getCommentsForStatement = getCommentsForStatement;
+            function buildCommentMap(file) {
+                var fileText = file.getFullText();
+                var scanner = ts.createScanner(file.languageVersion, false, file.languageVariant, fileText, undefined, file.getFullStart());
+                var res = [];
+                var leading;
+                var trailing;
+                while (scanner.getTextPos() < file.end) {
+                    var val = scanner.scan();
+                    if (val === SK.SingleLineCommentTrivia || val === SK.MultiLineCommentTrivia) {
+                        leading = ts.getLeadingCommentRanges(fileText, scanner.getTokenPos()) || [];
+                        trailing = ts.getTrailingCommentRanges(fileText, scanner.getTokenPos()) || [];
+                        // Filter out duplicates
+                        trailing = trailing.filter(function (range) { return !leading.some(function (other) { return other.pos === range.pos; }); });
+                        res.push.apply(res, getCommentsFromRanges(file, leading, false));
+                        res.push.apply(res, getCommentsFromRanges(file, trailing, true));
+                        for (var _i = 0, res_1 = res; _i < res_1.length; _i++) {
+                            var range = res_1[_i];
+                            if (range.end > scanner.getTextPos()) {
+                                scanner.setTextPos(range.end);
+                            }
+                        }
+                    }
+                }
+                res.sort(function (a, b) { return a.start - b.start; });
+                return res;
+            }
+            decompiler.buildCommentMap = buildCommentMap;
+            function markCommentsInRange(node, commentMap) {
+                var current;
+                for (var i = 0; i < commentMap.length; i++) {
+                    current = commentMap[i];
+                    if (!current.owner && current.start >= node.pos && current.end <= node.end) {
+                        current.owner = node;
+                    }
+                }
             }
         })(decompiler = pxtc.decompiler || (pxtc.decompiler = {}));
     })(pxtc = ts.pxtc || (ts.pxtc = {}));
@@ -8962,15 +9218,15 @@ var ts;
                     return pinfo_1.cell;
                 }
                 else {
-                    var res_1 = proc.localIndex(decl);
-                    if (!res_1) {
+                    var res_2 = proc.localIndex(decl);
+                    if (!res_2) {
                         if (bin.finalPass)
                             userError(9204, lf("cannot locate identifer"));
                         else {
-                            res_1 = proc.mkLocal(decl, getVarInfo(decl));
+                            res_2 = proc.mkLocal(decl, getVarInfo(decl));
                         }
                     }
-                    return res_1;
+                    return res_2;
                 }
             }
             function getBaseClassInfo(node) {
@@ -11025,8 +11281,8 @@ var ts;
                 var info = pxtInfo(e);
                 if (info.constantFolded === undefined) {
                     info.constantFolded = null; // make sure we don't come back here recursively
-                    var res_2 = constantFoldCore(e);
-                    info.constantFolded = res_2;
+                    var res_3 = constantFoldCore(e);
+                    info.constantFolded = res_3;
                 }
                 return info.constantFolded;
             }
@@ -11540,7 +11796,7 @@ var ts;
                                 continue;
                             var val = emitAsInt(decl.initializer);
                             var key = lookupDalConst(node, "CFG_" + nm);
-                            if (key == null || key == 0)
+                            if (key == null || key == 0) // key cannot be 0
                                 throw userError(9268, lf("can't find DAL.CFG_{0}", nm));
                             if (parname == "userconfig")
                                 nm = "!" + nm;
@@ -12018,12 +12274,12 @@ var ts;
                 inCatchErrors++;
                 try {
                     lastSecondaryError = null;
-                    var res_3 = f(node);
+                    var res_4 = f(node);
                     if (lastSecondaryError)
                         userError(lastSecondaryErrorCode, lastSecondaryError);
                     lastSecondaryError = prevErr;
                     inCatchErrors--;
-                    return res_3;
+                    return res_4;
                 }
                 catch (e) {
                     inCatchErrors--;
@@ -12227,6 +12483,68 @@ var ts;
                     default:
                         unhandled(node);
                         return null;
+                    /*
+                    case SyntaxKind.TemplateSpan:
+                        return emitTemplateSpan(<TemplateSpan>node);
+                    case SyntaxKind.Parameter:
+                        return emitParameter(<ParameterDeclaration>node);
+                    case SyntaxKind.SuperKeyword:
+                        return emitSuper(node);
+                    case SyntaxKind.JsxElement:
+                        return emitJsxElement(<JsxElement>node);
+                    case SyntaxKind.JsxSelfClosingElement:
+                        return emitJsxSelfClosingElement(<JsxSelfClosingElement>node);
+                    case SyntaxKind.JsxText:
+                        return emitJsxText(<JsxText>node);
+                    case SyntaxKind.JsxExpression:
+                        return emitJsxExpression(<JsxExpression>node);
+                    case SyntaxKind.QualifiedName:
+                        return emitQualifiedName(<QualifiedName>node);
+                    case SyntaxKind.ObjectBindingPattern:
+                        return emitObjectBindingPattern(<BindingPattern>node);
+                    case SyntaxKind.ArrayBindingPattern:
+                        return emitArrayBindingPattern(<BindingPattern>node);
+                    case SyntaxKind.BindingElement:
+                        return emitBindingElement(<BindingElement>node);
+                    case SyntaxKind.ShorthandPropertyAssignment:
+                        return emitShorthandPropertyAssignment(<ShorthandPropertyAssignment>node);
+                    case SyntaxKind.ComputedPropertyName:
+                        return emitComputedPropertyName(<ComputedPropertyName>node);
+                    case SyntaxKind.TaggedTemplateExpression:
+                        return emitTaggedTemplateExpression(<TaggedTemplateExpression>node);
+                    case SyntaxKind.VoidExpression:
+                        return emitVoidExpression(<VoidExpression>node);
+                    case SyntaxKind.AwaitExpression:
+                        return emitAwaitExpression(<AwaitExpression>node);
+                    case SyntaxKind.SpreadElementExpression:
+                        return emitSpreadElementExpression(<SpreadElementExpression>node);
+                    case SyntaxKind.YieldExpression:
+                        return emitYieldExpression(<YieldExpression>node);
+                    case SyntaxKind.OmittedExpression:
+                        return;
+                    case SyntaxKind.EmptyStatement:
+                        return;
+                    case SyntaxKind.ForOfStatement:
+                    case SyntaxKind.ForInStatement:
+                        return emitForInOrForOfStatement(<ForInStatement>node);
+                    case SyntaxKind.WithStatement:
+                        return emitWithStatement(<WithStatement>node);
+                    case SyntaxKind.CaseClause:
+                    case SyntaxKind.DefaultClause:
+                        return emitCaseOrDefaultClause(<CaseOrDefaultClause>node);
+                    case SyntaxKind.CatchClause:
+                        return emitCatchClause(<CatchClause>node);
+                    case SyntaxKind.ClassExpression:
+                        return emitClassExpression(<ClassExpression>node);
+                    case SyntaxKind.EnumMember:
+                        return emitEnumMember(<EnumMember>node);
+                    case SyntaxKind.ImportDeclaration:
+                        return emitImportDeclaration(<ImportDeclaration>node);
+                    case SyntaxKind.ExportDeclaration:
+                        return emitExportDeclaration(<ExportDeclaration>node);
+                    case SyntaxKind.ExportAssignment:
+                        return emitExportAssignment(<ExportAssignment>node);
+                    */
                 }
             }
         }
@@ -12388,7 +12706,6 @@ var ts;
         }
     })(pxtc = ts.pxtc || (ts.pxtc = {}));
 })(ts || (ts = {}));
-/// <reference path="../../built/typescriptServices.d.ts"/>
 /// <reference path="../../localtypings/pxtarget.d.ts"/>
 // TODO: enable reference so we don't need to use: (pxt as any).py
 //      the issue is that this creates a circular dependency. This
@@ -12477,9 +12794,9 @@ var ts;
         function py2tsIfNecessary(opts) {
             if (opts.target.preferredEditor == pxt.PYTHON_PROJECT_NAME) {
                 var res = pxtc.transpile.pyToTs(opts);
-                return res.diagnostics;
+                return res;
             }
-            return [];
+            return undefined;
         }
         pxtc.py2tsIfNecessary = py2tsIfNecessary;
         function mkCompileResult() {
@@ -12500,11 +12817,14 @@ var ts;
         pxtc.storeGeneratedFiles = storeGeneratedFiles;
         function runConversionsAndStoreResults(opts, res) {
             var startTime = pxtc.U.cpuUs();
-            if (!res)
+            if (!res) {
                 res = mkCompileResult();
-            var convDiag = py2tsIfNecessary(opts);
+            }
+            var convRes = py2tsIfNecessary(opts);
+            if (convRes) {
+                res = __assign(__assign({}, res), { diagnostics: convRes.diagnostics, sourceMap: convRes.sourceMap, globalNames: convRes.globalNames });
+            }
             storeGeneratedFiles(opts, res);
-            res.diagnostics = convDiag;
             if (!opts.sourceFiles)
                 opts.sourceFiles = Object.keys(opts.fileSystem);
             // ensure that main.ts is last of TS files
@@ -12660,11 +12980,12 @@ var ts;
             var apis = pxtc.getApiInfo(program, opts.jres);
             var blocksInfo = pxtc.getBlocksInfo(apis, opts.bannedCategories);
             var decompileOpts = {
-                snippetMode: false,
+                snippetMode: opts.snippetMode || false,
                 alwaysEmitOnStart: opts.alwaysDecompileOnStart,
                 includeGreyBlockMessages: includeGreyBlockMessages,
-                allowedArgumentTypes: opts.allowedArgumentTypes || ["number", "boolean", "string"],
-                generatedVarDeclarations: generatedVarDeclarations
+                generatedVarDeclarations: generatedVarDeclarations,
+                generateSourceMap: !!opts.ast,
+                allowedArgumentTypes: opts.allowedArgumentTypes || ["number", "boolean", "string"]
             };
             var _a = pxtc.decompiler.buildRenameMap(program, file), renameMap = _a[0], _ = _a[1];
             var bresp = pxtc.decompiler.decompileToBlocks(blocksInfo, file, decompileOpts, renameMap);
@@ -14295,11 +14616,9 @@ var ts;
                         }
                     }
                     else {
-                        upper = 0x2000;
                         addr = 0;
-                        myhex.push(hexBytes([0x02, 0x00, 0x00, 0x04, upper >> 8, upper & 0xff]));
                         for (var i = 0; i < bin.packedSource.length; i += 16) {
-                            var bytes = [0x10, (addr >> 8) & 0xff, addr & 0xff, 0];
+                            var bytes = [0x10, (addr >> 8) & 0xff, addr & 0xff, 0x0E];
                             for (var j = 0; j < 16; ++j) {
                                 bytes.push((bin.packedSource.charCodeAt(i + j) || 0) & 0xff);
                             }
@@ -14774,13 +15093,13 @@ var ts;
                         var extinfo = otherVariants_1[_i];
                         var localOpts = pxtc.U.flatClone(opts0);
                         localOpts.extinfo = extinfo;
-                        pxt.setAppTargetVariant(extinfo.appVariant, { temporary: true });
+                        //pxt.setAppTargetVariant(extinfo.appVariant, { temporary: true })
                         hexfile.setupFor(localOpts.target, extinfo);
                         assembleAndPatch(src, bin, localOpts, cres);
                     }
                 }
                 finally {
-                    pxt.setAppTargetVariant(null, { temporary: true });
+                    //pxt.setAppTargetVariant(null, { temporary: true })
                     hexfile.setupFor(opts0.target, opts0.extinfo);
                 }
         }
@@ -14958,7 +15277,7 @@ var ts;
                     diagnostics = program.getSemanticDiagnostics();
                 }
             }
-            return diagnostics;
+            return diagnostics.slice(0); // fix TS 3.5 vs 2.x issue
         }
         pxtc.getProgramDiagnostics = getProgramDiagnostics;
     })(pxtc = ts.pxtc || (ts.pxtc = {}));
@@ -14972,14 +15291,13 @@ var ts;
     var pxtc;
     (function (pxtc) {
         pxtc.placeholderChar = "◊";
-        pxtc.defaultImgLit = "\n. . . . .\n. . . . .\n. . # . .\n. . . . .\n. . . . .\n";
         pxtc.ts2PyFunNameMap = {
-            "Math.trunc": { n: "int", t: ts.SyntaxKind.NumberKeyword },
-            "Math.min": { n: "min", t: ts.SyntaxKind.NumberKeyword },
-            "Math.max": { n: "max", t: ts.SyntaxKind.NumberKeyword },
-            "Math.abs": { n: "abs", t: ts.SyntaxKind.NumberKeyword },
-            "Math.randomRange": { n: "randint", t: ts.SyntaxKind.NumberKeyword },
-            "console.log": { n: "print", t: ts.SyntaxKind.VoidKeyword },
+            "Math.trunc": { n: "int", t: ts.SyntaxKind.NumberKeyword, snippet: "int(0)" },
+            "Math.min": { n: "min", t: ts.SyntaxKind.NumberKeyword, snippet: "min(0, 0)" },
+            "Math.max": { n: "max", t: ts.SyntaxKind.NumberKeyword, snippet: "max(0, 0)" },
+            "Math.abs": { n: "abs", t: ts.SyntaxKind.NumberKeyword, snippet: "abs(0)" },
+            "Math.randomRange": { n: "randint", t: ts.SyntaxKind.NumberKeyword, snippet: "randint(0, 10)" },
+            "console.log": { n: "print", t: ts.SyntaxKind.VoidKeyword, snippet: 'print(":)")' },
             ".length": { n: "len", t: ts.SyntaxKind.NumberKeyword },
             ".toLowerCase()": { n: "string.lower", t: ts.SyntaxKind.StringKeyword },
             ".toUpperCase()": { n: "string.upper", t: ts.SyntaxKind.StringKeyword },
@@ -14990,50 +15308,8 @@ var ts;
             "control.createBufferFromArray": { n: "bytes", t: ts.SyntaxKind.Unknown },
             "!!": { n: "bool", t: ts.SyntaxKind.BooleanKeyword },
             ".indexOf": { n: "Array.index", t: ts.SyntaxKind.NumberKeyword },
-            "parseInt": { n: "int", t: ts.SyntaxKind.NumberKeyword }
+            "parseInt": { n: "int", t: ts.SyntaxKind.NumberKeyword, snippet: 'int("0")' }
         };
-        function renderDefaultVal(apis, p, imgLit, cursorMarker) {
-            if (p.initializer)
-                return p.initializer;
-            if (p.default)
-                return p.default;
-            if (p.type == "number")
-                return "0";
-            if (p.type == "boolean")
-                return "false";
-            else if (p.type == "string") {
-                if (imgLit) {
-                    imgLit = false;
-                    return "`" + pxtc.defaultImgLit + cursorMarker + "`";
-                }
-                return "\"" + cursorMarker + "\"";
-            }
-            var si = apis ? pxtc.Util.lookup(apis.byQName, p.type) : undefined;
-            if (si && si.kind == 6 /* Enum */) {
-                var en = pxtc.Util.values(apis.byQName).filter(function (e) { return e.namespace == p.type; })[0];
-                if (en)
-                    return en.namespace + "." + en.name;
-            }
-            var m = /^\((.*)\) => (.*)$/.exec(p.type);
-            if (m)
-                return "(" + m[1] + ") => {\n    " + cursorMarker + "\n}";
-            return pxtc.placeholderChar;
-        }
-        function renderCall(apiInfo, si) {
-            return si.namespace + "." + si.name + renderParameters(apiInfo, si) + ";";
-        }
-        pxtc.renderCall = renderCall;
-        function renderParameters(apis, si, cursorMarker) {
-            if (cursorMarker === void 0) { cursorMarker = ''; }
-            if (si.parameters) {
-                var imgLit_1 = !!si.attributes.imageLiteral;
-                return "(" + si.parameters
-                    .filter(function (p) { return !p.initializer; })
-                    .map(function (p) { return renderDefaultVal(apis, p, imgLit_1, cursorMarker); }).join(", ") + ")";
-            }
-            return '';
-        }
-        pxtc.renderParameters = renderParameters;
         function snakify(s) {
             var up = s.toUpperCase();
             var lo = s.toLowerCase();
@@ -15106,9 +15382,11 @@ var ts;
                     var nm = t.typeName && t.typeName.getText ? t.typeName.getText() : t.typeName;
                     return "" + nm;
                 }
+                case ts.SyntaxKind.AnyKeyword:
+                    return "any";
                 default:
                     pxt.tickEvent("depython.todo", { kind: s.kind });
-                    return "(TODO: Unknown TypeNode kind: " + s.kind + ")";
+                    return "";
             }
             // // TODO translate type
             // return s.getText()
@@ -15419,9 +15697,19 @@ var ts;
         pxtc.hasBlock = hasBlock;
         var symbolKindWeight;
         function compareSymbols(l, r) {
-            var c = -(hasBlock(l) ? 1 : -1) + (hasBlock(r) ? 1 : -1);
+            function cmpr(toValue) {
+                var c = -toValue(l) + toValue(r);
+                return c;
+            }
+            // favor symbols with blocks
+            var c = cmpr(function (s) { return hasBlock(s) ? 1 : -1; });
             if (c)
                 return c;
+            // favor top-level symbols
+            c = cmpr(function (s) { return !s.namespace ? 1 : -1; });
+            if (c)
+                return c;
+            // sort by symbol kind
             if (!symbolKindWeight) {
                 symbolKindWeight = {};
                 symbolKindWeight[4 /* Variable */] = 100;
@@ -15433,11 +15721,11 @@ var ts;
                 symbolKindWeight[6 /* Enum */] = 81;
                 symbolKindWeight[7 /* EnumMember */] = 80;
             }
-            // favor functions
-            c = -(symbolKindWeight[l.kind] || 0) + (symbolKindWeight[r.kind] || 0);
+            c = cmpr(function (s) { return symbolKindWeight[s.kind] || 0; });
             if (c)
                 return c;
-            c = -(l.attributes.weight || 50) + (r.attributes.weight || 50);
+            // check for a weight attribute
+            c = cmpr(function (s) { return s.attributes.weight || 50; });
             if (c)
                 return c;
             return pxtc.U.strcmp(l.name, r.name);
@@ -15555,6 +15843,8 @@ var ts;
                     var override = pxtc.U.lookup(pxtc.ts2PyFunNameMap, si.qName);
                     if (override && override.n) {
                         si.pyQName = override.n;
+                        si.pySnippet = override.snippet;
+                        si.pySnippetName = override.n;
                     }
                     else if (si.namespace) {
                         var par = res.byQName[si.namespace];
@@ -15684,7 +15974,7 @@ var ts;
             var service;
             var host;
             var lastApiInfo;
-            var lastPyIdentifierSyntaxInfo;
+            var lastGlobalNames;
             var lastBlocksInfo;
             var lastLocBlocksInfo;
             var lastFuse;
@@ -15716,28 +16006,27 @@ var ts;
                     return lastBlocksInfo;
                 }
             };
+            function getLastApiInfo(opts) {
+                if (!lastApiInfo)
+                    lastApiInfo = pxtc.internalGetApiInfo(service.getProgram(), opts.jres);
+                return lastApiInfo;
+            }
             function addApiInfo(opts) {
                 if (!opts.apisInfo && opts.target.preferredEditor == pxt.PYTHON_PROJECT_NAME) {
-                    if (!lastApiInfo)
-                        lastApiInfo = pxtc.internalGetApiInfo(service.getProgram(), opts.jres);
-                    opts.apisInfo = pxtc.U.clone(lastApiInfo.apis);
+                    var info = getLastApiInfo(opts);
+                    opts.apisInfo = pxtc.U.clone(info.apis);
                 }
             }
-            function updatePySyntaxInfo(opts) {
-                // TODO: We call py2ts here directly to get the python syntax info.
-                // We likely already have the syntax info from a previous compile,
-                // we should do better about cache the latest results and serving those
-                // here. Also, we shouldn't mutate "opts" (the input).
-                var res = pxt.py.py2ts(opts);
-                if (res.syntaxInfo && res.syntaxInfo.symbols) {
-                    lastPyIdentifierSyntaxInfo = res.syntaxInfo;
-                }
+            function cloneCompileOpts(opts) {
+                var newOpts = pxt.U.flatClone(opts);
+                newOpts.fileSystem = pxt.U.flatClone(newOpts.fileSystem);
+                return newOpts;
             }
             var operations = {
                 reset: function () {
                     service.cleanupSemanticCache();
                     lastApiInfo = undefined;
-                    lastPyIdentifierSyntaxInfo = undefined;
+                    lastGlobalNames = undefined;
                     host.reset();
                     pxtc.transpile.resetCache();
                 },
@@ -15751,7 +16040,7 @@ var ts;
                     if (v.fileContent) {
                         host.setFile(v.fileName, v.fileContent);
                     }
-                    var opts = pxtc.U.flatClone(host.opts);
+                    var opts = cloneCompileOpts(host.opts);
                     opts.fileSystem[v.fileName] = src;
                     opts.syntaxInfo = {
                         position: v.position,
@@ -15759,21 +16048,32 @@ var ts;
                     };
                     if (opts.target.preferredEditor == pxt.PYTHON_PROJECT_NAME) {
                         addApiInfo(opts);
-                        updatePySyntaxInfo(opts);
-                        if (lastPyIdentifierSyntaxInfo)
-                            return lastPyIdentifierSyntaxInfo;
+                        var res = pxtc.transpile.pyToTs(opts);
+                        if (res.globalNames)
+                            lastGlobalNames = res.globalNames;
+                    }
+                    else {
+                        var info = getNodeAndSymbolAtLocation(service.getProgram(), v.fileName, v.position, getLastApiInfo(opts).apis);
+                        if (info) {
+                            var node = info[0], sym = info[1];
+                            opts.syntaxInfo.symbols = [sym];
+                            opts.syntaxInfo.beginPos = node.getStart();
+                            opts.syntaxInfo.endPos = node.getEnd();
+                        }
                     }
                     return opts.syntaxInfo;
                 },
                 getCompletions: function (v) {
-                    var src = v.fileContent;
-                    if (v.fileContent) {
-                        host.setFile(v.fileName, v.fileContent);
+                    var fileName = v.fileName, fileContent = v.fileContent, position = v.position, wordStartPos = v.wordStartPos, wordEndPos = v.wordEndPos, runtime = v.runtime;
+                    var src = fileContent;
+                    if (fileContent) {
+                        host.setFile(fileName, fileContent);
                     }
-                    var isPython = /\.py$/.test(v.fileName);
+                    var span = { startPos: wordStartPos, endPos: wordEndPos };
+                    var isPython = /\.py$/.test(fileName);
                     var dotIdx = -1;
                     var complPosition = -1;
-                    for (var i = v.position - 1; i >= 0; --i) {
+                    for (var i = position - 1; i >= 0; --i) {
                         if (src[i] == ".") {
                             dotIdx = i;
                             break;
@@ -15783,17 +16083,19 @@ var ts;
                         if (complPosition == -1)
                             complPosition = i;
                     }
-                    if (dotIdx == v.position - 1) {
+                    if (dotIdx == position - 1) {
                         // "foo.|" -> we add "_" as field name to minimize the risk of a parse error
-                        src = src.slice(0, v.position) + "_" + src.slice(v.position);
+                        src = src.slice(0, position) + "_" + src.slice(position);
                     }
                     else if (complPosition == -1) {
-                        src = src.slice(0, v.position) + "_" + src.slice(v.position);
-                        complPosition = v.position;
+                        src = src.slice(0, position) + "_" + src.slice(position);
+                        complPosition = position;
                     }
+                    var lastNl = src.lastIndexOf("\n", position);
+                    lastNl = Math.max(0, lastNl);
+                    var cursorLine = src.substring(lastNl, position);
                     if (dotIdx != -1)
                         complPosition = dotIdx;
-                    //console.log(v.fileContent.slice(v.position - 20, v.position) + "<X>" + v.fileContent.slice(v.position, v.position + 20))
                     var entries = {};
                     var r = {
                         entries: [],
@@ -15801,46 +16103,173 @@ var ts;
                         isNewIdentifierLocation: true,
                         isTypeLocation: false
                     };
-                    var opts = pxtc.U.flatClone(host.opts);
-                    opts.fileSystem[v.fileName] = src;
+                    var opts = cloneCompileOpts(host.opts);
+                    opts.fileSystem[fileName] = src;
                     addApiInfo(opts);
                     opts.syntaxInfo = {
                         position: complPosition,
                         type: r.isMemberCompletion ? "memberCompletion" : "identifierCompletion"
                     };
+                    var resultSymbols = [];
+                    var tsPos;
                     if (isPython) {
-                        updatePySyntaxInfo(opts);
+                        var res_5 = pxtc.transpile.pyToTs(opts);
+                        if (res_5.syntaxInfo && res_5.syntaxInfo.symbols) {
+                            resultSymbols = completionSymbols(opts.syntaxInfo.symbols);
+                        }
+                        if (res_5.globalNames)
+                            lastGlobalNames = res_5.globalNames;
+                        // update our language host
+                        Object.keys(res_5.outfiles)
+                            .forEach(function (k) {
+                            if (k.endsWith(".ts")) {
+                                host.setFile(k, res_5.outfiles[k]);
+                            }
+                        });
+                        // convert our location from python to typescript
+                        if (res_5.sourceMap) {
+                            var pySrc = src;
+                            var tsSrc = res_5.outfiles["main.ts"];
+                            var srcMap = pxtc.BuildSourceMapHelpers(res_5.sourceMap, tsSrc, pySrc);
+                            var smallest = srcMap.py.smallestOverlap(span);
+                            if (smallest) {
+                                tsPos = smallest.ts.startPos;
+                            }
+                        }
                     }
+                    else {
+                        tsPos = position;
+                    }
+                    var prog = service.getProgram();
+                    var tsAst = prog.getSourceFile("main.ts"); // TODO: work for non-main files
+                    var tc = prog.getTypeChecker();
+                    var isPropertyAccess = false;
+                    if (dotIdx !== -1) {
+                        var propertyAccessTarget = findInnerMostNodeAtPosition(tsAst, isPython ? tsPos : dotIdx - 1);
+                        if (propertyAccessTarget) {
+                            var symbol = tc.getSymbolAtLocation(propertyAccessTarget);
+                            if (symbol) {
+                                var type = tc.getTypeOfSymbolAtLocation(symbol, propertyAccessTarget);
+                                if (type && type.symbol) {
+                                    var qname_1 = tc.getFullyQualifiedName(type.symbol);
+                                    var props = type.getApparentProperties()
+                                        .map(function (prop) { return qname_1 + "." + prop.getName(); })
+                                        .map(function (propQname) { return lastApiInfo.apis.byQName[propQname]; })
+                                        .filter(function (prop) { return !!prop; })
+                                        .map(function (prop) { return completionSymbol(prop); });
+                                    if (props.length) {
+                                        resultSymbols = props;
+                                        isPropertyAccess = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    var innerMost = findInnerMostNodeAtPosition(tsAst, tsPos);
+                    if (innerMost && innerMost.parent && ts.isCallExpression(innerMost.parent)) {
+                        var call_1 = innerMost.parent;
+                        function findArgIdx() {
+                            // does our cursor syntax node trivially map to an argument?
+                            var paramIdx = call_1.arguments
+                                .map(function (a) { return a === innerMost; })
+                                .indexOf(true);
+                            if (paramIdx >= 0)
+                                return paramIdx;
+                            // is our cursor within the argument range?
+                            var inRange = call_1.arguments.pos <= tsPos && tsPos < call_1.end;
+                            if (!inRange)
+                                return -1;
+                            // no arguments?
+                            if (call_1.arguments.length === 0)
+                                return 0;
+                            // then find which argument we're refering to
+                            paramIdx = 0;
+                            for (var _i = 0, _a = call_1.arguments; _i < _a.length; _i++) {
+                                var a = _a[_i];
+                                if (a.end <= tsPos)
+                                    paramIdx++;
+                                else
+                                    break;
+                            }
+                            if (!call_1.arguments.hasTrailingComma)
+                                paramIdx = Math.max(0, paramIdx - 1);
+                            return paramIdx;
+                        }
+                        // which argument are we ?
+                        var paramIdx = findArgIdx();
+                        // if we're not one of the arguments, are we at the
+                        // determine parameter idx
+                        if (paramIdx >= 0) {
+                            var blocksInfo = blocksInfoOp(lastApiInfo.apis, runtime.bannedCategories);
+                            var callSym = getCallSymbol(call_1);
+                            if (callSym) {
+                                if (paramIdx >= callSym.parameters.length)
+                                    paramIdx = callSym.parameters.length - 1;
+                                var paramType = getParameterTsType(callSym, paramIdx, blocksInfo);
+                                if (paramType) {
+                                    // if this is a property access, then weight the results higher if they return the
+                                    // correct type for the parameter
+                                    if (isPropertyAccess && resultSymbols.length) {
+                                        var matchingApis = getApisForTsType(paramType, call_1, tc, resultSymbols);
+                                        matchingApis.forEach(function (match) { return match.weight = 1; });
+                                    }
+                                    else {
+                                        var matchingApis = getApisForTsType(paramType, call_1, tc, completionSymbols(pxt.Util.values(lastApiInfo.apis.byQName)));
+                                        resultSymbols = matchingApis;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isPython && !resultSymbols.length) {
+                        // TODO: get better default result symbols for typescript
+                        resultSymbols = completionSymbols(pxt.U.values(lastApiInfo.apis.byQName));
+                    }
+                    // determine which names are taken for auto-generated variable names
                     var takenNames = {};
-                    if (isPython && lastPyIdentifierSyntaxInfo && lastPyIdentifierSyntaxInfo.globalNames) {
-                        takenNames = lastPyIdentifierSyntaxInfo.globalNames;
+                    if (isPython && lastGlobalNames) {
+                        takenNames = lastGlobalNames;
                     }
                     else {
                         takenNames = lastApiInfo.apis.byQName;
                     }
-                    var symbols = opts.syntaxInfo.symbols || [];
-                    for (var _i = 0, symbols_1 = symbols; _i < symbols_1.length; _i++) {
-                        var si = symbols_1[_i];
-                        if (/^__/.test(si.name) || // ignore members starting with __
-                            /^__/.test(si.namespace) || // ignore namespaces starting with _-
+                    function shouldUseSymbol(_a) {
+                        var si = _a.symbol;
+                        var use = !(/^__/.test(si.name) || // ignore members starting with __
+                            /^__/.test(si.namespace) || // ignore namespaces starting with __
                             si.attributes.hidden ||
                             si.attributes.deprecated ||
-                            // don't members with an alias
-                            si.attributes.alias)
-                            continue; // ignore
-                        entries[si.qName] = si;
+                            // ignore TD_ID helpers
+                            si.attributes.shim == "TD_ID");
+                        return use;
+                    }
+                    function patchSymbolWithSnippet(si) {
                         var n = lastApiInfo.decls[si.qName];
                         if (ts.isFunctionLike(n)) {
-                            var snippet = getSnippet(lastApiInfo.apis, takenNames, v.runtime, si, n, isPython);
-                            if (isPython)
-                                si.pySnippet = snippet;
-                            else
-                                si.snippet = snippet;
+                            // snippet/pySnippet might have been set already
+                            if ((isPython && !si.pySnippet)
+                                || (!isPython && !si.snippet)) {
+                                var snippet = getSnippet(lastApiInfo.apis, takenNames, v.runtime, si, n, isPython);
+                                if (isPython)
+                                    si.pySnippet = snippet;
+                                else
+                                    si.snippet = snippet;
+                            }
                         }
                     }
+                    // swap aliases, filter symbols and add snippets
+                    resultSymbols
+                        .map(function (sym) { return sym.symbol.attributes.alias ? completionSymbol(lastApiInfo.apis.byQName[sym.symbol.attributes.alias], sym.weight) : sym; })
+                        .filter(shouldUseSymbol)
+                        .forEach(function (sym) {
+                        entries[sym.symbol.qName] = sym;
+                        patchSymbolWithSnippet(sym.symbol);
+                    });
+                    resultSymbols = pxt.Util.values(entries)
+                        .filter(function (a) { return !!a && !!a.symbol; });
+                    resultSymbols.sort(compareCompletionSymbols);
                     // sort entries
-                    r.entries = pxt.Util.values(entries);
-                    r.entries.sort(pxtc.compareSymbols);
+                    r.entries = resultSymbols.map(function (sym) { return sym.symbol; });
                     return r;
                 },
                 compile: function (v) {
@@ -15878,7 +16307,7 @@ var ts;
                     pxtc.timesToMs(res);
                     if (host.opts.target.switches.time)
                         console.log("DIAG-TIME", res.times);
-                    return res.diagnostics;
+                    return res;
                 },
                 format: function (v) {
                     var formatOptions = v.format;
@@ -15902,7 +16331,16 @@ var ts;
                     var n = lastApiInfo.decls[o.qName];
                     if (!fn || !n || !ts.isFunctionLike(n))
                         return undefined;
-                    return ts.pxtc.service.getSnippet(lastApiInfo.apis, lastApiInfo.apis.byQName, v.runtime, fn, n, !!o.python);
+                    var isPython = !!o.python;
+                    // determine which names are taken for auto-generated variable names
+                    var takenNames = {};
+                    if (isPython && lastGlobalNames) {
+                        takenNames = lastGlobalNames;
+                    }
+                    else {
+                        takenNames = lastApiInfo.apis.byQName;
+                    }
+                    return ts.pxtc.service.getSnippet(lastApiInfo.apis, takenNames, v.runtime, fn, n, isPython);
                 },
                 blocksInfo: function (v) { return blocksInfoOp(v, v.blocks && v.blocks.bannedCategories); },
                 apiSearch: function (v) {
@@ -16064,10 +16502,65 @@ var ts;
                     lastProjectFuse = undefined;
                 }
             };
+            function getCallSymbol(callExp) {
+                var callTs = callExp.expression.getText();
+                var api = lastApiInfo.apis.byQName[callTs];
+                return api;
+            }
+            function getParameterTsType(callSym, paramIdx, blocksInfo) {
+                if (!callSym || paramIdx < 0)
+                    return undefined;
+                var paramDesc = callSym.parameters[paramIdx];
+                console.dir({ paramDesc: paramDesc });
+                var result = paramDesc.type;
+                // check if this parameter has a shadow block, if so use the type from that instead
+                if (callSym.attributes._def) {
+                    var blockParams = callSym.attributes._def.parameters;
+                    var blockParam = blockParams[paramIdx];
+                    var shadowId = blockParam.shadowBlockId;
+                    if (shadowId) {
+                        var shadowBlk = blocksInfo.blocksById[shadowId];
+                        var shadowApi = lastApiInfo.apis.byQName[shadowBlk.qName];
+                        var isPassThrough = shadowApi.attributes.shim === "TD_ID";
+                        if (isPassThrough && shadowApi.parameters.length === 1) {
+                            var realTyp = shadowApi.parameters[0].type;
+                            result = realTyp;
+                        }
+                    }
+                }
+                return result;
+            }
+            function getApisForTsType(pxtType, location, tc, symbols) {
+                // any apis that return this type?
+                // TODO: if this becomes expensive, this can be cached between calls since the same
+                // return type is likely to occur over and over.
+                var apisByRetType = {};
+                symbols.forEach(function (i) {
+                    apisByRetType[i.symbol.retType] = __spreadArrays((apisByRetType[i.symbol.retType] || []), [i]);
+                });
+                var retApis = apisByRetType[pxtType];
+                // any enum members?
+                var enumVals = [];
+                for (var _i = 0, retApis_1 = retApis; _i < retApis_1.length; _i++) {
+                    var r = retApis_1[_i];
+                    var asTsEnum = getTsSymbolFromPxtSymbol(r.symbol, location, ts.SymbolFlags.Enum);
+                    if (asTsEnum) {
+                        var enumType = tc.getTypeOfSymbolAtLocation(asTsEnum, location);
+                        var mems = getEnumMembers(enumType);
+                        var enumValQNames = mems.map(function (e) { return enumMemberToQName(tc, e); });
+                        var symbols_1 = enumValQNames.map(function (n) { return lastApiInfo.apis.byQName[n]; });
+                        enumVals = __spreadArrays(enumVals, symbols_1);
+                    }
+                }
+                return __spreadArrays(retApis, completionSymbols(enumVals));
+            }
             function runConversionsAndCompileUsingService() {
                 addApiInfo(host.opts);
                 var prevFS = pxtc.U.flatClone(host.opts.fileSystem);
                 var res = pxtc.runConversionsAndStoreResults(host.opts);
+                if (res && res.globalNames) {
+                    lastGlobalNames = res.globalNames;
+                }
                 var newFS = host.opts.fileSystem;
                 host.opts.fileSystem = prevFS;
                 for (var _i = 0, _a = Object.keys(newFS); _i < _a.length; _i++) {
@@ -16084,15 +16577,18 @@ var ts;
                             host.opts.skipPxtModulesEmit = true;
                         else if (host.opts.target.isNative)
                             host.opts.skipPxtModulesEmit = false;
+                        // don't cache emit when debugging pxt_modules/*
                         else if (host.pxtModulesOK == "js" && (!host.opts.breakpoints || host.opts.justMyCode))
                             host.opts.skipPxtModulesEmit = true;
                     }
-                    res = pxtc.compile(host.opts, service);
+                    var ts2asm = pxtc.compile(host.opts, service);
+                    res = __assign({ sourceMap: res.sourceMap }, ts2asm);
                     if (res.needsFullRecompile) {
                         pxt.log("trigering full recompile");
                         pxt.tickEvent("compile.fullrecompile");
                         host.opts.skipPxtModulesEmit = false;
-                        res = pxtc.compile(host.opts, service);
+                        ts2asm = pxtc.compile(host.opts, service);
+                        res = __assign({ sourceMap: res.sourceMap }, ts2asm);
                     }
                     if (res.diagnostics.every(function (d) { return !pxtc.isPxtModulesFilename(d.fileName); }))
                         host.pxtModulesOK = currKey;
@@ -16126,10 +16622,10 @@ var ts;
                     service = ts.createLanguageService(host);
                 }
             }
-            var defaultImgLit = "`\n. . . . .\n. . . . .\n. . # . .\n. . . . .\n. . . . .\n`";
+            var defaultTsImgList = "`\n. . . . .\n. . . . .\n. . # . .\n. . . . .\n. . . . .\n`";
+            var defaultPyImgList = "\"\"\"\n. . . . .\n. . . . .\n. . # . .\n. . . . .\n. . . . .\n\"\"\"";
             function getSnippet(apis, takenNames, runtimeOps, fn, decl, python) {
                 var PY_INDENT = pxt.py.INDENT;
-                var findex = 0;
                 var preStmt = "";
                 var fnName = "";
                 if (decl.kind == pxtc.SK.Constructor) {
@@ -16146,29 +16642,9 @@ var ts;
                     return inName;
                 }
                 var attrs = fn.attributes;
-                var blocks = blocksInfoOp(apis, runtimeOps.bannedCategories).blocks;
-                var blocksById = pxt.Util.toDictionary(blocks, function (t) { return t.attributes.blockId; });
-                function getShadowSymbol(paramName) {
-                    var shadowBlock = (attrs._shadowOverrides || {})[paramName];
-                    if (!shadowBlock)
-                        return null;
-                    var sym = blocksById[shadowBlock];
-                    if (!sym)
-                        return null;
-                    if (sym.attributes.shim === "TD_ID" && sym.parameters.length) {
-                        var realName = sym.parameters[0].type;
-                        var realSym = apis.byQName[realName];
-                        sym = realSym || sym;
-                    }
-                    return sym;
-                }
                 var checker = service && service.getProgram().getTypeChecker();
-                function getTsSymbolFromPxtSymbol(inSym, anchor) {
-                    // TODO: handle non-enum types
-                    var tsSymbols = checker.getSymbolsInScope(anchor, ts.SymbolFlags.Enum);
-                    var tsSymbolMap = pxt.Util.toDictionary(tsSymbols, function (s) { return s.escapedName.toString(); });
-                    return tsSymbolMap[inSym.qName] || null;
-                }
+                var blocksInfo = blocksInfoOp(apis, runtimeOps.bannedCategories);
+                var blocksById = blocksInfo.blocksById;
                 function getParameterDefault(param) {
                     var typeNode = param.type;
                     if (!typeNode)
@@ -16185,7 +16661,7 @@ var ts;
                     function getDefaultValueOfType(type) {
                         // TODO: generalize this to handle more types
                         if (type.symbol && type.symbol.flags & ts.SymbolFlags.Enum) {
-                            return getDefaultEnumValue(type);
+                            return getDefaultEnumValue(type, python);
                         }
                         if (pxtc.isObjectType(type)) {
                             var typeSymbol = apis.byQName[checker.getFullyQualifiedName(type.symbol)];
@@ -16205,10 +16681,25 @@ var ts;
                         }
                         return null;
                     }
+                    function getShadowSymbol(paramName) {
+                        // TODO: generalize and unify this with getCompletions code
+                        var shadowBlock = (attrs._shadowOverrides || {})[paramName];
+                        if (!shadowBlock)
+                            return null;
+                        var sym = blocksById[shadowBlock];
+                        if (!sym)
+                            return null;
+                        if (sym.attributes.shim === "TD_ID" && sym.parameters.length) {
+                            var realName = sym.parameters[0].type;
+                            var realSym = apis.byQName[realName];
+                            sym = realSym || sym;
+                        }
+                        return sym;
+                    }
                     // check if there's a shadow override defined
                     var shadowSymbol = getShadowSymbol(name);
                     if (shadowSymbol) {
-                        var tsSymbol = getTsSymbolFromPxtSymbol(shadowSymbol, param);
+                        var tsSymbol = getTsSymbolFromPxtSymbol(shadowSymbol, param, ts.SymbolFlags.Enum);
                         if (tsSymbol) {
                             var shadowType = checker.getTypeOfSymbolAtLocation(tsSymbol, param);
                             if (shadowType) {
@@ -16222,7 +16713,9 @@ var ts;
                     // simple types we can determine defaults for
                     // TODO: move into getDefaultValueOfType
                     switch (typeNode.kind) {
-                        case pxtc.SK.StringKeyword: return (name == "leds" ? defaultImgLit : "\"\"");
+                        case pxtc.SK.StringKeyword: return (name == "leds"
+                            ? (python ? defaultPyImgList : defaultTsImgList)
+                            : "\"\"");
                         case pxtc.SK.NumberKeyword: return "0";
                         case pxtc.SK.BooleanKeyword: return python ? "False" : "false";
                         case pxtc.SK.ArrayType: return "[]";
@@ -16250,7 +16743,7 @@ var ts;
                 var args = decl.parameters ? decl.parameters
                     .filter(function (param) { return !param.initializer && !param.questionToken; })
                     .map(getParameterDefault) : [];
-                var snippetPrefix = (fn.attributes.blockNamespace || fn.namespace);
+                var snippetPrefix = fn.namespace;
                 var isInstance = false;
                 var addNamespace = false;
                 var namespaceToUse = "";
@@ -16262,7 +16755,7 @@ var ts;
                         if (python && snippetPrefix)
                             snippetPrefix = pxtc.snakify(snippetPrefix);
                     }
-                    else if (element.namespace) {
+                    else if (element.namespace) { // some blocks don't have a namespace such as parseInt
                         var nsInfo_1 = apis.byQName[element.namespace];
                         if (nsInfo_1.attributes.fixedInstances) {
                             var instances_1 = pxtc.Util.values(apis.byQName);
@@ -16306,7 +16799,13 @@ var ts;
                         else if (element.kind == 1 /* Method */ || element.kind == 2 /* Property */) {
                             var params = pxt.blocks.compileInfo(element);
                             if (params.thisParameter) {
-                                snippetPrefix = params.thisParameter.defaultValue || params.thisParameter.definitionName;
+                                var varName = undefined;
+                                if (params.thisParameter.definitionName) {
+                                    varName = params.thisParameter.definitionName;
+                                    varName = varName[0].toUpperCase() + varName.substring(1);
+                                    varName = "my" + varName;
+                                }
+                                snippetPrefix = params.thisParameter.defaultValue || varName;
                                 if (python && snippetPrefix)
                                     snippetPrefix = pxtc.snakify(snippetPrefix);
                             }
@@ -16357,7 +16856,11 @@ var ts;
                     else if (returnType.flags & (ts.TypeFlags.Boolean | ts.TypeFlags.BooleanLiteral))
                         returnValue = python ? "return False" : "return false";
                     if (python) {
-                        var functionArgument = "(" + functionSignature.parameters.map(function (p) { return p.name; }).join(', ') + ")";
+                        var functionArgument = void 0;
+                        if (attrs.optionalVariableArgs)
+                            functionArgument = "()";
+                        else
+                            functionArgument = "(" + functionSignature.parameters.map(function (p) { return p.name; }).join(', ') + ")";
                         var n = fnName || "fn";
                         if (functionCount++ > 0)
                             n += functionCount;
@@ -16368,11 +16871,13 @@ var ts;
                     }
                     else {
                         var functionArgument = "()";
-                        var displayParts = ts.mapToDisplayParts(function (writer) {
-                            checker.getSymbolDisplayBuilder().buildSignatureDisplay(functionSignature, writer);
-                        });
-                        var displayPartsStr = ts.displayPartsToString(displayParts);
-                        functionArgument = displayPartsStr.substr(0, displayPartsStr.lastIndexOf(":"));
+                        if (!attrs.optionalVariableArgs) {
+                            var displayParts = ts.mapToDisplayParts(function (writer) {
+                                checker.getSymbolDisplayBuilder().buildSignatureDisplay(functionSignature, writer);
+                            });
+                            var displayPartsStr = ts.displayPartsToString(displayParts);
+                            functionArgument = displayPartsStr.substr(0, displayPartsStr.lastIndexOf(":"));
+                        }
                         return "function " + functionArgument + " {\n    " + returnValue + "\n}";
                     }
                 }
@@ -16387,38 +16892,99 @@ var ts;
                     else
                         return "function () {}";
                 }
-                function getDefaultEnumValue(t) {
-                    // Note: AFAIK this is NOT guranteed to get the same default as you get in
-                    // blocks. That being said, it should get the first declared value. Only way
-                    // to guarantee an API has the same default in blocks and in TS is to actually
-                    // set a default on the parameter in its comment attributes
-                    if (checker && t.symbol && t.symbol.declarations && t.symbol.declarations.length) {
-                        for (var i = 0; i < t.symbol.declarations.length; i++) {
-                            var decl_2 = t.symbol.declarations[i];
-                            if (decl_2.kind === pxtc.SK.EnumDeclaration) {
-                                var enumDeclaration = decl_2;
-                                for (var j = 0; j < enumDeclaration.members.length; j++) {
-                                    var member = enumDeclaration.members[i];
-                                    if (member.name.kind === pxtc.SK.Identifier) {
-                                        var fullName = checker.getFullyQualifiedName(checker.getSymbolAtLocation(member.name));
-                                        var pxtSym = apis.byQName[fullName];
-                                        if (pxtSym) {
-                                            if (pxtSym.attributes.alias)
-                                                // use pyAlias if python; or default to alias
-                                                return (python && pxtSym.attributes.pyAlias) || pxtSym.attributes.alias; // prefer alias
-                                            return python ? pxtSym.pyQName : pxtSym.qName;
-                                        }
-                                        else
-                                            return fullName;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return "0";
-                }
             }
             service_1.getSnippet = getSnippet;
+            function getTsSymbolFromPxtSymbol(pxtSym, location, meaning) {
+                var checker = service && service.getProgram().getTypeChecker();
+                if (!checker)
+                    return null;
+                var tsSymbols = checker.getSymbolsInScope(location, meaning);
+                for (var _i = 0, tsSymbols_1 = tsSymbols; _i < tsSymbols_1.length; _i++) {
+                    var tsSym = tsSymbols_1[_i];
+                    if (tsSym.escapedName.toString() === pxtSym.qName)
+                        return tsSym;
+                }
+                return null;
+            }
+            function getEnumMembers(t) {
+                var checker = service && service.getProgram().getTypeChecker();
+                if (checker && t.symbol && t.symbol.declarations && t.symbol.declarations.length) {
+                    for (var i = 0; i < t.symbol.declarations.length; i++) {
+                        var decl = t.symbol.declarations[i];
+                        if (decl.kind === pxtc.SK.EnumDeclaration) {
+                            var enumDeclaration = decl;
+                            return enumDeclaration.members;
+                        }
+                    }
+                }
+                return undefined;
+            }
+            function enumMemberToQName(tc, e) {
+                if (e.name.kind === pxtc.SK.Identifier) {
+                    return tc.getFullyQualifiedName(tc.getSymbolAtLocation(e.name));
+                }
+                return undefined;
+            }
+            function getDefaultEnumValue(t, python) {
+                // Note: AFAIK this is NOT guranteed to get the same default as you get in
+                // blocks. That being said, it should get the first declared value. Only way
+                // to guarantee an API has the same default in blocks and in TS is to actually
+                // set a default on the parameter in its comment attributes
+                var checker = service && service.getProgram().getTypeChecker();
+                var members = getEnumMembers(t);
+                for (var _i = 0, members_1 = members; _i < members_1.length; _i++) {
+                    var member = members_1[_i];
+                    if (member.name.kind === pxtc.SK.Identifier) {
+                        var fullName = enumMemberToQName(checker, member);
+                        var pxtSym = lastApiInfo.apis.byQName[fullName];
+                        if (pxtSym) {
+                            if (pxtSym.attributes.alias)
+                                // use pyAlias if python; or default to alias
+                                return (python && pxtSym.attributes.pyAlias) || pxtSym.attributes.alias; // prefer alias
+                            return python ? pxtSym.pyQName : pxtSym.qName;
+                        }
+                        else
+                            return fullName;
+                    }
+                }
+                return "0";
+            }
+            function compareCompletionSymbols(a, b) {
+                if (a.weight !== b.weight) {
+                    return b.weight - a.weight;
+                }
+                return pxtc.compareSymbols(a.symbol, b.symbol);
+            }
+            function completionSymbol(symbol, weight) {
+                if (weight === void 0) { weight = 0; }
+                return { symbol: symbol, weight: weight };
+            }
+            function completionSymbols(symbols, weight) {
+                if (weight === void 0) { weight = 0; }
+                return symbols.map(function (s) { return completionSymbol(s, weight); });
+            }
+            function getNodeAndSymbolAtLocation(program, filename, position, apiInfo) {
+                var source = program.getSourceFile(filename);
+                var checker = program.getTypeChecker();
+                var node = findInnerMostNodeAtPosition(source, position);
+                if (node) {
+                    var symbol = checker.getSymbolAtLocation(node);
+                    if (symbol) {
+                        return [node, apiInfo.byQName[checker.getFullyQualifiedName(symbol)]];
+                    }
+                }
+                return null;
+            }
+            function findInnerMostNodeAtPosition(n, position) {
+                for (var _i = 0, _a = n.getChildren(); _i < _a.length; _i++) {
+                    var child = _a[_i];
+                    var s = child.getStart();
+                    var e = child.getEnd();
+                    if (s <= position && position < e)
+                        return findInnerMostNodeAtPosition(child, position);
+                }
+                return (n && n.kind === pxtc.SK.SourceFile) ? null : n;
+            }
         })(service = pxtc.service || (pxtc.service = {}));
     })(pxtc = ts.pxtc || (ts.pxtc = {}));
 })(ts || (ts = {}));
@@ -16442,8 +17008,7 @@ var ts;
             var codeEquivalences = [];
             var MAX_CODE_EQUIVS = 10;
             function toComparable(code) {
-                // Ignore whitespace
-                code = code.replace(/\s/g, "");
+                // Note that whitespace is semantic for Python
                 return code;
             }
             function resetCache() {
@@ -16460,51 +17025,49 @@ var ts;
                 }
                 return undefined;
             }
-            function cacheTranspile(lang1, lang1Txt, lang2, lang2Txt) {
+            function cacheTranspile(lang1, lang1Txt, lang2, lang2Txt, sourceMap) {
                 var equiv = {
                     comparable: {
                         "ts": undefined,
                         "blocks": undefined,
                         "py": undefined
                     },
-                    code: {
-                        "ts": undefined,
-                        "blocks": undefined,
-                        "py": undefined
-                    }
+                    outfiles: {},
+                    sourceMap: sourceMap
                 };
-                equiv.code[lang1] = lang1Txt;
+                equiv.outfiles[mainName(lang1)] = lang1Txt;
                 equiv.comparable[lang1] = toComparable(lang1Txt);
-                equiv.code[lang2] = lang2Txt;
+                equiv.outfiles[mainName(lang2)] = lang2Txt;
                 equiv.comparable[lang2] = toComparable(lang2Txt);
                 codeEquivalences.unshift(equiv);
                 if (codeEquivalences.length > MAX_CODE_EQUIVS) {
                     codeEquivalences.pop();
                 }
             }
-            function makeSuccess(l, txt) {
-                var outfiles = {};
-                outfiles[mainName(l)] = txt;
+            function makeSuccess(equiv) {
                 return {
                     diagnostics: [],
                     success: true,
-                    outfiles: outfiles
+                    outfiles: equiv.outfiles,
+                    sourceMap: equiv.sourceMap,
+                    globalNames: equiv.globalNames,
+                    syntaxInfo: equiv.syntaxInfo
                 };
             }
-            function transpileInternal(from, fromTxt, to, doRealTranspile) {
+            // @param force: forces a live transpile, and does not cache the result
+            function transpileInternal(from, fromTxt, to, doRealTranspile, force) {
                 var equiv = tryGetCachedTranspile(from, fromTxt);
-                if (equiv && equiv.code[to]) {
+                if (equiv && equiv.outfiles[mainName(to)] && !force) {
                     // return from cache
-                    var toTxt = equiv.code[to];
-                    var res_4 = makeSuccess(to, toTxt);
-                    return res_4;
+                    var res_6 = makeSuccess(equiv);
+                    return res_6;
                 }
                 // not found in cache, do the compile
                 var res = doRealTranspile();
-                if (res.success) {
+                if (res.success && !force) {
                     // store the result
                     var toTxt = res.outfiles[mainName(to)] || "";
-                    cacheTranspile(from, fromTxt, to, toTxt);
+                    cacheTranspile(from, fromTxt, to, toTxt, res.sourceMap);
                 }
                 return res;
             }
@@ -16515,7 +17078,7 @@ var ts;
                 };
                 var fromTxt = options.fileSystem[filename];
                 pxtc.U.assert(fromTxt !== undefined && fromTxt !== null, "Missing file \"" + filename + "\" when converting from py->ts");
-                return transpileInternal("py", fromTxt, "ts", doRealTranspile);
+                return transpileInternal("py", fromTxt, "ts", doRealTranspile, !!options.syntaxInfo);
             }
             transpile.pyToTs = pyToTs;
             function tsToPy(program, filename) {

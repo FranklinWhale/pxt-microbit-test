@@ -35,18 +35,15 @@ CACHE:
 # monaco; keep in sync with webapp/public/index.html
 /pxt-microbit-test/vs/loader.js
 /pxt-microbit-test/vs/base/worker/workerMain.js
-/pxt-microbit-test/vs/basic-languages/src/bat.js
-/pxt-microbit-test/vs/basic-languages/src/cpp.js
-/pxt-microbit-test/vs/basic-languages/src/python.js
-/pxt-microbit-test/vs/basic-languages/src/markdown.js
+/pxt-microbit-test/vs/basic-languages/bat/bat.js
+/pxt-microbit-test/vs/basic-languages/cpp/cpp.js
+/pxt-microbit-test/vs/basic-languages/python/python.js
+/pxt-microbit-test/vs/basic-languages/markdown/markdown.js
 /pxt-microbit-test/vs/editor/editor.main.css
 /pxt-microbit-test/vs/editor/editor.main.js
 /pxt-microbit-test/vs/editor/editor.main.nls.js
 /pxt-microbit-test/vs/language/json/jsonMode.js
 /pxt-microbit-test/vs/language/json/jsonWorker.js
-/pxt-microbit-test/vs/language/typescript/lib/typescriptServices.js
-/pxt-microbit-test/vs/language/typescript/src/mode.js
-/pxt-microbit-test/vs/language/typescript/src/worker.js
 
 # charts
 /pxt-microbit-test/smoothie/smoothie_compressed.js
@@ -61,7 +58,7 @@ CACHE:
 /pxt-microbit-test/worker.js
 /pxt-microbit-test/monacoworker.js
 
-# ver Thu Jan 16 2020 11:28:58 GMT+0800 (CST)
+# ver Wed Mar 04 2020 11:58:24 GMT+0800 (CST)
 
 # target
 /pxt-microbit-test/docs/static/logo.portrait.white.svg
@@ -75,6 +72,6 @@ CACHE:
 /pxt-microbit-test/docs/static/hero.png
 
 /pxt-microbit-test/target.js
-  
+
 NETWORK:
 *

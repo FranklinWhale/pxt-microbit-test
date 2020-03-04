@@ -170,6 +170,35 @@ var pxt;
         var BLOCKS_ICON = "icon xicon blocks";
         var PY_FILE = "main.py";
         var BLOCKS_FILE = "main.blocks";
+        function defaultClientRenderOptions() {
+            var renderOptions = {
+                blocksAspectRatio: window.innerHeight < window.innerWidth ? 1.62 : 1 / 1.62,
+                snippetClass: 'lang-blocks',
+                signatureClass: 'lang-sig',
+                blocksClass: 'lang-block',
+                blocksXmlClass: 'lang-blocksxml',
+                diffBlocksXmlClass: 'lang-diffblocksxml',
+                diffClass: 'lang-diff',
+                diffStaticPythonClass: 'lang-diffspy',
+                diffBlocksClass: 'lang-diffblocks',
+                staticPythonClass: 'lang-spy',
+                simulatorClass: 'lang-sim',
+                linksClass: 'lang-cards',
+                namespacesClass: 'lang-namespaces',
+                codeCardClass: 'lang-codecard',
+                packageClass: 'lang-package',
+                projectClass: 'lang-project',
+                snippetReplaceParent: true,
+                simulator: true,
+                showEdit: true,
+                hex: true,
+                tutorial: false,
+                showJavaScript: false,
+                hexName: pxt.appTarget.id
+            };
+            return renderOptions;
+        }
+        runner.defaultClientRenderOptions = defaultClientRenderOptions;
         function highlight($js) {
             if (typeof hljs !== "undefined") {
                 if ($js.hasClass("highlight")) {
@@ -180,7 +209,63 @@ var pxt;
                         hljs.highlightBlock(block);
                     });
                 }
+                highlightLine($js);
             }
+        }
+        function highlightLine($js) {
+            // apply line highlighting
+            $js.find("span.hljs-comment:contains(@highlight)")
+                .each(function (i, el) {
+                try {
+                    highlightLineElement(el);
+                }
+                catch (e) {
+                    pxt.reportException(e);
+                }
+            });
+        }
+        function highlightLineElement(el) {
+            var $el = $(el);
+            var span = document.createElement("span");
+            span.className = "highlight-line";
+            // find new line and split text node
+            var next = el.nextSibling;
+            if (!next || next.nodeType != Node.TEXT_NODE)
+                return; // end of snippet?
+            var text = next.textContent;
+            var inewline = text.indexOf('\n');
+            if (inewline < 0)
+                return; // there should have been a new line here
+            // split the next node
+            next.textContent = text.substring(0, inewline + 1);
+            $(document.createTextNode(text.substring(inewline + 1).replace(/^\s+/, ''))).insertAfter($(next));
+            // process and highlight new line
+            next = next.nextSibling;
+            while (next) {
+                var nextnext = next.nextSibling; // before we hoist it from the tree
+                if (next.nodeType == Node.TEXT_NODE) {
+                    text = next.textContent;
+                    var inewline_1 = text.indexOf('\n');
+                    if (inewline_1 < 0) {
+                        span.appendChild(next);
+                        next = nextnext;
+                    }
+                    else {
+                        // we've hit the end of the line... split node in two
+                        span.appendChild(document.createTextNode(text.substring(0, inewline_1)));
+                        next.textContent = text.substring(inewline_1 + 1);
+                        break;
+                    }
+                }
+                else {
+                    span.appendChild(next);
+                    next = nextnext;
+                }
+            }
+            // insert back
+            $(span).insertAfter($el);
+            // remove line entry
+            $el.remove();
         }
         function appendBlocks($parent, $svg) {
             $parent.append($("<div class=\"ui content blocks\"/>").append($svg));
@@ -218,7 +303,7 @@ var pxt;
             var $c = $('<div class="ui top attached segment codewidget"></div>');
             var $menu = $h.find('.right.menu');
             var theme = pxt.appTarget.appTheme || {};
-            if (woptions.showEdit && !theme.hideDocsEdit && decompileResult) {
+            if (woptions.showEdit && !theme.hideDocsEdit && decompileResult) { // edit button
                 var $editBtn = snippetBtn(lf("Edit"), "edit icon");
                 var pkg = decompileResult.package, compileBlocks = decompileResult.compileBlocks, compilePython = decompileResult.compilePython;
                 var host = pkg.host();
@@ -459,7 +544,8 @@ var pxt;
                     return;
                 var block = Blockly.Blocks[symbolInfo.attributes.blockId];
                 var xml = block && block.codeCard ? block.codeCard.blocksXml : undefined;
-                var s = xml ? $(pxt.blocks.render(xml)) : r.compileBlocks && r.compileBlocks.success ? $(r.blocksSvg) : undefined;
+                var blocksHtml = xml ? pxt.blocks.render(xml) : r.compileBlocks && r.compileBlocks.success ? r.blocksSvg : undefined;
+                var s = blocksHtml ? $(blocksHtml) : undefined;
                 var sig = info.decl.getText().replace(/^export/, '');
                 sig = sig.slice(0, sig.indexOf('{')).trim() + ';';
                 var js = $('<code class="lang-typescript highlight"/>').text(sig);
@@ -556,11 +642,11 @@ var pxt;
                     .then(function (r) {
                     $el.removeClass(cls);
                     try {
-                        var diff = pxt.blocks.diffXml(oldXml, newXml);
-                        if (!diff)
+                        var diff_1 = pxt.blocks.diffXml(oldXml, newXml);
+                        if (!diff_1)
                             $el.text("no changes");
                         else {
-                            r.blocksSvg = diff.svg;
+                            r.blocksSvg = diff_1.svg;
                             render($el, r);
                         }
                     }
@@ -578,6 +664,98 @@ var pxt;
                 var segment = $('<div class="ui segment codewidget"/>').append(s);
                 c.replaceWith(segment);
             }, { package: opts.package, snippetMode: true, aspectRatio: opts.blocksAspectRatio });
+        }
+        function renderDiffAsync(opts) {
+            if (!opts.diffClass)
+                return Promise.resolve();
+            var cls = opts.diffClass;
+            function renderNextDiffAsync(cls) {
+                var $el = $("." + cls).first();
+                if (!$el[0])
+                    return Promise.resolve();
+                var _a = pxt.diff.split($el.text()), oldSrc = _a.fileA, newSrc = _a.fileB;
+                try {
+                    var diffEl = pxt.diff.render(oldSrc, newSrc, {
+                        hideLineNumbers: true,
+                        hideMarkerLine: true,
+                        hideMarker: true,
+                        hideRemoved: true,
+                        update: true,
+                        ignoreWhitespace: true,
+                    });
+                    if (opts.snippetReplaceParent)
+                        $el = $el.parent();
+                    var segment = $('<div class="ui segment codewidget"/>').append(diffEl);
+                    $el.removeClass(cls);
+                    $el.replaceWith(segment);
+                }
+                catch (e) {
+                    pxt.reportException(e);
+                    $el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                }
+                return Promise.delay(1, renderNextDiffAsync(cls));
+            }
+            return renderNextDiffAsync(cls);
+        }
+        function renderDiffBlocksAsync(opts) {
+            if (!opts.diffBlocksClass)
+                return Promise.resolve();
+            var cls = opts.diffBlocksClass;
+            function renderNextDiffAsync(cls) {
+                var $el = $("." + cls).first();
+                if (!$el[0])
+                    return Promise.resolve();
+                var _a = pxt.diff.split($el.text(), {
+                    removeTrailingSemiColumns: true
+                }), oldSrc = _a.fileA, newSrc = _a.fileB;
+                return Promise.mapSeries([oldSrc, newSrc], function (src) { return pxt.runner.decompileSnippetAsync(src, {
+                    generateSourceMap: true
+                }); })
+                    .then(function (resps) {
+                    try {
+                        var diffBlocks = pxt.blocks.decompiledDiffAsync(oldSrc, resps[0].compileBlocks, newSrc, resps[1].compileBlocks, {
+                            hideDeletedTopBlocks: true,
+                            hideDeletedBlocks: true
+                        });
+                        var diffJs = pxt.diff.render(oldSrc, newSrc, {
+                            hideLineNumbers: true,
+                            hideMarkerLine: true,
+                            hideMarker: true,
+                            hideRemoved: true,
+                            update: true,
+                            ignoreWhitespace: true
+                        });
+                        var diffPy = void 0;
+                        var _a = resps.map(function (resp) {
+                            return resp.compilePython
+                                && resp.compilePython.outfiles
+                                && resp.compilePython.outfiles["main.py"];
+                        }), oldPy = _a[0], newPy = _a[1];
+                        if (oldPy && newPy) {
+                            diffPy = pxt.diff.render(oldPy, newPy, {
+                                hideLineNumbers: true,
+                                hideMarkerLine: true,
+                                hideMarker: true,
+                                hideRemoved: true,
+                                update: true,
+                                ignoreWhitespace: true
+                            });
+                        }
+                        fillWithWidget(opts, $el.parent(), $(diffJs), diffPy && $(diffPy), $(diffBlocks.svg), undefined, {
+                            showEdit: false,
+                            run: false,
+                            hexname: undefined,
+                            hex: undefined
+                        });
+                    }
+                    catch (e) {
+                        pxt.reportException(e);
+                        $el.append($('<div/>').addClass("ui segment warning").text(e.message));
+                    }
+                    return Promise.delay(1, renderNextDiffAsync(cls));
+                });
+            }
+            return renderNextDiffAsync(cls);
         }
         function renderNamespaces(options) {
             if (pxt.appTarget.id == "core")
@@ -956,6 +1134,7 @@ var pxt;
                 if (typeof hljs !== "undefined") {
                     $(e).text($(e).text().replace(/^\s*\r?\n/, ''));
                     hljs.highlightBlock(e);
+                    highlightLine($(e));
                 }
                 var opts = pxt.U.clone(woptions);
                 if (ignored) {
@@ -978,6 +1157,7 @@ var pxt;
                 if (typeof hljs !== "undefined") {
                     $(e).text($(e).text().replace(/^\s*\r?\n/, ''));
                     hljs.highlightBlock(e);
+                    highlightLine($(e));
                 }
                 var opts = pxt.U.clone(woptions);
                 if (ignored) {
@@ -1044,7 +1224,7 @@ var pxt;
         function renderAsync(options) {
             pxt.analytics.enable();
             if (!options)
-                options = {};
+                options = defaultClientRenderOptions();
             if (options.pxtUrl)
                 options.pxtUrl = options.pxtUrl.replace(/\/$/, '');
             if (options.showEdit)
@@ -1066,6 +1246,8 @@ var pxt;
                 .then(function () { return renderBlocksAsync(options); })
                 .then(function () { return renderBlocksXmlAsync(options); })
                 .then(function () { return renderDiffBlocksXmlAsync(options); })
+                .then(function () { return renderDiffBlocksAsync(options); })
+                .then(function () { return renderDiffAsync(options); })
                 .then(function () { return renderStaticPythonAsync(options); })
                 .then(function () { return renderProjectAsync(options); })
                 .then(function () { return consumeRenderQueueAsync(); });
@@ -1498,8 +1680,9 @@ var pxt;
                 var options = (msg.options || {});
                 options.splitSvg = false; // don't split when requesting rendered images
                 pxt.tickEvent("renderer.job");
+                var isXml = /^\s*<xml/.test(msg.code);
                 jobPromise = pxt.BrowserUtils.loadBlocklyAsync()
-                    .then(function () { return runner.decompileSnippetAsync(msg.code, msg.options); })
+                    .then(function () { return isXml ? pxt.runner.compileBlocksAsync(msg.code, options) : runner.decompileSnippetAsync(msg.code, msg.options); })
                     .then(function (result) {
                     var blocksSvg = result.blocksSvg;
                     return blocksSvg ? pxt.blocks.layout.blocklyToSvgAsync(blocksSvg, 0, 0, blocksSvg.viewBox.baseVal.width, blocksSvg.viewBox.baseVal.height) : undefined;
@@ -1757,28 +1940,10 @@ var pxt;
                 || window.innerHeight < window.innerWidth ? 1.62 : 1 / 1.62;
             $(content).html(html);
             $(content).find('a').attr('target', '_blank');
-            var renderOptions = {
-                blocksAspectRatio: blocksAspectRatio,
-                snippetClass: 'lang-blocks',
-                signatureClass: 'lang-sig',
-                blocksClass: 'lang-block',
-                blocksXmlClass: 'lang-blocksxml',
-                diffBlocksXmlClass: 'lang-diffblocksxml',
-                staticPythonClass: 'lang-spy',
-                simulatorClass: 'lang-sim',
-                linksClass: 'lang-cards',
-                namespacesClass: 'lang-namespaces',
-                codeCardClass: 'lang-codecard',
-                packageClass: 'lang-package',
-                projectClass: 'lang-project',
-                snippetReplaceParent: true,
-                simulator: true,
-                showEdit: true,
-                hex: true,
-                tutorial: !!options.tutorial,
-                showJavaScript: runner.editorLanguageMode == LanguageMode.TypeScript,
-                hexName: pxt.appTarget.id
-            };
+            var renderOptions = pxt.runner.defaultClientRenderOptions();
+            renderOptions.tutorial = !!options.tutorial;
+            renderOptions.blocksAspectRatio = blocksAspectRatio || renderOptions.blocksAspectRatio;
+            renderOptions.showJavaScript = runner.editorLanguageMode == LanguageMode.TypeScript;
             if (options.print) {
                 renderOptions.showEdit = false;
                 renderOptions.simulator = false;
@@ -1828,7 +1993,10 @@ var pxt;
                     .then(function () {
                     var blocksInfo = pxtc.getBlocksInfo(apis);
                     pxt.blocks.initializeAndInject(blocksInfo);
-                    var bresp = pxtc.decompiler.decompileToBlocks(blocksInfo, program.getSourceFile("main.ts"), { snippetMode: options && options.snippetMode });
+                    var bresp = pxtc.decompiler.decompileToBlocks(blocksInfo, program.getSourceFile("main.ts"), {
+                        snippetMode: options && options.snippetMode,
+                        generateSourceMap: options && options.generateSourceMap
+                    });
                     if (bresp.diagnostics && bresp.diagnostics.length > 0)
                         bresp.diagnostics.forEach(function (diag) { return console.error(diag.messageText); });
                     if (!bresp.success)

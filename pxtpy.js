@@ -1,3 +1,10 @@
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 /// <reference path='../built/pxtlib.d.ts' />
 /// <reference path='../built/pxtcompiler.d.ts' />
 var pxt;
@@ -14,7 +21,7 @@ var pxt;
 var pxt;
 (function (pxt) {
     var py;
-    (function (py) {
+    (function (py_1) {
         var B = pxt.blocks;
         // global state
         var externalApis; // slurped from libraries
@@ -148,7 +155,7 @@ var pxt;
             if (isNum)
                 return tpNumber;
             // generic
-            if (tp == "T" || tp == "U")
+            if (tp == "T" || tp == "U") // TODO hack!
                 return mkType({ primType: "'" + tp });
             // defined by a symbol,
             //  either in external (non-py) APIs (like default/common packages)
@@ -595,9 +602,9 @@ var pxt;
         }
         function getTypesForFieldLookup(recvType) {
             var t = find(recvType);
-            return [
+            return __spreadArrays([
                 t.classType
-            ].concat(resolvePrimTypes(t.primType), [
+            ], resolvePrimTypes(t.primType), [
                 t.moduleType
             ]).filter(isTruthy);
         }
@@ -756,7 +763,7 @@ var pxt;
         function compileType(e) {
             if (!e)
                 return mkType();
-            var tpName = getName(e);
+            var tpName = tryGetName(e);
             if (tpName) {
                 var sym = lookupApi(tpName + "@type") || lookupApi(tpName);
                 if (sym) {
@@ -957,7 +964,7 @@ var pxt;
                 var prefix = "";
                 var funname = n.name;
                 var remainingDecorators = n.decorator_list.filter(function (d) {
-                    if (getName(d) == "property") {
+                    if (tryGetName(d) == "property") {
                         prefix = "get";
                         return false;
                     }
@@ -1049,7 +1056,7 @@ var pxt;
                         quote(n.name)
                     ];
                 if (!n.isNamespace && n.bases.length > 0) {
-                    if (getName(n.bases[0]) == "Enum") {
+                    if (tryGetName(n.bases[0]) == "Enum") {
                         n.isEnum = true;
                     }
                     else {
@@ -1104,6 +1111,7 @@ var pxt;
             },
             For: function (n) {
                 pxt.U.assert(n.orelse.length == 0);
+                n.target.forTargetEndPos = n.endPos;
                 if (isCallTo(n.iter, "range")) {
                     var r = n.iter;
                     var def = expr(n.target);
@@ -1115,7 +1123,17 @@ var pxt;
                         B.mkInfix(ref, "+=", expr(r.args[2])) :
                         B.mkPostfix([ref], "++"), B.mkText(")"), stmts(n.body));
                 }
-                unifyTypeOf(n.iter, mkArrayType(typeOf(n.target)));
+                if (currIteration > 1) {
+                    var typeOfTarget = typeOf(n.target);
+                    /**
+                     * The type the variable to iterate over must be `string | Iterable<typeof Target>`,
+                     * but we can't model that with the current state of the python type checker.
+                     * If we can identify the type of the value we're iterating over to be a string elsewhere,
+                     * try and allow this by unifying with just the target type;
+                     * otherwise, it is assumed to be an array.
+                     */
+                    unifyTypeOf(n.iter, typeOf(n.iter) == tpString ? typeOfTarget : mkArrayType(typeOfTarget));
+                }
                 return B.mkStmt(B.mkText("for ("), expr(n.target), B.mkText(" of "), expr(n.iter), B.mkText(")"), stmts(n.body));
             },
             While: function (n) {
@@ -1151,7 +1169,7 @@ var pxt;
                     var res = [];
                     var devRef = expr(it.context_expr);
                     if (it.optional_vars) {
-                        var id = getName(it.optional_vars);
+                        var id = tryGetName(it.optional_vars);
                         if (id) {
                             var v = defvar(id, { isLocal: true });
                             id = quoteStr(id);
@@ -1172,7 +1190,6 @@ var pxt;
                     var varName = "with" + idx;
                     if (it.optional_vars) {
                         var id = getName(it.optional_vars);
-                        pxt.U.assert(id != null);
                         defvar(id, { isLocal: true });
                         varName = quoteStr(id);
                     }
@@ -1296,7 +1313,7 @@ var pxt;
                     if (!existing) {
                         error(n, 9521, pxt.U.lf("No binding found for global variable"));
                     }
-                    var sym = defvar(name_1, { modifier: py.VarModifier.Global });
+                    var sym = defvar(name_1, { modifier: py_1.VarModifier.Global });
                     if (sym.firstRefPos < n.startPos) {
                         error(n, 9522, pxt.U.lf("Variable referenced before global declaration"));
                     }
@@ -1310,10 +1327,10 @@ var pxt;
                     var name_2 = _a[_i];
                     var declaringScope = findNonlocalDeclaration(name_2, current);
                     // Python nonlocal variables cannot refer to globals
-                    if (!declaringScope || declaringScope === globalScope || declaringScope.vars[name_2].modifier === py.VarModifier.Global) {
+                    if (!declaringScope || declaringScope === globalScope || declaringScope.vars[name_2].modifier === py_1.VarModifier.Global) {
                         error(n, 9523, pxt.U.lf("No binding found for nonlocal variable"));
                     }
-                    var sym = defvar(name_2, { modifier: py.VarModifier.NonLocal });
+                    var sym = defvar(name_2, { modifier: py_1.VarModifier.NonLocal });
                     if (sym.firstRefPos < n.startPos) {
                         error(n, 9524, pxt.U.lf("Variable referenced before nonlocal declaration"));
                     }
@@ -1345,7 +1362,7 @@ var pxt;
             }
             var pref = "";
             var isConstCall = value ? isCallTo(value, "const") : false;
-            var nm = getName(target) || "";
+            var nm = tryGetName(target) || "";
             if (!isTopLevel() && !ctx.currClass && !ctx.currFun && nm[0] != "_")
                 pref = "export ";
             if (nm && ctx.currClass && !ctx.currFun) {
@@ -1489,7 +1506,7 @@ var pxt;
                 return id;
             //return id.replace(/([a-z0-9])_([a-zA-Z0-9])/g, (f: string, x: string, y: string) => x + y.toUpperCase())
         }
-        function getName(e) {
+        function tryGetName(e) {
             if (e.kind == "Name") {
                 var s = e.id;
                 var v = lookupVar(s);
@@ -1499,12 +1516,17 @@ var pxt;
                     return s;
             }
             if (e.kind == "Attribute") {
-                var pref = getName(e.value);
+                var pref = tryGetName(e.value);
                 if (pref)
                     return pref + "." + e.attr;
             }
-            error(null, 9542, lf("Cannot get name of unknown expression kind '{0}'", e.kind));
             return undefined;
+        }
+        function getName(e) {
+            var name = tryGetName(e);
+            if (!name)
+                error(null, 9542, lf("Cannot get name of unknown expression kind '{0}'", e.kind));
+            return name;
         }
         function quote(id) {
             if (id == "self")
@@ -1515,7 +1537,7 @@ var pxt;
             if (n.kind != "Call")
                 return false;
             var c = n;
-            return getName(c.func) === fn;
+            return tryGetName(c.func) === fn;
         }
         function binop(left, pyName, right) {
             var op = opMapping[pyName];
@@ -1617,7 +1639,14 @@ var pxt;
                 var r = handleFmt(n);
                 if (r)
                     return r;
-                r = binop(expr(n.left), n.op, expr(n.right));
+                var left = expr(n.left);
+                var right = expr(n.right);
+                if (isArrayType(n.left) && isArrayType(n.right)) {
+                    if (n.op === "Add") {
+                        return B.H.extensionCall("concat", [left, right], false);
+                    }
+                }
+                r = binop(left, n.op, right);
                 if (numOps[n.op]) {
                     unifyTypeOf(n.left, tpNumber);
                     unifyTypeOf(n.right, tpNumber);
@@ -1636,7 +1665,18 @@ var pxt;
             IfExp: function (n) {
                 return B.mkInfix(B.mkInfix(expr(n.test), "?", expr(n.body)), ":", expr(n.orelse));
             },
-            Dict: function (n) { return exprTODO(n); },
+            Dict: function (n) {
+                ctx.blockDepth++;
+                var elts = n.keys.map(function (k, i) {
+                    var v = n.values[i];
+                    if (k === undefined)
+                        return exprTODO(n);
+                    return B.mkStmt(B.mkInfix(expr(k), ":", expr(v)), B.mkText(","));
+                });
+                var res = B.mkBlock(elts);
+                ctx.blockDepth--;
+                return res;
+            },
             Set: function (n) { return exprTODO(n); },
             ListComp: function (n) { return exprTODO(n); },
             SetComp: function (n) { return exprTODO(n); },
@@ -1675,7 +1715,7 @@ var pxt;
             Call: function (n) {
                 // TODO(dz): move body out; needs seperate PR that doesn't touch content
                 n.func.inCalledPosition = true;
-                var nm = getName(n.func);
+                var nm = tryGetName(n.func);
                 var namedSymbol = lookupSymbol(nm);
                 var isClass = namedSymbol && namedSymbol.kind == 8 /* Class */;
                 var fun = namedSymbol;
@@ -1983,6 +2023,13 @@ var pxt;
                 if (v.isImport)
                     return v;
                 addCaller(n, v);
+                if (n.forTargetEndPos && v.forVariableEndPos !== n.forTargetEndPos) {
+                    if (v.forVariableEndPos)
+                        // defined in more than one 'for'; make sure it's hoisted
+                        v.lastRefPos = v.forVariableEndPos + 1;
+                    else
+                        v.forVariableEndPos = n.forTargetEndPos;
+                }
             }
             else if (currIteration > 0) {
                 error(n, 9516, pxt.U.lf("name '{0}' is not defined", n.id));
@@ -1991,13 +2038,13 @@ var pxt;
         }
         function markUsage(s, location) {
             if (s) {
-                if (s.modifier === py.VarModifier.Global) {
+                if (s.modifier === py_1.VarModifier.Global) {
                     var declaringScope = topScope();
                     if (declaringScope && declaringScope.vars[s.name]) {
                         s = declaringScope.vars[s.name];
                     }
                 }
-                else if (s.modifier === py.VarModifier.NonLocal) {
+                else if (s.modifier === py_1.VarModifier.NonLocal) {
                     var declaringScope = findNonlocalDeclaration(s.name, currentScope());
                     if (declaringScope) {
                         s = declaringScope.vars[s.name];
@@ -2005,6 +2052,9 @@ var pxt;
                 }
                 if (s.firstRefPos === undefined || s.firstRefPos > location.startPos) {
                     s.firstRefPos = location.startPos;
+                }
+                if (s.lastRefPos === undefined || s.lastRefPos < location.startPos) {
+                    s.lastRefPos = location.startPos;
                 }
             }
         }
@@ -2018,6 +2068,9 @@ var pxt;
                 B.mkText("]"),
             ]);
         }
+        function sourceMapId(e) {
+            return e.startPos + ":" + e.endPos;
+        }
         function expr(e) {
             lastAST = e;
             var f = exprMap[e.kind];
@@ -2025,7 +2078,9 @@ var pxt;
                 pxt.U.oops(e.kind + " - unknown expr");
             }
             typeOf(e);
-            return f(e);
+            var r = f(e);
+            r.id = sourceMapId(e);
+            return r;
         }
         function stmt(e) {
             lastAST = e;
@@ -2038,6 +2093,7 @@ var pxt;
             if (cmts.length) {
                 r = B.mkGroup(cmts.map(function (c) { return B.mkStmt(B.H.mkComment(c)); }).concat(r));
             }
+            r.id = sourceMapId(e);
             return r;
         }
         function isEmpty(b) {
@@ -2058,7 +2114,7 @@ var pxt;
             if (!scope)
                 return undefined;
             var symbolInfo = scope.vars && scope.vars[name];
-            if (symbolInfo && symbolInfo.modifier != py.VarModifier.NonLocal) {
+            if (symbolInfo && symbolInfo.modifier != py_1.VarModifier.NonLocal) {
                 return scope;
             }
             else {
@@ -2081,7 +2137,8 @@ var pxt;
             var result = sym.kind === 4 /* Variable */
                 && !sym.isParam
                 && sym.modifier === undefined
-                && (sym.firstRefPos < sym.firstAssignPos
+                && (sym.lastRefPos > sym.forVariableEndPos
+                    || sym.firstRefPos < sym.firstAssignPos
                     || sym.firstAssignDepth > scope.blockDepth);
             return !!result;
         }
@@ -2131,7 +2188,7 @@ var pxt;
             // find .ts files that are copies of / shadowed by the .py files
             var pyFiles = opts.sourceFiles.filter(function (fn) { return pxt.U.endsWith(fn, ".py"); });
             if (pyFiles.length == 0)
-                return { outfiles: outfiles, diagnostics: diagnostics, success: diagnostics.length === 0 };
+                return { outfiles: outfiles, diagnostics: diagnostics, success: diagnostics.length === 0, sourceMap: [] };
             var removeEnd = function (file, ext) { return file.substr(0, file.length - ext.length); };
             var pyFilesSet = pxt.U.toDictionary(pyFiles, function (p) { return removeEnd(p, ".py"); });
             var tsFiles = opts.sourceFiles
@@ -2189,7 +2246,11 @@ var pxt;
             }
             resetPass(1000);
             infoNode = undefined;
-            syntaxInfo = opts.syntaxInfo;
+            syntaxInfo = opts.syntaxInfo || {
+                position: 0,
+                type: "symbol"
+            };
+            var sourceMap = [];
             for (var _b = 0, modules_2 = modules; _b < modules_2.length; _b++) {
                 var m = modules_2[_b];
                 try {
@@ -2201,6 +2262,26 @@ var pxt;
                     opts.generatedFiles.push(m.tsFilename);
                     opts.fileSystem[m.tsFilename] = res.output;
                     outfiles[m.tsFilename] = res.output;
+                    var rawSrcMap = res.sourceMap;
+                    function unpackInterval(i) {
+                        var splits = i.id.split(":");
+                        if (splits.length != 2)
+                            return undefined;
+                        var py = splits.map(function (i) { return parseInt(i); });
+                        return {
+                            py: {
+                                startPos: py[0],
+                                endPos: py[1]
+                            },
+                            ts: {
+                                startPos: i.startPos,
+                                endPos: i.endPos
+                            }
+                        };
+                    }
+                    sourceMap = rawSrcMap
+                        .map(unpackInterval)
+                        .filter(function (i) { return !!i; });
                 }
                 catch (e) {
                     console.log("Conv error", e);
@@ -2222,34 +2303,29 @@ var pxt;
                         return false;
                 }
             };
-            if (syntaxInfo)
-                syntaxInfo.symbols = [];
-            if (infoNode)
-                error(null, 9569, lf("type annotation error; this should be unreachable"));
+            // always return global symbols because we might need to check for
+            // name collisions downstream
+            var globalNames = {};
+            var apis = pxt.U.values(externalApis).concat(pxt.U.values(internalApis));
+            var existing = [];
+            var addSym = function (v) {
+                if (isGlobalSymbol(v) && existing.indexOf(v) < 0) {
+                    var s = cleanSymbol(v);
+                    globalNames[s.qName || s.name] = s;
+                }
+            };
+            for (var s = infoScope; !!s; s = s.parent) {
+                if (s && s.vars)
+                    pxt.U.values(s.vars).forEach(addSym);
+            }
+            apis.forEach(addSym);
             if (syntaxInfo && infoNode) {
-                // TODO: unreachable since infoNode is always undefined here
                 infoNode = infoNode;
-                var apis = pxt.U.values(externalApis).concat(pxt.U.values(internalApis));
                 syntaxInfo.beginPos = infoNode.startPos;
                 syntaxInfo.endPos = infoNode.endPos;
                 if (!syntaxInfo.symbols)
                     syntaxInfo.symbols = [];
-                // always return global symbols because we might need to check for
-                // name collisions downstream
-                syntaxInfo.globalNames = syntaxInfo.globalNames || {};
-                var existing_1 = [];
-                var addSym = function (v) {
-                    if (isGlobalSymbol(v) && existing_1.indexOf(v) < 0) {
-                        var s = cleanSymbol(v);
-                        syntaxInfo.globalNames[s.qName || s.name] = s;
-                    }
-                };
-                existing_1 = syntaxInfo.symbols.slice();
-                for (var s = infoScope; !!s; s = s.parent) {
-                    if (s && s.vars)
-                        pxt.U.values(s.vars).forEach(addSym);
-                }
-                apis.forEach(addSym);
+                existing = syntaxInfo.symbols.slice();
                 if (syntaxInfo.type == "memberCompletion" && infoNode.kind == "Attribute") {
                     var attr = infoNode;
                     var tp = typeOf(attr.value);
@@ -2278,7 +2354,7 @@ var pxt;
                     }
                 }
                 else if (syntaxInfo.type == "identifierCompletion") {
-                    syntaxInfo.symbols = pxt.U.values(syntaxInfo.globalNames);
+                    syntaxInfo.symbols = pxt.U.values(globalNames);
                 }
                 else {
                     var sym = infoNode.symbolInfo;
@@ -2292,17 +2368,19 @@ var pxt;
                 outfiles: outfiles,
                 success: outDiag.length === 0,
                 diagnostics: outDiag,
-                syntaxInfo: syntaxInfo
+                syntaxInfo: syntaxInfo,
+                globalNames: globalNames,
+                sourceMap: sourceMap
             };
             function patchedDiags() {
                 for (var _i = 0, diagnostics_1 = diagnostics; _i < diagnostics_1.length; _i++) {
                     var d = diagnostics_1[_i];
-                    py.patchPosition(d, opts.fileSystem[d.fileName]);
+                    py_1.patchPosition(d, opts.fileSystem[d.fileName]);
                 }
                 return diagnostics;
             }
         }
-        py.py2ts = py2ts;
+        py_1.py2ts = py2ts;
         /**
          * Override example syntax:
          *      indexOf()       (no arguments)
@@ -2349,6 +2427,10 @@ var pxt;
             return {
                 parts: parts
             };
+        }
+        function isArrayType(expr) {
+            var t = find(typeOf(expr));
+            return t && t.primType === "@array";
         }
         function buildOverride(override, args, recv) {
             var result = [];
@@ -4516,6 +4598,7 @@ var pxt;
             var lhost = new ts.pxtc.LSHost(prog);
             // let ls = ts.createLanguageService(lhost) // TODO
             var file = prog.getSourceFile(filename);
+            var commentMap = pxtc.decompiler.buildCommentMap(file);
             var reservedWords = pxt.U.toSet(getReservedNmes(), function (s) { return s; });
             var _a = ts.pxtc.decompiler.buildRenameMap(prog, file, reservedWords), renameMap = _a[0], globalNames = _a[1];
             var allSymbols = pxtc.getApiInfo(prog);
@@ -4569,11 +4652,20 @@ var pxt;
                     'type', 'vars', 'zip'];
                 return reservedNames;
             }
+            function tryGetSymbol(exp) {
+                if (!exp.getSourceFile())
+                    return null;
+                var tsExp = exp.getText();
+                return symbols[tsExp] || null;
+            }
             function tryGetPyName(exp) {
                 if (!exp.getSourceFile())
                     return null;
                 var tsExp = exp.getText();
                 var sym = symbols[tsExp];
+                if (sym && sym.attributes.alias) {
+                    return sym.attributes.alias;
+                }
                 if (sym && sym.pyQName) {
                     return sym.pyQName;
                 }
@@ -4661,9 +4753,12 @@ var pxt;
                 // emit file
                 var outLns = file.getChildren()
                     .map(emitNode)
-                    .reduce(function (p, c) { return p.concat(c); }, [])
-                    .join("\n");
-                return outLns;
+                    .reduce(function (p, c) { return p.concat(c); }, []);
+                // emit any comments that could not be associated with a
+                // statement at the end of the file
+                commentMap.filter(function (c) { return !c.owner; })
+                    .forEach(function (comment) { return outLns.push.apply(outLns, emitComment(comment)); });
+                return outLns.join("\n");
             }
             function emitNode(s) {
                 switch (s.kind) {
@@ -4679,29 +4774,27 @@ var pxt;
                         return emitStmtWithNewlines(s);
                 }
             }
+            function emitComment(comment) {
+                var out = [];
+                if (comment.kind === pxtc.decompiler.CommentKind.SingleLine) {
+                    out.push("# " + comment.text);
+                }
+                else {
+                    out.push("\"\"\"");
+                    for (var _i = 0, _a = comment.lines; _i < _a.length; _i++) {
+                        var line = _a[_i];
+                        out.push(line);
+                    }
+                    out.push("\"\"\"");
+                }
+                return out;
+            }
             function emitStmtWithNewlines(s) {
                 var out = [];
-                if (s.getLeadingTriviaWidth() > 0) {
-                    var leading = s.getFullText().slice(0, s.getLeadingTriviaWidth());
-                    var lns = leading.split("\n");
-                    var getTriviaLine = function (s) {
-                        var trimmed = s.trim();
-                        if (!trimmed)
-                            return "blank";
-                        if (!trimmed.startsWith("//"))
-                            return "unknown";
-                        var com = "#" + trimmed.slice(2, trimmed.length);
-                        return ["comment", com];
-                    };
-                    var trivia = lns
-                        .map(getTriviaLine)
-                        .filter(function (s) { return s !== "unknown"; })
-                        .map(function (s) { return s === "blank" ? "" : s[1]; });
-                    if (trivia && !trivia[0])
-                        trivia.shift();
-                    if (trivia && !trivia[trivia.length - 1])
-                        trivia.pop();
-                    out = out.concat(trivia);
+                var comments = pxtc.decompiler.getCommentsForStatement(s, commentMap);
+                for (var _i = 0, comments_1 = comments; _i < comments_1.length; _i++) {
+                    var comment = comments_1[_i];
+                    out.push.apply(out, emitComment(comment));
                 }
                 out = out.concat(emitStmt(s));
                 return out;
@@ -4785,7 +4878,7 @@ var pxt;
             function emitWhileStmt(s) {
                 var _a = emitExp(s.expression), cond = _a[0], condSup = _a[1];
                 var body = emitBody(s.statement);
-                var whileStmt = expWrap("while ", cond);
+                var whileStmt = expWrap("while ", cond, ":");
                 return condSup.concat(whileStmt).concat(body);
             }
             function isNormalInteger(str) {
@@ -5335,7 +5428,7 @@ var pxt;
                 else if (ts.isIdentifier(s)) {
                     return [getName(s)];
                 }
-                else
+                else // TODO handle more cases like indexing?
                     return [];
             }
             function getNameHint(param, calleeExp, allParams, allArgs) {
@@ -5474,6 +5567,12 @@ var pxt;
                         return throwError(s, 3010, "TODO: Unsupported call site where caller the arguments outnumber the callee parameters: " + s.getText());
                     }
                 }
+                // special case TD_ID function, don't emit them
+                var sym = tryGetSymbol(s.expression);
+                if (s.arguments && sym && sym.attributes.shim == "TD_ID") {
+                    // this function is a no-op and should not be emitted
+                    return emitExp(s.arguments[0]);
+                }
                 // TODO inspect type info to rewrite things like console.log, Math.max, etc.
                 var _a = emitExp(s.expression), fnExp = _a[0], fnSup = _a[1];
                 var fn = expToStr(fnExp);
@@ -5550,7 +5649,7 @@ var pxt;
             }
             function getUnaryOpSpacing(s) {
                 switch (s) {
-                    case ts.SyntaxKind.ExclamationToken:// not
+                    case ts.SyntaxKind.ExclamationToken: // not
                         return " ";
                     case ts.SyntaxKind.PlusToken:
                     case ts.SyntaxKind.MinusToken:
@@ -5737,6 +5836,7 @@ var pxt;
                     default:
                         // TODO handle more expressions
                         return asExpRes(s.getText(), ["# unknown expression:  " + s.kind]); // uncomment for easier locating
+                    // throw Error("Unknown expression: " + s.kind)
                 }
             }
         }

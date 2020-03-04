@@ -1,10 +1,12 @@
-"use strict";
 var e=function(){"use strict";function r(e,r){postMessage({action:xt,cbn:r,result:e})}function t(e){var r=[];return r[e-1]=void 0,r}function o(e,r){return i(e[0]+r[0],e[1]+r[1])}function n(e,r){return u(~~Math.max(Math.min(e[1]/Ot,2147483647),-2147483648)&~~Math.max(Math.min(r[1]/Ot,2147483647),-2147483648),c(e)&c(r))}function s(e,r){var t,o;return e[0]==r[0]&&e[1]==r[1]?0:(t=0>e[1],o=0>r[1],t&&!o?-1:!t&&o?1:h(e,r)[1]<0?-1:1)}function i(e,r){var t,o;for(r%=0x10000000000000000,e%=0x10000000000000000,t=r%Ot,o=Math.floor(e/Ot)*Ot,r=r-t+o,e=e-o+t;0>e;)e+=Ot,r-=Ot;for(;e>4294967295;)e-=Ot,r+=Ot;for(r%=0x10000000000000000;r>0x7fffffff00000000;)r-=0x10000000000000000;for(;-0x8000000000000000>r;)r+=0x10000000000000000;return[e,r]}function _(e,r){return e[0]==r[0]&&e[1]==r[1]}function a(e){return e>=0?[e,0]:[e+Ot,-Ot]}function c(e){return e[0]>=2147483648?~~Math.max(Math.min(e[0]-Ot,2147483647),-2147483648):~~Math.max(Math.min(e[0],2147483647),-2147483648)}function u(e,r){var t,o;return t=e*Ot,o=r,0>r&&(o+=Ot),[o,t]}function f(e){return 30>=e?1<<e:f(30)*f(e-30)}function m(e,r){var t,o,n,s;if(r&=63,_(e,Ht))return r?Gt:e;if(0>e[1])throw Error("Neg");return s=f(r),o=e[1]*s%0x10000000000000000,n=e[0]*s,t=n-n%Ot,o+=t,n-=t,o>=0x8000000000000000&&(o-=0x10000000000000000),[n,o]}function d(e,r){var t;return r&=63,t=f(r),i(Math.floor(e[0]/t),e[1]/t)}function p(e,r){var t;return r&=63,t=d(e,r),0>e[1]&&(t=o(t,m([2,0],63-r))),t}function h(e,r){return i(e[0]-r[0],e[1]-r[1])}function P(e,r){return e.Mc=r,e.Lc=0,e.Yb=r.length,e}function l(e){return e.Lc>=e.Yb?-1:255&e.Mc[e.Lc++]}function v(e,r,t,o){return e.Lc>=e.Yb?-1:(o=Math.min(o,e.Yb-e.Lc),M(e.Mc,e.Lc,r,t,o),e.Lc+=o,o)}function B(e){return e.Mc=t(32),e.Yb=0,e}function S(e){var r=e.Mc;return r.length=e.Yb,r}function g(e,r){e.Mc[e.Yb++]=r<<24>>24}function k(e,r,t,o){M(r,t,e.Mc,e.Yb,o),e.Yb+=o}function R(e,r,t,o,n){var s;for(s=r;t>s;++s)o[n++]=e.charCodeAt(s)}function M(e,r,t,o,n){for(var s=0;n>s;++s)t[o+s]=e[r+s]}function D(e,r){Ar(r,1<<e.s),r.n=e.f,Hr(r,e.m),r.eb=0,r.fb=3,r.Y=2,r.y=3}function b(r,t,o,n,i){var _,a;if(s(n,At)<0)throw Error("invalid length "+n);for(r.Tb=n,_=Dr({}),D(i,_),_.Gc=void 0===e.disableEndMark,Gr(_,o),a=0;64>a;a+=8)g(o,255&c(d(n,a)));r.yb=(_.W=0,_.oc=t,_.pc=0,Mr(_),_.d.Ab=o,Fr(_),wr(_),br(_),_.$.rb=_.n+1-2,Qr(_.$,1<<_.Y),_.i.rb=_.n+1-2,Qr(_.i,1<<_.Y),void(_.g=Gt),X({},_))}function w(e,r,t){return e.Nb=B({}),b(e,P({},r),e.Nb,a(r.length),t),e}function E(e,r,t){var o,n,s,i,_="",c=[];for(n=0;5>n;++n){if(s=l(r),-1==s)throw Error("truncated input");c[n]=s<<24>>24}if(o=ir({}),!ar(o,c))throw Error("corrupted input");for(n=0;64>n;n+=8){if(s=l(r),-1==s)throw Error("truncated input");s=s.toString(16),1==s.length&&(s="0"+s),_=s+""+_}/^0+$|^f+$/i.test(_)?e.Tb=At:(i=parseInt(_,16),e.Tb=i>4294967295?At:a(i)),e.yb=nr(o,r,t,e.Tb)}function L(e,r){return e.Nb=B({}),E(e,P({},r),e.Nb),e}function y(e,r,o,n){var s;e.Bc=r,e._b=o,s=r+o+n,(null==e.c||e.Kb!=s)&&(e.c=null,e.Kb=s,e.c=t(e.Kb)),e.H=e.Kb-o}function C(e,r){return e.c[e.f+e.o+r]}function z(e,r,t,o){var n,s;for(e.T&&e.o+r+o>e.h&&(o=e.h-(e.o+r)),++t,s=e.f+e.o+r,n=0;o>n&&e.c[s+n]==e.c[s+n-t];++n);return n}function F(e){return e.h-e.o}function I(e){var r,t,o;for(o=e.f+e.o-e.Bc,o>0&&--o,t=e.f+e.h-o,r=0;t>r;++r)e.c[r]=e.c[o+r];e.f-=o}function x(e){var r;++e.o,e.o>e.zb&&(r=e.f+e.o,r>e.H&&I(e),N(e))}function N(e){var r,t,o;if(!e.T)for(;;){if(o=-e.f+e.Kb-e.h,!o)return;if(r=v(e.cc,e.c,e.f+e.h,o),-1==r)return e.zb=e.h,t=e.f+e.zb,t>e.H&&(e.zb=e.H-e.f),void(e.T=1);e.h+=r,e.h>=e.o+e._b&&(e.zb=e.h-e._b)}}function O(e,r){e.f+=r,e.zb-=r,e.o-=r,e.h-=r}function A(e,r,o,n,s){var i,_,a;1073741567>r&&(e.Fc=16+(n>>1),a=~~((r+o+n+s)/2)+256,y(e,r+o,n+s,a),e.ob=n,i=r+1,e.p!=i&&(e.L=t(2*(e.p=i))),_=65536,e.qb&&(_=r-1,_|=_>>1,_|=_>>2,_|=_>>4,_|=_>>8,_>>=1,_|=65535,_>16777216&&(_>>=1),e.Ec=_,++_,_+=e.R),_!=e.rc&&(e.ub=t(e.rc=_)))}function H(e,r){var t,o,n,s,i,_,a,c,u,f,m,d,p,h,P,l,v,B,S,g,k;if(e.h>=e.o+e.ob)h=e.ob;else if(h=e.h-e.o,e.xb>h)return W(e),0;for(v=0,P=e.o>e.p?e.o-e.p:0,o=e.f+e.o,l=1,c=0,u=0,e.qb?(k=Tt[255&e.c[o]]^255&e.c[o+1],c=1023&k,k^=(255&e.c[o+2])<<8,u=65535&k,f=(k^Tt[255&e.c[o+3]]<<5)&e.Ec):f=255&e.c[o]^(255&e.c[o+1])<<8,n=e.ub[e.R+f]||0,e.qb&&(s=e.ub[c]||0,i=e.ub[1024+u]||0,e.ub[c]=e.o,e.ub[1024+u]=e.o,s>P&&e.c[e.f+s]==e.c[o]&&(r[v++]=l=2,r[v++]=e.o-s-1),i>P&&e.c[e.f+i]==e.c[o]&&(i==s&&(v-=2),r[v++]=l=3,r[v++]=e.o-i-1,s=i),0!=v&&s==n&&(v-=2,l=1)),e.ub[e.R+f]=e.o,S=(e.k<<1)+1,g=e.k<<1,d=p=e.w,0!=e.w&&n>P&&e.c[e.f+n+e.w]!=e.c[o+e.w]&&(r[v++]=l=e.w,r[v++]=e.o-n-1),t=e.Fc;;){if(P>=n||0==t--){e.L[S]=e.L[g]=0;break}if(a=e.o-n,_=(e.k>=a?e.k-a:e.k-a+e.p)<<1,B=e.f+n,m=p>d?d:p,e.c[B+m]==e.c[o+m]){for(;++m!=h&&e.c[B+m]==e.c[o+m];);if(m>l&&(r[v++]=l=m,r[v++]=a-1,m==h)){e.L[g]=e.L[_],e.L[S]=e.L[_+1];break}}(255&e.c[o+m])>(255&e.c[B+m])?(e.L[g]=n,g=_+1,n=e.L[g],p=m):(e.L[S]=n,S=_,n=e.L[S],d=m)}return W(e),v}function G(e){e.f=0,e.o=0,e.h=0,e.T=0,N(e),e.k=0,O(e,-1)}function W(e){var r;++e.k>=e.p&&(e.k=0),x(e),1073741823==e.o&&(r=e.o-e.p,T(e.L,2*e.p,r),T(e.ub,e.rc,r),O(e,r))}function T(e,r,t){var o,n;for(o=0;r>o;++o)n=e[o]||0,t>=n?n=0:n-=t,e[o]=n}function Z(e,r){e.qb=r>2,e.qb?(e.w=0,e.xb=4,e.R=66560):(e.w=2,e.xb=3,e.R=0)}function Y(e,r){var t,o,n,s,i,_,a,c,u,f,m,d,p,h,P,l,v;do{if(e.h>=e.o+e.ob)d=e.ob;else if(d=e.h-e.o,e.xb>d){W(e);continue}for(p=e.o>e.p?e.o-e.p:0,o=e.f+e.o,e.qb?(v=Tt[255&e.c[o]]^255&e.c[o+1],_=1023&v,e.ub[_]=e.o,v^=(255&e.c[o+2])<<8,a=65535&v,e.ub[1024+a]=e.o,c=(v^Tt[255&e.c[o+3]]<<5)&e.Ec):c=255&e.c[o]^(255&e.c[o+1])<<8,n=e.ub[e.R+c],e.ub[e.R+c]=e.o,P=(e.k<<1)+1,l=e.k<<1,f=m=e.w,t=e.Fc;;){if(p>=n||0==t--){e.L[P]=e.L[l]=0;break}if(i=e.o-n,s=(e.k>=i?e.k-i:e.k-i+e.p)<<1,h=e.f+n,u=m>f?f:m,e.c[h+u]==e.c[o+u]){for(;++u!=d&&e.c[h+u]==e.c[o+u];);if(u==d){e.L[l]=e.L[s],e.L[P]=e.L[s+1];break}}(255&e.c[o+u])>(255&e.c[h+u])?(e.L[l]=n,l=s+1,n=e.L[l],m=u):(e.L[P]=n,P=s,n=e.L[P],f=u)}W(e)}while(0!=--r)}function V(e,r,t){var o=e.o-r-1;for(0>o&&(o+=e.M);0!=t;--t)o>=e.M&&(o=0),e.Lb[e.o++]=e.Lb[o++],e.o>=e.M&&$(e)}function j(e,r){(null==e.Lb||e.M!=r)&&(e.Lb=t(r)),e.M=r,e.o=0,e.h=0}function $(e){var r=e.o-e.h;r&&(k(e.cc,e.Lb,e.h,r),e.o>=e.M&&(e.o=0),e.h=e.o)}function K(e,r){var t=e.o-r-1;return 0>t&&(t+=e.M),e.Lb[t]}function q(e,r){e.Lb[e.o++]=r,e.o>=e.M&&$(e)}function J(e){$(e),e.cc=null}function Q(e){return e-=2,4>e?e:3}function U(e){return 4>e?0:10>e?e-3:e-6}function X(e,r){return e.cb=r,e.Z=null,e.zc=1,e}function er(e,r){return e.Z=r,e.cb=null,e.zc=1,e}function rr(e){if(!e.zc)throw Error("bad state");return e.cb?or(e):tr(e),e.zc}function tr(e){var r=sr(e.Z);if(-1==r)throw Error("corrupted input");e.Pb=At,e.Pc=e.Z.g,(r||s(e.Z.Nc,Gt)>=0&&s(e.Z.g,e.Z.Nc)>=0)&&($(e.Z.B),J(e.Z.B),e.Z.e.Ab=null,e.zc=0)}function or(e){Rr(e.cb,e.cb.Xb,e.cb.uc,e.cb.Kc),e.Pb=e.cb.Xb[0],e.cb.Kc[0]&&(Or(e.cb),e.zc=0)}function nr(e,r,t,o){return e.e.Ab=r,J(e.B),e.B.cc=t,_r(e),e.U=0,e.ib=0,e.Jc=0,e.Ic=0,e.Qc=0,e.Nc=o,e.g=Gt,e.jc=0,er({},e)}function sr(e){var r,t,n,i,_,u;if(u=c(e.g)&e.Dc,vt(e.e,e.Gb,(e.U<<4)+u)){if(vt(e.e,e.Zb,e.U))n=0,vt(e.e,e.Cb,e.U)?(vt(e.e,e.Db,e.U)?(vt(e.e,e.Eb,e.U)?(t=e.Qc,e.Qc=e.Ic):t=e.Ic,e.Ic=e.Jc):t=e.Jc,e.Jc=e.ib,e.ib=t):vt(e.e,e.pb,(e.U<<4)+u)||(e.U=7>e.U?9:11,n=1),n||(n=mr(e.sb,e.e,u)+2,e.U=7>e.U?8:11);else if(e.Qc=e.Ic,e.Ic=e.Jc,e.Jc=e.ib,n=2+mr(e.Rb,e.e,u),e.U=7>e.U?7:10,_=at(e.kb[Q(n)],e.e),_>=4){if(i=(_>>1)-1,e.ib=(2|1&_)<<i,14>_)e.ib+=ut(e.kc,e.ib-_-1,e.e,i);else if(e.ib+=Bt(e.e,i-4)<<4,e.ib+=ct(e.Fb,e.e),0>e.ib)return-1==e.ib?1:-1}else e.ib=_;if(s(a(e.ib),e.g)>=0||e.ib>=e.nb)return-1;V(e.B,e.ib,n),e.g=o(e.g,a(n)),e.jc=K(e.B,0)}else r=Pr(e.gb,c(e.g),e.jc),e.jc=7>e.U?vr(r,e.e):Br(r,e.e,K(e.B,e.ib)),q(e.B,e.jc),e.U=U(e.U),e.g=o(e.g,Wt);return 0}function ir(e){e.B={},e.e={},e.Gb=t(192),e.Zb=t(12),e.Cb=t(12),e.Db=t(12),e.Eb=t(12),e.pb=t(192),e.kb=t(4),e.kc=t(114),e.Fb=_t({},4),e.Rb=dr({}),e.sb=dr({}),e.gb={};for(var r=0;4>r;++r)e.kb[r]=_t({},6);return e}function _r(e){e.B.h=0,e.B.o=0,gt(e.Gb),gt(e.pb),gt(e.Zb),gt(e.Cb),gt(e.Db),gt(e.Eb),gt(e.kc),lr(e.gb);for(var r=0;4>r;++r)gt(e.kb[r].G);pr(e.Rb),pr(e.sb),gt(e.Fb.G),St(e.e)}function ar(e,r){var t,o,n,s,i,_,a;if(5>r.length)return 0;for(a=255&r[0],n=a%9,_=~~(a/9),s=_%5,i=~~(_/5),t=0,o=0;4>o;++o)t+=(255&r[1+o])<<8*o;return t>99999999||!ur(e,n,s,i)?0:cr(e,t)}function cr(e,r){return 0>r?0:(e.Ob!=r&&(e.Ob=r,e.nb=Math.max(e.Ob,1),j(e.B,Math.max(e.nb,4096))),1)}function ur(e,r,t,o){if(r>8||t>4||o>4)return 0;hr(e.gb,t,r);var n=1<<o;return fr(e.Rb,n),fr(e.sb,n),e.Dc=n-1,1}function fr(e,r){for(;r>e.O;++e.O)e.ec[e.O]=_t({},3),e.hc[e.O]=_t({},3)}function mr(e,r,t){if(!vt(r,e.wc,0))return at(e.ec[t],r);var o=8;return o+=vt(r,e.wc,1)?8+at(e.tc,r):at(e.hc[t],r)}function dr(e){return e.wc=t(2),e.ec=t(16),e.hc=t(16),e.tc=_t({},8),e.O=0,e}function pr(e){gt(e.wc);for(var r=0;e.O>r;++r)gt(e.ec[r].G),gt(e.hc[r].G);gt(e.tc.G)}function hr(e,r,o){var n,s;if(null==e.V||e.u!=o||e.I!=r)for(e.I=r,e.qc=(1<<r)-1,e.u=o,s=1<<e.u+e.I,e.V=t(s),n=0;s>n;++n)e.V[n]=Sr({})}function Pr(e,r,t){return e.V[((r&e.qc)<<e.u)+((255&t)>>>8-e.u)]}function lr(e){var r,t;for(t=1<<e.u+e.I,r=0;t>r;++r)gt(e.V[r].Ib)}function vr(e,r){var t=1;do t=t<<1|vt(r,e.Ib,t);while(256>t);return t<<24>>24}function Br(e,r,t){var o,n,s=1;do if(n=t>>7&1,t<<=1,o=vt(r,e.Ib,(1+n<<8)+s),s=s<<1|o,n!=o){for(;256>s;)s=s<<1|vt(r,e.Ib,s);break}while(256>s);return s<<24>>24}function Sr(e){return e.Ib=t(768),e}function gr(e,r){var t,o,n,s;e.jb=r,n=e.a[r].r,o=e.a[r].j;do e.a[r].t&&(st(e.a[n]),e.a[n].r=n-1,e.a[r].Ac&&(e.a[n-1].t=0,e.a[n-1].r=e.a[r].r2,e.a[n-1].j=e.a[r].j2)),s=n,t=o,o=e.a[s].j,n=e.a[s].r,e.a[s].j=t,e.a[s].r=r,r=s;while(r>0);return e.mb=e.a[0].j,e.q=e.a[0].r}function kr(e){e.l=0,e.J=0;for(var r=0;4>r;++r)e.v[r]=0}function Rr(e,r,t,n){var i,u,f,m,d,p,P,l,v,B,S,g,k,R,M;if(r[0]=Gt,t[0]=Gt,n[0]=1,e.oc&&(e.b.cc=e.oc,G(e.b),e.W=1,e.oc=null),!e.pc){if(e.pc=1,R=e.g,_(e.g,Gt)){if(!F(e.b))return void Er(e,c(e.g));xr(e),k=c(e.g)&e.y,kt(e.d,e.C,(e.l<<4)+k,0),e.l=U(e.l),f=C(e.b,-e.s),rt(Xr(e.A,c(e.g),e.J),e.d,f),e.J=f,--e.s,e.g=o(e.g,Wt)}if(!F(e.b))return void Er(e,c(e.g));for(;;){if(P=Lr(e,c(e.g)),B=e.mb,k=c(e.g)&e.y,u=(e.l<<4)+k,1==P&&-1==B)kt(e.d,e.C,u,0),f=C(e.b,-e.s),M=Xr(e.A,c(e.g),e.J),7>e.l?rt(M,e.d,f):(v=C(e.b,-e.v[0]-1-e.s),tt(M,e.d,v,f)),e.J=f,e.l=U(e.l);else{if(kt(e.d,e.C,u,1),4>B){if(kt(e.d,e.bb,e.l,1),B?(kt(e.d,e.hb,e.l,1),1==B?kt(e.d,e.Ub,e.l,0):(kt(e.d,e.Ub,e.l,1),kt(e.d,e.vc,e.l,B-2))):(kt(e.d,e.hb,e.l,0),1==P?kt(e.d,e._,u,0):kt(e.d,e._,u,1)),1==P?e.l=7>e.l?9:11:(Kr(e.i,e.d,P-2,k),e.l=7>e.l?8:11),m=e.v[B],0!=B){for(p=B;p>=1;--p)e.v[p]=e.v[p-1];e.v[0]=m}}else{for(kt(e.d,e.bb,e.l,0),e.l=7>e.l?7:10,Kr(e.$,e.d,P-2,k),B-=4,g=Tr(B),l=Q(P),mt(e.K[l],e.d,g),g>=4&&(d=(g>>1)-1,i=(2|1&g)<<d,S=B-i,14>g?Pt(e.Sb,i-g-1,e.d,d,S):(Rt(e.d,S>>4,d-4),pt(e.S,e.d,15&S),++e.Qb)),m=B,p=3;p>=1;--p)e.v[p]=e.v[p-1];e.v[0]=m,++e.Mb}e.J=C(e.b,P-1-e.s)}if(e.s-=P,e.g=o(e.g,a(P)),!e.s){if(e.Mb>=128&&wr(e),e.Qb>=16&&br(e),r[0]=e.g,t[0]=Mt(e.d),!F(e.b))return void Er(e,c(e.g));if(s(h(e.g,R),[4096,0])>=0)return e.pc=0,void(n[0]=0)}}}}function Mr(e){var r,t;e.b||(r={},t=4,e.X||(t=2),Z(r,t),e.b=r),Ur(e.A,e.eb,e.fb),(e.ab!=e.wb||e.Hb!=e.n)&&(A(e.b,e.ab,4096,e.n,274),e.wb=e.ab,e.Hb=e.n)}function Dr(e){var r;for(e.v=t(4),e.a=[],e.d={},e.C=t(192),e.bb=t(12),e.hb=t(12),e.Ub=t(12),e.vc=t(12),e._=t(192),e.K=[],e.Sb=t(114),e.S=ft({},4),e.$=qr({}),e.i=qr({}),e.A={},e.m=[],e.P=[],e.lb=[],e.nc=t(16),e.x=t(4),e.Q=t(4),e.Xb=[Gt],e.uc=[Gt],e.Kc=[0],e.fc=t(5),e.yc=t(128),e.vb=0,e.X=1,e.D=0,e.Hb=-1,e.mb=0,r=0;4096>r;++r)e.a[r]={};for(r=0;4>r;++r)e.K[r]=ft({},6);return e}function br(e){for(var r=0;16>r;++r)e.nc[r]=ht(e.S,r);e.Qb=0}function wr(e){var r,t,o,n,s,i,_,a;for(n=4;128>n;++n)i=Tr(n),o=(i>>1)-1,r=(2|1&i)<<o,e.yc[n]=lt(e.Sb,r-i-1,o,n-r);for(s=0;4>s;++s){for(t=e.K[s],_=s<<6,i=0;e.$b>i;++i)e.P[_+i]=dt(t,i);for(i=14;e.$b>i;++i)e.P[_+i]+=(i>>1)-1-4<<6;for(a=128*s,n=0;4>n;++n)e.lb[a+n]=e.P[_+n];for(;128>n;++n)e.lb[a+n]=e.P[_+Tr(n)]+e.yc[n]}e.Mb=0}function Er(e,r){Nr(e),Wr(e,r&e.y);for(var t=0;5>t;++t)bt(e.d)}function Lr(e,r){var t,o,n,s,i,_,a,c,u,f,m,d,p,h,P,l,v,B,S,g,k,R,M,D,b,w,E,L,y,I,x,N,O,A,H,G,W,T,Z,Y,V,j,$,K,q,J,Q,X,er,rr;if(e.jb!=e.q)return p=e.a[e.q].r-e.q,e.mb=e.a[e.q].j,e.q=e.a[e.q].r,p;if(e.q=e.jb=0,e.N?(d=e.vb,e.N=0):d=xr(e),E=e.D,b=F(e.b)+1,2>b)return e.mb=-1,1;for(b>273&&(b=273),Y=0,u=0;4>u;++u)e.x[u]=e.v[u],e.Q[u]=z(e.b,-1,e.x[u],273),e.Q[u]>e.Q[Y]&&(Y=u);if(e.Q[Y]>=e.n)return e.mb=Y,p=e.Q[Y],Ir(e,p-1),p;if(d>=e.n)return e.mb=e.m[E-1]+4,Ir(e,d-1),d;if(a=C(e.b,-1),v=C(e.b,-e.v[0]-1-1),2>d&&a!=v&&2>e.Q[Y])return e.mb=-1,1;if(e.a[0].Hc=e.l,A=r&e.y,e.a[1].z=Yt[e.C[(e.l<<4)+A]>>>2]+nt(Xr(e.A,r,e.J),e.l>=7,v,a),st(e.a[1]),B=Yt[2048-e.C[(e.l<<4)+A]>>>2],Z=B+Yt[2048-e.bb[e.l]>>>2],v==a&&(V=Z+zr(e,e.l,A),e.a[1].z>V&&(e.a[1].z=V,it(e.a[1]))),m=d>=e.Q[Y]?d:e.Q[Y],2>m)return e.mb=e.a[1].j,1;e.a[1].r=0,e.a[0].bc=e.x[0],e.a[0].ac=e.x[1],e.a[0].dc=e.x[2],e.a[0].lc=e.x[3],f=m;do e.a[f--].z=268435455;while(f>=2);for(u=0;4>u;++u)if(T=e.Q[u],!(2>T)){G=Z+Cr(e,u,e.l,A);do s=G+Jr(e.i,T-2,A),x=e.a[T],x.z>s&&(x.z=s,x.r=0,x.j=u,x.t=0);while(--T>=2)}if(D=B+Yt[e.bb[e.l]>>>2],f=e.Q[0]>=2?e.Q[0]+1:2,d>=f){for(L=0;f>e.m[L];)L+=2;for(;c=e.m[L+1],s=D+yr(e,c,f,A),x=e.a[f],x.z>s&&(x.z=s,x.r=0,x.j=c+4,x.t=0),f!=e.m[L]||(L+=2,L!=E);++f);}for(t=0;;){if(++t,t==m)return gr(e,t);if(S=xr(e),E=e.D,S>=e.n)return e.vb=S,e.N=1,gr(e,t);if(++r,O=e.a[t].r,e.a[t].t?(--O,e.a[t].Ac?($=e.a[e.a[t].r2].Hc,$=4>e.a[t].j2?7>$?8:11:7>$?7:10):$=e.a[O].Hc,$=U($)):$=e.a[O].Hc,O==t-1?$=e.a[t].j?U($):7>$?9:11:(e.a[t].t&&e.a[t].Ac?(O=e.a[t].r2,N=e.a[t].j2,$=7>$?8:11):(N=e.a[t].j,$=4>N?7>$?8:11:7>$?7:10),I=e.a[O],4>N?N?1==N?(e.x[0]=I.ac,e.x[1]=I.bc,e.x[2]=I.dc,e.x[3]=I.lc):2==N?(e.x[0]=I.dc,e.x[1]=I.bc,e.x[2]=I.ac,e.x[3]=I.lc):(e.x[0]=I.lc,e.x[1]=I.bc,e.x[2]=I.ac,e.x[3]=I.dc):(e.x[0]=I.bc,e.x[1]=I.ac,e.x[2]=I.dc,e.x[3]=I.lc):(e.x[0]=N-4,e.x[1]=I.bc,e.x[2]=I.ac,e.x[3]=I.dc)),e.a[t].Hc=$,e.a[t].bc=e.x[0],e.a[t].ac=e.x[1],e.a[t].dc=e.x[2],e.a[t].lc=e.x[3],_=e.a[t].z,a=C(e.b,-1),v=C(e.b,-e.x[0]-1-1),A=r&e.y,o=_+Yt[e.C[($<<4)+A]>>>2]+nt(Xr(e.A,r,C(e.b,-2)),$>=7,v,a),R=e.a[t+1],g=0,R.z>o&&(R.z=o,R.r=t,R.j=-1,R.t=0,g=1),B=_+Yt[2048-e.C[($<<4)+A]>>>2],Z=B+Yt[2048-e.bb[$]>>>2],v!=a||t>R.r&&!R.j||(V=Z+(Yt[e.hb[$]>>>2]+Yt[e._[($<<4)+A]>>>2]),R.z>=V&&(R.z=V,R.r=t,R.j=0,R.t=0,g=1)),w=F(e.b)+1,w=w>4095-t?4095-t:w,b=w,!(2>b)){if(b>e.n&&(b=e.n),!g&&v!=a&&(q=Math.min(w-1,e.n),P=z(e.b,0,e.x[0],q),P>=2)){for(K=U($),H=r+1&e.y,M=o+Yt[2048-e.C[(K<<4)+H]>>>2]+Yt[2048-e.bb[K]>>>2],y=t+1+P;y>m;)e.a[++m].z=268435455;s=M+(J=Jr(e.i,P-2,H),J+Cr(e,0,K,H)),x=e.a[y],x.z>s&&(x.z=s,x.r=t+1,x.j=0,x.t=1,x.Ac=0)}for(j=2,W=0;4>W;++W)if(h=z(e.b,-1,e.x[W],b),!(2>h)){l=h;do{for(;t+h>m;)e.a[++m].z=268435455;s=Z+(Q=Jr(e.i,h-2,A),Q+Cr(e,W,$,A)),x=e.a[t+h],x.z>s&&(x.z=s,x.r=t,x.j=W,x.t=0)}while(--h>=2);if(h=l,W||(j=h+1),w>h&&(q=Math.min(w-1-h,e.n),P=z(e.b,h,e.x[W],q),P>=2)){for(K=7>$?8:11,H=r+h&e.y,n=Z+(X=Jr(e.i,h-2,A),X+Cr(e,W,$,A))+Yt[e.C[(K<<4)+H]>>>2]+nt(Xr(e.A,r+h,C(e.b,h-1-1)),1,C(e.b,h-1-(e.x[W]+1)),C(e.b,h-1)),K=U(K),H=r+h+1&e.y,k=n+Yt[2048-e.C[(K<<4)+H]>>>2],M=k+Yt[2048-e.bb[K]>>>2],y=h+1+P;t+y>m;)e.a[++m].z=268435455;s=M+(er=Jr(e.i,P-2,H),er+Cr(e,0,K,H)),x=e.a[t+y],x.z>s&&(x.z=s,x.r=t+h+1,x.j=0,x.t=1,x.Ac=1,x.r2=t,x.j2=W)}}if(S>b){for(S=b,E=0;S>e.m[E];E+=2);e.m[E]=S,E+=2}if(S>=j){for(D=B+Yt[e.bb[$]>>>2];t+S>m;)e.a[++m].z=268435455;for(L=0;j>e.m[L];)L+=2;for(h=j;;++h)if(i=e.m[L+1],s=D+yr(e,i,h,A),x=e.a[t+h],x.z>s&&(x.z=s,x.r=t,x.j=i+4,x.t=0),h==e.m[L]){if(w>h&&(q=Math.min(w-1-h,e.n),P=z(e.b,h,i,q),P>=2)){for(K=7>$?7:10,H=r+h&e.y,n=s+Yt[e.C[(K<<4)+H]>>>2]+nt(Xr(e.A,r+h,C(e.b,h-1-1)),1,C(e.b,h-(i+1)-1),C(e.b,h-1)),K=U(K),H=r+h+1&e.y,k=n+Yt[2048-e.C[(K<<4)+H]>>>2],M=k+Yt[2048-e.bb[K]>>>2],y=h+1+P;t+y>m;)e.a[++m].z=268435455;s=M+(rr=Jr(e.i,P-2,H),rr+Cr(e,0,K,H)),x=e.a[t+y],x.z>s&&(x.z=s,x.r=t+h+1,x.j=0,x.t=1,x.Ac=1,x.r2=t,x.j2=i+4)}if(L+=2,L==E)break}}}}}function yr(e,r,t,o){var n,s=Q(t);return n=128>r?e.lb[128*s+r]:e.P[(s<<6)+Zr(r)]+e.nc[15&r],n+Jr(e.$,t-2,o)}function Cr(e,r,t,o){var n;return r?(n=Yt[2048-e.hb[t]>>>2],1==r?n+=Yt[e.Ub[t]>>>2]:(n+=Yt[2048-e.Ub[t]>>>2],n+=wt(e.vc[t],r-2))):(n=Yt[e.hb[t]>>>2],n+=Yt[2048-e._[(t<<4)+o]>>>2]),n}function zr(e,r,t){return Yt[e.hb[r]>>>2]+Yt[e._[(r<<4)+t]>>>2]}function Fr(e){kr(e),Dt(e.d),gt(e.C),gt(e._),gt(e.bb),gt(e.hb),gt(e.Ub),gt(e.vc),gt(e.Sb),et(e.A);for(var r=0;4>r;++r)gt(e.K[r].G);jr(e.$,1<<e.Y),jr(e.i,1<<e.Y),gt(e.S.G),e.N=0,e.jb=0,e.q=0,e.s=0}function Ir(e,r){r>0&&(Y(e.b,r),e.s+=r)}function xr(e){var r=0;return e.D=H(e.b,e.m),e.D>0&&(r=e.m[e.D-2],r==e.n&&(r+=z(e.b,r-1,e.m[e.D-1],273-r))),++e.s,r}function Nr(e){e.b&&e.W&&(e.b.cc=null,e.W=0)}function Or(e){Nr(e),e.d.Ab=null}function Ar(e,r){e.ab=r;for(var t=0;r>1<<t;++t);e.$b=2*t}function Hr(e,r){var t=e.X;e.X=r,e.b&&t!=e.X&&(e.wb=-1,e.b=null)}function Gr(e,r){e.fc[0]=9*(5*e.Y+e.eb)+e.fb<<24>>24;for(var t=0;4>t;++t)e.fc[1+t]=e.ab>>8*t<<24>>24;k(r,e.fc,0,5)}function Wr(e,r){if(e.Gc){kt(e.d,e.C,(e.l<<4)+r,1),kt(e.d,e.bb,e.l,0),e.l=7>e.l?7:10,Kr(e.$,e.d,0,r);var t=Q(2);mt(e.K[t],e.d,63),Rt(e.d,67108863,26),pt(e.S,e.d,15)}}function Tr(e){return 2048>e?Zt[e]:2097152>e?Zt[e>>10]+20:Zt[e>>20]+40}function Zr(e){return 131072>e?Zt[e>>6]+12:134217728>e?Zt[e>>16]+32:Zt[e>>26]+52}function Yr(e,r,t,o){8>t?(kt(r,e.db,0,0),mt(e.Vb[o],r,t)):(t-=8,kt(r,e.db,0,1),8>t?(kt(r,e.db,1,0),mt(e.Wb[o],r,t)):(kt(r,e.db,1,1),mt(e.ic,r,t-8)))}function Vr(e){e.db=t(2),e.Vb=t(16),e.Wb=t(16),e.ic=ft({},8);for(var r=0;16>r;++r)e.Vb[r]=ft({},3),e.Wb[r]=ft({},3);return e}function jr(e,r){gt(e.db);for(var t=0;r>t;++t)gt(e.Vb[t].G),gt(e.Wb[t].G);gt(e.ic.G)}function $r(e,r,t,o,n){var s,i,_,a,c;for(s=Yt[e.db[0]>>>2],i=Yt[2048-e.db[0]>>>2],_=i+Yt[e.db[1]>>>2],a=i+Yt[2048-e.db[1]>>>2],c=0,c=0;8>c;++c){if(c>=t)return;o[n+c]=s+dt(e.Vb[r],c)}for(;16>c;++c){if(c>=t)return;o[n+c]=_+dt(e.Wb[r],c-8)}for(;t>c;++c)o[n+c]=a+dt(e.ic,c-8-8)}function Kr(e,r,t,o){Yr(e,r,t,o),0==--e.sc[o]&&($r(e,o,e.rb,e.Cc,272*o),e.sc[o]=e.rb)}function qr(e){return Vr(e),e.Cc=[],e.sc=[],e}function Jr(e,r,t){return e.Cc[272*t+r]}function Qr(e,r){for(var t=0;r>t;++t)$r(e,t,e.rb,e.Cc,272*t),e.sc[t]=e.rb}function Ur(e,r,o){var n,s;if(null==e.V||e.u!=o||e.I!=r)for(e.I=r,e.qc=(1<<r)-1,e.u=o,s=1<<e.u+e.I,e.V=t(s),n=0;s>n;++n)e.V[n]=ot({})}function Xr(e,r,t){return e.V[((r&e.qc)<<e.u)+((255&t)>>>8-e.u)]}function et(e){var r,t=1<<e.u+e.I;for(r=0;t>r;++r)gt(e.V[r].tb)}function rt(e,r,t){var o,n,s=1;for(n=7;n>=0;--n)o=t>>n&1,kt(r,e.tb,s,o),s=s<<1|o}function tt(e,r,t,o){var n,s,i,_,a=1,c=1;for(s=7;s>=0;--s)n=o>>s&1,_=c,a&&(i=t>>s&1,_+=1+i<<8,a=i==n),kt(r,e.tb,_,n),c=c<<1|n}function ot(e){return e.tb=t(768),e}function nt(e,r,t,o){var n,s,i=1,_=7,a=0;if(r)for(;_>=0;--_)if(s=t>>_&1,n=o>>_&1,a+=wt(e.tb[(1+s<<8)+i],n),i=i<<1|n,s!=n){--_;break}for(;_>=0;--_)n=o>>_&1,a+=wt(e.tb[i],n),i=i<<1|n;return a}function st(e){e.j=-1,e.t=0}function it(e){e.j=0,e.t=0}function _t(e,r){return e.F=r,e.G=t(1<<r),e}function at(e,r){var t,o=1;for(t=e.F;0!=t;--t)o=(o<<1)+vt(r,e.G,o);return o-(1<<e.F)}function ct(e,r){var t,o,n=1,s=0;for(o=0;e.F>o;++o)t=vt(r,e.G,n),n<<=1,n+=t,s|=t<<o;return s}function ut(e,r,t,o){var n,s,i=1,_=0;for(s=0;o>s;++s)n=vt(t,e,r+i),i<<=1,i+=n,_|=n<<s;return _}function ft(e,r){return e.F=r,e.G=t(1<<r),e}function mt(e,r,t){var o,n,s=1;for(n=e.F;0!=n;)--n,o=t>>>n&1,kt(r,e.G,s,o),s=s<<1|o}function dt(e,r){var t,o,n=1,s=0;for(o=e.F;0!=o;)--o,t=r>>>o&1,s+=wt(e.G[n],t),n=(n<<1)+t;return s}function pt(e,r,t){var o,n,s=1;for(n=0;e.F>n;++n)o=1&t,kt(r,e.G,s,o),s=s<<1|o,t>>=1}function ht(e,r){var t,o,n=1,s=0;for(o=e.F;0!=o;--o)t=1&r,r>>>=1,s+=wt(e.G[n],t),n=n<<1|t;return s}function Pt(e,r,t,o,n){var s,i,_=1;for(i=0;o>i;++i)s=1&n,kt(t,e,r+_,s),_=_<<1|s,n>>=1}function lt(e,r,t,o){var n,s,i=1,_=0;for(s=t;0!=s;--s)n=1&o,o>>>=1,_+=Yt[(2047&(e[r+i]-n^-n))>>>2],i=i<<1|n;return _}function vt(e,r,t){var o,n=r[t];return o=(e.E>>>11)*n,(-2147483648^o)>(-2147483648^e.Bb)?(e.E=o,r[t]=n+(2048-n>>>5)<<16>>16,-16777216&e.E||(e.Bb=e.Bb<<8|l(e.Ab),e.E<<=8),0):(e.E-=o,e.Bb-=o,r[t]=n-(n>>>5)<<16>>16,-16777216&e.E||(e.Bb=e.Bb<<8|l(e.Ab),e.E<<=8),1)}function Bt(e,r){var t,o,n=0;for(t=r;0!=t;--t)e.E>>>=1,o=e.Bb-e.E>>>31,e.Bb-=e.E&o-1,n=n<<1|1-o,-16777216&e.E||(e.Bb=e.Bb<<8|l(e.Ab),e.E<<=8);return n}function St(e){e.Bb=0,e.E=-1;for(var r=0;5>r;++r)e.Bb=e.Bb<<8|l(e.Ab)}function gt(e){for(var r=e.length-1;r>=0;--r)e[r]=1024}function kt(e,r,t,s){var i,_=r[t];i=(e.E>>>11)*_,s?(e.xc=o(e.xc,n(a(i),[4294967295,0])),e.E-=i,r[t]=_-(_>>>5)<<16>>16):(e.E=i,r[t]=_+(2048-_>>>5)<<16>>16),-16777216&e.E||(e.E<<=8,bt(e))}function Rt(e,r,t){for(var n=t-1;n>=0;--n)e.E>>>=1,1==(r>>>n&1)&&(e.xc=o(e.xc,a(e.E))),-16777216&e.E||(e.E<<=8,bt(e))}function Mt(e){return o(o(a(e.Jb),e.mc),[4,0])}function Dt(e){e.mc=Gt,e.xc=Gt,e.E=-1,e.Jb=1,e.Oc=0}function bt(e){var r,t=c(p(e.xc,32));if(0!=t||s(e.xc,[4278190080,0])<0){e.mc=o(e.mc,a(e.Jb)),r=e.Oc;do g(e.Ab,r+t),r=255;while(0!=--e.Jb);e.Oc=c(e.xc)>>>24}++e.Jb,e.xc=m(n(e.xc,[16777215,0]),8)}function wt(e,r){return Yt[(2047&(e-r^-r))>>>2]}function Et(e){for(var r,t,o,n=0,s=0,i=e.length,_=[],a=[];i>n;++n,++s){if(r=255&e[n],128&r)if(192==(224&r)){if(n+1>=i)return e;if(t=255&e[++n],128!=(192&t))return e;a[s]=(31&r)<<6|63&t}else{if(224!=(240&r))return e;
 if(n+2>=i)return e;if(t=255&e[++n],128!=(192&t))return e;if(o=255&e[++n],128!=(192&o))return e;a[s]=(15&r)<<12|(63&t)<<6|63&o}else{if(!r)return e;a[s]=r}16383==s&&(_.push(String.fromCharCode.apply(String,a)),s=-1)}return s>0&&(a.length=s,_.push(String.fromCharCode.apply(String,a))),_.join("")}function Lt(e){var r,t,o,n=[],s=0,i=e.length;if("object"==typeof e)return e;for(R(e,0,i,n,0),o=0;i>o;++o)r=n[o],r>=1&&127>=r?++s:s+=!r||r>=128&&2047>=r?2:3;for(t=[],s=0,o=0;i>o;++o)r=n[o],r>=1&&127>=r?t[s++]=r<<24>>24:!r||r>=128&&2047>=r?(t[s++]=(192|r>>6&31)<<24>>24,t[s++]=(128|63&r)<<24>>24):(t[s++]=(224|r>>12&15)<<24>>24,t[s++]=(128|r>>6&63)<<24>>24,t[s++]=(128|63&r)<<24>>24);return t}function yt(e){return e[1]+e[0]}function Ct(e,t,o,n){function s(){try{for(var e,r=(new Date).getTime();rr(a.c.yb);)if(i=yt(a.c.yb.Pb)/yt(a.c.Tb),(new Date).getTime()-r>200)return n(i),Nt(s,0),0;n(1),e=S(a.c.Nb),Nt(o.bind(null,e),0)}catch(t){o(null,t)}}var i,_,a={},c=void 0===o&&void 0===n;if("function"!=typeof o&&(_=o,o=n=0),n=n||function(e){return void 0!==_?r(e,_):void 0},o=o||function(e,r){return void 0!==_?postMessage({action:Ft,cbn:_,result:e,error:r}):void 0},c){for(a.c=w({},Lt(e),Vt(t));rr(a.c.yb););return S(a.c.Nb)}try{a.c=w({},Lt(e),Vt(t)),n(0)}catch(u){return o(null,u)}Nt(s,0)}function zt(e,t,o){function n(){try{for(var e,r=0,i=(new Date).getTime();rr(c.d.yb);)if(++r%1e3==0&&(new Date).getTime()-i>200)return _&&(s=yt(c.d.yb.Z.g)/a,o(s)),Nt(n,0),0;o(1),e=Et(S(c.d.Nb)),Nt(t.bind(null,e),0)}catch(u){t(null,u)}}var s,i,_,a,c={},u=void 0===t&&void 0===o;if("function"!=typeof t&&(i=t,t=o=0),o=o||function(e){return void 0!==i?r(_?e:-1,i):void 0},t=t||function(e,r){return void 0!==i?postMessage({action:It,cbn:i,result:e,error:r}):void 0},u){for(c.d=L({},e);rr(c.d.yb););return Et(S(c.d.Nb))}try{c.d=L({},e),a=yt(c.d.Tb),_=a>-1,o(0)}catch(f){return t(null,f)}Nt(n,0)}var Ft=1,It=2,xt=3,Nt="function"==typeof setImmediate?setImmediate:setTimeout,Ot=4294967296,At=[4294967295,-Ot],Ht=[0,-0x8000000000000000],Gt=[0,0],Wt=[1,0],Tt=function(){var e,r,t,o=[];for(e=0;256>e;++e){for(t=e,r=0;8>r;++r)0!=(1&t)?t=t>>>1^-306674912:t>>>=1;o[e]=t}return o}(),Zt=function(){var e,r,t,o=2,n=[0,1];for(t=2;22>t;++t)for(r=1<<(t>>1)-1,e=0;r>e;++e,++o)n[o]=t<<24>>24;return n}(),Yt=function(){var e,r,t,o,n=[];for(r=8;r>=0;--r)for(o=1<<9-r-1,e=1<<9-r,t=o;e>t;++t)n[t]=(r<<6)+(e-t<<6>>>9-r-1);return n}(),Vt=function(){var e=[{s:16,f:64,m:0},{s:20,f:64,m:0},{s:19,f:64,m:1},{s:20,f:64,m:1},{s:21,f:128,m:1},{s:22,f:128,m:1},{s:23,f:128,m:1},{s:24,f:255,m:1},{s:25,f:255,m:1}];return function(r){return e[r-1]||e[6]}}();return"undefined"==typeof onmessage||"undefined"!=typeof window&&void 0!==window.document||!function(){onmessage=function(r){r&&r.gc&&(r.gc.action==It?e.decompress(r.gc.gc,r.gc.cbn):r.gc.action==Ft&&e.compress(r.gc.gc,r.gc.Rc,r.gc.cbn))}}(),{compress:Ct,decompress:zt}}();this.LZMA=this.LZMA_WORKER=e;
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -12,10 +14,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -26,8 +29,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -45,6 +48,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
+};
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
 };
 /// <reference path="../localtypings/mscc" />
 var pxt;
@@ -1474,7 +1495,7 @@ var ts;
                         etag = entry.etag;
                         // update expired entries
                         var dt = (Date.now() - entry.time) / 1000;
-                        if (dt > 300)
+                        if (dt > 300) // 5min caching time before trying etag again
                             downloadFromCloudAsync(entry.strings).done();
                         return entry.strings;
                     }
@@ -1581,7 +1602,7 @@ var ts;
             function downloadTranslationsAsync(targetId, baseUrl, code, pxtBranch, targetBranch, live, translationKind) {
                 translationKind = translationKind || TranslationsKind.Editor;
                 code = Util.normalizeLanguageCode(code)[0];
-                if (code === "en-US" || code === "en")
+                if (code === "en-US" || code === "en") // shortcut
                     return Promise.resolve(undefined);
                 var translationsCacheId = code + "/" + live + "/" + translationKind;
                 if (Util.translationsCache()[translationsCacheId]) {
@@ -1947,6 +1968,7 @@ var pxt;
                 var apiName = _c[_b];
                 var sym = byQName[apiName];
                 var lastDot = apiName.lastIndexOf(".");
+                var pyQName = sym.pyQName;
                 // re-create the object - this will hint the JIT that these are objects of the same type
                 // and the same hidden class should be used
                 var newsym = byQName[apiName] = {
@@ -1954,6 +1976,8 @@ var pxt;
                     qName: apiName,
                     namespace: apiName.slice(0, lastDot < 0 ? 0 : lastDot),
                     name: apiName.slice(lastDot + 1),
+                    pyQName: pyQName,
+                    pyName: pyQName ? pyQName.slice(pyQName.lastIndexOf(".") + 1) : undefined,
                     fileName: "",
                     attributes: sym.attributes || {},
                     retType: sym.retType || "void",
@@ -1996,8 +2020,11 @@ var pxt;
     }
     pxt.savedAppTheme = savedAppTheme;
     function setCompileSwitch(name, value) {
-        savedSwitches[name] = value;
-        if (pxt.appTarget) {
+        if (/^csv-/.test(name)) {
+            pxt.setAppTargetVariant(name.replace(/^csv-*/, ""));
+        }
+        else if (pxt.appTarget) {
+            savedSwitches[name] = value;
             pxt.U.jsonCopyFrom(pxt.appTarget.compile.switches, savedSwitches);
             pxt.U.jsonCopyFrom(savedAppTarget.compile.switches, savedSwitches);
         }
@@ -2099,14 +2126,30 @@ var pxt;
             res[pxt.CONFIG_NAME] = pxt.Package.stringifyConfig(config);
         });
         // patch any pre-configured query url appTheme overrides
-        if (pxt.appTarget.queryVariants && typeof window !== 'undefined') {
+        if (typeof window !== 'undefined') {
+            // Map<AppTarget>
+            var queryVariants_1 = {
+                "lockededitor=1": {
+                    appTheme: {
+                        lockedEditor: true
+                    }
+                },
+                "hidemenu=1": {
+                    appTheme: {
+                        hideMenuBar: true
+                    }
+                }
+            };
+            // import target specific flags
+            if (pxt.appTarget.queryVariants)
+                pxt.Util.jsonCopyFrom(queryVariants_1, pxt.appTarget.queryVariants);
             var href_1 = window.location.href;
-            Object.keys(pxt.appTarget.queryVariants).forEach(function (queryRegex) {
+            Object.keys(queryVariants_1).forEach(function (queryRegex) {
                 var regex = new RegExp(queryRegex, "i");
                 var match = regex.exec(href_1);
                 if (match) {
                     // Apply any appTheme overrides
-                    var v = pxt.appTarget.queryVariants[queryRegex];
+                    var v = queryVariants_1[queryRegex];
                     if (v) {
                         pxt.U.jsonMergeFrom(pxt.appTarget, v);
                     }
@@ -2275,7 +2318,7 @@ var pxt;
     pxt.getEmbeddedScript = getEmbeddedScript;
     var _targetConfigPromise = undefined;
     function targetConfigAsync() {
-        if (!_targetConfigPromise)
+        if (!_targetConfigPromise) // cached promise
             _targetConfigPromise = pxt.Cloud.downloadTargetConfigAsync()
                 .then(function (js) { return js || {}; }, function (err) { return {}; });
         return _targetConfigPromise;
@@ -2292,6 +2335,7 @@ var pxt;
     pxt.BLOCKS_PROJECT_NAME = "blocksprj";
     pxt.JAVASCRIPT_PROJECT_NAME = "tsprj";
     pxt.PYTHON_PROJECT_NAME = "pyprj";
+    pxt.DEFAULT_GROUP_NAME = "other"; // used in flyout, for snippet groups
     function outputName(trg) {
         if (trg === void 0) { trg = null; }
         if (!trg)
@@ -3193,15 +3237,18 @@ var pxt;
         }
         BrowserUtils.browserVersion = browserVersion;
         var hasLoggedBrowser = false;
+        // Note that IE11 is no longer supported in any target. Redirect handled in docfiles/pxtweb/browserRedirect.ts
         function isBrowserSupported() {
+            var _a, _b, _c;
             if (!navigator) {
                 return true; //All browsers define this, but we can't make any predictions if it isn't defined, so assume the best
             }
             // allow bots in general
             if (/bot|crawler|spider|crawling/i.test(navigator.userAgent))
                 return true;
-            //Check target theme to see if this browser is supported
-            if (pxt.appTarget.unsupportedBrowsers && pxt.appTarget.unsupportedBrowsers.some(function (b) { return b.id == browser(); })) {
+            // Check target theme to see if this browser is supported
+            var unsupportedBrowsers = ((_a = pxt.appTarget) === null || _a === void 0 ? void 0 : _a.unsupportedBrowsers) || ((_b = window.pxtTargetBundle) === null || _b === void 0 ? void 0 : _b.unsupportedBrowsers);
+            if ((_c = unsupportedBrowsers) === null || _c === void 0 ? void 0 : _c.some(function (b) { return b.id == browser(); })) {
                 return false;
             }
             // testing browser versions
@@ -3212,8 +3259,7 @@ var pxt;
             var isRecentEdge = isEdge();
             var isRecentSafari = isSafari() && v >= 9;
             var isRecentOpera = (isOpera() && isChrome()) && v >= 21;
-            var isRecentIE = isIE() && v >= 11;
-            var isModernBrowser = isRecentChrome || isRecentFirefox || isRecentEdge || isRecentSafari || isRecentOpera || isRecentIE;
+            var isModernBrowser = isRecentChrome || isRecentFirefox || isRecentEdge || isRecentSafari || isRecentOpera;
             //In the future this should check for the availability of features, such
             //as web workers
             var isSupported = isModernBrowser;
@@ -3235,10 +3281,13 @@ var pxt;
         function devicePixelRatio() {
             if (typeof window === "undefined" || !window.screen)
                 return 1;
-            if (window.screen.systemXDPI !== undefined
-                && window.screen.logicalXDPI !== undefined
-                && window.screen.systemXDPI > window.screen.logicalXDPI) {
-                return window.screen.systemXDPI / window.screen.logicalXDPI;
+            // these are IE specific
+            var sysXDPI = window.screen.systemXDPI;
+            var logicalXDPI = window.screen.logicalXDPI;
+            if (sysXDPI !== undefined
+                && logicalXDPI !== undefined
+                && sysXDPI > logicalXDPI) {
+                return sysXDPI / logicalXDPI;
             }
             else if (window && window.devicePixelRatio !== undefined) {
                 return window.devicePixelRatio;
@@ -3787,7 +3836,7 @@ var pxt;
                         var db = r.result;
                         db.createObjectStore(IndexedDbTranslationDb.TABLE, { keyPath: IndexedDbTranslationDb.KEYPATH });
                     }, function () {
-                        // quota exceeeded, nuke db
+                        // quota exceeeded, delete db
                         clearTranslationDbAsync().catch(function (e) { });
                     });
                     return idbWrapper.openAsync()
@@ -3914,6 +3963,42 @@ var pxt;
                 };
             }
         })();
+        function getPageX(event) {
+            if ("pageX" in event) {
+                return event.pageX;
+            }
+            else {
+                return event.changedTouches[0].pageX;
+            }
+        }
+        BrowserUtils.getPageX = getPageX;
+        function getPageY(event) {
+            if ("pageY" in event) {
+                return event.pageY;
+            }
+            else {
+                return event.changedTouches[0].pageY;
+            }
+        }
+        BrowserUtils.getPageY = getPageY;
+        function getClientX(event) {
+            if ("clientX" in event) {
+                return event.clientX;
+            }
+            else {
+                return event.changedTouches[0].clientX;
+            }
+        }
+        BrowserUtils.getClientX = getClientX;
+        function getClientY(event) {
+            if ("clientY" in event) {
+                return event.clientY;
+            }
+            else {
+                return event.changedTouches[0].clientY;
+            }
+        }
+        BrowserUtils.getClientY = getClientY;
         function popupWindow(url, title, popUpWidth, popUpHeight) {
             try {
                 var winLeft = window.screenLeft ? window.screenLeft : window.screenX;
@@ -3997,7 +4082,7 @@ var pxt;
                 pxt.tickEvent("menu.lang.setcookielang", { lang: langId, docs: "" + docs });
                 var expiration = new Date();
                 expiration.setTime(expiration.getTime() + (pxt.Util.langCookieExpirationDays * 24 * 60 * 60 * 1000));
-                document.cookie = pxt.Util.pxtLangCookieId + "=" + langId + "; expires=" + expiration.toUTCString();
+                document.cookie = pxt.Util.pxtLangCookieId + "=" + langId + "; expires=" + expiration.toUTCString() + "; path=/";
             }
         }
         BrowserUtils.setCookieLang = setCookieLang;
@@ -4469,6 +4554,8 @@ var pxt;
                         case "TValue": return "any";
                         default:
                             return toJs(tp);
+                        //err("Don't know how to map type: " + tp)
+                        //return "any"
                     }
                 }
                 function mapRunTimeType(tp) {
@@ -4880,7 +4967,7 @@ var pxt;
                 delete optSettings[k];
                 optSettings[k.replace(/-/g, '_')] = v;
             });
-            if (!isYotta && compileService.yottaConfigCompatibility) {
+            if (!isYotta && compileService.yottaConfigCompatibility) { // yotta automatically adds YOTTA_CFG_
                 Object.keys(optSettings)
                     .forEach(function (k) { return optSettings["YOTTA_CFG_" + k] = optSettings[k]; });
             }
@@ -5054,7 +5141,7 @@ var pxt;
             var buf;
             var ptr = 0;
             hexfile.split(/\r?\n/).forEach(function (ln) {
-                var m = /^:10....0041140E2FB82FA2BB(....)(....)(....)(....)(..)/.exec(ln);
+                var m = /^:10....0[0E]41140E2FB82FA2BB(....)(....)(....)(....)(..)/.exec(ln);
                 if (m) {
                     metaLen = parseInt(swapBytes(m[1]), 16);
                     textLen = parseInt(swapBytes(m[2]), 16);
@@ -5062,7 +5149,7 @@ var pxt;
                     buf = new Uint8Array(toGo);
                 }
                 else if (toGo > 0) {
-                    m = /^:10....00(.*)(..)$/.exec(ln);
+                    m = /^:10....0[0E](.*)(..)$/.exec(ln);
                     if (!m)
                         return;
                     var k = m[1];
@@ -5596,27 +5683,28 @@ var pxt;
             }
             function handleResponseAsync(resp) {
                 var code = resp.statusCode;
-                var data = JSON.parse(resp.text);
+                var data = pxt.Util.jsonTryParse(resp.text) || {};
                 pxt.debug("upload result: " + code);
-                if (code == 404 && data.error.code == 8) {
+                if (code == 404 && data.error && data.error.code == 8) {
                     pxt.log("create new translation file: " + filename);
                     return uploadAsync("add-file", {});
                 }
-                else if (code == 404 && data.error.code == 17) {
+                else if (code == 404 && data.error && data.error.code == 17) {
                     return createDirectoryAsync(branch, prj, key, filename.replace(/\/[^\/]+$/, ""), incr)
                         .then(function () { return startAsync(); });
                 }
-                else if (!data.success && data.error.code == 53) {
+                else if (!data.success && data.error && data.error.code == 53) {
                     // file is being updated
                     pxt.log(filename + " being updated, waiting 5s and retry...");
                     return Promise.delay(5000) // wait 5s and try again
                         .then(function () { return uploadTranslationAsync(branch, prj, key, filename, data); });
                 }
-                else if (code == 200) {
+                else if (code == 200 || data.success) {
+                    // something crowdin reports 500 with success=true
                     return Promise.resolve();
                 }
                 else {
-                    throw new Error("Error, upload translation: " + filename + ", " + code + ", " + JSON.stringify(data));
+                    throw new Error("Error, upload translation: " + filename + ", " + code + ", " + resp.text);
                 }
             }
             return startAsync();
@@ -5727,6 +5815,684 @@ var pxt;
         }
         crowdin.inContextLoadAsync = inContextLoadAsync;
     })(crowdin = pxt.crowdin || (pxt.crowdin = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var diff;
+    (function (diff_1) {
+        /*
+        Constant MAX ∈ [0,M+N]
+        Var V: Array [− MAX .. MAX] of Integer
+        V[1]←0
+        For D←0 to MAX Do
+            For k ← −D to D in steps of 2 Do
+                If k=−D or k≠D and V[k−1]<V[k+1] Then
+                    x ← V[k+1]
+                Else
+                    x ← V[k−1]+1
+                y←x−k
+                While x<N and y<M and a[x+1] =b[y+1] Do
+                    (x,y)←(x+1,y+1)
+                V[k]←x
+                If x≥N and y≥M Then
+                    Length of an SES is D
+                    Stop
+        */
+        function toLines(file) {
+            return file ? file.split(/\r?\n/) : [];
+        }
+        diff_1.toLines = toLines;
+        // based on An O(ND) Difference Algorithm and Its Variations by EUGENE W. MYERS
+        function compute(fileA, fileB, options) {
+            if (options === void 0) { options = {}; }
+            if (options.ignoreWhitespace) {
+                fileA = fileA.replace(/[\r\n]+$/, "");
+                fileB = fileB.replace(/[\r\n]+$/, "");
+            }
+            var a = toLines(fileA);
+            var b = toLines(fileB);
+            var MAX = Math.min(options.maxDiffSize || 1024, a.length + b.length);
+            if (MAX == 0) // nothing to diff
+                return [];
+            var ctor = a.length > 0xfff0 ? Uint32Array : Uint16Array;
+            var idxmap = {};
+            var curridx = 0;
+            var aidx = mkidx(a), bidx = mkidx(b);
+            function mkidx(strings) {
+                var idxarr = new ctor(strings.length);
+                var i = 0;
+                for (var _i = 0, strings_1 = strings; _i < strings_1.length; _i++) {
+                    var e = strings_1[_i];
+                    if (options.ignoreWhitespace)
+                        e = e.replace(/\s+$/g, "").replace(/^\s+/g, ''); // only ignore start/end of lines
+                    if (idxmap.hasOwnProperty(e))
+                        idxarr[i] = idxmap[e];
+                    else {
+                        ++curridx;
+                        idxarr[i] = curridx;
+                        idxmap[e] = curridx;
+                    }
+                    i++;
+                }
+                return idxarr;
+            }
+            var V = new ctor(2 * MAX + 1);
+            var diffLen = -1;
+            for (var D = 0; D <= MAX; D++) {
+                if (computeFor(D, V) != null) {
+                    diffLen = D;
+                }
+            }
+            if (diffLen == -1)
+                return null; // diffLen > MAX
+            var trace = [];
+            var endpoint = null;
+            for (var D = 0; D <= diffLen; D++) {
+                var V_1 = trace.length ? trace[trace.length - 1].slice(0) : new ctor(2 * diffLen + 1);
+                trace.push(V_1);
+                endpoint = computeFor(D, V_1);
+                if (endpoint != null)
+                    break;
+            }
+            var diff = [];
+            var k = endpoint;
+            for (var D = trace.length - 1; D >= 0; D--) {
+                var V_2 = trace[D];
+                var x = 0;
+                var nextK = 0;
+                if (k == -D || (k != D && V_2[MAX + k - 1] < V_2[MAX + k + 1])) {
+                    nextK = k + 1;
+                    x = V_2[MAX + nextK];
+                }
+                else {
+                    nextK = k - 1;
+                    x = V_2[MAX + nextK] + 1;
+                }
+                var y = x - k;
+                var snakeLen = V_2[MAX + k] - x;
+                for (var i = snakeLen - 1; i >= 0; --i)
+                    diff.push("  " + b[y + i]);
+                if (nextK == k - 1) {
+                    diff.push("- " + a[x - 1]);
+                }
+                else {
+                    if (y > 0)
+                        diff.push("+ " + b[y - 1]);
+                }
+                k = nextK;
+            }
+            diff.reverse();
+            if (options.context == Infinity || options.full)
+                return diff;
+            var aline = 1, bline = 1, idx = 0;
+            var shortDiff = [];
+            var context = options.context || 3;
+            while (idx < diff.length) {
+                var nextIdx = idx;
+                while (nextIdx < diff.length && diff[nextIdx][0] == " ")
+                    nextIdx++;
+                if (nextIdx == diff.length)
+                    break;
+                var startIdx = nextIdx - context;
+                var skip = startIdx - idx;
+                if (skip > 0) {
+                    aline += skip;
+                    bline += skip;
+                    idx = startIdx;
+                }
+                var hdPos = shortDiff.length;
+                var aline0 = aline, bline0 = bline;
+                shortDiff.push("@@"); // patched below
+                var endIdx = idx;
+                var numCtx = 0;
+                while (endIdx < diff.length) {
+                    if (diff[endIdx][0] == " ") {
+                        numCtx++;
+                        if (numCtx > context * 2 + 2) {
+                            endIdx -= context + 2;
+                            break;
+                        }
+                    }
+                    else {
+                        numCtx = 0;
+                    }
+                    endIdx++;
+                }
+                while (idx < endIdx) {
+                    shortDiff.push(diff[idx]);
+                    var c = diff[idx][0];
+                    switch (c) {
+                        case "-":
+                            aline++;
+                            break;
+                        case "+":
+                            bline++;
+                            break;
+                        case " ":
+                            aline++;
+                            bline++;
+                            break;
+                    }
+                    idx++;
+                }
+                shortDiff[hdPos] = "@@ -" + aline0 + "," + (aline - aline0) + " +" + bline0 + "," + (bline - bline0) + " @@";
+            }
+            return shortDiff;
+            function computeFor(D, V) {
+                for (var k_1 = -D; k_1 <= D; k_1 += 2) {
+                    var x = 0;
+                    if (k_1 == -D || (k_1 != D && V[MAX + k_1 - 1] < V[MAX + k_1 + 1]))
+                        x = V[MAX + k_1 + 1];
+                    else
+                        x = V[MAX + k_1 - 1] + 1;
+                    var y = x - k_1;
+                    while (x < aidx.length && y < bidx.length && aidx[x] == bidx[y]) {
+                        x++;
+                        y++;
+                    }
+                    V[MAX + k_1] = x;
+                    if (x >= aidx.length && y >= bidx.length) {
+                        return k_1;
+                    }
+                }
+                return null;
+            }
+        }
+        diff_1.compute = compute;
+        // based on "A Formal Investigation of Diff3" by Sanjeev Khanna, Keshav Kunal, and Benjamin C. Pierce
+        function diff3(fileA, fileO, fileB, lblA, lblB) {
+            var ma = computeMatch(fileA);
+            var mb = computeMatch(fileB);
+            if (!ma || !mb) // diff failed, can't merge
+                return undefined;
+            var fa = toLines(fileA);
+            var fb = toLines(fileB);
+            var numConflicts = 0;
+            var r = [];
+            var la = 0, lb = 0;
+            for (var i = 0; i < ma.length - 1;) {
+                if (ma[i] == la && mb[i] == lb) {
+                    r.push(fa[la]);
+                    la++;
+                    lb++;
+                    i++;
+                }
+                else {
+                    var aSame = true;
+                    var bSame = true;
+                    var j = i;
+                    while (j < ma.length) {
+                        if (ma[j] != la + j - i)
+                            aSame = false;
+                        if (mb[j] != lb + j - i)
+                            bSame = false;
+                        if (ma[j] != null && mb[j] != null)
+                            break;
+                        j++;
+                    }
+                    pxt.U.assert(j < ma.length);
+                    if (aSame) {
+                        while (lb < mb[j])
+                            r.push(fb[lb++]);
+                    }
+                    else if (bSame) {
+                        while (la < ma[j])
+                            r.push(fa[la++]);
+                    }
+                    else if (fa.slice(la, ma[j]).join("\n") == fb.slice(lb, mb[j]).join("\n")) {
+                        // false conflict - both are the same
+                        while (la < ma[j])
+                            r.push(fa[la++]);
+                    }
+                    else {
+                        numConflicts++;
+                        r.push("<<<<<<< " + lblA);
+                        while (la < ma[j])
+                            r.push(fa[la++]);
+                        r.push("=======");
+                        while (lb < mb[j])
+                            r.push(fb[lb++]);
+                        r.push(">>>>>>> " + lblB);
+                    }
+                    i = j;
+                    la = ma[j];
+                    lb = mb[j];
+                }
+            }
+            return { merged: r.join("\n"), numConflicts: numConflicts };
+            function computeMatch(fileA) {
+                var da = compute(fileO, fileA, { context: Infinity });
+                if (!da)
+                    return undefined;
+                var ma = [];
+                var aidx = 0;
+                var oidx = 0;
+                // console.log(da)
+                for (var _i = 0, da_1 = da; _i < da_1.length; _i++) {
+                    var l = da_1[_i];
+                    if (l[0] == "+") {
+                        aidx++;
+                    }
+                    else if (l[0] == "-") {
+                        ma[oidx] = null;
+                        oidx++;
+                    }
+                    else if (l[0] == " ") {
+                        ma[oidx] = aidx;
+                        aidx++;
+                        oidx++;
+                    }
+                    else {
+                        pxt.U.oops();
+                    }
+                }
+                ma.push(aidx + 1); // terminator
+                return ma;
+            }
+        }
+        diff_1.diff3 = diff3;
+        function removeTrailingSemiColumns(src) {
+            return toLines(src).map(function (line) { return line.replace(/;\s*$/, ''); }).join('\n');
+        }
+        diff_1.removeTrailingSemiColumns = removeTrailingSemiColumns;
+        function split(dualSrc, options) {
+            var src = dualSrc.split(/-{10,}/, 2);
+            if (src.length < 2)
+                return { fileA: dualSrc, fileB: undefined };
+            var fileA = src[0].replace(/\n$/, ''); // intial new line introduced by html
+            var fileB = src[1].replace(/^\n/, ''); // last new line introduct by html
+            if (options && options.removeTrailingSemiColumns) {
+                fileA = removeTrailingSemiColumns(fileA);
+                fileB = removeTrailingSemiColumns(fileB);
+            }
+            return { fileA: fileA, fileB: fileB };
+        }
+        diff_1.split = split;
+        function parseDiffMarker(ln) {
+            var m = /^@@ -(\d+),(\d+) \+(\d+),(\d+)/.exec(ln);
+            return m && {
+                oldStart: parseInt(m[1]) - 1,
+                oldLength: parseInt(m[2]),
+                newStart: parseInt(m[3]) - 1,
+                newLength: parseInt(m[4])
+            };
+        }
+        diff_1.parseDiffMarker = parseDiffMarker;
+        function render(fileA, fileB, options) {
+            if (options === void 0) { options = {}; }
+            var diffLines = compute(fileA, fileB, options);
+            if (!diffLines) {
+                return pxt.dom.el("div", null, pxtc.Util.lf("Too many differences to render diff."));
+            }
+            var diffClasses = {
+                "@": "diff-marker",
+                " ": "diff-unchanged",
+                "+": "diff-added",
+                "-": "diff-removed",
+            };
+            var lnA = 0, lnB = 0;
+            var lastMark = "";
+            var tbody = pxt.dom.el("tbody");
+            var diffEl = pxt.dom.el("table", {
+                "class": "diffview " + (options.update ? 'update' : '')
+            }, tbody);
+            var savedDiffEl = null;
+            diffLines.forEach(function (ln, idx) {
+                var m = parseDiffMarker(ln);
+                if (m) {
+                    lnA = m.oldStart;
+                    lnB = m.newStart;
+                }
+                else {
+                    if (ln[0] != "+")
+                        lnA++;
+                    if (ln[0] != "-")
+                        lnB++;
+                }
+                var nextMark = diffLines[idx + 1] ? diffLines[idx + 1][0] : "";
+                var next2Mark = diffLines[idx + 2] ? diffLines[idx + 2][0] : "";
+                var lnSrc = ln.slice(2);
+                var currDiff = pxt.dom.el("code", null, lnSrc);
+                if (savedDiffEl) {
+                    currDiff = savedDiffEl;
+                    savedDiffEl = null;
+                }
+                else if (ln[0] == "-" && (lastMark == " " || lastMark == "@") && nextMark == "+"
+                    && (next2Mark == " " || next2Mark == "@" || next2Mark == "")) {
+                    var r = lineDiff(ln.slice(2), diffLines[idx + 1].slice(2));
+                    currDiff = r.a;
+                    savedDiffEl = r.b;
+                }
+                lastMark = ln[0];
+                // check if line is skipped
+                if ((options.hideMarkerLine && lastMark == "@")
+                    || (options.hideRemoved && lastMark == "-"))
+                    return;
+                // add diff
+                var isMarkerLine = lastMark == "@";
+                var className = "" + diffClasses[lastMark];
+                tbody.appendChild(pxt.dom.el("tr", { "class": className }, [
+                    !options.hideLineNumbers && pxt.dom.el("td", { class: "line-a", "data-content": lnA }),
+                    !options.hideLineNumbers && pxt.dom.el("td", { class: "line-b", "data-content": lnB }),
+                    isMarkerLine && pxt.dom.el("td", { "colspan": 2, class: "change" }, pxt.dom.el("code", null, ln)),
+                    !options.hideMarker && !isMarkerLine && pxt.dom.el("td", { class: "marker", "data-content": lastMark }),
+                    !isMarkerLine && pxt.dom.el("td", { class: "change" }, currDiff)
+                ]));
+            });
+            return diffEl;
+        }
+        diff_1.render = render;
+        function lineDiff(lineA, lineB) {
+            var df = compute(lineA.split("").join("\n"), lineB.split("").join("\n"), {
+                context: Infinity
+            });
+            if (!df) // diff failed
+                return {
+                    a: pxt.dom.el("div", { "class": "inline-diff" }, pxt.dom.el("code", null, lineA)),
+                    b: pxt.dom.el("div", { "class": "inline-diff" }, pxt.dom.el("code", null, lineB))
+                };
+            var ja = [];
+            var jb = [];
+            for (var i = 0; i < df.length;) {
+                var j = i;
+                var mark = df[i][0];
+                while (df[j] && df[j][0] == mark)
+                    j++;
+                var chunk = df.slice(i, j).map(function (s) { return s.slice(2); }).join("");
+                if (mark == " ") {
+                    ja.push(pxt.dom.el("code", { "class": "ch-common" }, chunk));
+                    jb.push(pxt.dom.el("code", { "class": "ch-common" }, chunk));
+                }
+                else if (mark == "-") {
+                    ja.push(pxt.dom.el("code", { "class": "ch-removed" }, chunk));
+                }
+                else if (mark == "+") {
+                    jb.push(pxt.dom.el("code", { "class": "ch-added" }, chunk));
+                }
+                else {
+                    pxt.Util.oops();
+                }
+                i = j;
+            }
+            return {
+                a: pxt.dom.el("div", { "class": "inline-diff" }, ja),
+                b: pxt.dom.el("div", { "class": "inline-diff" }, jb)
+            };
+        }
+        function resolveMergeConflictMarker(content, startMarkerLine, local, remote) {
+            var lines = pxt.diff.toLines(content);
+            var startLine = startMarkerLine;
+            while (startLine < lines.length) {
+                if (/^<<<<<<<[^<]/.test(lines[startLine])) {
+                    break;
+                }
+                startLine++;
+            }
+            var middleLine = startLine + 1;
+            while (middleLine < lines.length) {
+                if (/^=======$/.test(lines[middleLine]))
+                    break;
+                middleLine++;
+            }
+            var endLine = middleLine + 1;
+            while (endLine < lines.length) {
+                if (/^>>>>>>>[^>]/.test(lines[endLine])) {
+                    break;
+                }
+                endLine++;
+            }
+            if (endLine >= lines.length) {
+                // no match?
+                pxt.debug("diff marker mistmatch: " + lines.length + " -> " + startLine + " " + middleLine + " " + endLine);
+                return content;
+            }
+            // remove locals
+            lines[startLine] = undefined;
+            lines[middleLine] = undefined;
+            lines[endLine] = undefined;
+            if (!local)
+                for (var i = startLine; i <= middleLine; ++i)
+                    lines[i] = undefined;
+            if (!remote)
+                for (var i = middleLine; i <= endLine; ++i)
+                    lines[i] = undefined;
+            return lines.filter(function (line) { return line !== undefined; }).join("\n");
+        }
+        diff_1.resolveMergeConflictMarker = resolveMergeConflictMarker;
+        /**
+         * A naive 3way merge for pxt.json files. It can mostly handle conflicts when adding/removing files concurrently.
+         * - highest version number if kept
+         * - current preferred editor is kept
+         * - conjection of public flag
+         * - files list is merged so that added files are kept and deleted files are removed
+         * @param configA
+         * @param configO
+         * @param configB
+         */
+        function mergeDiff3Config(configA, configO, configB) {
+            var jsonA = pxt.Util.jsonTryParse(configA); //  as pxt.PackageConfig
+            var jsonO = pxt.Util.jsonTryParse(configO);
+            var jsonB = pxt.Util.jsonTryParse(configB);
+            // A is good, B destroyed
+            if (jsonA && !jsonB)
+                return configA; // keep A
+            // A destroyed, B good, use B or O
+            if (!jsonA)
+                return configB || configO;
+            // O is destroyed, B isnt, use B as O
+            if (!jsonO && jsonB)
+                jsonO = jsonB;
+            // final check
+            if (!jsonA || !jsonO || !jsonB)
+                return undefined;
+            delete jsonA.installedVersion;
+            delete jsonO.installedVersion;
+            delete jsonB.installedVersion;
+            var r = {};
+            var keys = pxt.U.unique(Object.keys(jsonO).concat(Object.keys(jsonA)).concat(Object.keys(jsonB)), function (l) { return l; });
+            for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+                var key = keys_1[_i];
+                var vA = jsonA[key];
+                var vO = jsonO[key];
+                var vB = jsonB[key];
+                var svA = JSON.stringify(vA);
+                var svB = JSON.stringify(vB);
+                if (svA == svB) { // same serialized keys
+                    if (vA !== undefined)
+                        r[key] = vA;
+                }
+                else {
+                    switch (key) {
+                        case "name":
+                            r[key] = mergeName(vA, vO, vB);
+                            break;
+                        case "version": // pick highest version
+                            r[key] = pxt.semver.strcmp(vA, vB) > 0 ? vA : vB;
+                            break;
+                        case "languageRestriction":
+                        case "preferredEditor":
+                            r[key] = vA; // keep current one
+                            break;
+                        case "public":
+                            r[key] = vA && vB;
+                            break;
+                        case "files":
+                        case "testFiles": { // merge file arrays
+                            var m = mergeFiles(vA || [], vO || [], vB || []);
+                            if (!m)
+                                return undefined;
+                            r[key] = m.length ? m : undefined;
+                            break;
+                        }
+                        case "dependencies":
+                        case "testDependencies": {
+                            var m = mergeDependencies(vA || {}, vO || {}, vB || {});
+                            if (Object.keys(m).length)
+                                return undefined;
+                            r[key] = m;
+                            break;
+                        }
+                        case "description":
+                            if (vA && !vB)
+                                r[key] = vA; // new description
+                            else if (!vA && vB)
+                                r[key] = vB;
+                            else
+                                return undefined;
+                            break;
+                        default:
+                            return undefined;
+                    }
+                }
+            }
+            return pxt.Package.stringifyConfig(r);
+            function mergeName(fA, fO, fB) {
+                if (fA == fO)
+                    return fB;
+                if (fB == fO)
+                    return fA;
+                if (fA == lf("Untitled"))
+                    return fB;
+                return fA;
+            }
+            function mergeFiles(fA, fO, fB) {
+                var r = [];
+                var fkeys = pxt.U.unique(fO.concat(fA).concat(fB), function (l) { return l; });
+                for (var _i = 0, fkeys_1 = fkeys; _i < fkeys_1.length; _i++) {
+                    var fkey = fkeys_1[_i];
+                    var mA = fA.indexOf(fkey) > -1;
+                    var mB = fB.indexOf(fkey) > -1;
+                    var mO = fO.indexOf(fkey) > -1;
+                    if (mA == mB) { // both have or have nots
+                        if (mA) // key is in set
+                            r.push(fkey);
+                    }
+                    else { // conflict
+                        if (mB == mO) { // mB not changed, false conflict
+                            if (mA) // item added
+                                r.push(fkey);
+                        }
+                        else { // mA == mO, conflict
+                            if (mB) // not deleted by A
+                                r.push(fkey);
+                        }
+                    }
+                }
+                return r;
+            }
+            function mergeDependencies(fA, fO, fB) {
+                var r = {};
+                var fkeys = pxt.U.unique(Object.keys(fO).concat(Object.keys(fA)).concat(Object.keys(fB)), function (l) { return l; });
+                for (var _i = 0, fkeys_2 = fkeys; _i < fkeys_2.length; _i++) {
+                    var fkey = fkeys_2[_i];
+                    var mA = fA[fkey];
+                    var mB = fB[fkey];
+                    var mO = fO[fkey];
+                    if (mA == mB) { // both have or have nots
+                        if (mA) // key is in set
+                            r[fkey] = mA;
+                    }
+                    else { // conflict
+                        // check if it is a version change in github reference
+                        var ghA = pxt.github.parseRepoId(mA);
+                        var ghB = pxt.github.parseRepoId(mB);
+                        if (ghA && ghB
+                            && pxt.semver.tryParse(ghA.tag)
+                            && pxt.semver.tryParse(ghB.tag)
+                            && ghA.owner && ghA.project
+                            && ghA.owner == ghB.owner
+                            && ghA.project == ghB.project) {
+                            var newtag = pxt.semver.strcmp(ghA.tag, ghB.tag) > 0
+                                ? ghA.tag : ghB.tag;
+                            r[fkey] = "github:" + ghA.owner + "/" + ghA.project + "#" + newtag;
+                        }
+                        else if (mB == mO) { // mB not changed, false conflict
+                            if (mA) // item added
+                                r[fkey] = mA;
+                        }
+                        else { // mA == mO, conflict
+                            if (mB) // not deleted by A
+                                r[fkey] = mB;
+                        }
+                    }
+                }
+                return r;
+            }
+        }
+        diff_1.mergeDiff3Config = mergeDiff3Config;
+        function hasMergeConflictMarker(content) {
+            return content && /^(<<<<<<<[^<]|>>>>>>>[^>])/m.test(content);
+        }
+        diff_1.hasMergeConflictMarker = hasMergeConflictMarker;
+        function reconstructConfig(files, commit, tp) {
+            var dependencies = {};
+            // grab files from commit
+            var commitFiles = commit.tree.tree.map(function (f) { return f.path; })
+                .filter(function (f) { return /\.(ts|blocks|md|jres|asm|json)$/.test(f); })
+                .filter(function (f) { return f != pxt.CONFIG_NAME; });
+            // if no available files, include the files from the template
+            if (!commitFiles.find(function (f) { return /\.ts$/.test(f); })) {
+                tp.config.files.filter(function (f) { return commitFiles.indexOf(f) < 0; })
+                    .forEach(function (f) {
+                    commitFiles.push(f);
+                    files[f] = tp.files[f];
+                });
+                pxt.Util.jsonCopyFrom(dependencies, tp.config.dependencies);
+            }
+            // include corepkg if no dependencies
+            if (!Object.keys(dependencies).length)
+                dependencies[pxt.appTarget.corepkg] = "*";
+            // yay, we have a new cfg
+            var cfg = {
+                name: "",
+                files: commitFiles,
+                dependencies: dependencies,
+                preferredEditor: commitFiles.find(function (f) { return /.blocks$/.test(f); }) ? pxt.BLOCKS_PROJECT_NAME : pxt.JAVASCRIPT_PROJECT_NAME
+            };
+            return cfg;
+        }
+        diff_1.reconstructConfig = reconstructConfig;
+    })(diff = pxt.diff || (pxt.diff = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var discourse;
+    (function (discourse) {
+        function extractSharedIdFromPostUrl(url) {
+            // https://docs.discourse.org/#tag/Posts%2Fpaths%2F~1posts~1%7Bid%7D.json%2Fget
+            return pxt.Util.httpGetJsonAsync(url + ".json")
+                .then(function (json) {
+                // extract from post_stream
+                var projectId = json.post_stream
+                    && json.post_stream.posts
+                    && json.post_stream.posts[0]
+                    && json.post_stream.posts[0].link_counts
+                        .map(function (link) { return pxt.Cloud.parseScriptId(link.url); })
+                        .filter(function (id) { return !!id; })[0];
+                return projectId;
+            });
+        }
+        discourse.extractSharedIdFromPostUrl = extractSharedIdFromPostUrl;
+        function topicsByTag(apiUrl, tag) {
+            apiUrl = apiUrl.replace(/\/$/, '');
+            var q = apiUrl + "/tags/" + tag + ".json";
+            return pxt.Util.httpGetJsonAsync(q)
+                .then(function (json) {
+                var users = pxt.Util.toDictionary(json.users, function (u) { return u.id.toString(); });
+                return json.topic_list.topics.map(function (t) {
+                    return {
+                        id: t.id,
+                        title: t.title,
+                        url: apiUrl + "/t/" + t.slug + "/" + t.id,
+                        imageUrl: t.image_url,
+                        author: users[t.posters[0].user_id].name,
+                        cardType: "forumUrl"
+                    };
+                });
+            });
+        }
+        discourse.topicsByTag = topicsByTag;
+    })(discourse = pxt.discourse || (pxt.discourse = {}));
 })(pxt || (pxt = {}));
 /// <reference path='../localtypings/pxtarget.d.ts' />
 /// <reference path="commonutil.ts"/>
@@ -6624,8 +7390,30 @@ var pxt;
 })(pxt || (pxt = {}));
 var pxt;
 (function (pxt) {
+    var dom;
+    (function (dom) {
+        function el(name, attributes, children) {
+            var el = document.createElement(name);
+            if (attributes)
+                Object.keys(attributes).forEach(function (k) { return el.setAttribute(k, attributes[k] + ""); });
+            appendChild(children);
+            return el;
+            function appendChild(c) {
+                if (Array.isArray(c))
+                    c.forEach(function (cc) { return appendChild(cc); });
+                else if (typeof c === "string")
+                    el.appendChild(document.createTextNode(c));
+                else if (c instanceof HTMLElement)
+                    el.appendChild(c);
+            }
+        }
+        dom.el = el;
+    })(dom = pxt.dom || (pxt.dom = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
     var gallery;
-    (function (gallery) {
+    (function (gallery_1) {
         function parsePackagesFromMarkdown(md) {
             var pm = /```package\s+((.|\s)+?)\s*```/i.exec(md);
             var dependencies = undefined;
@@ -6637,7 +7425,7 @@ var pxt;
             }
             return dependencies;
         }
-        gallery.parsePackagesFromMarkdown = parsePackagesFromMarkdown;
+        gallery_1.parsePackagesFromMarkdown = parsePackagesFromMarkdown;
         function parseFeaturesFromMarkdown(md) {
             var pm = /```config\s+((.|\s)+?)\s*```/i.exec(md);
             var features = [];
@@ -6649,29 +7437,33 @@ var pxt;
             }
             return features.length ? features : undefined;
         }
-        gallery.parseFeaturesFromMarkdown = parseFeaturesFromMarkdown;
+        gallery_1.parseFeaturesFromMarkdown = parseFeaturesFromMarkdown;
         function parseExampleMarkdown(name, md) {
+            var _a;
             if (!md)
                 return undefined;
-            var m = /```(blocks?|typescript|python)\s+((.|\s)+?)\s*```/i.exec(md);
+            var m = /```(blocks?|typescript|python|spy)\s+((.|\s)+?)\s*```/i.exec(md);
             if (!m)
                 return undefined;
             var dependencies = parsePackagesFromMarkdown(md);
-            var src = m[2];
+            var snippetType = m[1];
+            var source = m[2];
             var features = parseFeaturesFromMarkdown(md);
-            return {
+            var prj = {
                 name: name,
                 filesOverride: (_a = {
                         "main.blocks": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"></xml>"
                     },
-                    _a[m[1] === "python" ? "main.py" : "main.ts"] = src,
+                    _a[m[1] === "python" ? "main.py" : "main.ts"] = source,
                     _a),
                 dependencies: dependencies,
-                features: features
+                features: features,
+                snippetType: snippetType,
+                source: source
             };
-            var _a;
+            return prj;
         }
-        gallery.parseExampleMarkdown = parseExampleMarkdown;
+        gallery_1.parseExampleMarkdown = parseExampleMarkdown;
         function parseGalleryMardown(md) {
             if (!md)
                 return [];
@@ -6708,19 +7500,33 @@ var pxt;
                 else if (incard)
                     cards += line + '\n';
             });
+            // apply transformations
+            galleries.forEach(function (gallery) { return gallery.cards.forEach(function (card) {
+                if (card.otherActions && !card.otherActions.length
+                    && (card.cardType == "tutorial" || card.cardType == "example")) {
+                    var editors = ["js"];
+                    if (pxt.appTarget.appTheme.python)
+                        editors.unshift("py");
+                    card.otherActions = editors.map(function (editor) { return ({
+                        url: card.url,
+                        cardType: card.cardType,
+                        editor: editor
+                    }); });
+                }
+            }); });
             return galleries;
         }
-        gallery.parseGalleryMardown = parseGalleryMardown;
+        gallery_1.parseGalleryMardown = parseGalleryMardown;
         function loadGalleryAsync(name) {
             return pxt.Cloud.markdownAsync(name)
                 .then(function (md) { return parseGalleryMardown(md); });
         }
-        gallery.loadGalleryAsync = loadGalleryAsync;
+        gallery_1.loadGalleryAsync = loadGalleryAsync;
         function loadExampleAsync(name, path) {
             return pxt.Cloud.markdownAsync(path)
                 .then(function (md) { return parseExampleMarkdown(name, md); });
         }
-        gallery.loadExampleAsync = loadExampleAsync;
+        gallery_1.loadExampleAsync = loadExampleAsync;
     })(gallery = pxt.gallery || (pxt.gallery = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -6983,23 +7789,23 @@ var pxt;
         var isPrivateRepoCache = {};
         function ghRequestAsync(opts) {
             if (github.token) {
-                if (opts.url.indexOf('?') > 0)
-                    opts.url += "&";
-                else
-                    opts.url += "?";
-                opts.url += "access_token=" + github.token;
-                opts.url += "&anti_cache=" + Math.random();
-                // Token in headers doesn't work with CORS, especially for githubusercontent.com
-                //if (!opts.headers) opts.headers = {}
-                //opts.headers['Authorization'] = `token ${token}`
+                if (!opts.headers)
+                    opts.headers = {};
+                if (opts.url == GRAPHQL_URL)
+                    opts.headers['Authorization'] = "bearer " + github.token;
+                else {
+                    if (opts.url.indexOf('?') > 0)
+                        opts.url += "&";
+                    else
+                        opts.url += "?";
+                    opts.url += "anti_cache=" + Math.random();
+                    opts.headers['Authorization'] = "token " + github.token;
+                }
             }
             return pxt.U.requestAsync(opts);
         }
         function ghGetJsonAsync(url) {
             return ghRequestAsync({ url: url }).then(function (resp) { return resp.json; });
-        }
-        function ghGetTextAsync(url) {
-            return ghRequestAsync({ url: url }).then(function (resp) { return resp.text; });
         }
         function ghProxyJsonAsync(path) {
             return pxt.Cloud.apiRequestWithCdnAsync({ url: "gh/" + path }).then(function (r) { return r.json; });
@@ -7100,7 +7906,7 @@ var pxt;
             });
         }
         function downloadTextAsync(repopath, commitid, filepath) {
-            // raw.githubusercontent.com doesn't accept ?access_toke=... and has wrong CORS settings
+            // raw.githubusercontent.com doesn't accept ?access_token=... and has wrong CORS settings
             // for Authorization: header; so try anonymous access first, and otherwise fetch using API
             if (isPrivateRepoCache[repopath])
                 return fallbackDownloadTextAsync(repopath, commitid, filepath);
@@ -7117,9 +7923,21 @@ var pxt;
         // overriden by client
         github.db = new MemoryGithubDb();
         function authenticatedUserAsync() {
+            if (!github.token)
+                return Promise.resolve(undefined); // no token, bail out
             return ghGetJsonAsync("https://api.github.com/user");
         }
         github.authenticatedUserAsync = authenticatedUserAsync;
+        function getCommitsAsync(repopath, sha) {
+            return ghGetJsonAsync("https://api.github.com/repos/" + repopath + "/commits?sha=" + sha)
+                .then(function (objs) { return objs.map(function (obj) {
+                var c = obj.commit;
+                c.url = obj.url;
+                c.sha = obj.sha;
+                return c;
+            }); });
+        }
+        github.getCommitsAsync = getCommitsAsync;
         function getCommitAsync(repopath, sha) {
             return ghGetJsonAsync("https://api.github.com/repos/" + repopath + "/git/commits/" + sha)
                 .then(function (commit) { return ghGetJsonAsync(commit.tree.url + "?recursive=1")
@@ -7222,6 +8040,25 @@ var pxt;
             });
         }
         github.createTagAsync = createTagAsync;
+        function createReleaseAsync(repopath, tag, commitid) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, ghPostAsync(repopath + "/releases", {
+                                tag_name: tag,
+                                target_commitish: commitid,
+                                name: tag,
+                                draft: false,
+                                prerelease: false
+                            })];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        }
+        github.createReleaseAsync = createReleaseAsync;
         function createPRFromBranchAsync(repopath, baseBranch, headBranch, title, msg) {
             return __awaiter(this, void 0, void 0, function () {
                 var res;
@@ -7437,8 +8274,24 @@ var pxt;
             GitRepoStatus[GitRepoStatus["Banned"] = 2] = "Banned";
         })(GitRepoStatus = github.GitRepoStatus || (github.GitRepoStatus = {}));
         function listUserReposAsync() {
-            return ghGetJsonAsync("https://api.github.com/user/repos?per_page=200&sort=updated&affiliation=owner,collaborator")
-                .then(function (res) { return res.map(function (r) { return mkRepo(r, null); }); });
+            var q = "{\n  viewer {\n    repositories(first: 100, affiliations: [OWNER, COLLABORATOR], orderBy: {field: PUSHED_AT, direction: DESC}) {\n      nodes {\n        name\n        description\n        full_name: nameWithOwner\n        private: isPrivate\n        fork: isFork\n        updated_at: updatedAt\n        owner {\n          login\n        }\n        defaultBranchRef {\n          name\n        }\n        pxtjson: object(expression: \"master:pxt.json\") {\n          ... on Blob {\n            text\n          }\n        }\n        readme: object(expression: \"master:README.md\") {\n          ... on Blob {\n            text\n          }\n        }\n      }\n    }\n  }\n}";
+            return ghGraphQLQueryAsync(q)
+                .then(function (res) { return res.data.viewer.repositories.nodes
+                .filter(function (node) { return node.pxtjson; }) // needs a pxt.json file
+                .filter(function (node) {
+                node.default_branch = node.defaultBranchRef.name;
+                var pxtJson = pxt.Package.parseAndValidConfig(node.pxtjson && node.pxtjson.text);
+                var readme = node.readme && node.readme.text;
+                // needs to have a valid pxt.json file                    
+                if (!pxtJson)
+                    return false;
+                // new style of supported annontation
+                if (pxtJson.supportedTargets)
+                    return pxtJson.supportedTargets.indexOf(pxt.appTarget.id) > -1;
+                // legacy readme.md annotations
+                return readme && readme.indexOf("PXT/" + pxt.appTarget.id) > -1;
+            })
+                .map(function (node) { return mkRepo(node, null); }); });
         }
         github.listUserReposAsync = listUserReposAsync;
         function createRepoAsync(name, description, priv) {
@@ -7454,20 +8307,54 @@ var pxt;
         }
         github.createRepoAsync = createRepoAsync;
         function enablePagesAsync(repo) {
-            // https://developer.github.com/v3/repos/pages/#enable-a-pages-site
-            return ghPostAsync("https://api.github.com/repos/" + repo + "/pages", {
-                source: {
-                    branch: "master",
-                    path: ""
-                }
-            }, {
-                "Accept": "application/vnd.github.switcheroo-preview+json"
-            }).then(function (r) {
-                var url = r.html_url;
-                // update repo home page
-                return ghPostAsync("https://api.github.com/repos/" + repo, {
-                    "homepage": url
-                }, undefined, "PATCH");
+            return __awaiter(this, void 0, void 0, function () {
+                var url, status_1, e_1, r, rep;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            url = undefined;
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, ghGetJsonAsync("https://api.github.com/repos/" + repo + "/pages")]; // try to get the pages
+                        case 2:
+                            status_1 = _a.sent() // try to get the pages
+                            ;
+                            if (status_1)
+                                url = status_1.html_url;
+                            return [3 /*break*/, 4];
+                        case 3:
+                            e_1 = _a.sent();
+                            return [3 /*break*/, 4];
+                        case 4:
+                            if (!!url) return [3 /*break*/, 6];
+                            return [4 /*yield*/, ghPostAsync("https://api.github.com/repos/" + repo + "/pages", {
+                                    source: {
+                                        branch: "master",
+                                        path: ""
+                                    }
+                                }, {
+                                    "Accept": "application/vnd.github.switcheroo-preview+json"
+                                })];
+                        case 5:
+                            r = _a.sent();
+                            url = r.html_url;
+                            _a.label = 6;
+                        case 6:
+                            if (!url) return [3 /*break*/, 9];
+                            return [4 /*yield*/, ghGetJsonAsync("https://api.github.com/repos/" + repo)];
+                        case 7:
+                            rep = _a.sent();
+                            if (!(rep && !rep.homepage)) return [3 /*break*/, 9];
+                            return [4 /*yield*/, ghPostAsync("https://api.github.com/repos/" + repo, {
+                                    "homepage": url
+                                }, undefined, "PATCH")];
+                        case 8:
+                            _a.sent();
+                            _a.label = 9;
+                        case 9: return [2 /*return*/];
+                    }
+                });
             });
         }
         github.enablePagesAsync = enablePagesAsync;
@@ -7591,6 +8478,7 @@ var pxt;
                 .then(function (rs) {
                 return rs.items.map(function (item) { return mkRepo(item, config); })
                     .filter(function (r) { return r.status == GitRepoStatus.Approved || (config.allowUnapproved && r.status == GitRepoStatus.Unknown); })
+                    // don't return the target itself!
                     .filter(function (r) { return !pxt.appTarget.appTheme.githubUrl || "https://github.com/" + r.fullName != pxt.appTarget.appTheme.githubUrl.toLowerCase(); });
             })
                 .catch(function (err) { return []; }); // offline
@@ -7688,7 +8576,7 @@ var pxt;
                             .filter(function (repo) { return repo.fullName.toLowerCase() == parsed.fullName.toLowerCase(); })[0];
                         if (release_1) {
                             // this repo is frozen to a particular tag for this target
-                            if (tags.some(function (t) { return t == release_1.tag; })) {
+                            if (tags.some(function (t) { return t == release_1.tag; })) { // tag still exists!!!
                                 pxt.debug("approved release " + release_1.fullName + "#" + release_1.tag + " for v" + targetVersion.major);
                                 return Promise.resolve(release_1.tag);
                             }
@@ -7708,496 +8596,13 @@ var pxt;
         }
         github.latestVersionAsync = latestVersionAsync;
         github.GIT_JSON = ".git.json";
-        function toLines(file) {
-            return file ? file.split(/\r?\n/) : [];
-        }
-        // based on An O(ND) Difference Algorithm and Its Variations by EUGENE W. MYERS
-        function diff(fileA, fileB, options) {
-            if (options === void 0) { options = {}; }
-            if (options.ignoreWhitespace) {
-                fileA = fileA.replace(/[\r\n]+$/, "");
-                fileB = fileB.replace(/[\r\n]+$/, "");
-            }
-            var a = toLines(fileA);
-            var b = toLines(fileB);
-            var MAX = Math.min(options.maxDiffSize || 1024, a.length + b.length);
-            if (MAX == 0)
-                return [];
-            var ctor = a.length > 0xfff0 ? Uint32Array : Uint16Array;
-            var idxmap = {};
-            var curridx = 0;
-            var aidx = mkidx(a), bidx = mkidx(b);
-            function mkidx(strings) {
-                var idxarr = new ctor(strings.length);
-                var i = 0;
-                for (var _i = 0, strings_1 = strings; _i < strings_1.length; _i++) {
-                    var e = strings_1[_i];
-                    if (options.ignoreWhitespace)
-                        e = e.replace(/\s+$/g, "").replace(/^\s+/g, ''); // only ignore start/end of lines
-                    if (idxmap.hasOwnProperty(e))
-                        idxarr[i] = idxmap[e];
-                    else {
-                        ++curridx;
-                        idxarr[i] = curridx;
-                        idxmap[e] = curridx;
-                    }
-                    i++;
-                }
-                return idxarr;
-            }
-            var V = new ctor(2 * MAX + 1);
-            var diffLen = -1;
-            for (var D = 0; D <= MAX; D++) {
-                if (computeFor(D, V) != null) {
-                    diffLen = D;
-                }
-            }
-            if (diffLen == -1)
-                return null; // diffLen > MAX
-            var trace = [];
-            var endpoint = null;
-            for (var D = 0; D <= diffLen; D++) {
-                var V_1 = trace.length ? trace[trace.length - 1].slice(0) : new ctor(2 * diffLen + 1);
-                trace.push(V_1);
-                endpoint = computeFor(D, V_1);
-                if (endpoint != null)
-                    break;
-            }
-            var diff = [];
-            var k = endpoint;
-            for (var D = trace.length - 1; D >= 0; D--) {
-                var V_2 = trace[D];
-                var x = 0;
-                var nextK = 0;
-                if (k == -D || (k != D && V_2[MAX + k - 1] < V_2[MAX + k + 1])) {
-                    nextK = k + 1;
-                    x = V_2[MAX + nextK];
-                }
-                else {
-                    nextK = k - 1;
-                    x = V_2[MAX + nextK] + 1;
-                }
-                var y = x - k;
-                var snakeLen = V_2[MAX + k] - x;
-                for (var i = snakeLen - 1; i >= 0; --i)
-                    diff.push("  " + a[x + i]);
-                if (nextK == k - 1) {
-                    diff.push("- " + a[x - 1]);
-                }
-                else {
-                    if (y > 0)
-                        diff.push("+ " + b[y - 1]);
-                }
-                k = nextK;
-            }
-            diff.reverse();
-            if (options.context == Infinity)
-                return diff;
-            var aline = 1, bline = 1, idx = 0;
-            var shortDiff = [];
-            var context = options.context || 3;
-            while (idx < diff.length) {
-                var nextIdx = idx;
-                while (nextIdx < diff.length && diff[nextIdx][0] == " ")
-                    nextIdx++;
-                if (nextIdx == diff.length)
-                    break;
-                var startIdx = nextIdx - context;
-                var skip = startIdx - idx;
-                if (skip > 0) {
-                    aline += skip;
-                    bline += skip;
-                    idx = startIdx;
-                }
-                var hdPos = shortDiff.length;
-                var aline0 = aline, bline0 = bline;
-                shortDiff.push("@@"); // patched below
-                var endIdx = idx;
-                var numCtx = 0;
-                while (endIdx < diff.length) {
-                    if (diff[endIdx][0] == " ") {
-                        numCtx++;
-                        if (numCtx > context * 2 + 2) {
-                            endIdx -= context + 2;
-                            break;
-                        }
-                    }
-                    else {
-                        numCtx = 0;
-                    }
-                    endIdx++;
-                }
-                while (idx < endIdx) {
-                    shortDiff.push(diff[idx]);
-                    var c = diff[idx][0];
-                    switch (c) {
-                        case "-":
-                            aline++;
-                            break;
-                        case "+":
-                            bline++;
-                            break;
-                        case " ":
-                            aline++;
-                            bline++;
-                            break;
-                    }
-                    idx++;
-                }
-                shortDiff[hdPos] = "@@ -" + aline0 + "," + (aline - aline0) + " +" + bline0 + "," + (bline - bline0) + " @@";
-            }
-            return shortDiff;
-            function computeFor(D, V) {
-                for (var k_1 = -D; k_1 <= D; k_1 += 2) {
-                    var x = 0;
-                    if (k_1 == -D || (k_1 != D && V[MAX + k_1 - 1] < V[MAX + k_1 + 1]))
-                        x = V[MAX + k_1 + 1];
-                    else
-                        x = V[MAX + k_1 - 1] + 1;
-                    var y = x - k_1;
-                    while (x < aidx.length && y < bidx.length && aidx[x] == bidx[y]) {
-                        x++;
-                        y++;
-                    }
-                    V[MAX + k_1] = x;
-                    if (x >= aidx.length && y >= bidx.length) {
-                        return k_1;
-                    }
-                }
-                return null;
-            }
-        }
-        github.diff = diff;
-        // based on "A Formal Investigation of Diff3" by Sanjeev Khanna, Keshav Kunal, and Benjamin C. Pierce
-        function diff3(fileA, fileO, fileB, lblA, lblB) {
-            var ma = computeMatch(fileA);
-            var mb = computeMatch(fileB);
-            if (!ma || !mb)
-                return undefined;
-            var fa = toLines(fileA);
-            var fb = toLines(fileB);
-            var numConflicts = 0;
-            var r = [];
-            var la = 0, lb = 0;
-            for (var i = 0; i < ma.length - 1;) {
-                if (ma[i] == la && mb[i] == lb) {
-                    r.push(fa[la]);
-                    la++;
-                    lb++;
-                    i++;
-                }
-                else {
-                    var aSame = true;
-                    var bSame = true;
-                    var j = i;
-                    while (j < ma.length) {
-                        if (ma[j] != la + j - i)
-                            aSame = false;
-                        if (mb[j] != lb + j - i)
-                            bSame = false;
-                        if (ma[j] != null && mb[j] != null)
-                            break;
-                        j++;
-                    }
-                    pxt.U.assert(j < ma.length);
-                    if (aSame) {
-                        while (lb < mb[j])
-                            r.push(fb[lb++]);
-                    }
-                    else if (bSame) {
-                        while (la < ma[j])
-                            r.push(fa[la++]);
-                    }
-                    else if (fa.slice(la, ma[j]).join("\n") == fb.slice(lb, mb[j]).join("\n")) {
-                        // false conflict - both are the same
-                        while (la < ma[j])
-                            r.push(fa[la++]);
-                    }
-                    else {
-                        numConflicts++;
-                        r.push("<<<<<<< " + lblA);
-                        while (la < ma[j])
-                            r.push(fa[la++]);
-                        r.push("=======");
-                        while (lb < mb[j])
-                            r.push(fb[lb++]);
-                        r.push(">>>>>>> " + lblB);
-                    }
-                    i = j;
-                    la = ma[j];
-                    lb = mb[j];
-                }
-            }
-            return { merged: r.join("\n"), numConflicts: numConflicts };
-            function computeMatch(fileA) {
-                var da = pxt.github.diff(fileO, fileA, { context: Infinity });
-                if (!da)
-                    return undefined;
-                var ma = [];
-                var aidx = 0;
-                var oidx = 0;
-                // console.log(da)
-                for (var _i = 0, da_1 = da; _i < da_1.length; _i++) {
-                    var l = da_1[_i];
-                    if (l[0] == "+") {
-                        aidx++;
-                    }
-                    else if (l[0] == "-") {
-                        ma[oidx] = null;
-                        oidx++;
-                    }
-                    else if (l[0] == " ") {
-                        ma[oidx] = aidx;
-                        aidx++;
-                        oidx++;
-                    }
-                    else {
-                        pxt.U.oops();
-                    }
-                }
-                ma.push(aidx + 1); // terminator
-                return ma;
-            }
-        }
-        github.diff3 = diff3;
-        function resolveMergeConflictMarker(content, startMarkerLine, local, remote) {
-            var lines = toLines(content);
-            var startLine = startMarkerLine;
-            while (startLine < lines.length) {
-                if (/^<<<<<<<[^<]/.test(lines[startLine])) {
-                    break;
-                }
-                startLine++;
-            }
-            var middleLine = startLine + 1;
-            while (middleLine < lines.length) {
-                if (/^=======$/.test(lines[middleLine]))
-                    break;
-                middleLine++;
-            }
-            var endLine = middleLine + 1;
-            while (endLine < lines.length) {
-                if (/^>>>>>>>[^>]/.test(lines[endLine])) {
-                    break;
-                }
-                endLine++;
-            }
-            if (endLine >= lines.length) {
-                // no match?
-                pxt.debug("diff marker mistmatch: " + lines.length + " -> " + startLine + " " + middleLine + " " + endLine);
-                return content;
-            }
-            // remove locals
-            lines[startLine] = undefined;
-            lines[middleLine] = undefined;
-            lines[endLine] = undefined;
-            if (!local)
-                for (var i = startLine; i <= middleLine; ++i)
-                    lines[i] = undefined;
-            if (!remote)
-                for (var i = middleLine; i <= endLine; ++i)
-                    lines[i] = undefined;
-            return lines.filter(function (line) { return line !== undefined; }).join("\n");
-        }
-        github.resolveMergeConflictMarker = resolveMergeConflictMarker;
-        /**
-         * A naive 3way merge for pxt.json files. It can mostly handle conflicts when adding/removing files concurrently.
-         * - highest version number if kept
-         * - current preferred editor is kept
-         * - conjection of public flag
-         * - files list is merged so that added files are kept and deleted files are removed
-         * @param configA
-         * @param configO
-         * @param configB
-         */
-        function mergeDiff3Config(configA, configO, configB) {
-            var jsonA = pxt.Util.jsonTryParse(configA); //  as pxt.PackageConfig
-            var jsonO = pxt.Util.jsonTryParse(configO);
-            var jsonB = pxt.Util.jsonTryParse(configB);
-            // A is good, B destroyed
-            if (jsonA && !jsonB)
-                return configA; // keep A
-            // A destroyed, B good, use B or O
-            if (!jsonA)
-                return configB || configO;
-            // O is destroyed, B isnt, use B as O
-            if (!jsonO && jsonB)
-                jsonO = jsonB;
-            // final check
-            if (!jsonA || !jsonO || !jsonB)
-                return undefined;
-            delete jsonA.installedVersion;
-            delete jsonO.installedVersion;
-            delete jsonB.installedVersion;
-            var r = {};
-            var keys = pxt.U.unique(Object.keys(jsonO).concat(Object.keys(jsonA)).concat(Object.keys(jsonB)), function (l) { return l; });
-            for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-                var key = keys_1[_i];
-                var vA = jsonA[key];
-                var vO = jsonO[key];
-                var vB = jsonB[key];
-                var svA = JSON.stringify(vA);
-                var svB = JSON.stringify(vB);
-                if (svA == svB) {
-                    if (vA !== undefined)
-                        r[key] = vA;
-                }
-                else {
-                    switch (key) {
-                        case "name":
-                            r[key] = mergeName(vA, vO, vB);
-                            break;
-                        case "version":// pick highest version
-                            r[key] = pxt.semver.strcmp(vA, vB) > 0 ? vA : vB;
-                            break;
-                        case "preferredEditor":
-                            r[key] = vA; // keep current one
-                            break;
-                        case "public":
-                            r[key] = vA && vB;
-                            break;
-                        case "files":
-                        case "testFiles": {
-                            var m = mergeFiles(vA || [], vO || [], vB || []);
-                            if (!m)
-                                return undefined;
-                            r[key] = m.length ? m : undefined;
-                            break;
-                        }
-                        case "dependencies":
-                        case "testDependencies": {
-                            var m = mergeDependencies(vA || {}, vO || {}, vB || {});
-                            if (Object.keys(m).length)
-                                return undefined;
-                            r[key] = m;
-                            break;
-                        }
-                        case "description":
-                            if (vA && !vB)
-                                r[key] = vA; // new description
-                            else if (!vA && vB)
-                                r[key] = vB;
-                            else
-                                return undefined;
-                            break;
-                        default:
-                            return undefined;
-                    }
-                }
-            }
-            return pxt.Package.stringifyConfig(r);
-            function mergeName(fA, fO, fB) {
-                if (fA == fO)
-                    return fB;
-                if (fB == fO)
-                    return fA;
-                if (fA == lf("Untitled"))
-                    return fB;
-                return fA;
-            }
-            function mergeFiles(fA, fO, fB) {
-                var r = [];
-                var fkeys = pxt.U.unique(fO.concat(fA).concat(fB), function (l) { return l; });
-                for (var _i = 0, fkeys_1 = fkeys; _i < fkeys_1.length; _i++) {
-                    var fkey = fkeys_1[_i];
-                    var mA = fA.indexOf(fkey) > -1;
-                    var mB = fB.indexOf(fkey) > -1;
-                    var mO = fO.indexOf(fkey) > -1;
-                    if (mA == mB) {
-                        if (mA)
-                            r.push(fkey);
-                    }
-                    else {
-                        if (mB == mO) {
-                            if (mA)
-                                r.push(fkey);
-                        }
-                        else {
-                            if (mB)
-                                r.push(fkey);
-                        }
-                    }
-                }
-                return r;
-            }
-            function mergeDependencies(fA, fO, fB) {
-                var r = {};
-                var fkeys = pxt.U.unique(Object.keys(fO).concat(Object.keys(fA)).concat(Object.keys(fB)), function (l) { return l; });
-                for (var _i = 0, fkeys_2 = fkeys; _i < fkeys_2.length; _i++) {
-                    var fkey = fkeys_2[_i];
-                    var mA = fA[fkey];
-                    var mB = fB[fkey];
-                    var mO = fO[fkey];
-                    if (mA == mB) {
-                        if (mA)
-                            r[fkey] = mA;
-                    }
-                    else {
-                        // check if it is a version change in github reference
-                        var ghA = parseRepoId(mA);
-                        var ghB = parseRepoId(mB);
-                        if (ghA && ghB
-                            && pxt.semver.tryParse(ghA.tag)
-                            && pxt.semver.tryParse(ghB.tag)
-                            && ghA.owner && ghA.project
-                            && ghA.owner == ghB.owner
-                            && ghA.project == ghB.project) {
-                            var newtag = pxt.semver.strcmp(ghA.tag, ghB.tag) > 0
-                                ? ghA.tag : ghB.tag;
-                            r[fkey] = "github:" + ghA.owner + "/" + ghA.project + "#" + newtag;
-                        }
-                        else if (mB == mO) {
-                            if (mA)
-                                r[fkey] = mA;
-                        }
-                        else {
-                            if (mB)
-                                r[fkey] = mB;
-                        }
-                    }
-                }
-                return r;
-            }
-        }
-        github.mergeDiff3Config = mergeDiff3Config;
-        function hasMergeConflictMarker(content) {
-            return content && /^(<<<<<<<[^<]|>>>>>>>[^>])/m.test(content);
-        }
-        github.hasMergeConflictMarker = hasMergeConflictMarker;
+        var GRAPHQL_URL = "https://api.github.com/graphql";
         function lookupFile(commit, path) {
             if (!commit)
                 return null;
             return commit.tree.tree.find(function (e) { return e.path == path; });
         }
         github.lookupFile = lookupFile;
-        function reconstructConfig(files, commit, tp) {
-            var dependencies = {};
-            // grab files from commit
-            var commitFiles = commit.tree.tree.map(function (f) { return f.path; })
-                .filter(function (f) { return /\.(ts|blocks|md|jres|asm|json)$/.test(f); })
-                .filter(function (f) { return f != pxt.CONFIG_NAME; });
-            // if no available files, include the files from the template
-            if (!commitFiles.find(function (f) { return /\.ts$/.test(f); })) {
-                tp.config.files.filter(function (f) { return commitFiles.indexOf(f) < 0; })
-                    .forEach(function (f) {
-                    commitFiles.push(f);
-                    files[f] = tp.files[f];
-                });
-                pxt.Util.jsonCopyFrom(dependencies, tp.config.dependencies);
-            }
-            // include corepkg if no dependencies
-            if (!Object.keys(dependencies).length)
-                dependencies[pxt.appTarget.corepkg] = "*";
-            // yay, we have a new cfg
-            var cfg = {
-                name: "",
-                files: commitFiles,
-                dependencies: dependencies,
-                preferredEditor: commitFiles.find(function (f) { return /.blocks$/.test(f); }) ? pxt.BLOCKS_PROJECT_NAME : pxt.JAVASCRIPT_PROJECT_NAME
-            };
-            return cfg;
-        }
-        github.reconstructConfig = reconstructConfig;
         /**
          * Executes a GraphQL query against GitHub v4 api
          * @param query
@@ -8206,7 +8611,7 @@ var pxt;
             var payload = JSON.stringify({
                 query: query
             });
-            return ghPostAsync("https://api.github.com/graphql", payload);
+            return ghPostAsync(GRAPHQL_URL, payload);
         }
         github.ghGraphQLQueryAsync = ghGraphQLQueryAsync;
         /**
@@ -8251,6 +8656,13 @@ var pxt;
             });
         }
         github.findPRNumberforBranchAsync = findPRNumberforBranchAsync;
+        function getPagesStatusAsync(repoPath) {
+            return ghGetJsonAsync("https://api.github.com/repos/" + repoPath + "/pages")
+                .catch(function (e) { return ({
+                status: null
+            }); });
+        }
+        github.getPagesStatusAsync = getPagesStatusAsync;
     })(github = pxt.github || (pxt.github = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -9334,15 +9746,24 @@ var pxt;
                 ".vscode/tasks.json": "\n// A task runner that calls the MakeCode (PXT) compiler\n{\n    \"version\": \"2.0.0\",\n    \"tasks\": [{\n        \"label\": \"pxt deploy\",\n        \"type\": \"shell\",\n        \"command\": \"pxt deploy --local\",\n        \"group\": \"build\",\n        \"problemMatcher\": [ \"$tsc\" ]\n    }, {\n        \"label\": \"pxt build\",\n        \"type\": \"shell\",\n        \"command\": \"pxt build --local\",\n        \"group\": \"build\",\n        \"problemMatcher\": [ \"$tsc\" ]\n    }, {\n        \"label\": \"pxt install\",\n        \"type\": \"shell\",\n        \"command\": \"pxt install\",\n        \"group\": \"build\",\n        \"problemMatcher\": [ \"$tsc\" ]\n    }, {\n        \"label\": \"pxt clean\",\n        \"type\": \"shell\",\n        \"command\": \"pxt clean\",\n        \"group\": \"test\",\n        \"problemMatcher\": [ \"$tsc\" ]\n    }]\n}\n"
             };
             // override files from target
-            var overrides = pxt.appTarget.bundledpkgs[pxt.template.TEMPLATE_PRJ];
+            var overrides = targetTemplateFiles();
             if (overrides) {
                 Object.keys(overrides)
-                    .filter(function (k) { return k != pxt.CONFIG_NAME; })
                     .forEach(function (k) { return files[k] = overrides[k]; });
             }
             return files;
         }
         template.defaultFiles = defaultFiles;
+        function targetTemplateFiles() {
+            var overrides = pxt.appTarget.bundledpkgs[pxt.template.TEMPLATE_PRJ];
+            if (overrides) {
+                var r = pxt.Util.clone(overrides);
+                delete r[pxt.CONFIG_NAME];
+                return r;
+            }
+            return undefined;
+        }
+        template.targetTemplateFiles = targetTemplateFiles;
         template.TEMPLATE_PRJ = "template";
         function packageFiles(name) {
             var prj = pxt.appTarget.blocksprj || pxt.appTarget.tsprj;
@@ -9363,7 +9784,7 @@ var pxt;
             for (var f in defFiles)
                 files[f] = defFiles[f];
             for (var f in prj.files)
-                if (f != "README.md")
+                if (f != "README.md") // this one we need to keep
                     files[f] = prj.files[f];
             var pkgFiles = Object.keys(files).filter(function (s) {
                 return /\.(blocks|md|ts|asm|cpp|h|py)$/.test(s);
@@ -9379,11 +9800,13 @@ var pxt;
             var configMap = JSON.parse(files[pxt.CONFIG_NAME]);
             if (options)
                 pxt.Util.jsonMergeFrom(configMap, options);
-            Object.keys(pxt.webConfig).forEach(function (k) { return configMap[k.toLowerCase()] = pxt.webConfig[k]; });
-            configMap["platform"] = pxt.appTarget.platformid || pxt.appTarget.id;
-            configMap["target"] = pxt.appTarget.id;
-            configMap["docs"] = pxt.appTarget.appTheme.homeUrl || "./";
-            configMap["homeurl"] = pxt.appTarget.appTheme.homeUrl || "???";
+            if (pxt.webConfig) { // CLI
+                Object.keys(pxt.webConfig).forEach(function (k) { return configMap[k.toLowerCase()] = pxt.webConfig[k]; });
+                configMap["platform"] = pxt.appTarget.platformid || pxt.appTarget.id;
+                configMap["target"] = pxt.appTarget.id;
+                configMap["docs"] = pxt.appTarget.appTheme.homeUrl || "./";
+                configMap["homeurl"] = pxt.appTarget.appTheme.homeUrl || "???";
+            }
             pxt.U.iterMap(files, function (k, v) {
                 v = v.replace(/@([A-Z]+)@/g, function (f, n) { return configMap[n.toLowerCase()] || ""; });
                 files[k] = v;
@@ -9734,7 +10157,8 @@ var pxt;
                         output += " ";
                     }
                 }
-                var start = getCurrentLine();
+                var startLine = getCurrentLine();
+                var startPos = output.length;
                 switch (n.type) {
                     case NT.Infix:
                         pxt.U.oops("no infix should be left");
@@ -9762,15 +10186,22 @@ var pxt;
                     default:
                         break;
                 }
-                var end = getCurrentLine();
+                var endLine = getCurrentLine();
+                // end position is non-inclusive
+                var endPos = Math.max(output.length, 1);
                 if (n.id) {
                     if (sourceMapById[n.id]) {
                         var node = sourceMapById[n.id];
-                        node.start = Math.min(node.start, start);
-                        node.end = Math.max(node.end, end);
+                        node.startLine = Math.min(node.startLine, startLine);
+                        node.endLine = Math.max(node.endLine, endLine);
+                        node.startPos = Math.min(node.startPos, startPos);
+                        node.endPos = Math.max(node.endPos, endPos);
                     }
                     else {
-                        var interval = { id: n.id, start: start, end: end };
+                        var interval = {
+                            id: n.id,
+                            startLine: startLine, startPos: startPos, endLine: endLine, endPos: endPos
+                        };
                         sourceMapById[n.id] = interval;
                         sourceMap.push(interval);
                     }
@@ -9855,6 +10286,7 @@ var pxt;
         "targetVersions",
         "supportedTargets",
         "preferredEditor",
+        "languageRestriction",
         "additionalFilePath",
         "additionalFilePaths"
     ];
@@ -10105,9 +10537,10 @@ var pxt;
                 pxt.U.userError("Missing dependencies in config of: " + this.id);
             if (!Array.isArray(this.config.files))
                 pxt.U.userError("Missing files in config of: " + this.id);
-            if (typeof this.config.name != "string" || !this.config.name ||
-                (this.config.public && !/^[a-z][a-z0-9\-_]+$/i.test(this.config.name)))
-                pxt.U.userError("Invalid extension name: " + this.config.name);
+            if (typeof this.config.name != "string" || !this.config.name)
+                this.config.name = lf("Untitled");
+            // don't be so uptight about project names,
+            // handle invalid names downstream
             if (this.config.targetVersions
                 && this.config.targetVersions.target
                 && pxt.semver.majorCmp(this.config.targetVersions.target, pxt.appTarget.versions.target) > 0)
@@ -10324,7 +10757,11 @@ var pxt;
             var dependencies = pxt.Util.clone(this.config.dependencies || {});
             // add test dependencies if nedeed
             if (this.level == 0 && this.config.testDependencies) {
-                pxt.Util.jsonMergeFrom(dependencies, this.config.testDependencies);
+                // only add testDepdencies that can be resolved
+                pxt.Util.iterMap(this.config.testDependencies, function (k, v) {
+                    if (v != "*" || pxt.appTarget.bundledpkgs[k])
+                        dependencies[k] = v;
+                });
             }
             if (includeCpp && this.config.cppDependencies) {
                 pxt.Util.jsonMergeFrom(dependencies, this.config.cppDependencies);
@@ -10591,7 +11028,7 @@ var pxt;
             return Promise.all(pxt.Util.values(this.deps).map(function (dep) {
                 return dep.packageLocalizationStringsAsync(lang)
                     .then(function (depLoc) {
-                    if (depLoc)
+                    if (depLoc) // merge data
                         Object.keys(depLoc).forEach(function (k) {
                             if (!loc[k])
                                 loc[k] = depLoc[k];
@@ -10668,8 +11105,8 @@ var pxt;
         MainPackage.prototype.getCompileOptionsAsync = function (target) {
             if (target === void 0) { target = this.getTargetOptions(); }
             return __awaiter(this, void 0, void 0, function () {
-                var _this = this;
                 var opts, generateFile, fillExtInfoAsync, variants, ext, _i, variants_1, v, curr, noFileEmbed, files, headerString, programText, buf, _a, _b, pkg, _c, _d, f, sn, functionOpts;
+                var _this = this;
                 return __generator(this, function (_e) {
                     switch (_e.label) {
                         case 0:
@@ -11200,6 +11637,92 @@ var ts;
         pxtc.BINARY_PXT64 = "binary.pxt64";
         pxtc.NATIVE_TYPE_THUMB = "thumb";
         pxtc.NATIVE_TYPE_VM = "vm";
+        function BuildSourceMapHelpers(sourceMap, tsFile, pyFile) {
+            // Notes:
+            //  lines are 0-indexed (Monaco they are 1-indexed)
+            //  columns are 0-indexed (0th is first character)
+            //  positions are 0-indexed, as if getting the index of a character in a file as a giant string (incl. new lines)
+            //  line summation is the length of that line plus its newline plus all the lines before it; aka the position of the next line's first character
+            //  end positions are zero-index but not inclusive, same behavior as substring
+            var makeLineColPosConverters = function (file) {
+                var lines = file.split("\n");
+                var lineLengths = lines
+                    .map(function (l) { return l.length; });
+                var lineLenSums = lineLengths
+                    .reduce(function (_a, n) {
+                    var lens = _a.lens, sum = _a.sum;
+                    return ({ lens: __spreadArrays(lens, [sum + n + 1]), sum: sum + n + 1 });
+                }, { lens: [], sum: 0 })
+                    .lens;
+                var lineColToPos = function (line, col) {
+                    var pos = (lineLenSums[line - 1] || 0) + col;
+                    return pos;
+                };
+                var posToLineCol = function (pos) {
+                    var line = lineLenSums
+                        .reduce(function (curr, nextLen, i) { return pos < nextLen ? curr : i + 1; }, 0);
+                    var col = lineLengths[line] - (lineLenSums[line] - pos) + 1;
+                    return [line, col];
+                };
+                return { posToLineCol: posToLineCol, lineColToPos: lineColToPos };
+            };
+            var lcp = {
+                ts: makeLineColPosConverters(tsFile),
+                py: makeLineColPosConverters(pyFile)
+            };
+            var intLen = function (i) { return i.endPos - i.startPos; };
+            var allOverlaps = function (i, lang) {
+                var startPos = i.startPos, endPos = i.endPos;
+                return sourceMap
+                    .filter(function (i) {
+                    // O(n), can we and should we do better?
+                    return i[lang].startPos <= startPos && endPos <= i[lang].endPos;
+                });
+            };
+            var smallestOverlap = function (i, lang) {
+                var overlaps = allOverlaps(i, lang);
+                return overlaps.reduce(function (p, n) { return intLen(n[lang]) < intLen(p[lang]) ? n : p; }, overlaps[0]);
+            };
+            var os = {
+                ts: {
+                    allOverlaps: function (i) { return allOverlaps(i, "ts"); },
+                    smallestOverlap: function (i) { return smallestOverlap(i, "ts"); },
+                },
+                py: {
+                    allOverlaps: function (i) { return allOverlaps(i, "py"); },
+                    smallestOverlap: function (i) { return smallestOverlap(i, "py"); },
+                }
+            };
+            var makeLocToLoc = function (inLang, outLang) {
+                var inLocToPosAndLen = function (inLoc) { return [lcp[inLang].lineColToPos(inLoc.line, inLoc.column), inLoc.length]; };
+                var locToLoc = function (inLoc) {
+                    var _a = inLocToPosAndLen(inLoc), inStartPos = _a[0], inLen = _a[1];
+                    var inEndPos = inStartPos + inLen;
+                    var bestOverlap = smallestOverlap({ startPos: inStartPos, endPos: inEndPos }, inLang);
+                    if (!bestOverlap)
+                        return undefined;
+                    var _b = lcp[outLang].posToLineCol(bestOverlap[outLang].startPos), outStartLine = _b[0], outStartCol = _b[1];
+                    var outLoc = {
+                        fileName: "main." + outLang,
+                        start: bestOverlap[outLang].startPos,
+                        length: intLen(bestOverlap[outLang]),
+                        line: outStartLine,
+                        column: outStartCol
+                    };
+                    return outLoc;
+                };
+                return locToLoc;
+            };
+            var tsLocToPyLoc = makeLocToLoc("ts", "py");
+            var pyLocToTsLoc = makeLocToLoc("py", "ts");
+            var tsGetText = function (i) { return tsFile.substring(i.startPos, i.endPos); };
+            var pyGetText = function (i) { return pyFile.substring(i.startPos, i.endPos); };
+            return {
+                ts: __assign(__assign(__assign({}, lcp.ts), os.ts), { locToLoc: tsLocToPyLoc, getText: tsGetText }),
+                py: __assign(__assign(__assign({}, lcp.py), os.py), { locToLoc: pyLocToTsLoc, getText: pyGetText }),
+            };
+        }
+        pxtc.BuildSourceMapHelpers = BuildSourceMapHelpers;
         function computeUsedParts(resp, ignoreBuiltin) {
             if (ignoreBuiltin === void 0) { ignoreBuiltin = false; }
             if (!resp.usedSymbols || !pxt.appTarget.simulator || !pxt.appTarget.simulator.parts)
@@ -13978,10 +14501,36 @@ var pxt;
             if (!steps)
                 return undefined; // error parsing steps
             // collect code and infer editor
+            var _c = computeBodyMetadata(body), code = _c.code, templateCode = _c.templateCode, editor = _c.editor, language = _c.language;
+            if (!metadata.noDiffs
+                && (editor != pxt.BLOCKS_PROJECT_NAME || pxt.appTarget.appTheme.tutorialBlocksDiff))
+                diffify(steps, activities);
+            // strip hidden snippets
+            steps.forEach(function (step) {
+                step.contentMd = stripHiddenSnippets(step.contentMd);
+                step.headerContentMd = stripHiddenSnippets(step.headerContentMd);
+                step.hintContentMd = stripHiddenSnippets(step.hintContentMd);
+            });
+            return {
+                editor: editor,
+                title: title,
+                steps: steps,
+                activities: activities,
+                code: code,
+                templateCode: templateCode,
+                metadata: metadata,
+                language: language
+            };
+        }
+        tutorial.parseTutorial = parseTutorial;
+        function computeBodyMetadata(body) {
+            // collect code and infer editor
             var editor = undefined;
-            var regex = /```(sim|block|blocks|filterblocks|spy|ghost|typescript|ts|js|javascript|template)?\s*\n([\s\S]*?)\n```/gmi;
+            var regex = /```(sim|block|blocks|filterblocks|spy|ghost|typescript|ts|js|javascript|template|python)?\s*\n([\s\S]*?)\n```/gmi;
             var code = '';
             var templateCode;
+            var language;
+            var idx = 0;
             // Concatenate all blocks in separate code blocks and decompile so we can detect what blocks are used (for the toolbox)
             body
                 .replace(/((?!.)\s)+/g, "\n")
@@ -13994,8 +14543,11 @@ var pxt;
                             return undefined;
                         break;
                     case "spy":
+                    case "python":
                         if (!checkTutorialEditor(pxt.PYTHON_PROJECT_NAME))
                             return undefined;
+                        if (m1 == "python")
+                            language = m1;
                         break;
                     case "typescript":
                     case "ts":
@@ -14008,18 +14560,15 @@ var pxt;
                         templateCode = m2;
                         break;
                 }
-                code += "\n { \n " + m2 + "\n } \n";
+                code += "\n" + (m1 == "python"
+                    ? "def __wrapper_" + idx + "():\n" + m2.replace(/^/gm, "    ")
+                    : "{\n" + m2 + "\n}") + "\n";
+                idx++;
                 return "";
             });
-            return {
-                editor: editor || pxt.BLOCKS_PROJECT_NAME,
-                title: title,
-                steps: steps,
-                activities: activities,
-                code: code,
-                templateCode: templateCode,
-                metadata: metadata
-            };
+            // default to blocks
+            editor = editor || pxt.BLOCKS_PROJECT_NAME;
+            return { code: code, templateCode: templateCode, editor: editor, language: language };
             function checkTutorialEditor(expected) {
                 if (editor && editor != expected) {
                     pxt.debug("tutorial ambiguous: contains snippets of different types");
@@ -14031,13 +14580,61 @@ var pxt;
                 }
             }
         }
-        tutorial.parseTutorial = parseTutorial;
+        function diffify(steps, activities) {
+            // convert typescript snippets into diff snippets
+            var lastSrc = undefined;
+            steps.forEach(function (step, stepi) {
+                // reset diff on each activity or when requested
+                if (step.resetDiff
+                    || (activities && activities.find(function (activity) { return activity.step == stepi; })))
+                    lastSrc = undefined;
+                // extract typescript snippet from hint or content
+                if (step.hintContentMd) {
+                    var s = convertSnippetToDiff(step.hintContentMd);
+                    if (s && s != step.hintContentMd) {
+                        step.hintContentMd = s;
+                        return;
+                    }
+                }
+                if (step.headerContentMd) {
+                    var s = convertSnippetToDiff(step.headerContentMd);
+                    if (s && s != step.headerContentMd) {
+                        step.headerContentMd = s;
+                        return;
+                    }
+                }
+            });
+            function convertSnippetToDiff(src) {
+                var diffClasses = {
+                    "typescript": "diff",
+                    "spy": "diffspy",
+                    "blocks": "diffblocks",
+                    "python": "diff"
+                };
+                var highlightRx = /\s*(\/\/|#)\s*@highlight/gm;
+                if (!src)
+                    return src;
+                return src
+                    .replace(/```(typescript|spy|python|blocks|ghost|template)((?:.|[\r\n])+)```/, function (m, type, code) {
+                    var fileA = lastSrc;
+                    var hidden = /^(template|ghost)$/.test(type);
+                    var hasHighlight = highlightRx.test(code);
+                    code = code.replace(/^\n+/, '').replace(/\n+$/, ''); // always trim lines
+                    if (hasHighlight)
+                        code = code.replace(highlightRx, '');
+                    lastSrc = code;
+                    if (!fileA || hasHighlight || hidden)
+                        return m; // leave unchanged or reuse highlight info
+                    else
+                        return "```" + diffClasses[type] + "\n" + fileA + "\n----------\n" + code + "\n```";
+                });
+            }
+        }
         function parseTutorialTitle(tutorialmd) {
             var title = tutorialmd.match(/^#[^#](.*)$/mi);
             return title && title.length > 1 ? title[1] : null;
         }
         function parseTutorialMarkdown(tutorialmd, metadata) {
-            tutorialmd = stripHiddenSnippets(tutorialmd);
             if (metadata && metadata.activities) {
                 // tutorial with "## ACTIVITY", "### STEP" syntax
                 return parseTutorialActivities(tutorialmd, metadata);
@@ -14078,14 +14675,19 @@ var pxt;
                 step = step.trim();
                 var _a = parseTutorialHint(step, metadata && metadata.explicitHints), header = _a.header, hint = _a.hint;
                 var info = {
-                    fullscreen: /@(fullscreen|unplugged)/.test(flags),
-                    unplugged: /@unplugged/.test(flags),
-                    tutorialCompleted: /@tutorialCompleted/.test(flags),
                     contentMd: step,
-                    headerContentMd: header,
-                    hintContentMd: hint,
-                    hasHint: hint && hint.length > 0
+                    headerContentMd: header
                 };
+                if (/@(fullscreen|unplugged)/.test(flags))
+                    info.fullscreen = true;
+                if (/@unplugged/.test(flags))
+                    info.unplugged = true;
+                if (/@tutorialCompleted/.test(flags))
+                    info.tutorialCompleted = true;
+                if (/@resetDiff/.test(flags))
+                    info.resetDiff = true;
+                if (hint)
+                    info.hintContentMd = hint;
                 stepInfo.push(info);
                 return "";
             });
@@ -14096,6 +14698,8 @@ var pxt;
             return stepInfo;
         }
         function parseTutorialHint(step, explicitHints) {
+            // remove hidden code sections
+            step = stripHiddenSnippets(step);
             var header = step, hint;
             if (explicitHints) {
                 // hint is explicitly set with hint syntax "#### ~ tutorialhint" and terminates at the next heading
@@ -14119,7 +14723,7 @@ var pxt;
         /* Remove hidden snippets from text */
         function stripHiddenSnippets(str) {
             if (!str)
-                return null;
+                return str;
             var hiddenSnippetRegex = /```(filterblocks|package|ghost|config|template)\s*\n([\s\S]*?)\n```/gmi;
             return str.replace(hiddenSnippetRegex, '').trim();
         }
@@ -14139,11 +14743,16 @@ var pxt;
                 }
                 return "";
             });
-            return { metadata: m, body: body };
+            var metadata = m;
+            if (metadata.explicitHints !== undefined
+                && pxt.appTarget.appTheme
+                && pxt.appTarget.appTheme.tutorialExplicitHints)
+                metadata.explicitHints = true;
+            return { metadata: metadata, body: body };
         }
         function highlight(pre) {
             var text = pre.textContent;
-            if (!/@highlight/.test(text))
+            if (!/@highlight/.test(text)) // shortcut, nothing to do
                 return;
             // collapse image python/js literales
             text = text.replace(/img\s*\(\s*"{3}(.|\n)*"{3}\s*\)/g, "\"\"\" \"\"\"");
@@ -14152,6 +14761,8 @@ var pxt;
             pre.textContent = ""; // clear up and rebuild
             var lines = text.split('\n');
             for (var i = 0; i < lines.length; ++i) {
+                if (i > 0 && i < lines.length)
+                    pre.appendChild(document.createTextNode("\n"));
                 var line = lines[i];
                 if (/@highlight/.test(line)) {
                     // highlight next line
@@ -14164,14 +14775,38 @@ var pxt;
                     }
                 }
                 else {
-                    pre.appendChild(document.createTextNode(line + '\n'));
+                    pre.appendChild(document.createTextNode(line));
                 }
             }
         }
         tutorial.highlight = highlight;
+        function getTutorialOptions(md, tutorialId, filename, reportId, recipe) {
+            var tutorialInfo = pxt.tutorial.parseTutorial(md);
+            if (!tutorialInfo)
+                throw new Error(lf("Invalid tutorial format"));
+            var tutorialOptions = {
+                tutorial: tutorialId,
+                tutorialName: tutorialInfo.title || filename,
+                tutorialReportId: reportId,
+                tutorialStep: 0,
+                tutorialReady: true,
+                tutorialHintCounter: 0,
+                tutorialStepInfo: tutorialInfo.steps,
+                tutorialActivityInfo: tutorialInfo.activities,
+                tutorialMd: md,
+                tutorialCode: tutorialInfo.code,
+                tutorialRecipe: !!recipe,
+                templateCode: tutorialInfo.templateCode,
+                autoexpandStep: true,
+                metadata: tutorialInfo.metadata,
+                language: tutorialInfo.language
+            };
+            return { options: tutorialOptions, editor: tutorialInfo.editor };
+        }
+        tutorial.getTutorialOptions = getTutorialOptions;
     })(tutorial = pxt.tutorial || (pxt.tutorial = {}));
 })(pxt || (pxt = {}));
-/// <reference path='../built/typescriptServices.d.ts' />
+/// <reference path='../pxtcompiler/ext-typescript/lib/typescriptServices.d.ts' />
 var ts;
 (function (ts) {
     var pxtc;
@@ -14707,7 +15342,7 @@ var pxt;
                 var packet = new Uint8Array(dataView.buffer);
                 var cmd = packet[0];
                 //this.debug(`flash state ${this.state} - cmd ${cmd}`);
-                if (this.state == PartialFlashingState.Idle)
+                if (this.state == PartialFlashingState.Idle) // rogue response
                     return;
                 switch (cmd) {
                     case PartialFlashingService.STATUS:
@@ -14806,7 +15441,7 @@ var pxt;
                                         _this.clearFlashData();
                                     });
                                 }
-                                else {
+                                else { // keep flashing
                                     this.flashNextPacket();
                                 }
                                 break;
@@ -15288,6 +15923,7 @@ var pxt;
                 var dev = this.dev;
                 this.log("open device");
                 return dev.open()
+                    // assume one configuration; no one really does more
                     .then(function () {
                     _this.log("select configuration");
                     return dev.selectConfiguration(1);
@@ -15573,9 +16209,9 @@ var ts;
                                 v = this.ei.registerNo(actual);
                                 if (v == null)
                                     return emitErr("expecting register name", actual);
-                                if (this.ei.isPush(this.opcode))
+                                if (this.ei.isPush(this.opcode)) // push
                                     stack++;
-                                else if (this.ei.isPop(this.opcode))
+                                else if (this.ei.isPop(this.opcode)) // pop
                                     stack--;
                             }
                             else if (enc.isImmediate) {
@@ -15608,9 +16244,9 @@ var ts;
                                     if (v & (1 << no))
                                         return emitErr("duplicate register name", actual);
                                     v |= (1 << no);
-                                    if (this.ei.isPush(this.opcode))
+                                    if (this.ei.isPush(this.opcode)) // push
                                         stack++;
-                                    else if (this.ei.isPop(this.opcode))
+                                    else if (this.ei.isPop(this.opcode)) // pop
                                         stack--;
                                     if (tokens[j] == ",")
                                         j++;
@@ -16458,7 +17094,7 @@ var ts;
                     var mylines = this.lines.filter(function (l) { return l.type != "empty"; });
                     for (var i = 0; i < mylines.length; ++i) {
                         var ln = mylines[i];
-                        if (/^user/.test(ln.scope))
+                        if (/^user/.test(ln.scope)) // skip opt for user-supplied assembly
                             continue;
                         var lnNext = mylines[i + 1];
                         if (!lnNext)
@@ -16862,7 +17498,7 @@ var pxt;
         }
         Cloud.privateGetAsync = privateGetAsync;
         function downloadTargetConfigAsync() {
-            if (!Cloud.isOnline())
+            if (!Cloud.isOnline()) // offline
                 return Promise.resolve(undefined);
             var targetVersion = pxt.appTarget.versions && pxt.appTarget.versions.target;
             var url = pxt.webConfig && pxt.webConfig.isStatic ? "targetconfig.json" : "config/" + pxt.appTarget.id + "/targetconfig" + (targetVersion ? "/v" + targetVersion : '');
@@ -16896,6 +17532,7 @@ var pxt;
                 // return cached entry
                 if (entry && entry.md)
                     return entry.md;
+                // download and cache
                 else
                     return downloadMarkdownAsync(docid, locale, live)
                         .then(function (r) { return db.setAsync(locale, docid, branch, r.etag, undefined, r.md)
@@ -17067,7 +17704,7 @@ var pxtmelody;
                 return "- - - - - - - - ";
             for (var j = 0; j < numMelodies; j++) {
                 for (var i = 0; i < this.numCols; i++) {
-                    if (queues[i] && queues[i].length > 0) {
+                    if (queues[i] && queues[i].length > 0) { // if there is an element
                         stringMelody += queues[i].shift() + " ";
                     }
                     else {
@@ -18219,6 +18856,7 @@ var pxt;
                         throwError(409);
                     }
                 }, function (err) { }); }); })
+                    // no conflict, proceed with writing
                     .then(function () { return Promise.map(data.files, function (f) { return writeFileAsync(logicalDirname, f.name, f.content); }); })
                     .then(function () { return writeFileAsync(logicalDirname, HEADER_JSON, JSON.stringify(data.header, null, 4)); })
                     .then(function () { return readPkgAsync(logicalDirname, false); });
@@ -18289,9 +18927,12 @@ var pxt;
 })(pxt || (pxt = {}));
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -18301,7 +18942,7 @@ var __extends = (this && this.__extends) || (function () {
 var pxt;
 (function (pxt) {
     var editor;
-    (function (editor) {
+    (function (editor_1) {
         var SimState;
         (function (SimState) {
             SimState[SimState["Stopped"] = 0] = "Stopped";
@@ -18309,20 +18950,20 @@ var pxt;
             SimState[SimState["Pending"] = 1] = "Pending";
             SimState[SimState["Starting"] = 2] = "Starting";
             SimState[SimState["Running"] = 3] = "Running";
-        })(SimState = editor.SimState || (editor.SimState = {}));
+        })(SimState = editor_1.SimState || (editor_1.SimState = {}));
         function isBlocks(f) {
             return pxt.U.endsWith(f.name, ".blocks");
         }
-        editor.isBlocks = isBlocks;
+        editor_1.isBlocks = isBlocks;
         var FilterState;
         (function (FilterState) {
             FilterState[FilterState["Hidden"] = 0] = "Hidden";
             FilterState[FilterState["Visible"] = 1] = "Visible";
             FilterState[FilterState["Disabled"] = 2] = "Disabled";
-        })(FilterState = editor.FilterState || (editor.FilterState = {}));
-        editor.initExtensionsAsync = function (opts) { return Promise.resolve({}); };
-        editor.initFieldExtensionsAsync = function (opts) { return Promise.resolve({}); };
-        editor.HELP_IMAGE_URI = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjYiIHZpZXdCb3g9IjAgMCAyNiAyNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTMiIGN5PSIxMyIgcj0iMTMiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNy45NTIgOS4xODQwMkMxNy45NTIgMTAuMjU2IDE3LjgxNiAxMS4wNzIgMTcuNTQ0IDExLjYzMkMxNy4yODggMTIuMTkyIDE2Ljc1MiAxMi43OTIgMTUuOTM2IDEzLjQzMkMxNS4xMiAxNC4wNzIgMTQuNTc2IDE0LjU4NCAxNC4zMDQgMTQuOTY4QzE0LjA0OCAxNS4zMzYgMTMuOTIgMTUuNzM2IDEzLjkyIDE2LjE2OFYxNi45NkgxMS44MDhDMTEuNDI0IDE2LjQ2NCAxMS4yMzIgMTUuODQgMTEuMjMyIDE1LjA4OEMxMS4yMzIgMTQuNjg4IDExLjM4NCAxNC4yODggMTEuNjg4IDEzLjg4OEMxMS45OTIgMTMuNDg4IDEyLjUzNiAxMi45NjggMTMuMzIgMTIuMzI4QzE0LjEwNCAxMS42NzIgMTQuNjI0IDExLjE2OCAxNC44OCAxMC44MTZDMTUuMTM2IDEwLjQ0OCAxNS4yNjQgOS45NjgwMiAxNS4yNjQgOS4zNzYwMkMxNS4yNjQgOC4yMDgwMiAxNC40MTYgNy42MjQwMiAxMi43MiA3LjYyNDAyQzExLjc2IDcuNjI0MDIgMTAuNzUyIDcuNzM2MDIgOS42OTYgNy45NjAwMkw5LjE0NCA4LjA4MDAyTDkgNi4wODgwMkMxMC40ODggNS41NjAwMiAxMS44NCA1LjI5NjAyIDEzLjA1NiA1LjI5NjAyQzE0LjczNiA1LjI5NjAyIDE1Ljk2OCA1LjYwODAyIDE2Ljc1MiA2LjIzMjAyQzE3LjU1MiA2Ljg0MDAyIDE3Ljk1MiA3LjgyNDAyIDE3Ljk1MiA5LjE4NDAyWk0xMS40IDIyVjE4LjY0SDE0LjE4NFYyMkgxMS40WiIgZmlsbD0iIzU5NUU3NCIvPgo8L3N2Zz4K';
+        })(FilterState = editor_1.FilterState || (editor_1.FilterState = {}));
+        editor_1.initExtensionsAsync = function (opts) { return Promise.resolve({}); };
+        editor_1.initFieldExtensionsAsync = function (opts) { return Promise.resolve({}); };
+        editor_1.HELP_IMAGE_URI = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjYiIGhlaWdodD0iMjYiIHZpZXdCb3g9IjAgMCAyNiAyNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTMiIGN5PSIxMyIgcj0iMTMiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNy45NTIgOS4xODQwMkMxNy45NTIgMTAuMjU2IDE3LjgxNiAxMS4wNzIgMTcuNTQ0IDExLjYzMkMxNy4yODggMTIuMTkyIDE2Ljc1MiAxMi43OTIgMTUuOTM2IDEzLjQzMkMxNS4xMiAxNC4wNzIgMTQuNTc2IDE0LjU4NCAxNC4zMDQgMTQuOTY4QzE0LjA0OCAxNS4zMzYgMTMuOTIgMTUuNzM2IDEzLjkyIDE2LjE2OFYxNi45NkgxMS44MDhDMTEuNDI0IDE2LjQ2NCAxMS4yMzIgMTUuODQgMTEuMjMyIDE1LjA4OEMxMS4yMzIgMTQuNjg4IDExLjM4NCAxNC4yODggMTEuNjg4IDEzLjg4OEMxMS45OTIgMTMuNDg4IDEyLjUzNiAxMi45NjggMTMuMzIgMTIuMzI4QzE0LjEwNCAxMS42NzIgMTQuNjI0IDExLjE2OCAxNC44OCAxMC44MTZDMTUuMTM2IDEwLjQ0OCAxNS4yNjQgOS45NjgwMiAxNS4yNjQgOS4zNzYwMkMxNS4yNjQgOC4yMDgwMiAxNC40MTYgNy42MjQwMiAxMi43MiA3LjYyNDAyQzExLjc2IDcuNjI0MDIgMTAuNzUyIDcuNzM2MDIgOS42OTYgNy45NjAwMkw5LjE0NCA4LjA4MDAyTDkgNi4wODgwMkMxMC40ODggNS41NjAwMiAxMS44NCA1LjI5NjAyIDEzLjA1NiA1LjI5NjAyQzE0LjczNiA1LjI5NjAyIDE1Ljk2OCA1LjYwODAyIDE2Ljc1MiA2LjIzMjAyQzE3LjU1MiA2Ljg0MDAyIDE3Ljk1MiA3LjgyNDAyIDE3Ljk1MiA5LjE4NDAyWk0xMS40IDIyVjE4LjY0SDE0LjE4NFYyMkgxMS40WiIgZmlsbD0iIzU5NUU3NCIvPgo8L3N2Zz4K';
         var _initEditorExtensionsPromise;
         function initEditorExtensionsAsync() {
             if (!_initEditorExtensionsPromise) {
@@ -18343,13 +18984,13 @@ var pxt;
             }
             return _initEditorExtensionsPromise;
         }
-        editor.initEditorExtensionsAsync = initEditorExtensionsAsync;
+        editor_1.initEditorExtensionsAsync = initEditorExtensionsAsync;
     })(editor = pxt.editor || (pxt.editor = {}));
 })(pxt || (pxt = {}));
 var pxt;
 (function (pxt) {
     var editor;
-    (function (editor_1) {
+    (function (editor_2) {
         var pendingRequests = {};
         /**
          * Binds incoming window messages to the project view.
@@ -18392,7 +19033,7 @@ var pxt;
                     // Messages sent to the editor from the parent frame
                     var p = Promise.resolve();
                     var resp_1 = undefined;
-                    if (data.type == "pxthost") {
+                    if (data.type == "pxthost") { // response from the host
                         var req_1 = pendingRequests[data.id];
                         if (!req_1) {
                             pxt.debug("pxthost: unknown request " + data.id);
@@ -18401,7 +19042,7 @@ var pxt;
                             p = p.then(function () { return req_1.resolve(data); });
                         }
                     }
-                    else if (data.type == "pxteditor") {
+                    else if (data.type == "pxteditor") { // request from the editor
                         p = p.then(function () {
                             return getEditorAsync().then(function (projectView) {
                                 var req = data;
@@ -18524,7 +19165,7 @@ var pxt;
                 return true;
             }, false);
         }
-        editor_1.bindEditorMessages = bindEditorMessages;
+        editor_2.bindEditorMessages = bindEditorMessages;
         /**
          * Sends analytics messages upstream to container if any
          */
@@ -18574,7 +19215,7 @@ var pxt;
                 });
             };
         }
-        editor_1.enableControllerAnalytics = enableControllerAnalytics;
+        editor_2.enableControllerAnalytics = enableControllerAnalytics;
         function sendResponse(request, resp, success, error) {
             if (request.response) {
                 window.parent.postMessage({
@@ -18600,7 +19241,7 @@ var pxt;
                     resolve(undefined);
             });
         }
-        editor_1.postHostMessageAsync = postHostMessageAsync;
+        editor_2.postHostMessageAsync = postHostMessageAsync;
     })(editor = pxt.editor || (pxt.editor = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -18688,12 +19329,6 @@ var pxt;
                         feedbackUrl: "https://github.com/microsoft/pxt/issues/5390"
                     },
                     {
-                        id: "pythonToolbox",
-                        name: lf("Toolbox for Static Python"),
-                        description: lf("Use the code toolbox in Static Python"),
-                        feedbackUrl: "https://github.com/microsoft/pxt/issues/6291"
-                    },
-                    {
                         id: "simGif",
                         name: lf("Simulator Gifs"),
                         description: lf("Download gifs of the simulator"),
@@ -18732,12 +19367,6 @@ var pxt;
                         description: lf("Enable support for hardware marked 'experimental' in the hardware seletion dialog")
                     },
                     {
-                        id: "recipes",
-                        name: lf("Tutorials in Context"),
-                        description: lf("Micro-tutorials running within your program."),
-                        feedbackUrl: "https://github.com/microsoft/pxt/issues/5646"
-                    },
-                    {
                         id: "checkForHwVariantWebUSB",
                         name: lf("Detect Hardware with WebUSB"),
                         description: lf("When compiling, use WebUSB to detect hardware configuration.")
@@ -18752,6 +19381,21 @@ var pxt;
                         id: "githubCompiledJs",
                         name: lf("GitHub Pages JavaScript"),
                         description: lf("Commit compiled javascript when creating a release")
+                    },
+                    {
+                        id: "blocksCollapsing",
+                        name: lf("Collapse blocks"),
+                        description: lf("Collapse and expand functions or event blocks")
+                    },
+                    {
+                        id: "tutorialBlocksDiff",
+                        name: lf("Tutorial Block Diffs"),
+                        description: lf("Automatially render blocks diff in tutorials")
+                    },
+                    {
+                        id: "openProjectNewTab",
+                        name: lf("Open in New Tab"),
+                        description: lf("Open connected editors in different browser tabs.")
                     }
                 ].filter(function (experiment) { return ids.indexOf(experiment.id) > -1; });
             }
@@ -18958,7 +19602,22 @@ var pxt;
                 var monacoPaths = window.MonacoPaths;
                 var onGotAmdLoader = function () {
                     var req = window.require;
-                    req.config({ paths: monacoPaths });
+                    req.config({
+                        paths: monacoPaths,
+                        ignoreDuplicateModules: ["vs/basic-languages/typescript/typescript.contribution", "vs/basic-languages/javascript/javascript.contribution"]
+                    });
+                    // Mock out the JavaScript and TypeScript modules because we use our own language service
+                    var def = window.define;
+                    def("vs/basic-languages/typescript/typescript.contribution", ["require", "exports"], function () { return function () { }; });
+                    def("vs/basic-languages/javascript/javascript.contribution", ["require", "exports"], function () { return function () { }; });
+                    def("vs/language/typescript/tsMode", ["require", "exports"], function () {
+                        return {
+                            setupTypeScript: function () { },
+                            getTypeScriptWorker: function () { },
+                            setupJavaScript: function () { },
+                            getJavaScriptWorker: function () { },
+                        };
+                    });
                     // Load monaco
                     req(['vs/editor/editor.main'], function () {
                         setupMonaco();
@@ -18980,28 +19639,8 @@ var pxt;
         }
         vs.initMonacoAsync = initMonacoAsync;
         function setupMonaco() {
-            if (!monaco.languages.typescript)
-                return;
             initAsmMonarchLanguage();
-            // validation settings
-            monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-                noSyntaxValidation: true,
-                noSemanticValidation: true
-            });
-            // compiler options
-            monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-                allowUnreachableCode: true,
-                noImplicitAny: true,
-                allowJs: false,
-                allowUnusedLabels: true,
-                target: monaco.languages.typescript.ScriptTarget.ES5,
-                outDir: "built",
-                rootDir: ".",
-                noLib: true,
-                mouseWheelZoom: false
-            });
-            // maximum idle time
-            monaco.languages.typescript.typescriptDefaults.setMaximunWorkerIdleTime(20 * 60 * 1000);
+            initTypeScriptLanguageDefinition();
         }
         function createEditor(element) {
             var inverted = pxt.appTarget.appTheme.invertedMonaco;
@@ -19021,10 +19660,11 @@ var pxt;
                 minimap: {
                     enabled: false
                 },
-                autoIndent: true,
+                fixedOverflowWidgets: true,
+                autoIndent: "full",
                 useTabStops: true,
                 dragAndDrop: true,
-                matchBrackets: true,
+                matchBrackets: "always",
                 occurrencesHighlight: false,
                 quickSuggestionsDelay: 200,
                 theme: inverted ? 'vs-dark' : 'vs',
@@ -19115,6 +19755,207 @@ var pxt;
                         [/;.*$/, 'comment'],
                     ],
                 }
+            });
+        }
+        function initTypeScriptLanguageDefinition() {
+            // Taken from https://github.com/microsoft/monaco-languages/blob/master/src/typescript/typescript.ts
+            monaco.languages.register({
+                id: "typescript",
+                extensions: [".ts", ".tsx"],
+                aliases: ["TypeScript", "ts", "typescript"],
+                mimetypes: ["text/typescript"],
+            });
+            monaco.languages.setLanguageConfiguration("typescript", {
+                wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+                comments: {
+                    lineComment: '//',
+                    blockComment: ['/*', '*/']
+                },
+                brackets: [
+                    ['{', '}'],
+                    ['[', ']'],
+                    ['(', ')']
+                ],
+                onEnterRules: [
+                    {
+                        // e.g. /** | */
+                        beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
+                        afterText: /^\s*\*\/$/,
+                        action: { indentAction: monaco.languages.IndentAction.IndentOutdent, appendText: ' * ' }
+                    },
+                    {
+                        // e.g. /** ...|
+                        beforeText: /^\s*\/\*\*(?!\/)([^\*]|\*(?!\/))*$/,
+                        action: { indentAction: monaco.languages.IndentAction.None, appendText: ' * ' }
+                    },
+                    {
+                        // e.g.  * ...|
+                        beforeText: /^(\t|(\ \ ))*\ \*(\ ([^\*]|\*(?!\/))*)?$/,
+                        action: { indentAction: monaco.languages.IndentAction.None, appendText: '* ' }
+                    },
+                    {
+                        // e.g.  */|
+                        beforeText: /^(\t|(\ \ ))*\ \*\/\s*$/,
+                        action: { indentAction: monaco.languages.IndentAction.None, removeText: 1 }
+                    }
+                ],
+                autoClosingPairs: [
+                    { open: '{', close: '}' },
+                    { open: '[', close: ']' },
+                    { open: '(', close: ')' },
+                    { open: '"', close: '"', notIn: ['string'] },
+                    { open: '\'', close: '\'', notIn: ['string', 'comment'] },
+                    { open: '`', close: '`', notIn: ['string', 'comment'] },
+                    { open: "/**", close: " */", notIn: ["string"] }
+                ],
+                folding: {
+                    markers: {
+                        start: new RegExp("^\\s*//\\s*#?region\\b"),
+                        end: new RegExp("^\\s*//\\s*#?endregion\\b")
+                    }
+                }
+            });
+            monaco.languages.setMonarchTokensProvider("typescript", {
+                // Set defaultToken to invalid to see what you do not tokenize yet
+                defaultToken: 'invalid',
+                tokenPostfix: '.ts',
+                keywords: [
+                    'abstract', 'as', 'break', 'case', 'catch', 'class', 'continue', 'const',
+                    'constructor', 'debugger', 'declare', 'default', 'delete', 'do', 'else',
+                    'enum', 'export', 'extends', 'false', 'finally', 'for', 'from', 'function',
+                    'get', 'if', 'implements', 'import', 'in', 'infer', 'instanceof', 'interface',
+                    'is', 'keyof', 'let', 'module', 'namespace', 'never', 'new', 'null', 'package',
+                    'private', 'protected', 'public', 'readonly', 'require', 'global', 'return',
+                    'set', 'static', 'super', 'switch', 'symbol', 'this', 'throw', 'true', 'try',
+                    'type', 'typeof', 'unique', 'var', 'void', 'while', 'with', 'yield', 'async',
+                    'await', 'of'
+                ],
+                typeKeywords: [
+                    'any', 'boolean', 'number', 'object', 'string', 'undefined'
+                ],
+                operators: [
+                    '<=', '>=', '==', '!=', '===', '!==', '=>', '+', '-', '**',
+                    '*', '/', '%', '++', '--', '<<', '</', '>>', '>>>', '&',
+                    '|', '^', '!', '~', '&&', '||', '??', '?', ':', '=', '+=', '-=',
+                    '*=', '**=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '|=',
+                    '^=', '@',
+                ],
+                // we include these common regular expressions
+                symbols: /[=><!~?:&|+\-*\/\^%]+/,
+                escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+                digits: /\d+(_+\d+)*/,
+                octaldigits: /[0-7]+(_+[0-7]+)*/,
+                binarydigits: /[0-1]+(_+[0-1]+)*/,
+                hexdigits: /[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*/,
+                regexpctl: /[(){}\[\]\$\^|\-*+?\.]/,
+                regexpesc: /\\(?:[bBdDfnrstvwWn0\\\/]|@regexpctl|c[A-Z]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})/,
+                // The main tokenizer for our languages
+                tokenizer: {
+                    root: [
+                        [/[{}]/, 'delimiter.bracket'],
+                        { include: 'common' }
+                    ],
+                    common: [
+                        // identifiers and keywords
+                        [/[a-z_$][\w$]*/, {
+                                cases: {
+                                    '@typeKeywords': 'keyword',
+                                    '@keywords': 'keyword',
+                                    '@default': 'identifier'
+                                }
+                            }],
+                        [/[A-Z][\w\$]*/, 'type.identifier'],
+                        // [/[A-Z][\w\$]*/, 'identifier'],
+                        // whitespace
+                        { include: '@whitespace' },
+                        // regular expression: ensure it is terminated before beginning (otherwise it is an opeator)
+                        [/\/(?=([^\\\/]|\\.)+\/([gimsuy]*)(\s*)(\.|;|,|\)|\]|\}|$))/, { token: 'regexp', bracket: '@open', next: '@regexp' }],
+                        // delimiters and operators
+                        [/[()\[\]]/, '@brackets'],
+                        [/[<>](?!@symbols)/, '@brackets'],
+                        [/!(?=([^=]|$))/, 'delimiter'],
+                        [/@symbols/, {
+                                cases: {
+                                    '@operators': 'delimiter',
+                                    '@default': ''
+                                }
+                            }],
+                        // numbers
+                        [/(@digits)[eE]([\-+]?(@digits))?/, 'number.float'],
+                        [/(@digits)\.(@digits)([eE][\-+]?(@digits))?/, 'number.float'],
+                        [/0[xX](@hexdigits)n?/, 'number.hex'],
+                        [/0[oO]?(@octaldigits)n?/, 'number.octal'],
+                        [/0[bB](@binarydigits)n?/, 'number.binary'],
+                        [/(@digits)n?/, 'number'],
+                        // delimiter: after number because of .\d floats
+                        [/[;,.]/, 'delimiter'],
+                        // strings
+                        [/"([^"\\]|\\.)*$/, 'string.invalid'],
+                        [/'([^'\\]|\\.)*$/, 'string.invalid'],
+                        [/"/, 'string', '@string_double'],
+                        [/'/, 'string', '@string_single'],
+                        [/`/, 'string', '@string_backtick'],
+                    ],
+                    whitespace: [
+                        [/[ \t\r\n]+/, ''],
+                        [/\/\*\*(?!\/)/, 'comment.doc', '@jsdoc'],
+                        [/\/\*/, 'comment', '@comment'],
+                        [/\/\/.*$/, 'comment'],
+                    ],
+                    comment: [
+                        [/[^\/*]+/, 'comment'],
+                        [/\*\//, 'comment', '@pop'],
+                        [/[\/*]/, 'comment']
+                    ],
+                    jsdoc: [
+                        [/[^\/*]+/, 'comment.doc'],
+                        [/\*\//, 'comment.doc', '@pop'],
+                        [/[\/*]/, 'comment.doc']
+                    ],
+                    // We match regular expression quite precisely
+                    regexp: [
+                        [/(\{)(\d+(?:,\d*)?)(\})/, ['regexp.escape.control', 'regexp.escape.control', 'regexp.escape.control']],
+                        [/(\[)(\^?)(?=(?:[^\]\\\/]|\\.)+)/, ['regexp.escape.control', { token: 'regexp.escape.control', next: '@regexrange' }]],
+                        [/(\()(\?:|\?=|\?!)/, ['regexp.escape.control', 'regexp.escape.control']],
+                        [/[()]/, 'regexp.escape.control'],
+                        [/@regexpctl/, 'regexp.escape.control'],
+                        [/[^\\\/]/, 'regexp'],
+                        [/@regexpesc/, 'regexp.escape'],
+                        [/\\\./, 'regexp.invalid'],
+                        [/(\/)([gimsuy]*)/, [{ token: 'regexp', bracket: '@close', next: '@pop' }, 'keyword.other']],
+                    ],
+                    regexrange: [
+                        [/-/, 'regexp.escape.control'],
+                        [/\^/, 'regexp.invalid'],
+                        [/@regexpesc/, 'regexp.escape'],
+                        [/[^\]]/, 'regexp'],
+                        [/\]/, { token: 'regexp.escape.control', next: '@pop', bracket: '@close' }]
+                    ],
+                    string_double: [
+                        [/[^\\"]+/, 'string'],
+                        [/@escapes/, 'string.escape'],
+                        [/\\./, 'string.escape.invalid'],
+                        [/"/, 'string', '@pop']
+                    ],
+                    string_single: [
+                        [/[^\\']+/, 'string'],
+                        [/@escapes/, 'string.escape'],
+                        [/\\./, 'string.escape.invalid'],
+                        [/'/, 'string', '@pop']
+                    ],
+                    string_backtick: [
+                        [/\$\{/, { token: 'delimiter.bracket', next: '@bracketCounting' }],
+                        [/[^\\`$]+/, 'string'],
+                        [/@escapes/, 'string.escape'],
+                        [/\\./, 'string.escape.invalid'],
+                        [/`/, 'string', '@pop']
+                    ],
+                    bracketCounting: [
+                        [/\{/, 'delimiter.bracket', '@bracketCounting'],
+                        [/\}/, 'delimiter.bracket', '@pop'],
+                        { include: 'common' }
+                    ],
+                },
             });
         }
     })(vs = pxt.vs || (pxt.vs = {}));
@@ -19341,15 +20182,25 @@ var pxt;
 })(pxt || (pxt = {}));
 
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 // Helpers designed to help to make a simulator accessible.
 var pxsim;
 (function (pxsim) {
@@ -19365,7 +20216,7 @@ var pxsim;
             if (handlerKeyDown) {
                 elem.addEventListener('keydown', function (e) {
                     var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
-                    if (charCode === 32 || charCode === 13) {
+                    if (charCode === 32 || charCode === 13) { // Enter or Space key
                         handlerKeyDown();
                     }
                 });
@@ -19373,7 +20224,7 @@ var pxsim;
             if (handlerKeyUp) {
                 elem.addEventListener('keyup', function (e) {
                     var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
-                    if (charCode === 32 || charCode === 13) {
+                    if (charCode === 32 || charCode === 13) { // Enter or Space key
                         handlerKeyUp();
                     }
                 });
@@ -19728,7 +20579,7 @@ var pxsim;
                 var colIdx = part.startColumnIdx + pin.bbFit.partRelativeColIdx;
                 var colName = pxsim.visuals.getColumnName(colIdx);
                 var pinRowIdx = part.startRowIdx + pin.bbFit.partRelativeRowIdx;
-                if (pinRowIdx >= 7)
+                if (pinRowIdx >= 7) //account for middle gap
                     pinRowIdx -= 2;
                 if (isConnectedToBB(pin.def)) {
                     //make a wire from bb top or bottom to target
@@ -19870,7 +20721,7 @@ var pxsim;
                 pxsim.U.assert(typeof location === "string", "Unknown location type: " + location);
                 var mbPin = location;
                 var boardPin = this.opts.boardDef.gpioPinMap[mbPin] || mbPin;
-                if (!boardPin) {
+                if (!boardPin) { // this pin is internal
                     console.debug("unknown pin location for " + mbPin);
                     return undefined;
                 }
@@ -20036,7 +20887,7 @@ var pxsim;
                 .filter(function (p) { return isConnectedToBB(p.def); })
                 .map(function (p) {
                 var rowIdx = ir.startRowIdx + p.bbFit.partRelativeRowIdx;
-                if (rowIdx >= 7)
+                if (rowIdx >= 7) //account for middle gap
                     rowIdx -= 2;
                 var rowName = pxsim.visuals.getRowName(rowIdx);
                 var colIdx = ir.startColumnIdx + p.bbFit.partRelativeColIdx;
@@ -20991,13 +21842,13 @@ var pxsim;
                 Object.defineProperty(Object, "assign", {
                     value: function assign(target, varArgs) {
                         'use strict';
-                        if (target == null) {
+                        if (target == null) { // TypeError if undefined or null
                             throw new TypeError('Cannot convert undefined or null to object');
                         }
                         var to = Object(target);
                         for (var index = 1; index < arguments.length; index++) {
                             var nextSource = arguments[index];
-                            if (nextSource != null) {
+                            if (nextSource != null) { // Skip over if undefined or null
                                 for (var nextKey in nextSource) {
                                     // Avoid bugs when hasOwnProperty is shadowed
                                     if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
@@ -21824,7 +22675,6 @@ var pxsim;
         var PARTS_BB_SCALE = 0.25;
         var PARTS_CMP_SCALE = 0.3;
         var PARTS_WIRE_SCALE = 0.23;
-        var BACK_PAGE_BOARD_WIDTH = PANEL_WIDTH - PANEL_PADDING * 1.5;
         var STYLE = "\n            .instr-panel {\n                margin: " + PANEL_MARGIN + "px;\n                padding: " + PANEL_PADDING + "px;\n                border-width: " + BORDER_WIDTH + "px;\n                border-color: " + BORDER_COLOR + ";\n                border-style: solid;\n                border-radius: " + BORDER_RADIUS + "px;\n                display: inline-block;\n                width: " + PANEL_WIDTH + "px;\n                height: " + PANEL_HEIGHT + "px;\n                position: relative;\n                overflow: hidden;\n                page-break-inside: avoid;\n            }\n            .board-svg {\n                margin: 0 auto;\n                display: block;\n                position: absolute;\n                bottom: " + BOARD_BOT + "px;\n                left: " + BOARD_LEFT + "px;\n            }\n            .panel-num-outer {\n                position: absolute;\n                left: " + -BORDER_WIDTH + "px;\n                top: " + -BORDER_WIDTH + "px;\n                width: " + NUM_BOX_SIZE + "px;\n                height: " + NUM_BOX_SIZE + "px;\n                border-width: " + BORDER_WIDTH + "px;\n                border-style: solid;\n                border-color: " + BORDER_COLOR + ";\n                border-radius: " + BORDER_RADIUS + "px 0 " + BORDER_RADIUS + "px 0;\n            }\n            .panel-num {\n                margin: " + NUM_MARGIN + "px 0;\n                text-align: center;\n                font-size: " + NUM_FONT + "px;\n            }\n            .cmp-div {\n                display: inline-block;\n            }\n            .reqs-div {\n                margin-left: " + (PANEL_PADDING + NUM_BOX_SIZE) + "px;\n                margin-top: 5px;\n            }\n            .partslist-wire,\n            .partslist-cmp {\n                margin: 10px;\n            }\n            .partslist-wire {\n                display: inline-block;\n            }\n            ";
         function mkTxt(p, txt, size) {
             var el = pxsim.svg.elt("text");
@@ -22246,14 +23096,6 @@ var pxsim;
             panel.appendChild(board.getView());
             return [panel, props];
         }
-        function mkFinalPanel(props) {
-            var panel = mkPanel();
-            pxsim.U.addClass(panel, "back-panel");
-            var board = mkBlankBoardAndBreadboard(props, BACK_PAGE_BOARD_WIDTH, false);
-            board.addAll(props.allAlloc);
-            panel.appendChild(board.getView());
-            return panel;
-        }
         function renderParts(container, options) {
             if (!options.boardDef.pinStyles)
                 options.boardDef.pinStyles = {};
@@ -22281,6 +23123,7 @@ var pxsim;
                 fnArgs: options.fnArgs,
                 getBBCoord: dummyBreadboard.getCoord.bind(dummyBreadboard)
             });
+            props.allAlloc.requiresBreadboard = true;
             //front page
             var frontPanel = updateFrontPanel(props);
             //all required parts
@@ -24064,7 +24907,10 @@ var pxsim;
             createBuffer: pxsim.BufferMethods.createBuffer,
         };
         myRT.control = {
-            inBackground: pxsim.thread.runInBackground
+            inBackground: pxsim.thread.runInBackground,
+            createBuffer: pxsim.BufferMethods.createBuffer,
+            dmesg: function (s) { return console.log("DMESG: " + s); },
+            __log: function (pri, s) { return console.log("LOG: " + s.trim()); },
         };
     }
     pxsim.initBareRuntime = initBareRuntime;
@@ -24115,8 +24961,8 @@ var pxsim;
             // in order semantics for events and handlers
             return Promise.each(events, function (value) {
                 return Promise.each(_this.handlers, function (handler) {
-                    return (_a = _this.runtime).runFiberAsync.apply(_a, [handler].concat((_this.valueToArgs ? _this.valueToArgs(value) : [value])));
                     var _a;
+                    return (_a = _this.runtime).runFiberAsync.apply(_a, __spreadArrays([handler], (_this.valueToArgs ? _this.valueToArgs(value) : [value])));
                 });
             }).then(function () {
                 // if some events arrived while processing above then keep processing
@@ -24695,7 +25541,7 @@ var pxsim;
                 return fn;
             }
             // tslint:disable-next-line
-            var entryPoint = eval(msg.code)(evalIface);
+            var entryPoint = msg.code && eval(msg.code)(evalIface);
             this.run = function (cb) { return topCall(entryPoint, cb); };
             this.getResume = function () {
                 if (!currResume)
@@ -24998,7 +25844,7 @@ var pxsim;
                     for (i = 0; i < n; ++i)
                         if (d0[i] != d1[i])
                             break;
-                    if (i == n)
+                    if (i == n) // same, don't send update
                         return;
                 }
                 _this.recordingLastImageData = imageData;
@@ -25259,6 +26105,21 @@ var pxsim;
             if (frame)
                 frame.focus();
         };
+        SimulatorDriver.prototype.registerDependentEditor = function (w) {
+            if (!w)
+                return;
+            if (!this._dependentEditors)
+                this._dependentEditors = [];
+            this._dependentEditors.push(w);
+        };
+        SimulatorDriver.prototype.dependentEditors = function () {
+            if (this._dependentEditors) {
+                this._dependentEditors = this._dependentEditors.filter(function (w) { return !!w.parent; });
+                if (!this._dependentEditors.length)
+                    this._dependentEditors = undefined;
+            }
+            return this._dependentEditors;
+        };
         SimulatorDriver.prototype.setStarting = function () {
             this.setState(SimulatorState.Starting);
         };
@@ -25375,18 +26236,37 @@ var pxsim;
                 this.hwdbg.postMessage(msg);
                 return;
             }
-            // dispatch to all iframe besides self
-            var frames = this.simFrames();
             var broadcastmsg = msg;
+            var depEditors = this.dependentEditors();
+            var frames = this.simFrames();
             if (source && broadcastmsg && !!broadcastmsg.broadcast) {
-                if (frames.length < 2) {
-                    this.container.appendChild(this.createFrame());
-                    frames = this.simFrames();
+                // the editor is hosted in a multi-editor setting
+                // don't start extra frames
+                var parentWindow = window.parent && window.parent !== window.window
+                    ? window.parent : window.opener;
+                if (this.options.nestedEditorSim && parentWindow) {
+                    // if message comes from parent already, don't echo
+                    if (source !== parentWindow)
+                        parentWindow.postMessage(msg, "*");
                 }
-                else if (frames[1].dataset['runid'] != this.runId) {
-                    this.startFrame(frames[1]);
+                else if (depEditors) {
+                    depEditors.forEach(function (w) {
+                        if (source !== w)
+                            w.postMessage(msg, "*");
+                    });
+                }
+                else {
+                    // start secondary frame if needed
+                    if (frames.length < 2) {
+                        this.container.appendChild(this.createFrame());
+                        frames = this.simFrames();
+                    }
+                    else if (frames[1].dataset['runid'] != this.runId) {
+                        this.startFrame(frames[1]);
+                    }
                 }
             }
+            // dispatch message to other frames
             for (var i = 0; i < frames.length; ++i) {
                 var frame = frames[i];
                 // same frame as source
@@ -25617,7 +26497,7 @@ var pxsim;
                 this.container.appendChild(wrapper);
                 frame = wrapper.firstElementChild;
             }
-            else
+            else // reuse simulator
                 this.startFrame(frame);
             this.setState(SimulatorState.Running);
             this.setTraceInterval(this.traceInterval);
@@ -26336,7 +27216,7 @@ var pxsim;
         }
         function sendMidiMessage(buf) {
             var data = buf.data;
-            if (!data.length)
+            if (!data.length) // garbage.
                 return;
             // no midi access or no midi element,
             // limited interpretation of midi commands
@@ -26347,14 +27227,14 @@ var pxsim;
             var velocity = data[2] || 0;
             //console.log(`midi: cmd ${cmd} channel (-1) ${channel} note ${noteNumber} f ${noteFrequency} v ${velocity}`)
             // play drums regardless
-            if (cmd == 8 || ((cmd == 9) && (velocity == 0))) {
+            if (cmd == 8 || ((cmd == 9) && (velocity == 0))) { // with MIDI, note on with velocity zero is the same as note off
                 // note off
                 stopTone();
             }
             else if (cmd == 9) {
                 // note on -- todo handle velocity
                 tone(noteFrequency, 1);
-                if (channel == 9)
+                if (channel == 9) // drums don't call noteOff
                     setTimeout(function () { return stopTone(); }, 500);
             }
         }
@@ -27096,7 +27976,7 @@ var pxsim;
                 allocRes.partsAndWires.forEach(function (pAndWs) {
                     var wires = pAndWs.wires;
                     var wiresOk = wires && wires.every(function (w) { return _this.wireFactory.checkWire(w.start, w.end); });
-                    if (wiresOk)
+                    if (wiresOk) // try to add all the wires
                         wires.forEach(function (w) { return allocRes.wires.push(_this.addWire(w)); });
                     var part = pAndWs.part;
                     if (part && (!wires || wiresOk))

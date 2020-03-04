@@ -742,6 +742,7 @@ var pxt;
                         throwError(409);
                     }
                 }, function (err) { }); }); })
+                    // no conflict, proceed with writing
                     .then(function () { return Promise.map(data.files, function (f) { return writeFileAsync(logicalDirname, f.name, f.content); }); })
                     .then(function () { return writeFileAsync(logicalDirname, HEADER_JSON, JSON.stringify(data.header, null, 4)); })
                     .then(function () { return readPkgAsync(logicalDirname, false); });

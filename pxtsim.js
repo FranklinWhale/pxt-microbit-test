@@ -1,13 +1,23 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 // Helpers designed to help to make a simulator accessible.
 var pxsim;
 (function (pxsim) {
@@ -23,7 +33,7 @@ var pxsim;
             if (handlerKeyDown) {
                 elem.addEventListener('keydown', function (e) {
                     var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
-                    if (charCode === 32 || charCode === 13) {
+                    if (charCode === 32 || charCode === 13) { // Enter or Space key
                         handlerKeyDown();
                     }
                 });
@@ -31,7 +41,7 @@ var pxsim;
             if (handlerKeyUp) {
                 elem.addEventListener('keyup', function (e) {
                     var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
-                    if (charCode === 32 || charCode === 13) {
+                    if (charCode === 32 || charCode === 13) { // Enter or Space key
                         handlerKeyUp();
                     }
                 });
@@ -386,7 +396,7 @@ var pxsim;
                 var colIdx = part.startColumnIdx + pin.bbFit.partRelativeColIdx;
                 var colName = pxsim.visuals.getColumnName(colIdx);
                 var pinRowIdx = part.startRowIdx + pin.bbFit.partRelativeRowIdx;
-                if (pinRowIdx >= 7)
+                if (pinRowIdx >= 7) //account for middle gap
                     pinRowIdx -= 2;
                 if (isConnectedToBB(pin.def)) {
                     //make a wire from bb top or bottom to target
@@ -528,7 +538,7 @@ var pxsim;
                 pxsim.U.assert(typeof location === "string", "Unknown location type: " + location);
                 var mbPin = location;
                 var boardPin = this.opts.boardDef.gpioPinMap[mbPin] || mbPin;
-                if (!boardPin) {
+                if (!boardPin) { // this pin is internal
                     console.debug("unknown pin location for " + mbPin);
                     return undefined;
                 }
@@ -694,7 +704,7 @@ var pxsim;
                 .filter(function (p) { return isConnectedToBB(p.def); })
                 .map(function (p) {
                 var rowIdx = ir.startRowIdx + p.bbFit.partRelativeRowIdx;
-                if (rowIdx >= 7)
+                if (rowIdx >= 7) //account for middle gap
                     rowIdx -= 2;
                 var rowName = pxsim.visuals.getRowName(rowIdx);
                 var colIdx = ir.startColumnIdx + p.bbFit.partRelativeColIdx;
@@ -1649,13 +1659,13 @@ var pxsim;
                 Object.defineProperty(Object, "assign", {
                     value: function assign(target, varArgs) {
                         'use strict';
-                        if (target == null) {
+                        if (target == null) { // TypeError if undefined or null
                             throw new TypeError('Cannot convert undefined or null to object');
                         }
                         var to = Object(target);
                         for (var index = 1; index < arguments.length; index++) {
                             var nextSource = arguments[index];
-                            if (nextSource != null) {
+                            if (nextSource != null) { // Skip over if undefined or null
                                 for (var nextKey in nextSource) {
                                     // Avoid bugs when hasOwnProperty is shadowed
                                     if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
@@ -2482,7 +2492,6 @@ var pxsim;
         var PARTS_BB_SCALE = 0.25;
         var PARTS_CMP_SCALE = 0.3;
         var PARTS_WIRE_SCALE = 0.23;
-        var BACK_PAGE_BOARD_WIDTH = PANEL_WIDTH - PANEL_PADDING * 1.5;
         var STYLE = "\n            .instr-panel {\n                margin: " + PANEL_MARGIN + "px;\n                padding: " + PANEL_PADDING + "px;\n                border-width: " + BORDER_WIDTH + "px;\n                border-color: " + BORDER_COLOR + ";\n                border-style: solid;\n                border-radius: " + BORDER_RADIUS + "px;\n                display: inline-block;\n                width: " + PANEL_WIDTH + "px;\n                height: " + PANEL_HEIGHT + "px;\n                position: relative;\n                overflow: hidden;\n                page-break-inside: avoid;\n            }\n            .board-svg {\n                margin: 0 auto;\n                display: block;\n                position: absolute;\n                bottom: " + BOARD_BOT + "px;\n                left: " + BOARD_LEFT + "px;\n            }\n            .panel-num-outer {\n                position: absolute;\n                left: " + -BORDER_WIDTH + "px;\n                top: " + -BORDER_WIDTH + "px;\n                width: " + NUM_BOX_SIZE + "px;\n                height: " + NUM_BOX_SIZE + "px;\n                border-width: " + BORDER_WIDTH + "px;\n                border-style: solid;\n                border-color: " + BORDER_COLOR + ";\n                border-radius: " + BORDER_RADIUS + "px 0 " + BORDER_RADIUS + "px 0;\n            }\n            .panel-num {\n                margin: " + NUM_MARGIN + "px 0;\n                text-align: center;\n                font-size: " + NUM_FONT + "px;\n            }\n            .cmp-div {\n                display: inline-block;\n            }\n            .reqs-div {\n                margin-left: " + (PANEL_PADDING + NUM_BOX_SIZE) + "px;\n                margin-top: 5px;\n            }\n            .partslist-wire,\n            .partslist-cmp {\n                margin: 10px;\n            }\n            .partslist-wire {\n                display: inline-block;\n            }\n            ";
         function mkTxt(p, txt, size) {
             var el = pxsim.svg.elt("text");
@@ -2904,14 +2913,6 @@ var pxsim;
             panel.appendChild(board.getView());
             return [panel, props];
         }
-        function mkFinalPanel(props) {
-            var panel = mkPanel();
-            pxsim.U.addClass(panel, "back-panel");
-            var board = mkBlankBoardAndBreadboard(props, BACK_PAGE_BOARD_WIDTH, false);
-            board.addAll(props.allAlloc);
-            panel.appendChild(board.getView());
-            return panel;
-        }
         function renderParts(container, options) {
             if (!options.boardDef.pinStyles)
                 options.boardDef.pinStyles = {};
@@ -2939,6 +2940,7 @@ var pxsim;
                 fnArgs: options.fnArgs,
                 getBBCoord: dummyBreadboard.getCoord.bind(dummyBreadboard)
             });
+            props.allAlloc.requiresBreadboard = true;
             //front page
             var frontPanel = updateFrontPanel(props);
             //all required parts
@@ -4722,7 +4724,10 @@ var pxsim;
             createBuffer: pxsim.BufferMethods.createBuffer,
         };
         myRT.control = {
-            inBackground: pxsim.thread.runInBackground
+            inBackground: pxsim.thread.runInBackground,
+            createBuffer: pxsim.BufferMethods.createBuffer,
+            dmesg: function (s) { return console.log("DMESG: " + s); },
+            __log: function (pri, s) { return console.log("LOG: " + s.trim()); },
         };
     }
     pxsim.initBareRuntime = initBareRuntime;
@@ -4773,8 +4778,8 @@ var pxsim;
             // in order semantics for events and handlers
             return Promise.each(events, function (value) {
                 return Promise.each(_this.handlers, function (handler) {
-                    return (_a = _this.runtime).runFiberAsync.apply(_a, [handler].concat((_this.valueToArgs ? _this.valueToArgs(value) : [value])));
                     var _a;
+                    return (_a = _this.runtime).runFiberAsync.apply(_a, __spreadArrays([handler], (_this.valueToArgs ? _this.valueToArgs(value) : [value])));
                 });
             }).then(function () {
                 // if some events arrived while processing above then keep processing
@@ -5353,7 +5358,7 @@ var pxsim;
                 return fn;
             }
             // tslint:disable-next-line
-            var entryPoint = eval(msg.code)(evalIface);
+            var entryPoint = msg.code && eval(msg.code)(evalIface);
             this.run = function (cb) { return topCall(entryPoint, cb); };
             this.getResume = function () {
                 if (!currResume)
@@ -5656,7 +5661,7 @@ var pxsim;
                     for (i = 0; i < n; ++i)
                         if (d0[i] != d1[i])
                             break;
-                    if (i == n)
+                    if (i == n) // same, don't send update
                         return;
                 }
                 _this.recordingLastImageData = imageData;
@@ -5917,6 +5922,21 @@ var pxsim;
             if (frame)
                 frame.focus();
         };
+        SimulatorDriver.prototype.registerDependentEditor = function (w) {
+            if (!w)
+                return;
+            if (!this._dependentEditors)
+                this._dependentEditors = [];
+            this._dependentEditors.push(w);
+        };
+        SimulatorDriver.prototype.dependentEditors = function () {
+            if (this._dependentEditors) {
+                this._dependentEditors = this._dependentEditors.filter(function (w) { return !!w.parent; });
+                if (!this._dependentEditors.length)
+                    this._dependentEditors = undefined;
+            }
+            return this._dependentEditors;
+        };
         SimulatorDriver.prototype.setStarting = function () {
             this.setState(SimulatorState.Starting);
         };
@@ -6033,18 +6053,37 @@ var pxsim;
                 this.hwdbg.postMessage(msg);
                 return;
             }
-            // dispatch to all iframe besides self
-            var frames = this.simFrames();
             var broadcastmsg = msg;
+            var depEditors = this.dependentEditors();
+            var frames = this.simFrames();
             if (source && broadcastmsg && !!broadcastmsg.broadcast) {
-                if (frames.length < 2) {
-                    this.container.appendChild(this.createFrame());
-                    frames = this.simFrames();
+                // the editor is hosted in a multi-editor setting
+                // don't start extra frames
+                var parentWindow = window.parent && window.parent !== window.window
+                    ? window.parent : window.opener;
+                if (this.options.nestedEditorSim && parentWindow) {
+                    // if message comes from parent already, don't echo
+                    if (source !== parentWindow)
+                        parentWindow.postMessage(msg, "*");
                 }
-                else if (frames[1].dataset['runid'] != this.runId) {
-                    this.startFrame(frames[1]);
+                else if (depEditors) {
+                    depEditors.forEach(function (w) {
+                        if (source !== w)
+                            w.postMessage(msg, "*");
+                    });
+                }
+                else {
+                    // start secondary frame if needed
+                    if (frames.length < 2) {
+                        this.container.appendChild(this.createFrame());
+                        frames = this.simFrames();
+                    }
+                    else if (frames[1].dataset['runid'] != this.runId) {
+                        this.startFrame(frames[1]);
+                    }
                 }
             }
+            // dispatch message to other frames
             for (var i = 0; i < frames.length; ++i) {
                 var frame = frames[i];
                 // same frame as source
@@ -6275,7 +6314,7 @@ var pxsim;
                 this.container.appendChild(wrapper);
                 frame = wrapper.firstElementChild;
             }
-            else
+            else // reuse simulator
                 this.startFrame(frame);
             this.setState(SimulatorState.Running);
             this.setTraceInterval(this.traceInterval);
@@ -6994,7 +7033,7 @@ var pxsim;
         }
         function sendMidiMessage(buf) {
             var data = buf.data;
-            if (!data.length)
+            if (!data.length) // garbage.
                 return;
             // no midi access or no midi element,
             // limited interpretation of midi commands
@@ -7005,14 +7044,14 @@ var pxsim;
             var velocity = data[2] || 0;
             //console.log(`midi: cmd ${cmd} channel (-1) ${channel} note ${noteNumber} f ${noteFrequency} v ${velocity}`)
             // play drums regardless
-            if (cmd == 8 || ((cmd == 9) && (velocity == 0))) {
+            if (cmd == 8 || ((cmd == 9) && (velocity == 0))) { // with MIDI, note on with velocity zero is the same as note off
                 // note off
                 stopTone();
             }
             else if (cmd == 9) {
                 // note on -- todo handle velocity
                 tone(noteFrequency, 1);
-                if (channel == 9)
+                if (channel == 9) // drums don't call noteOff
                     setTimeout(function () { return stopTone(); }, 500);
             }
         }
@@ -7754,7 +7793,7 @@ var pxsim;
                 allocRes.partsAndWires.forEach(function (pAndWs) {
                     var wires = pAndWs.wires;
                     var wiresOk = wires && wires.every(function (w) { return _this.wireFactory.checkWire(w.start, w.end); });
-                    if (wiresOk)
+                    if (wiresOk) // try to add all the wires
                         wires.forEach(function (w) { return allocRes.wires.push(_this.addWire(w)); });
                     var part = pAndWs.part;
                     if (part && (!wires || wiresOk))

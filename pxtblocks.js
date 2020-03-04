@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -463,7 +466,8 @@ var pxt;
             else if (!c.type) {
                 c.parentType = p;
             }
-            p.isArrayType = true;
+            if (isArrayType(p.type))
+                p.isArrayType = true;
         }
         function getConcreteType(point, found) {
             if (found === void 0) { found = []; }
@@ -474,7 +478,12 @@ var pxt;
                     if (t.parentType) {
                         var parent_1 = getConcreteType(t.parentType, found);
                         if (parent_1.type && parent_1.type !== "Array") {
-                            t.type = parent_1.type.substr(0, parent_1.type.length - 2);
+                            if (isArrayType(parent_1.type)) {
+                                t.type = parent_1.type.substr(0, parent_1.type.length - 2);
+                            }
+                            else {
+                                t.type = parent_1.type;
+                            }
                             return t;
                         }
                     }
@@ -951,7 +960,7 @@ var pxt;
         function compileVariableGet(e, b) {
             var name = b.getField("VAR").getText();
             var binding = lookup(e, b, name);
-            if (!binding)
+            if (!binding) // trying to compile a disabled block with a bogus variable
                 return blocks_1.mkText(name);
             assert(binding != null && binding.type != null);
             return blocks_1.mkText(binding.escapedName);
@@ -1300,7 +1309,7 @@ var pxt;
                     // Otherwise, after the first compile the function will be renamed because it conflicts
                     // with itself. You can still get collisions if you attempt to define a function with
                     // the same name as a function defined in another file in the user's project (e.g. custom.ts)
-                    if (info.pkg && (info.kind === 6 /* Enum */ || info.kind === 3 /* Function */ || info.kind === 5 /* Module */)) {
+                    if (info.pkg && (info.kind === 6 /* Enum */ || info.kind === 3 /* Function */ || info.kind === 5 /* Module */ || info.kind === 4 /* Variable */)) {
                         e.renames.takenNames[info.qName] = true;
                     }
                 });
@@ -1546,6 +1555,7 @@ var pxt;
                     flagDuplicate(ts.pxtc.ON_START_TYPE, b);
                 else if (isFunctionDefinition(b) || call && call.attrs.blockAllowMultiple && !call.attrs.handlerStatement)
                     return;
+                // is this an event?
                 else if (call && call.hasHandler && !call.attrs.handlerStatement) {
                     // compute key that identifies event call
                     // detect if same event is registered already
@@ -1562,16 +1572,19 @@ var pxt;
                 }
             });
         }
-        function findBlockId(sourceMap, loc) {
+        function findBlockIdByPosition(sourceMap, loc) {
             if (!loc)
                 return undefined;
             var bestChunk;
             var bestChunkLength;
+            // look for smallest chunk containing the block
             for (var i = 0; i < sourceMap.length; ++i) {
                 var chunk = sourceMap[i];
-                if (chunk.start <= loc.start && chunk.end > loc.start + loc.length && (!bestChunk || bestChunkLength > chunk.end - chunk.start)) {
+                if (chunk.startPos <= loc.start
+                    && chunk.endPos >= loc.start + loc.length
+                    && (!bestChunk || bestChunkLength > chunk.endPos - chunk.startPos)) {
                     bestChunk = chunk;
-                    bestChunkLength = chunk.end - chunk.start;
+                    bestChunkLength = chunk.endPos - chunk.startPos;
                 }
             }
             if (bestChunk) {
@@ -1579,7 +1592,28 @@ var pxt;
             }
             return undefined;
         }
-        blocks_1.findBlockId = findBlockId;
+        blocks_1.findBlockIdByPosition = findBlockIdByPosition;
+        function findBlockIdByLine(sourceMap, loc) {
+            if (!loc)
+                return undefined;
+            var bestChunk;
+            var bestChunkLength;
+            // look for smallest chunk containing the block
+            for (var i = 0; i < sourceMap.length; ++i) {
+                var chunk = sourceMap[i];
+                if (chunk.startLine <= loc.start
+                    && chunk.endLine > loc.start + loc.length
+                    && (!bestChunk || bestChunkLength > chunk.endLine - chunk.startLine)) {
+                    bestChunk = chunk;
+                    bestChunkLength = chunk.endLine - chunk.startLine;
+                }
+            }
+            if (bestChunk) {
+                return bestChunk.id;
+            }
+            return undefined;
+        }
+        blocks_1.findBlockIdByLine = findBlockIdByLine;
         function compileAsync(b, blockInfo) {
             var e = mkEnv(b, blockInfo);
             var _a = compileWorkspace(e, b), nodes = _a[0], diags = _a[1], decl = _a[2];
@@ -2212,6 +2246,27 @@ var pxt;
 (function (pxt) {
     var blocks;
     (function (blocks) {
+        // sniff ids to see if the xml was completly reconstructed
+        function needsDecompiledDiff(oldXml, newXml) {
+            if (!oldXml || !newXml)
+                return false;
+            // collect all ids
+            var oldids = {};
+            oldXml.replace(/id="([^"]+)"/g, function (m, id) { oldids[id] = true; return ""; });
+            if (!Object.keys(oldids).length)
+                return false;
+            // test if any newid exists in old
+            var total = 0;
+            var found = 0;
+            newXml.replace(/id="([^"]+)"/g, function (m, id) {
+                total++;
+                if (oldids[id])
+                    found++;
+                return "";
+            });
+            return total > 0 && found == 0;
+        }
+        blocks.needsDecompiledDiff = needsDecompiledDiff;
         function diffXml(oldXml, newXml, options) {
             var oldWs = pxt.blocks.loadWorkspaceXml(oldXml, true);
             var newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
@@ -2240,9 +2295,7 @@ var pxt;
                 Blockly.Events.enable();
             }
         }
-        function diffWorkspaceNoEvents(oldWs, newWs, options) {
-            pxt.tickEvent("blocks.diff", { started: 1 });
-            options = options || {};
+        function logger() {
             var log = pxt.options.debug || (window && /diffdbg=1/.test(window.location.href))
                 ? console.log : function (message) {
                 var args = [];
@@ -2250,6 +2303,12 @@ var pxt;
                     args[_i - 1] = arguments[_i];
                 }
             };
+            return log;
+        }
+        function diffWorkspaceNoEvents(oldWs, newWs, options) {
+            pxt.tickEvent("blocks.diff", { started: 1 });
+            options = options || {};
+            var log = logger();
             if (!oldWs) {
                 return {
                     ws: undefined,
@@ -2340,20 +2399,22 @@ var pxt;
             // 3. delete statement blocks
             // inject deleted blocks in new workspace
             var dids = {};
-            var deletedStatementBlocks = deletedBlocks
-                .filter(function (b) { return !todoBlocks[b.id]
-                && !isUsed(b)
-                && (!b.outputConnection || !b.outputConnection.isConnected()); } // ignore reporters
-            );
-            deletedStatementBlocks
-                .forEach(function (b) {
-                var b2 = cloneIntoDiff(b);
-                dids[b.id] = b2.id;
-                log("deleted block " + b.toDevString() + "->" + b2.toDevString());
-            });
-            // connect deleted blocks together
-            deletedStatementBlocks
-                .forEach(function (b) { return stitch(b); });
+            if (!options.hideDeletedBlocks) {
+                var deletedStatementBlocks = deletedBlocks
+                    .filter(function (b) { return !todoBlocks[b.id]
+                    && !isUsed(b)
+                    && (!b.outputConnection || !b.outputConnection.isConnected()); } // ignore reporters
+                );
+                deletedStatementBlocks
+                    .forEach(function (b) {
+                    var b2 = cloneIntoDiff(b);
+                    dids[b.id] = b2.id;
+                    log("deleted block " + b.toDevString() + "->" + b2.toDevString());
+                });
+                // connect deleted blocks together
+                deletedStatementBlocks
+                    .forEach(function (b) { return stitch(b); });
+            }
             // 4. moved blocks
             var modified = 0;
             pxt.Util.values(todoBlocks).filter(function (b) { return moved(b); }).forEach(function (b) {
@@ -2383,9 +2444,9 @@ var pxt;
             logTodo('cleaned');
             // all unmodifed blocks are greyed out
             pxt.Util.values(todoBlocks).filter(function (b) { return !!ws.getBlockById(b.id); }).forEach(function (b) {
-                b.setColour(UNMODIFIED_COLOR);
-                forceRender(b);
+                unmodified(b);
             });
+            logTodo('unmodified');
             // if nothing is left in the workspace, we "missed" change
             if (!ws.getAllBlocks().length) {
                 pxt.tickEvent("blocks.diff", { missed: 1 });
@@ -2503,13 +2564,13 @@ var pxt;
                 if (!oldPrevious && !newPrevious)
                     return false; // no connection
                 if (!!oldPrevious != !!newPrevious // new connection
-                    || oldPrevious.id != newPrevious.id)
+                    || oldPrevious.id != newPrevious.id) // new connected blocks
                     return true;
                 var oldNext = oldb.getNextBlock();
                 if (!oldNext && !newNext)
                     return false; // no connection
                 if (!!oldNext != !!newNext // new connection
-                    || oldNext.id != newNext.id)
+                    || oldNext.id != newNext.id) // new connected blocks
                     return true;
                 return false;
             }
@@ -2530,6 +2591,17 @@ var pxt;
                 // not changed!
                 return false;
             }
+            function unmodified(b) {
+                b.setColour(UNMODIFIED_COLOR);
+                forceRender(b);
+                if (options.statementsOnly) {
+                    // mark all nested reporters as unmodified
+                    (b.inputList || [])
+                        .map(function (input) { return input.type == Blockly.INPUT_VALUE && input.connection && input.connection.targetBlock(); })
+                        .filter(function (argBlock) { return !!argBlock; })
+                        .forEach(function (argBlock) { return unmodified(argBlock); });
+                }
+            }
         }
         function mergeXml(xmlA, xmlO, xmlB) {
             if (xmlA == xmlO)
@@ -2548,7 +2620,9 @@ var pxt;
                 if (!keepChildren) {
                     if (e.localName == "next")
                         e.remove(); // disconnect or unplug not working propertly
-                    if (e.localName == "statement")
+                    else if (e.localName == "statement")
+                        e.remove();
+                    else if (e.localName == "shadow") // ignore internal nodes
                         e.remove();
                 }
             });
@@ -2571,6 +2645,74 @@ var pxt;
                 visDom(child, f);
             }
         }
+        function decompiledDiffAsync(oldTs, oldResp, newTs, newResp, options) {
+            if (options === void 0) { options = {}; }
+            var log = logger();
+            var oldXml = oldResp.outfiles['main.blocks'];
+            var newXml = newResp.outfiles['main.blocks'];
+            log(oldXml);
+            log(newXml);
+            // compute diff of typescript sources
+            var diffLines = pxt.diff.compute(oldTs, newTs, {
+                ignoreWhitespace: true,
+                full: true
+            });
+            log(diffLines);
+            // build old -> new lines mapping
+            var newids = {};
+            var oldLineStart = 0;
+            var newLineStart = 0;
+            diffLines.forEach(function (ln, index) {
+                // moving cursors
+                var marker = ln[0];
+                var line = ln.substr(2);
+                var lineLength = line.length;
+                switch (marker) {
+                    case "-": // removed
+                        oldLineStart += lineLength + 1;
+                        break;
+                    case "+": // added
+                        newLineStart += lineLength + 1;
+                        break;
+                    default: // unchanged
+                        // skip leading white space
+                        var lw = /^\s+/.exec(line);
+                        if (lw) {
+                            var lwl = lw[0].length;
+                            oldLineStart += lwl;
+                            newLineStart += lwl;
+                            lineLength -= lwl;
+                        }
+                        // find block ids mapped to the ranges
+                        var newid = pxt.blocks.findBlockIdByPosition(newResp.blockSourceMap, {
+                            start: newLineStart,
+                            length: lineLength
+                        });
+                        if (newid && !newids[newid]) {
+                            var oldid = pxt.blocks.findBlockIdByPosition(oldResp.blockSourceMap, {
+                                start: oldLineStart,
+                                length: lineLength
+                            });
+                            // patch workspace
+                            if (oldid) {
+                                log(ln);
+                                log("id " + oldLineStart + ":" + line.length + ">" + oldid + " ==> " + newLineStart + ":" + line.length + ">" + newid);
+                                newids[newid] = oldid;
+                                newXml = newXml.replace(newid, oldid);
+                            }
+                        }
+                        oldLineStart += lineLength + 1;
+                        newLineStart += lineLength + 1;
+                        break;
+                }
+            });
+            // parse workspacews
+            var oldWs = pxt.blocks.loadWorkspaceXml(oldXml, true);
+            var newWs = pxt.blocks.loadWorkspaceXml(newXml, true);
+            options.statementsOnly = true; // no info on expression diffs
+            return diffWorkspace(oldWs, newWs, options);
+        }
+        blocks.decompiledDiffAsync = decompiledDiffAsync;
     })(blocks = pxt.blocks || (pxt.blocks = {}));
 })(pxt || (pxt = {}));
 ///<reference path='../localtypings/pxtblockly.d.ts'/>
@@ -2662,8 +2804,8 @@ var pxt;
             if (skipReport === void 0) { skipReport = false; }
             var workspace = new Blockly.Workspace();
             try {
-                var dom = Blockly.Xml.textToDom(xml);
-                pxt.blocks.domToWorkspaceNoEvents(dom, workspace);
+                var dom_1 = Blockly.Xml.textToDom(xml);
+                pxt.blocks.domToWorkspaceNoEvents(dom_1, workspace);
                 return workspace;
             }
             catch (e) {
@@ -2676,7 +2818,7 @@ var pxt;
         function patchFloatingBlocks(dom, info) {
             var onstarts = getBlocksWithType(dom, ts.pxtc.ON_START_TYPE);
             var onstart = onstarts.length ? onstarts[0] : undefined;
-            if (onstart) {
+            if (onstart) { // nothing to do
                 onstart.removeAttribute("deletable");
                 return;
             }
@@ -3115,6 +3257,7 @@ var pxt;
                     var href = image.getAttributeNS(XLINK_NAMESPACE, "href");
                     return href && !/^data:/.test(href);
                 })
+                    .map(function (img) { return img; })
                     .map(function (image) {
                     var href = image.getAttributeNS(XLINK_NAMESPACE, "href");
                     var dataUri = imageXLinkCache[href];
@@ -3123,9 +3266,11 @@ var pxt;
                             .then(function (img) {
                             var cvs = document.createElement("canvas");
                             var ctx = cvs.getContext("2d");
-                            cvs.width = img.width;
-                            cvs.height = img.height;
-                            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, cvs.width, cvs.height);
+                            var w = img.width;
+                            var h = img.height;
+                            cvs.width = w;
+                            cvs.height = h;
+                            ctx.drawImage(img, 0, 0, w, h, 0, 0, cvs.width, cvs.height);
                             imageXLinkCache[href] = dataUri = cvs.toDataURL("image/png");
                             return dataUri;
                         }).catch(function (e) {
@@ -3145,6 +3290,7 @@ var pxt;
                 var images = xsg.getElementsByTagName("image");
                 var p = pxt.Util.toArray(images)
                     .filter(function (image) { return /^data:image\/svg\+xml/.test(image.getAttributeNS(XLINK_NAMESPACE, "href")); })
+                    .map(function (img) { return img; })
                     .map(function (image) {
                     var svgUri = image.getAttributeNS(XLINK_NAMESPACE, "href");
                     var width = parseInt(image.getAttribute("width").replace(/[^0-9]/g, ""));
@@ -3198,7 +3344,7 @@ var pxt;
                         }
                     }
                     var f = formattable(block);
-                    if (!onStart && !block.disabled && block.type === pxtc.ON_START_TYPE) {
+                    if (!onStart && !block.disabled && block.type === pxtc.ON_START_TYPE) { // there might be duplicate on-start blocks
                         onStart = f;
                     }
                     else {
@@ -3410,6 +3556,7 @@ var pxt;
                 return field;
             }
             var isVariable = shadowId == "variables_get";
+            var isText = shadowId == "text";
             var value = document.createElement("value");
             value.setAttribute("name", p.definitionName);
             var isArray = isArrayType(p.type);
@@ -3471,6 +3618,10 @@ var pxt;
                 field.textContent = defaultValue;
                 if (isVariable) {
                     field.setAttribute("name", "VAR");
+                    shadow.appendChild(field);
+                }
+                else if (isText) {
+                    field.setAttribute("name", "TEXT");
                     shadow.appendChild(field);
                 }
                 else if (shadowId) {
@@ -3765,7 +3916,7 @@ var pxt;
                 || 255;
             if (fn.attributes.help)
                 block.setHelpUrl("/reference/" + fn.attributes.help.replace(/^\//, ''));
-            else if (fn.pkg && !pxt.appTarget.bundledpkgs[fn.pkg]) {
+            else if (fn.pkg && !pxt.appTarget.bundledpkgs[fn.pkg]) { // added package
                 var anchor = fn.qName.toLowerCase().split('.');
                 if (anchor[0] == fn.pkg)
                     anchor.shift();
@@ -4849,7 +5000,7 @@ var pxt;
                             {
                                 "type": "input_value",
                                 "name": "LIST",
-                                "check": "Array"
+                                "check": ["Array", "String"]
                             }
                         ],
                         "previousStatement": null,
@@ -6243,13 +6394,13 @@ var pxt;
             };
             ArrayMutator.prototype.updateBlock = function (subBlocks) {
                 if (subBlocks) {
-                    var diff = Math.abs(this.count - subBlocks.length);
+                    var diff_1 = Math.abs(this.count - subBlocks.length);
                     if (this.count < subBlocks.length) {
-                        for (var i = 0; i < diff; i++)
+                        for (var i = 0; i < diff_1; i++)
                             this.addNumberField(true, this.count);
                     }
                     else if (this.count > subBlocks.length) {
-                        for (var i = 0; i < diff; i++)
+                        for (var i = 0; i < diff_1; i++)
                             this.removeNumberField();
                     }
                 }
@@ -6418,7 +6569,7 @@ var pxt;
                     if (workspace.cleanUp_)
                         workspace.cleanUp_();
                     break;
-                default:// do nothing
+                default: // do nothing
                     break;
             }
             var metrics = workspace.getMetrics();
@@ -6677,15 +6828,15 @@ var pxt;
                     return;
                 }
                 if (currentlyVisible > actuallyVisible) {
-                    var diff = currentlyVisible - actuallyVisible;
-                    for (var j = 0; j < diff; j++) {
+                    var diff_2 = currentlyVisible - actuallyVisible;
+                    for (var j = 0; j < diff_2; j++) {
                         var arg = handlerArgs[actuallyVisible + j];
                         i.insertFieldAt(i.fieldRow.length - 1, new Blockly.FieldVariable(arg.name), "HANDLER_" + arg.name);
                     }
                 }
                 else {
-                    var diff = actuallyVisible - currentlyVisible;
-                    for (var j = 0; j < diff; j++) {
+                    var diff_3 = actuallyVisible - currentlyVisible;
+                    for (var j = 0; j < diff_3; j++) {
                         var arg = handlerArgs[actuallyVisible - j - 1];
                         i.removeField("HANDLER_" + arg.name);
                     }
@@ -8184,7 +8335,7 @@ var pxtblockly;
             // Select the first item if the enter key is pressed
             searchBar.addEventListener("keyup", function (e) {
                 var code = e.which;
-                if (code == 13) {
+                if (code == 13) { /* Enter key */
                     // Select the first item in the list
                     var firstRow = tableContainer.childNodes[0];
                     if (firstRow) {
@@ -9260,7 +9411,7 @@ var pxtblockly;
             return this.stringRep;
         };
         FieldCustomMelody.prototype.doValueUpdate_ = function (newValue) {
-            if (newValue == null || newValue == "" || newValue == "\"\"" || (this.stringRep && this.stringRep === newValue)) {
+            if (newValue == null || newValue == "" || newValue == "\"\"" || (this.stringRep && this.stringRep === newValue)) { // ignore empty strings
                 return;
             }
             this.stringRep = newValue;
@@ -9501,7 +9652,7 @@ var pxtblockly;
                                 else {
                                     this.tempoInput.value = this.tempo + "";
                                 }
-                            else {
+                            else { // Editor to block
                                 if (tempoBlock.type === "math_number_minmax") {
                                     tempoBlock.setFieldValue(this.tempoInput.value, "SLIDER");
                                 }
@@ -11189,8 +11340,8 @@ var pxtblockly;
                 var allRefs = pxtblockly.getAllBlocksWithTilemaps(ws);
                 var _loop_3 = function (old) {
                     pxtblockly.deleteTilesetTileIfExists(ws, old);
-                    for (var _i = 0, allRefs_1 = allRefs; _i < allRefs_1.length; _i++) {
-                        var ref = allRefs_1[_i];
+                    for (var _i = 0, allRefs_2 = allRefs; _i < allRefs_2.length; _i++) {
+                        var ref = allRefs_2[_i];
                         if (!ref.parsed) {
                             var existing_2 = ref.block.getFieldValue(ref.field);
                             ref.parsed = pxt.sprite.decodeTilemap(existing_2, "typescript");
@@ -11206,8 +11357,8 @@ var pxtblockly;
                     var old = deleted_1[_i];
                     _loop_3(old);
                 }
-                for (var _a = 0, allRefs_2 = allRefs; _a < allRefs_2.length; _a++) {
-                    var ref = allRefs_2[_a];
+                for (var _a = 0, allRefs_1 = allRefs; _a < allRefs_1.length; _a++) {
+                    var ref = allRefs_1[_a];
                     if (ref.parsed) {
                         ref.block.setFieldValue(pxt.sprite.encodeTilemap(ref.parsed, "typescript"), ref.field);
                     }
