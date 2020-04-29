@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1686,11 +1717,11 @@
         <h1 id="multi-dice">Multi Dice</h1><h2 id="introduction-unplugged">Introduction </h2><p><img class="ui image" src="/static/mb/projects/multi-dice.png" alt="Multiple micro:bit throwing a dice" loading="lazy"></p>
 <p>Build a multi-player dice game using the <strong>radio</strong>. The <strong>radio</strong> blocks let you send wireless messages between a micro:bit and another micro:bit.</p>
 <p>In this game, you shake to “throw the dice” and send the result to the other micro:bit. If you receive a result of a dice throw equal or greater than yours, you lose.</p>
-<h2 id="dice-game-fullscreen">Dice game </h2><p>Let’s start by rebuilding the <strong>dice</strong> game. If you are unsure about the details, try the <strong>dice</strong> tutorial again.</p>
+<h2 id="dice-game">Dice game</h2><p>Let’s start by rebuilding the <strong>dice</strong> game. If you are unsure about the details, try the <strong>dice</strong> tutorial again.</p>
 <pre><code class="lang-blocks">input.onGesture(Gesture.Shake, function () {
     basic.showNumber(Math.randomRange(1, 6))
 })</code></pre>
-<h2 id="dice-variable-fullscreen">Dice variable </h2><p>We need to store the result of the dice cast in a variable. A <strong>variable</strong> is like a place in the memory of the micro:bit where you save information, like numbers.</p>
+<h2 id="dice-variable">Dice variable</h2><p>We need to store the result of the dice cast in a variable. A <strong>variable</strong> is like a place in the memory of the micro:bit where you save information, like numbers.</p>
 <ul>
 <li>Go to the <strong>Variables</strong> toolbox and click <code>||Make a Variable||</code> to create a new variable. We will call it <strong>dice</strong>. </li>
 <li>Add a <code>||set dice to||</code> block and drag the <code>||pick random||</code> into it.</li>
@@ -1701,17 +1732,17 @@ input.onGesture(Gesture.Shake, function () {
     dice = Math.randomRange(1, 6)
     basic.showNumber(dice)
 })</code></pre>
-<h2 id="send-the-dice-fullscreen">Send the dice </h2><p>Put in a <code>||radio:send number||</code> and a <code>||dice||</code> to send the value stored in the <code>dice</code> variable via radio.</p>
+<h2 id="send-the-dice">Send the dice</h2><p>Put in a <code>||radio:send number||</code> and a <code>||dice||</code> to send the value stored in the <code>dice</code> variable via radio.</p>
 <pre><code class="lang-blocks">let dice = 0
 input.onGesture(Gesture.Shake, function () {
     dice = Math.randomRange(1, 6)
     basic.showNumber(dice)
     radio.sendNumber(dice)
 })</code></pre>
-<h2 id="receive-the-dice-fullscreen">Receive the dice </h2><p>Go get an <code>||radio:on received number||</code> event block. This event runs when a radio message from another micro:bit arrives. The <code>receivedNumber</code> value is the value of the dice in this game.</p>
+<h2 id="receive-the-dice">Receive the dice</h2><p>Go get an <code>||radio:on received number||</code> event block. This event runs when a radio message from another micro:bit arrives. The <code>receivedNumber</code> value is the value of the dice in this game.</p>
 <pre><code class="lang-blocks">radio.onReceivedNumber(function (receivedNumber) {
 })</code></pre>
-<h2 id="check-your-cast-fullscreen">Check your cast </h2><p>Add a <code>||logic:if||</code> block to test if <code>receivedNumber</code> is greater or equal to <code>dice</code>. 
+<h2 id="check-your-cast">Check your cast</h2><p>Add a <code>||logic:if||</code> block to test if <code>receivedNumber</code> is greater or equal to <code>dice</code>. 
 If is, you lost so display a sad face on the screen.</p>
 <pre><code class="lang-blocks">let dice = 0;
 radio.onReceivedNumber(function (receivedNumber) {
@@ -1719,7 +1750,7 @@ radio.onReceivedNumber(function (receivedNumber) {
         basic.showIcon(IconNames.Sad)
     }
 })</code></pre>
-<h2 id="test-it-fullscreen">Test it! </h2><p>Try pressing <strong>SHAKE</strong> in the simulator and see that a second micro:bit appears. You can play the game on both virtual boards.</p>
+<h2 id="test-it-">Test it!</h2><p>Try pressing <strong>SHAKE</strong> in the simulator and see that a second micro:bit appears. You can play the game on both virtual boards.</p>
 <p>If you have more than one micro:bit, download your code onto each one and try playing the game with your friends!</p>
 <pre><code class="lang-blocks">let dice = 0
 input.onGesture(Gesture.Shake, function () {
@@ -1771,7 +1802,7 @@ radio.onReceivedNumber(function (receivedNumber) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

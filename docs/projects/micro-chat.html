@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1685,27 +1716,27 @@
     <div class="ui text">
         <h1 id="micro-chat">Micro Chat</h1><h2 id="introduction-unplugged">Introduction </h2><p><img class="ui image" src="/static/mb/projects/a9-radio.png" alt="Two micro:bit connected via radio" loading="lazy"></p>
 <p>Use the <strong>radio</strong> to send and receive messages with other micro:bit.</p>
-<h2 id="sending-a-message-fullscreen">Sending a message </h2><p>Use <code>||input:on button pressed||</code> to send a text message over radio with <code>||radio:send string||</code>.
+<h2 id="sending-a-message">Sending a message</h2><p>Use <code>||input:on button pressed||</code> to send a text message over radio with <code>||radio:send string||</code>.
 Every micro:bit nearby will receive this message.</p>
 <pre><code class="lang-blocks">input.onButtonPressed(Button.A, () =&gt; {
     radio.sendString(&quot;Yo&quot;);
 });</code></pre>
-<h2 id="receiving-a-message-fullscreen">Receiving a message </h2><p>Add a <code>||radio:on received string||</code> block to run when a message is received. </p>
+<h2 id="receiving-a-message">Receiving a message</h2><p>Add a <code>||radio:on received string||</code> block to run when a message is received. </p>
 <pre><code class="lang-blocks">radio.onReceivedString(function (receivedString) {
 })</code></pre>
-<h2 id="displaying-text-fullscreen">Displaying text </h2><p>Add a <code>||basic:show string||</code> to display the string on the screen. Pull the <code>||variables:receivedString||</code> out of <code>||radio:on received string||</code> and put it into <code>||basic:show string||</code>.</p>
+<h2 id="displaying-text">Displaying text</h2><p>Add a <code>||basic:show string||</code> to display the string on the screen. Pull the <code>||variables:receivedString||</code> out of <code>||radio:on received string||</code> and put it into <code>||basic:show string||</code>.</p>
 <pre><code class="lang-blocks">radio.onReceivedString(function (receivedString) {
     basic.showString(receivedString);
 })</code></pre>
-<h2 id="testing-in-the-simulator-fullscreen">Testing in the simulator </h2><p>Press button <strong>A</strong> on the simulator, you will notice that a second micro:bit appears (if your screen is too small, the simulator might decide not to show it). Try pressing <strong>A</strong> again and notice that the “Yo” message gets displayed on the other micro:bit.</p>
+<h2 id="testing-in-the-simulator">Testing in the simulator</h2><p>Press button <strong>A</strong> on the simulator, you will notice that a second micro:bit appears (if your screen is too small, the simulator might decide not to show it). Try pressing <strong>A</strong> again and notice that the “Yo” message gets displayed on the other micro:bit.</p>
 <pre><code class="lang-blocks">input.onButtonPressed(Button.A, () =&gt; {
     radio.sendString(&quot;Yo&quot;);
 });
 radio.onReceivedString(function (receivedString) {
     basic.showString(receivedString);
 })</code></pre>
-<h2 id="try-it-for-real-fullscreen">Try it for real </h2><p>If you two micro:bits, download the program to each one. Press button <strong>A</strong> on one and see if the other gets a message.</p>
-<h2 id="groups-fullscreen">Groups </h2><p>Use the <code>||radio:set group||</code> block to assign a <strong>group</strong> number to your program. You will only receive messages from micro:bits within the same group. Use this to avoid receiving messages from every micro:bit that is transmitting.</p>
+<h2 id="try-it-for-real">Try it for real</h2><p>If you two micro:bits, download the program to each one. Press button <strong>A</strong> on one and see if the other gets a message.</p>
+<h2 id="groups">Groups</h2><p>Use the <code>||radio:set group||</code> block to assign a <strong>group</strong> number to your program. You will only receive messages from micro:bits within the same group. Use this to avoid receiving messages from every micro:bit that is transmitting.</p>
 <pre><code class="lang-blocks">radio.setGroup(123)</code></pre>
 <pre><code class="lang-package">radio</code></pre>
 
@@ -1746,7 +1777,7 @@ radio.onReceivedString(function (receivedString) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

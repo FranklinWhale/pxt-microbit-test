@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,8 +1714,8 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="setup-and-procedure">Setup and procedure</h1><h2 id="setup">Setup</h2><p><strong>1.</strong> Plan and design the experiments.<br/>
-<strong>2.</strong> Connect the wires to the micro:bit with connections at pin <strong>0</strong> and the ground pin. The pin <strong>0</strong> will connect to the positive ( + ) end of the battery. The <strong>GND</strong> will connect to the negative ( - ) end of the battery.<br/>
+        <h1 id="setup-and-procedure">Setup and procedure</h1><h2 id="setup">Setup</h2><p><strong>1.</strong> Plan and design the experiments.<br />
+<strong>2.</strong> Connect the wires to the micro:bit with connections at pin <strong>0</strong> and the ground pin. The pin <strong>0</strong> will connect to the positive ( + ) end of the battery. The <strong>GND</strong> will connect to the negative ( - ) end of the battery.<br />
 <strong>3.</strong> Sample data from batteries with a voltmeter. This gives a way to “calibrate” the micro:bit’s program.</p>
 <p><img class="ui image" src="/static/courses/ucp-science/electricity/battery-tester-connect.jpg" alt="Connect a the test battery to the micro:bit" loading="lazy"></p>
 
@@ -1738,10 +1769,10 @@
 </tbody>
 </table>
 </blockquote>
-<p><strong>4.</strong> Plan and design data collection documents.<br/>
-<strong>5.</strong> Program the micro:bit.<br/>
-<strong>6.</strong> When the battery is connected to the micro:bit. buttton <strong>A</strong> will give a reading. Button <strong>B</strong> will give a reading in millivolts converted from the digital reading on pin <strong>0</strong>.<br/>
-<strong>7.</strong> Experiment with different batteries. Use good batteries and some older batteries.<br/>
+<p><strong>4.</strong> Plan and design data collection documents.<br />
+<strong>5.</strong> Program the micro:bit.<br />
+<strong>6.</strong> When the battery is connected to the micro:bit. buttton <strong>A</strong> will give a reading. Button <strong>B</strong> will give a reading in millivolts converted from the digital reading on pin <strong>0</strong>.<br />
+<strong>7.</strong> Experiment with different batteries. Use good batteries and some older batteries.<br />
 <strong>8.</strong> Report on the findings and observations in the experiments.</p>
 <h2 id="code">Code</h2><p>This project will use a micro:bit to read the voltage of an old battery to see if it is a good battery or needs to be thrown away.</p>
 <h3 id="makecode-programming-environment">MakeCode Programming Environment</h3><ol>
@@ -1789,7 +1820,7 @@ else if (condition 2)
 else
     action “poor”</code></pre><h3 id="moving-a-magnet-through-copper-wires">Moving a magnet through copper wires</h3><p>Set up an experiment using a loop of copper wires and see if the micro:bit can detect electricity being generated by moving the magnet in the loop.</p>
 <h2 id="data-collection">Data Collection</h2><p>Log each battery tested to make decision on which of the batteries are good and which ones need to be disposed of.</p>
-<p><br/></p>
+<p><br /></p>
 <table>
 <thead>
 <tr>
@@ -1844,7 +1875,7 @@ else
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

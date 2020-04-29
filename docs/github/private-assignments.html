@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,15 +1714,17 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="private-assignments">Private Assignments</h1><p>This page describes a methodology to manage private assignments via GitHub. 
-Each assignment is a <strong>private repository</strong> under the student’s account; where the teacher has been given <strong>collaborator</strong> access.
-The student does their work in a <strong>branch</strong> and returns their work by creating a <strong>pull request</strong> with the teacher as <strong>reviewer</strong>.</p>
+        <h1 id="private-assignments">Private Assignments</h1><p>This page describes how private assignments are managed via GitHub. In short, it works like this:</p>
+<ol>
+<li>Each assignment is a <strong>private repository</strong> under the student’s account; where the teacher has been given <strong>collaborator</strong> access.</li>
+<li>The student does their work in a <strong>branch</strong> and returns their work by creating a <strong>pull request</strong> with the teacher as <strong>reviewer</strong>.</li>
+</ol>
 <p>This collaboration method is quite similar to the way professional developers use GitHub.</p>
 
     <div class="ui info message">
         <div class="content">
             <h4 id="public-repositories">Public repositories</h4><p>Using <strong>public</strong> repositories simplifies a lot the configuration phase for the assignments.
-If it is acceptable for the code to be publically available on <a target="_blank" rel="nofollow noopener" href="https://github.com">https://github.com</a>, 
+If it is acceptable for the code to be publically available on <a target="_blank" rel="nofollow noopener" href="https://github.com">GitHub</a>, 
 we recommend using the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/public-assignments.html">public assignments</a>.</p>
 
         </div>
@@ -1712,10 +1745,10 @@ we recommend using the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs
 
         </div>
     </div>
-<h2 id="step-3-student-change-commit-push-cycle">Step 3: Student change, commit, push cycle</h2><p>It’s time to work! Students can create all their work and use the <strong>commit &amp; push</strong> button to save it. It is a good idea to encourage them to perform a commit whenever they feel
-they have made significant progress and to provide a meaningful description of the changes.</p>
-<h2 id="step-4-teacher-reviews-the-commit-history">Step 4: Teacher reviews the commit history</h2><p>The teacher can use the <a target="_blank" rel="nofollow noopener" href="https://makecode.com/github-explorer">MakeCode GitHub Explorer</a> to easily browse the repositories of a user. If needed, the teacher can also review the entire history of the project on GitHub.</p>
-<h2 id="step-5-optional-student-makes-the-repository-public">Step 5: (optional) Student makes the repository public</h2><p>If the student wants to add this project to his portfolio, he can simply make it public and it will be visible on his GitHub user page.</p>
+<h2 id="step-2-student-change-commit-push-cycle">Step 2: Student change, commit, push cycle</h2><p>It’s time to work! Students can create all their work and use the <strong>commit &amp; push</strong> button to save it. It is a good idea to encourage them to perform a commit whenever they feel
+they have made significant progress. Make sure they provide a meaningful description of the changes for the commit.</p>
+<h2 id="step-3-teacher-reviews-the-commit-history">Step 3: Teacher reviews the commit history</h2><p>The teacher can use the <a target="_blank" rel="nofollow noopener" href="https://makecode.com/github-explorer">MakeCode GitHub Explorer</a> to easily browse the repositories of a user. If needed, the teacher can also review the entire history of the project on GitHub.</p>
+<h2 id="step-4-optional-student-makes-the-repository-public">Step 4: (optional) Student makes the repository public</h2><p>If the student wants to add this project to their portfolio, they can simply make it public and it will be visible on their GitHub user page.</p>
 
     </div>
 
@@ -1754,7 +1787,7 @@ they have made significant progress and to provide a meaningful description of t
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

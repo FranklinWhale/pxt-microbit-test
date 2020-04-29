@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1758,10 +1789,10 @@ Toss the Ball</p>
 <h2 id="work-logs">Work logs</h2><p>Because students are working on the projects in class, and much of the benefit comes from working together to solve problems, they should account for the work they are doing by writing a work log. </p>
 <p>A work log is a short, bullet point list of what they worked on, and how long it took. Stick to the facts. It shouldn’t take more than thirty seconds or so to write up a work log. Students should do one for every class. A shared Microsoft OneNote notebook is a great way to keep a work log that students can update regularly. Alternately, you might use a collaborative shared document, or your classroom management system, or even e-mail.</p>
 <h3 id="sample-work-log">Sample Work Log</h3><blockquote>
-<p><strong><em>April 11</em></strong><br/>
-<em>20 min. Created code that reacts when pins P0 and P1 are pressed.</em><br/>
-<em>0 min. Talked with Mr. Kiang about how to attach wires so they won’t fall off</em><br/>
-<em>20 min. Put target back together with pins</em><br/>
+<p><strong><em>April 11</em></strong><br />
+<em>20 min. Created code that reacts when pins P0 and P1 are pressed.</em><br />
+<em>0 min. Talked with Mr. Kiang about how to attach wires so they won’t fall off</em><br />
+<em>20 min. Put target back together with pins</em><br />
 <em>10 min. Helped Cody with attaching his scoreboard</em></p>
 </blockquote>
 <h2 id="reflection">Reflection</h2><p>At the end of the week, students should compose a final reflection that summarizes the process of their learning over the course of the week. They should go back through their work logs and talk about the following:</p>
@@ -1779,29 +1810,29 @@ Toss the Ball</p>
 <p><em>“I spent this week finishing up little details with my program, making it work better and more user friendly. The part that surprised me the most was the little things that kept popping into my head, little suggestions that could potentially be good to add, but might not be necessary or even useful. At the beginning of the assignment, I just added them as quickly as I thought of them, but as the project neared the midpoint and conclusion, I find myself considering if I actually need them (as previous additions have been since quickly deleted). Another thing that I find interesting about this is that it is a rather specialized project. Not many people would use it except for me. However, this is supposed to be easily used by other people, so I have to take them into consideration as I design the project. I also realized that I had, at some point, broken part of my code without realizing it, so I now have to fix part of it. The reason that it is a problem is because I added a lot of code at once without deleting it, which is unfortunate. Next time I will add small amounts of code and test it first.”</em></p>
 </blockquote>
 <h2 id="assessment">Assessment</h2><p><strong>Competency scores</strong>: 4, 3, 2, 1</p>
-<h3 id="code-show-what-you-know">Code - Show what you know</h3><p><strong>4 =</strong> Code very effectively demonstrates the use of previous concept(s). Variable names are unique and clearly describe what information values the variables hold. Code is highly efficient.<br/>
-<strong>3 =</strong> Code only partially demonstrates previous concepts, and/or is not efficient.<br/>
-<strong>2 =</strong> Code only partially demonstrates previous concepts, and/or is not efficient, variable names not clear.<br/>
+<h3 id="code-show-what-you-know">Code - Show what you know</h3><p><strong>4 =</strong> Code very effectively demonstrates the use of previous concept(s). Variable names are unique and clearly describe what information values the variables hold. Code is highly efficient.<br />
+<strong>3 =</strong> Code only partially demonstrates previous concepts, and/or is not efficient.<br />
+<strong>2 =</strong> Code only partially demonstrates previous concepts, and/or is not efficient, variable names not clear.<br />
 <strong>1 =</strong> Code does not demonstrate previous concepts, is not efficient, variable names not clear.</p>
-<h3 id="code-show-something-new">Code - Show something new</h3><p><strong>4 =</strong> Code very effectively demonstrates the use of new concept(s). Variable names are unique and clearly describe what information values the variables hold. Code is highly efficient.<br/>
-<strong>3 =</strong> Code only minimally demonstrates new concepts, and/or is not efficient.<br/>
-<strong>2 =</strong> Code only minimally demonstrates new concepts, and/or is not efficient, variable names not clear.<br/>
-<strong>1 =</strong> Code does not demonstrate new concepts, is not efficient, variable names not clear.<br/></p>
-<h3 id="maker-component">Maker component</h3><p><strong>4 =</strong> Tangible component is tightly integrated with the micro:bit and each relies heavily on the other to make the project complete.<br/>
-<strong>3 =</strong>Tangible component is somewhat integrated with the micro:bit but is not essential.<br/>
-<strong>2 =</strong> Tangible component does not add to the functionality of the program.<br/>
+<h3 id="code-show-something-new">Code - Show something new</h3><p><strong>4 =</strong> Code very effectively demonstrates the use of new concept(s). Variable names are unique and clearly describe what information values the variables hold. Code is highly efficient.<br />
+<strong>3 =</strong> Code only minimally demonstrates new concepts, and/or is not efficient.<br />
+<strong>2 =</strong> Code only minimally demonstrates new concepts, and/or is not efficient, variable names not clear.<br />
+<strong>1 =</strong> Code does not demonstrate new concepts, is not efficient, variable names not clear.<br /></p>
+<h3 id="maker-component">Maker component</h3><p><strong>4 =</strong> Tangible component is tightly integrated with the micro:bit and each relies heavily on the other to make the project complete.<br />
+<strong>3 =</strong>Tangible component is somewhat integrated with the micro:bit but is not essential.<br />
+<strong>2 =</strong> Tangible component does not add to the functionality of the program.<br />
 <strong>1 =</strong> No tangible component.</p>
-<h3 id="work-logs">Work Logs</h3><p><strong>4 =</strong> All work logs submitted on time, and accurate.<br/>
-<strong>3 =</strong> One late or missing work log and/or work logs not accurate nor sufficiently detailed.<br/>
-<strong>2 =</strong> Two late or missing work logs and/or work logs not accurate nor sufficiently detailed.<br/>
+<h3 id="work-logs">Work Logs</h3><p><strong>4 =</strong> All work logs submitted on time, and accurate.<br />
+<strong>3 =</strong> One late or missing work log and/or work logs not accurate nor sufficiently detailed.<br />
+<strong>2 =</strong> Two late or missing work logs and/or work logs not accurate nor sufficiently detailed.<br />
 <strong>1 =</strong> More than two late or missing work logs and/or not accurate nor sufficiently detailed.</p>
-<h3 id="reflection">Reflection</h3><p><strong>4 =</strong> Reflection piece describes:<br/>
-<code>*</code> Development Process<br/>
-<code>*</code> Something new<br/>
-<code>*</code> Something proud of<br/>
-<code>*</code> Future mods<br/>
-<strong>3 =</strong> Reflection piece lacks 1 of the required elements.<br/>
-<strong>3 =</strong> Reflection piece lacks 2 of the required elements.<br/>
+<h3 id="reflection">Reflection</h3><p><strong>4 =</strong> Reflection piece describes:<br />
+<code>*</code> Development Process<br />
+<code>*</code> Something new<br />
+<code>*</code> Something proud of<br />
+<code>*</code> Future mods<br />
+<strong>3 =</strong> Reflection piece lacks 1 of the required elements.<br />
+<strong>3 =</strong> Reflection piece lacks 2 of the required elements.<br />
 <strong>1 =</strong> Reflection piece lacks 3 of the required elements.</p>
 <h2 id="notes">Notes</h2><p>We actually split the grading of code between “show what you know” and “show something new.” If a student uses variables incorrectly or uses bad variable names, we generally would take off points in both places. Sometimes it is difficult to distinguish between what is old and new if the student’s reflection is less than clear; in those cases, we have to use some discretion in terms of where we take points off. Another option would be to break out the Variables category into its own row. </p>
 <p>As always, these rubrics are just a starting point and you should certainly feel free to adjust them as appropriate for your own classroom or learning environment.</p>
@@ -1843,7 +1874,7 @@ Toss the Ball</p>
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1751,24 +1782,24 @@ input.onButtonPressed(Button.AB, () =&gt; {
 <li>What feedback did your beta testers give you? How did that help you improve your musical instrument?</li>
 </ul>
 <h2 id="assessment">Assessment</h2><p><strong>Competency scores</strong>: 4, 3, 2, 1</p>
-<h3 id="array">Array</h3><p><strong>4 =</strong> Stores and iterates through each element of the array successfully.<br/>
-<strong>3 =</strong> Stores each element of the array successfully.<br/>
-<strong>2 =</strong> Array skips values or has other problems with storing and/or retrieving elements.<br/>
+<h3 id="array">Array</h3><p><strong>4 =</strong> Stores and iterates through each element of the array successfully.<br />
+<strong>3 =</strong> Stores each element of the array successfully.<br />
+<strong>2 =</strong> Array skips values or has other problems with storing and/or retrieving elements.<br />
 <strong>1 =</strong> Array doesn’t work at all or no array present.</p>
-<h3 id="maker-component">Maker component</h3><p><strong>4 =</strong> Tangible component is tightly integrated with the micro:bit and each relies heavily on the other to make the project complete.<br/>
-<strong>3 =</strong> Tangible component is somewhat integrated with the micro:bit but is not essential.<br/>
-<strong>2 =</strong> Tangible component does not add to the functionality of the program.<br/>
+<h3 id="maker-component">Maker component</h3><p><strong>4 =</strong> Tangible component is tightly integrated with the micro:bit and each relies heavily on the other to make the project complete.<br />
+<strong>3 =</strong> Tangible component is somewhat integrated with the micro:bit but is not essential.<br />
+<strong>2 =</strong> Tangible component does not add to the functionality of the program.<br />
 <strong>1 =</strong> No tangible component.</p>
-<h3 id="micro-bit-program">micro:bit program</h3><p><strong>4 =</strong> The program:<br/>
-<code>*</code> Uses at least one array in a fully integrated and meaningful way<br/>
-<code>*</code> Compiles and runs as intended<br/>
-<code>*</code> Meaningful comments in code<br/>
-<strong>3 =</strong> Uses an array in a tangential way that is peripheral to function of project and/or program lacks 1 of the required elements.<br/>
-<strong>2 =</strong> Array is poorly implemented and/or peripheral to function of project, and/or lacks 2 of the required elements.<br/>
+<h3 id="micro-bit-program">micro:bit program</h3><p><strong>4 =</strong> The program:<br />
+<code>*</code> Uses at least one array in a fully integrated and meaningful way<br />
+<code>*</code> Compiles and runs as intended<br />
+<code>*</code> Meaningful comments in code<br />
+<strong>3 =</strong> Uses an array in a tangential way that is peripheral to function of project and/or program lacks 1 of the required elements.<br />
+<strong>2 =</strong> Array is poorly implemented and/or peripheral to function of project, and/or lacks 2 of the required elements.<br />
 <strong>1 =</strong> micro:bit program lacks 3 or more of the required elements.</p>
-<h3 id="collaboration-reflection">Collaboration reflection</h3><p><strong>4 =</strong> Reflection piece addresses all prompts.<br/>
-<strong>3 =</strong> Reflection piece lacks 1 of the required elements.<br/>
-<strong>2 =</strong> Reflection piece lacks 2 of the required elements.<br/>
+<h3 id="collaboration-reflection">Collaboration reflection</h3><p><strong>4 =</strong> Reflection piece addresses all prompts.<br />
+<strong>3 =</strong> Reflection piece lacks 1 of the required elements.<br />
+<strong>2 =</strong> Reflection piece lacks 2 of the required elements.<br />
 <strong>1 =</strong> Reflection piece lacks 3 of the required elements.</p>
 
     </div>
@@ -1808,7 +1839,7 @@ input.onButtonPressed(Button.AB, () =&gt; {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

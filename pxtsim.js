@@ -1936,6 +1936,16 @@ var pxsim;
         }
         return stackFrame.retval;
     }
+    function injectEnvironmentGlobals(msg, heap) {
+        var environmentGlobals = pxsim.runtime.environmentGlobals;
+        var keys = Object.keys(environmentGlobals);
+        if (!keys.length)
+            return;
+        var envVars = msg.environmentGlobals = {};
+        Object.keys(environmentGlobals)
+            .forEach(function (n) { return envVars[n] = valToJSON(pxsim.runtime.environmentGlobals[n], heap); });
+    }
+    pxsim.injectEnvironmentGlobals = injectEnvironmentGlobals;
     function getBreakpointMsg(s, brkId, userGlobals) {
         var heap = {};
         var msg = {
@@ -2255,6 +2265,7 @@ var pxsim;
     }());
 })(pxsim || (pxsim = {}));
 /// <reference path="../localtypings/pxtparts.d.ts"/>
+/// <reference path="../localtypings/pxtarget.d.ts"/>
 var pxsim;
 (function (pxsim) {
     function print(delay) {
@@ -2278,7 +2289,7 @@ var pxsim;
         function start() {
             window.addEventListener("message", receiveMessage, false);
             Embed.frameid = window.location.hash.slice(1);
-            initAppcache();
+            initServiceWorker();
             pxsim.Runtime.postMessage({ type: 'ready', frameid: Embed.frameid });
         }
         Embed.start = start;
@@ -2427,13 +2438,29 @@ var pxsim;
             window.parent.postMessage(message, "*");
         }
     }
-    function initAppcache() {
-        if (typeof window !== 'undefined' && window.applicationCache) {
-            if (window.applicationCache.status === window.applicationCache.UPDATEREADY)
-                reload();
-            window.applicationCache.addEventListener("updateready", function () {
-                if (window.applicationCache.status === window.applicationCache.UPDATEREADY)
-                    reload();
+    function initServiceWorker() {
+        // pxsim is included in both the webapp and the simulator so we need to check if the ---simulator is
+        // present in the window location
+        if ("serviceWorker" in navigator && window.location.href.indexOf("---simulator") !== -1 && !pxsim.U.isLocalHost()) {
+            // We don't have access to the webconfig in pxtsim so we need to extract the ref from the URL
+            var pathname = window.location.pathname;
+            var ref_1 = pathname.substring(1, pathname.indexOf("---"));
+            // Only reload if there is already a service worker installed
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.addEventListener("message", function (ev) {
+                    var message = ev.data;
+                    // We need to check the ref of the activated service worker so that we don't reload if you have
+                    // index.html and beta open at the same time
+                    if (message && message.type === "serviceworker" && message.state === "activated" && message.ref === ref_1) {
+                        reload();
+                    }
+                });
+            }
+            var serviceWorkerUrl = window.location.href.replace(/---simulator.*$/, "---simserviceworker");
+            navigator.serviceWorker.register(serviceWorkerUrl).then(function (registration) {
+                console.log("Simulator ServiceWorker registration successful with scope: ", registration.scope);
+            }, function (err) {
+                console.log("Simulator ServiceWorker registration failed: ", err);
             });
         }
     }
@@ -4536,6 +4563,17 @@ var pxsim;
             return res;
         }
         U.toUTF8 = toUTF8;
+        function isLocalHost() {
+            try {
+                return typeof window !== "undefined"
+                    && /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(window.location.href)
+                    && !/nolocalhost=1/.test(window.location.href);
+            }
+            catch (e) {
+                return false;
+            }
+        }
+        U.isLocalHost = isLocalHost;
     })(U = pxsim.U || (pxsim.U = {}));
     var BreakLoopException = /** @class */ (function () {
         function BreakLoopException() {
@@ -4936,6 +4974,7 @@ var pxsim;
             this.pausedTime = 0;
             this.lastPauseTimestamp = 0;
             this.globals = {};
+            this.environmentGlobals = {};
             this.otherFrames = [];
             this.loopLock = null;
             this.loopLockWaitList = [];
@@ -5063,6 +5102,7 @@ var pxsim;
                 s.r0 = r0;
                 var _a = pxsim.getBreakpointMsg(s, brkId, userGlobals), msg = _a.msg, heap = _a.heap;
                 dbgHeap = heap;
+                pxsim.injectEnvironmentGlobals(msg, heap);
                 Runtime.postMessage(msg);
                 breakpoints[0] = 0;
                 breakFrame = null;
@@ -5104,11 +5144,9 @@ var pxsim;
             function trace(brkId, s, retPc, info) {
                 setupResume(s, retPc);
                 if (info.functionName === "<main>" || info.fileName === "main.ts") {
-                    Runtime.postMessage({
-                        type: "debugger",
-                        subtype: "trace",
-                        breakpointId: brkId,
-                    });
+                    var msg_1 = pxsim.getBreakpointMsg(s, brkId, userGlobals).msg;
+                    msg_1.subtype = "trace";
+                    Runtime.postMessage(msg_1);
                     pxsim.thread.pause(tracePauseMs || 1);
                 }
                 else {
@@ -5201,10 +5239,11 @@ var pxsim;
                         __this.errorHandler(e);
                     else {
                         console.error("Simulator crashed, no error handler", e.stack);
-                        var msg_1 = pxsim.getBreakpointMsg(p, p.lastBrkId, userGlobals).msg;
-                        msg_1.exceptionMessage = e.message;
-                        msg_1.exceptionStack = e.stack;
-                        Runtime.postMessage(msg_1);
+                        var _a = pxsim.getBreakpointMsg(p, p.lastBrkId, userGlobals), msg_2 = _a.msg, heap = _a.heap;
+                        pxsim.injectEnvironmentGlobals(msg_2, heap);
+                        msg_2.exceptionMessage = e.message;
+                        msg_2.exceptionStack = e.stack;
+                        Runtime.postMessage(msg_2);
                         if (__this.postError)
                             __this.postError(e);
                     }
@@ -5902,6 +5941,9 @@ var pxsim;
         SimulatorDriver.prototype.isDebug = function () {
             return this._runOptions && !!this._runOptions.debug;
         };
+        SimulatorDriver.prototype.isTracing = function () {
+            return this._runOptions && !!this._runOptions.trace;
+        };
         SimulatorDriver.prototype.hasParts = function () {
             return this._runOptions && this._runOptions.parts && !!this._runOptions.parts.length;
         };
@@ -6476,7 +6518,7 @@ var pxsim;
                     if (this.options.onDebuggerWarning)
                         this.options.onDebuggerWarning(msg);
                     break;
-                case "breakpoint":
+                case "breakpoint": {
                     var brk = msg;
                     if (this.state == SimulatorState.Running) {
                         if (brk.exceptionMessage)
@@ -6498,11 +6540,14 @@ var pxsim;
                         console.error("debugger: trying to pause from " + this.state);
                     }
                     break;
-                case "trace":
-                    if (this.options.onTraceMessage) {
-                        this.options.onTraceMessage(msg);
+                }
+                case "trace": {
+                    var brk = msg;
+                    if (this.state == SimulatorState.Running && this.options.onTraceMessage) {
+                        this.options.onTraceMessage(brk);
                     }
                     break;
+                }
                 default:
                     var seq = msg.req_seq;
                     if (seq) {
@@ -7512,52 +7557,6 @@ var pxsim;
         return LightSensorState;
     }());
     pxsim.LightSensorState = LightSensorState;
-})(pxsim || (pxsim = {}));
-var pxsim;
-(function (pxsim) {
-    var NeoPixelMode;
-    (function (NeoPixelMode) {
-        NeoPixelMode[NeoPixelMode["RGB"] = 0] = "RGB";
-        NeoPixelMode[NeoPixelMode["RGBW"] = 1] = "RGBW";
-    })(NeoPixelMode = pxsim.NeoPixelMode || (pxsim.NeoPixelMode = {}));
-    ;
-    var NeoPixelState = /** @class */ (function () {
-        function NeoPixelState() {
-            this.buffers = {};
-            this.colors = {};
-            this.dirty = {};
-        }
-        NeoPixelState.prototype.updateBuffer = function (buffer, pin) {
-            this.buffers[pin] = buffer;
-            this.dirty[pin] = true;
-        };
-        NeoPixelState.prototype.getColors = function (pin, mode) {
-            var outColors = this.colors[pin] || (this.colors[pin] = []);
-            if (this.dirty[pin]) {
-                var buf = this.buffers[pin] || (this.buffers[pin] = new Uint8Array([]));
-                this.readNeoPixelBuffer(buf, outColors, mode);
-                this.dirty[pin] = false;
-            }
-            return outColors;
-        };
-        NeoPixelState.prototype.readNeoPixelBuffer = function (inBuffer, outColors, mode) {
-            var buf = inBuffer;
-            var stride = mode === NeoPixelMode.RGBW ? 4 : 3;
-            var pixelCount = Math.floor(buf.length / stride);
-            for (var i = 0; i < pixelCount; i++) {
-                // NOTE: for whatever reason, NeoPixels pack GRB not RGB
-                var r = buf[i * stride + 1];
-                var g = buf[i * stride + 0];
-                var b = buf[i * stride + 2];
-                var w = 0;
-                if (stride === 4)
-                    w = buf[i * stride + 3];
-                outColors[i] = [r, g, b, w];
-            }
-        };
-        return NeoPixelState;
-    }());
-    pxsim.NeoPixelState = NeoPixelState;
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {

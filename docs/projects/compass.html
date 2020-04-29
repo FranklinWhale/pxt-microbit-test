@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="/static/mb/projects/a5-compass.png" />
+<meta name="twitter:image" content="https://img.youtube.com/vi/IL5grHtz_MU/0.jpg" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="/static/mb/projects/a5-compass.png" />
+<meta property="og:image" content="https://img.youtube.com/vi/IL5grHtz_MU/0.jpg" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,59 +1714,35 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="compass">Compass</h1>
-    <div class='avatar avatar'>
-        <div class='avatar-image'></div>
-        <div class='ui compact message'>
-            <p>Welcome! This guided tutorial will show you how to program a script that displays which direction the micro:bit is pointing. Let’s get started!</p>
-
-        </div>
-    </div>
-<p><img class="ui image" src="/static/mb/projects/a5-compass.png" alt="" loading="lazy"></p>
-<p>Display the direction that the micro:bit is facing using the compass.</p>
-<h2 id="step-1">Step 1</h2><p>Create a loop that will continuously update the reading of the compass.</p>
-<pre><code class="lang-blocks">basic.forever(() =&gt; {
-
-})</code></pre>
-<h2 id="step-2">Step 2</h2><p>Store the reading of the micro:bit in a variable called <code>degrees</code>.</p>
+        <h1 id="compass">Compass</h1><h2 id="introduction-unplugged">Introduction </h2><p>This tutorial will show you how to program a script that displays which direction the micro:bit is pointing. Let’s get started!</p>
+<p><img class="ui image" src="/static/mb/projects/a5-compass.png" alt="A cartoon of a compass" loading="lazy"></p>
+<h2 id="step-1">Step 1</h2><p>Store the <code>||input:compass heading||</code> of the micro:bit in a variable called <code>||variables:degrees||</code> in the <code>||basic:forever||</code> loop.</p>
 <pre><code class="lang-blocks">basic.forever(() =&gt; {
     let degrees = input.compassHeading()
 })</code></pre>
-<h2 id="step-3">Step 3</h2><p>If <code>degrees</code> is less than <code>45</code> or greater than <code>315</code>, 
-then the compass heading is mostly pointing toward <strong>North</strong>. Display <code>N</code> on the micro:bit.</p>
+<h2 id="step-2">Step 2</h2><p><code>||logic:If||</code> <code>||variables:degrees||</code> is <code>||logic:less than||</code> <code>45</code>, 
+then the compass heading is mostly pointing toward <strong>North</strong>. <code>||basic:Show||</code> <code>N</code> on the micro:bit.</p>
 <pre><code class="lang-blocks">basic.forever(() =&gt; {
     let degrees = input.compassHeading();
-    if (degrees &lt; 45 || degrees &gt; 315) {
+    if (degrees &lt; 45) {
         basic.showString(&quot;N&quot;);
     }
 });</code></pre>
-<h2 id="step-4">Step 4</h2><p>If <code>degrees</code> is less than <code>135</code>, the micro:bit is mostly pointing <strong>East</strong>. Display <code>E</code> on the micro:bit.</p>
+<h2 id="step-3">Step 3</h2><p><code>||logic:If||</code> <code>||variables:degrees||</code> is less than <code>135</code>, the micro:bit is mostly pointing <strong>East</strong>. <code>||basic:Show||</code> <code>E</code> on the micro:bit.</p>
 <pre><code class="lang-blocks">basic.forever(() =&gt; {
     let degrees = input.compassHeading();
-    if (degrees &lt; 45 || degrees &gt; 315) {
-        basic.showString(&quot;N&quot;);
-    }
-    else if (degrees &lt; 135) {
-        basic.showString(&quot;E&quot;);
-    }
-});</code></pre>
-<h2 id="step-5">Step 5</h2><p>If <code>degrees</code> is less than <code>225</code>, the micro:bit is mostly pointing <strong>South</strong>. Display <code>S</code> on the micro:bit.</p>
-<pre><code class="lang-blocks">basic.forever(() =&gt; {
-    let degrees = input.compassHeading();
-    if (degrees &lt; 45 || degrees &gt; 315) {
+    if (degrees &lt; 45) {
         basic.showString(&quot;N&quot;);
     }
     else if (degrees &lt; 135) {
         basic.showString(&quot;E&quot;);
     }
-    else if (degrees &lt; 225) {
-        basic.showString(&quot;S&quot;);
-    }
 });</code></pre>
-<h2 id="step-6">Step 6</h2><p>If none of these conditions returned true, then the micro:bit must be pointing <strong>West</strong>. Display <code>W</code> on the micro:bit.</p>
+<h2 id="step-4">Step 4</h2><p>Go to the simulator and rotate the micro:bit logo to simulate changes in the compass heading.</p>
+<h2 id="step-5">Step 5</h2><p><code>||logic:If||</code> <code>||variables:degrees||</code> is less than <code>225</code>, the micro:bit is mostly pointing <strong>South</strong>. <code>||basic:Show||</code> <code>S</code> on the micro:bit.</p>
 <pre><code class="lang-blocks">basic.forever(() =&gt; {
     let degrees = input.compassHeading();
-    if (degrees &lt; 45 || degrees &gt; 315) {
+    if (degrees &lt; 45) {
         basic.showString(&quot;N&quot;);
     }
     else if (degrees &lt; 135) {
@@ -1744,10 +1751,50 @@ then the compass heading is mostly pointing toward <strong>North</strong>. Displ
     else if (degrees &lt; 225) {
         basic.showString(&quot;S&quot;);
     }
+});</code></pre>
+<h2 id="step-6">Step 6</h2><p><code>||logic:If||</code> <code>||variables:degrees||</code> is less than <code>315</code>, the micro:bit is mostly pointing <strong>West</strong>. <code>||basic:Show||</code> <code>W</code> on the micro:bit.</p>
+<pre><code class="lang-blocks">basic.forever(() =&gt; {
+    let degrees = input.compassHeading();
+    if (degrees &lt; 45) {
+        basic.showString(&quot;N&quot;);
+    }
+    else if (degrees &lt; 135) {
+        basic.showString(&quot;E&quot;)
+    } else if (degrees &lt; 225) {
+        basic.showString(&quot;S&quot;)
+    } else if (degrees &lt; 315) {
+        basic.showString(&quot;W&quot;)
+    }
+});</code></pre>
+<h2 id="step-7">Step 7</h2><p><code>||logic:If||</code> none of these conditions returned true, then the micro:bit must be pointing <strong>North</strong> again. Display <code>N</code> on the micro:bit.</p>
+<pre><code class="lang-blocks">basic.forever(() =&gt; {
+    let degrees = input.compassHeading();
+    if (degrees &lt; 45) {
+        basic.showString(&quot;N&quot;);
+    }
+    else if (degrees &lt; 135) {
+        basic.showString(&quot;E&quot;);
+    }
+    else if (degrees &lt; 225) {
+        basic.showString(&quot;S&quot;);
+    } 
+    else if (degrees &lt; 315) {
+        basic.showString(&quot;W&quot;)
+    } 
     else {
-        basic.showString(&quot;W&quot;);
+        basic.showString(&quot;N&quot;)
     }
 });</code></pre>
+<h2 id="step-8-unplugged">Step 8 </h2><p>If you have a micro:bit, click <code>|Download|</code> and follow the screen instructions. 
+You will have to follow the screen instructions to calibrate your compass.</p>
+
+    <div class="ui grid">
+        <div class="ten wide column">
+            <div class="ui embed mdvid" data-source="youtube" data-id="IL5grHtz_MU"
+                data-placeholder="https://img.youtube.com/vi/IL5grHtz_MU/0.jpg">
+            </div>
+        </div>
+    </div>
 
     </div>
 
@@ -1786,7 +1833,7 @@ then the compass heading is mostly pointing toward <strong>North</strong>. Displ
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

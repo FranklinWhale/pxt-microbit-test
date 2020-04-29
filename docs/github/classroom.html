@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,9 +1714,8 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="classroom">Classroom</h1><p>This page describes various ways to use the GitHub integration to create and collect assignments.</p>
-<p>This section assumes that all students are able to register an account on <a target="_blank" rel="nofollow noopener" href="https://github.com">https://github.com</a> first.</p>
-<h2 id="assignments-as-repositories">Assignments as repositories</h2><p>Students can create new repositories, public or private, for each assignments. Repositories provide full tracability of the changes, collaboration features, and precise access control for the teachers.</p>
+        <h1 id="classroom">Classroom</h1><p>This page describes various ways to use the GitHub integration to create and collect assignments. The description here assumes that all students are able to register an account on <a target="_blank" rel="nofollow noopener" href="https://github.com">https://github.com</a> first.</p>
+<h2 id="assignments-as-repositories">Assignments as repositories</h2><p>Students can create new repositories, public or private, for each assignment. Repositories provide full tracability of the changes, collaboration features, and precise access control for the teachers.</p>
 <p>There are a few different ways to use repositories, in order of complexity:</p>
 <ul>
 <li><a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/public-assignments.html">public assignments</a> using public repositories. Easy to setup but code is public.</li>
@@ -1695,7 +1725,7 @@
 
     <div class="ui info message">
         <div class="content">
-            <h2 id="github-explorer">GitHub Explorer</h2><p>The <a target="_blank" rel="nofollow noopener" href="https://makecode.com/github-explorer">MakeCode GitHub Explorer</a> page allows you to list and browse MakeCode repositories seamlessly.</p>
+            <h4 id="github-explorer">GitHub Explorer</h4><p>The <a target="_blank" rel="nofollow noopener" href="https://makecode.com/github-explorer">MakeCode GitHub Explorer</a> page allows you to list and browse MakeCode repositories seamlessly.</p>
 
         </div>
     </div>
@@ -1737,7 +1767,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

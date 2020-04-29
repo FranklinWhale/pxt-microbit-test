@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1685,10 +1716,10 @@
     <div class="ui text">
         <h1 id="dice-roll-quiz-answers">dice roll quiz answers</h1><p>Create a dice when the micro:bit is shaken </p>
 <p>These are the answers to the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/lessons/dice-roll/quiz.html">dice roll quiz</a>.</p>
-<h2 id="1-create-a-variable-named-roll-that-will-be-randomly-assigned-to-a-number-between-0-and-5-">1. Create a variable named ‘roll’ that will be randomly assigned to a number between 0 and 5.</h2><p><br/></p>
+<h2 id="1-create-a-variable-named-roll-that-will-be-randomly-assigned-to-a-number-between-0-and-5-">1. Create a variable named ‘roll’ that will be randomly assigned to a number between 0 and 5.</h2><p><br /></p>
 <pre><code class="lang-blocks">let roll = Math.randomRange(0, 6)</code></pre>
 <h2 id="2-if-the-variable-roll-equals-5-write-the-code-that-will-plot-the-image-below">2. If the variable “roll” equals 5, write the code that will plot the image below</h2><p><img class="ui image" src="/static/mb/lessons/die-roll-0.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let roll = Math.randomRange(0, 6)
 if (roll == 5) {
     basic.showLeds(`
@@ -1700,7 +1731,7 @@ if (roll == 5) {
 `)
 }</code></pre>
 <h2 id="3-you-will-use-an-else-if-condition-if-roll-is-equal-4-write-the-else-if-statement-that-will-display-the-plot-image-below">3. You will use an <code>else if</code> condition if “roll” is equal 4. Write the <code>else if</code> statement that will display the plot image below</h2><p><img class="ui image" src="/static/mb/lessons/die-roll-1.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 <pre><code class="lang-blocks">
 let roll = Math.randomRange(0, 6)
 if (roll == 5) {
@@ -1722,7 +1753,7 @@ if (roll == 5) {
 }</code></pre>
 <p>Note: students are only required to write the bottom half of this answer, starting with “else if”.</p>
 <h2 id="4-you-will-use-an-else-if-condition-if-roll-is-equal-3-write-the-else-if-statement-that-will-display-the-plot-image-below">4. You will use an <code>else if</code> condition if “roll” is equal 3. Write the <code>else if</code> statement that will display the plot image below</h2><p><img class="ui image" src="/static/mb/lessons/die-roll-2.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let roll = Math.randomRange(0, 6)
 if (roll == 4) {
     basic.showLeds(`
@@ -1743,7 +1774,7 @@ if (roll == 4) {
 }</code></pre>
 <p>Note: students are only required to write the bottom half of this answer, starting with “else if”.</p>
 <h2 id="5-you-will-use-an-else-if-condition-if-roll-is-equal-2-write-the-else-if-that-will-display-the-image-below">5. You will use an <code>else if</code> condition if “roll” is equal 2. Write the <code>else if</code> that will display the image below</h2><p><img class="ui image" src="/static/mb/lessons/die-roll-3.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let roll = Math.randomRange(0, 6)
 if (roll == 3) {
     basic.showLeds(`
@@ -1801,7 +1832,7 @@ if (roll == 3) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

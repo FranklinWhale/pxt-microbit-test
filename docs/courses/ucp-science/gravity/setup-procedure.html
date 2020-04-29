@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1750,7 +1781,7 @@ radio.onReceivedNumber(function (receivedNumber) {
 <h3 id="earthquake-detector">Earthquake Detector</h3><p>Earthquakes cause vibrations which can be detected with the Microbit accelerator. By placing the “Gravity Sender” micro:bit on a flat surface and having it “feel” minor changes in acceleration it can detect earthquakes or other vibrations in the earth. Connect 2 micro:bits using radio signals (see <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/courses/ucp-science/data-collection/setup-procedure.html">Data Collection - Option 3</a>). The “Gravity Sender” micro:bit can be placed on or near a speaker. It will send a signal to the “Gravity Receiver” micro:bit which can be connected to the Windows 10 MakeCode app. When the “Gravity Receiver” micro:bit receives a gravity number it is sent to the monitoring data collection using the method <code>serial.writeValue(&quot;gravity&quot;, gravity)</code>. The movement of the object connected to the Earth can be observed in the <strong>Show data Device</strong>. Using a conditional statement that detects changes in the received gravity could be implemented to play “music” sound as an alarm when changes in movement are detected.</p>
 <p><img class="ui image" src="/static/courses/ucp-science/gravity/earthquake.png" alt="Earthquake vibrations" loading="lazy"></p>
 <h3 id="skate-park-data-or-pinewood-derby-">Skate Park Data or Pinewood Derby.</h3><p>Use the micro:bits to record data from a skater at a skate park or acceleration down a ramp like a Pinewood Derby car. </p>
-<p><br/></p>
+<p><br /></p>
 <table>
 <thead>
 <tr>
@@ -1806,7 +1837,7 @@ radio.onReceivedNumber(function (receivedNumber) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

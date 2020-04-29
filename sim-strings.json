@@ -1,1 +1,11 @@
-{}
+{
+    "acceleration.pitch": "acceleration.pitch",
+    "acceleration.roll": "acceleration.roll",
+    "acceleration.strength": "acceleration.strength",
+    "acceleration.x": "acceleration.x",
+    "acceleration.y": "acceleration.y",
+    "acceleration.z": "acceleration.z",
+    "heading": "heading",
+    "lightLevel": "lightLevel",
+    "temperature": "temperature"
+}

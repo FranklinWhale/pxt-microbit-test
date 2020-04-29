@@ -1,5 +1,51 @@
 # Tools
 
+## Utilities
+
+```codecard
+[
+{
+  "name": "Stopwatch",
+  "description": "How time passes, keep track of how much",
+  "url": "/projects/stopwatch",
+  "imageUrl":"/docs/static/mb/projects/stopwatch.png",
+  "cardType": "tutorial",
+  "otherActions": [{
+    "url": "/projects/spy/stopwatch",
+    "editor": "py",
+    "cardType": "tutorial"
+  }, {
+    "url": "/projects/spy/stopwatch",
+    "editor": "js",
+    "cardType": "tutorial"
+  }]},
+{
+  "name": "Level",
+  "description": "Is the table flat?",
+  "url": "/projects/level",
+  "imageUrl":"/docs/static/mb/projects/level.png",
+  "cardType": "tutorial",
+  "otherActions": [{
+    "url": "/projects/spy/level",
+    "editor": "py",
+    "cardType": "tutorial"
+  }, {
+    "url": "/projects/spy/level",
+    "editor": "js",
+    "cardType": "tutorial"
+  }]
+},
+{
+  "name": "Compass",
+  "description": "Where is North?",
+  "url": "/projects/compass",
+  "imageUrl":"/docs/static/mb/projects/a5-compass.png",
+  "cardType": "tutorial",
+  "otherActions": []
+}
+]
+```
+
 ## Sensors
 
 ```codecard

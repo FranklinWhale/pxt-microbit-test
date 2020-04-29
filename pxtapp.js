@@ -1,5 +1,8 @@
 var e=function(){"use strict";function r(e,r){postMessage({action:xt,cbn:r,result:e})}function t(e){var r=[];return r[e-1]=void 0,r}function o(e,r){return i(e[0]+r[0],e[1]+r[1])}function n(e,r){return u(~~Math.max(Math.min(e[1]/Ot,2147483647),-2147483648)&~~Math.max(Math.min(r[1]/Ot,2147483647),-2147483648),c(e)&c(r))}function s(e,r){var t,o;return e[0]==r[0]&&e[1]==r[1]?0:(t=0>e[1],o=0>r[1],t&&!o?-1:!t&&o?1:h(e,r)[1]<0?-1:1)}function i(e,r){var t,o;for(r%=0x10000000000000000,e%=0x10000000000000000,t=r%Ot,o=Math.floor(e/Ot)*Ot,r=r-t+o,e=e-o+t;0>e;)e+=Ot,r-=Ot;for(;e>4294967295;)e-=Ot,r+=Ot;for(r%=0x10000000000000000;r>0x7fffffff00000000;)r-=0x10000000000000000;for(;-0x8000000000000000>r;)r+=0x10000000000000000;return[e,r]}function _(e,r){return e[0]==r[0]&&e[1]==r[1]}function a(e){return e>=0?[e,0]:[e+Ot,-Ot]}function c(e){return e[0]>=2147483648?~~Math.max(Math.min(e[0]-Ot,2147483647),-2147483648):~~Math.max(Math.min(e[0],2147483647),-2147483648)}function u(e,r){var t,o;return t=e*Ot,o=r,0>r&&(o+=Ot),[o,t]}function f(e){return 30>=e?1<<e:f(30)*f(e-30)}function m(e,r){var t,o,n,s;if(r&=63,_(e,Ht))return r?Gt:e;if(0>e[1])throw Error("Neg");return s=f(r),o=e[1]*s%0x10000000000000000,n=e[0]*s,t=n-n%Ot,o+=t,n-=t,o>=0x8000000000000000&&(o-=0x10000000000000000),[n,o]}function d(e,r){var t;return r&=63,t=f(r),i(Math.floor(e[0]/t),e[1]/t)}function p(e,r){var t;return r&=63,t=d(e,r),0>e[1]&&(t=o(t,m([2,0],63-r))),t}function h(e,r){return i(e[0]-r[0],e[1]-r[1])}function P(e,r){return e.Mc=r,e.Lc=0,e.Yb=r.length,e}function l(e){return e.Lc>=e.Yb?-1:255&e.Mc[e.Lc++]}function v(e,r,t,o){return e.Lc>=e.Yb?-1:(o=Math.min(o,e.Yb-e.Lc),M(e.Mc,e.Lc,r,t,o),e.Lc+=o,o)}function B(e){return e.Mc=t(32),e.Yb=0,e}function S(e){var r=e.Mc;return r.length=e.Yb,r}function g(e,r){e.Mc[e.Yb++]=r<<24>>24}function k(e,r,t,o){M(r,t,e.Mc,e.Yb,o),e.Yb+=o}function R(e,r,t,o,n){var s;for(s=r;t>s;++s)o[n++]=e.charCodeAt(s)}function M(e,r,t,o,n){for(var s=0;n>s;++s)t[o+s]=e[r+s]}function D(e,r){Ar(r,1<<e.s),r.n=e.f,Hr(r,e.m),r.eb=0,r.fb=3,r.Y=2,r.y=3}function b(r,t,o,n,i){var _,a;if(s(n,At)<0)throw Error("invalid length "+n);for(r.Tb=n,_=Dr({}),D(i,_),_.Gc=void 0===e.disableEndMark,Gr(_,o),a=0;64>a;a+=8)g(o,255&c(d(n,a)));r.yb=(_.W=0,_.oc=t,_.pc=0,Mr(_),_.d.Ab=o,Fr(_),wr(_),br(_),_.$.rb=_.n+1-2,Qr(_.$,1<<_.Y),_.i.rb=_.n+1-2,Qr(_.i,1<<_.Y),void(_.g=Gt),X({},_))}function w(e,r,t){return e.Nb=B({}),b(e,P({},r),e.Nb,a(r.length),t),e}function E(e,r,t){var o,n,s,i,_="",c=[];for(n=0;5>n;++n){if(s=l(r),-1==s)throw Error("truncated input");c[n]=s<<24>>24}if(o=ir({}),!ar(o,c))throw Error("corrupted input");for(n=0;64>n;n+=8){if(s=l(r),-1==s)throw Error("truncated input");s=s.toString(16),1==s.length&&(s="0"+s),_=s+""+_}/^0+$|^f+$/i.test(_)?e.Tb=At:(i=parseInt(_,16),e.Tb=i>4294967295?At:a(i)),e.yb=nr(o,r,t,e.Tb)}function L(e,r){return e.Nb=B({}),E(e,P({},r),e.Nb),e}function y(e,r,o,n){var s;e.Bc=r,e._b=o,s=r+o+n,(null==e.c||e.Kb!=s)&&(e.c=null,e.Kb=s,e.c=t(e.Kb)),e.H=e.Kb-o}function C(e,r){return e.c[e.f+e.o+r]}function z(e,r,t,o){var n,s;for(e.T&&e.o+r+o>e.h&&(o=e.h-(e.o+r)),++t,s=e.f+e.o+r,n=0;o>n&&e.c[s+n]==e.c[s+n-t];++n);return n}function F(e){return e.h-e.o}function I(e){var r,t,o;for(o=e.f+e.o-e.Bc,o>0&&--o,t=e.f+e.h-o,r=0;t>r;++r)e.c[r]=e.c[o+r];e.f-=o}function x(e){var r;++e.o,e.o>e.zb&&(r=e.f+e.o,r>e.H&&I(e),N(e))}function N(e){var r,t,o;if(!e.T)for(;;){if(o=-e.f+e.Kb-e.h,!o)return;if(r=v(e.cc,e.c,e.f+e.h,o),-1==r)return e.zb=e.h,t=e.f+e.zb,t>e.H&&(e.zb=e.H-e.f),void(e.T=1);e.h+=r,e.h>=e.o+e._b&&(e.zb=e.h-e._b)}}function O(e,r){e.f+=r,e.zb-=r,e.o-=r,e.h-=r}function A(e,r,o,n,s){var i,_,a;1073741567>r&&(e.Fc=16+(n>>1),a=~~((r+o+n+s)/2)+256,y(e,r+o,n+s,a),e.ob=n,i=r+1,e.p!=i&&(e.L=t(2*(e.p=i))),_=65536,e.qb&&(_=r-1,_|=_>>1,_|=_>>2,_|=_>>4,_|=_>>8,_>>=1,_|=65535,_>16777216&&(_>>=1),e.Ec=_,++_,_+=e.R),_!=e.rc&&(e.ub=t(e.rc=_)))}function H(e,r){var t,o,n,s,i,_,a,c,u,f,m,d,p,h,P,l,v,B,S,g,k;if(e.h>=e.o+e.ob)h=e.ob;else if(h=e.h-e.o,e.xb>h)return W(e),0;for(v=0,P=e.o>e.p?e.o-e.p:0,o=e.f+e.o,l=1,c=0,u=0,e.qb?(k=Tt[255&e.c[o]]^255&e.c[o+1],c=1023&k,k^=(255&e.c[o+2])<<8,u=65535&k,f=(k^Tt[255&e.c[o+3]]<<5)&e.Ec):f=255&e.c[o]^(255&e.c[o+1])<<8,n=e.ub[e.R+f]||0,e.qb&&(s=e.ub[c]||0,i=e.ub[1024+u]||0,e.ub[c]=e.o,e.ub[1024+u]=e.o,s>P&&e.c[e.f+s]==e.c[o]&&(r[v++]=l=2,r[v++]=e.o-s-1),i>P&&e.c[e.f+i]==e.c[o]&&(i==s&&(v-=2),r[v++]=l=3,r[v++]=e.o-i-1,s=i),0!=v&&s==n&&(v-=2,l=1)),e.ub[e.R+f]=e.o,S=(e.k<<1)+1,g=e.k<<1,d=p=e.w,0!=e.w&&n>P&&e.c[e.f+n+e.w]!=e.c[o+e.w]&&(r[v++]=l=e.w,r[v++]=e.o-n-1),t=e.Fc;;){if(P>=n||0==t--){e.L[S]=e.L[g]=0;break}if(a=e.o-n,_=(e.k>=a?e.k-a:e.k-a+e.p)<<1,B=e.f+n,m=p>d?d:p,e.c[B+m]==e.c[o+m]){for(;++m!=h&&e.c[B+m]==e.c[o+m];);if(m>l&&(r[v++]=l=m,r[v++]=a-1,m==h)){e.L[g]=e.L[_],e.L[S]=e.L[_+1];break}}(255&e.c[o+m])>(255&e.c[B+m])?(e.L[g]=n,g=_+1,n=e.L[g],p=m):(e.L[S]=n,S=_,n=e.L[S],d=m)}return W(e),v}function G(e){e.f=0,e.o=0,e.h=0,e.T=0,N(e),e.k=0,O(e,-1)}function W(e){var r;++e.k>=e.p&&(e.k=0),x(e),1073741823==e.o&&(r=e.o-e.p,T(e.L,2*e.p,r),T(e.ub,e.rc,r),O(e,r))}function T(e,r,t){var o,n;for(o=0;r>o;++o)n=e[o]||0,t>=n?n=0:n-=t,e[o]=n}function Z(e,r){e.qb=r>2,e.qb?(e.w=0,e.xb=4,e.R=66560):(e.w=2,e.xb=3,e.R=0)}function Y(e,r){var t,o,n,s,i,_,a,c,u,f,m,d,p,h,P,l,v;do{if(e.h>=e.o+e.ob)d=e.ob;else if(d=e.h-e.o,e.xb>d){W(e);continue}for(p=e.o>e.p?e.o-e.p:0,o=e.f+e.o,e.qb?(v=Tt[255&e.c[o]]^255&e.c[o+1],_=1023&v,e.ub[_]=e.o,v^=(255&e.c[o+2])<<8,a=65535&v,e.ub[1024+a]=e.o,c=(v^Tt[255&e.c[o+3]]<<5)&e.Ec):c=255&e.c[o]^(255&e.c[o+1])<<8,n=e.ub[e.R+c],e.ub[e.R+c]=e.o,P=(e.k<<1)+1,l=e.k<<1,f=m=e.w,t=e.Fc;;){if(p>=n||0==t--){e.L[P]=e.L[l]=0;break}if(i=e.o-n,s=(e.k>=i?e.k-i:e.k-i+e.p)<<1,h=e.f+n,u=m>f?f:m,e.c[h+u]==e.c[o+u]){for(;++u!=d&&e.c[h+u]==e.c[o+u];);if(u==d){e.L[l]=e.L[s],e.L[P]=e.L[s+1];break}}(255&e.c[o+u])>(255&e.c[h+u])?(e.L[l]=n,l=s+1,n=e.L[l],m=u):(e.L[P]=n,P=s,n=e.L[P],f=u)}W(e)}while(0!=--r)}function V(e,r,t){var o=e.o-r-1;for(0>o&&(o+=e.M);0!=t;--t)o>=e.M&&(o=0),e.Lb[e.o++]=e.Lb[o++],e.o>=e.M&&$(e)}function j(e,r){(null==e.Lb||e.M!=r)&&(e.Lb=t(r)),e.M=r,e.o=0,e.h=0}function $(e){var r=e.o-e.h;r&&(k(e.cc,e.Lb,e.h,r),e.o>=e.M&&(e.o=0),e.h=e.o)}function K(e,r){var t=e.o-r-1;return 0>t&&(t+=e.M),e.Lb[t]}function q(e,r){e.Lb[e.o++]=r,e.o>=e.M&&$(e)}function J(e){$(e),e.cc=null}function Q(e){return e-=2,4>e?e:3}function U(e){return 4>e?0:10>e?e-3:e-6}function X(e,r){return e.cb=r,e.Z=null,e.zc=1,e}function er(e,r){return e.Z=r,e.cb=null,e.zc=1,e}function rr(e){if(!e.zc)throw Error("bad state");return e.cb?or(e):tr(e),e.zc}function tr(e){var r=sr(e.Z);if(-1==r)throw Error("corrupted input");e.Pb=At,e.Pc=e.Z.g,(r||s(e.Z.Nc,Gt)>=0&&s(e.Z.g,e.Z.Nc)>=0)&&($(e.Z.B),J(e.Z.B),e.Z.e.Ab=null,e.zc=0)}function or(e){Rr(e.cb,e.cb.Xb,e.cb.uc,e.cb.Kc),e.Pb=e.cb.Xb[0],e.cb.Kc[0]&&(Or(e.cb),e.zc=0)}function nr(e,r,t,o){return e.e.Ab=r,J(e.B),e.B.cc=t,_r(e),e.U=0,e.ib=0,e.Jc=0,e.Ic=0,e.Qc=0,e.Nc=o,e.g=Gt,e.jc=0,er({},e)}function sr(e){var r,t,n,i,_,u;if(u=c(e.g)&e.Dc,vt(e.e,e.Gb,(e.U<<4)+u)){if(vt(e.e,e.Zb,e.U))n=0,vt(e.e,e.Cb,e.U)?(vt(e.e,e.Db,e.U)?(vt(e.e,e.Eb,e.U)?(t=e.Qc,e.Qc=e.Ic):t=e.Ic,e.Ic=e.Jc):t=e.Jc,e.Jc=e.ib,e.ib=t):vt(e.e,e.pb,(e.U<<4)+u)||(e.U=7>e.U?9:11,n=1),n||(n=mr(e.sb,e.e,u)+2,e.U=7>e.U?8:11);else if(e.Qc=e.Ic,e.Ic=e.Jc,e.Jc=e.ib,n=2+mr(e.Rb,e.e,u),e.U=7>e.U?7:10,_=at(e.kb[Q(n)],e.e),_>=4){if(i=(_>>1)-1,e.ib=(2|1&_)<<i,14>_)e.ib+=ut(e.kc,e.ib-_-1,e.e,i);else if(e.ib+=Bt(e.e,i-4)<<4,e.ib+=ct(e.Fb,e.e),0>e.ib)return-1==e.ib?1:-1}else e.ib=_;if(s(a(e.ib),e.g)>=0||e.ib>=e.nb)return-1;V(e.B,e.ib,n),e.g=o(e.g,a(n)),e.jc=K(e.B,0)}else r=Pr(e.gb,c(e.g),e.jc),e.jc=7>e.U?vr(r,e.e):Br(r,e.e,K(e.B,e.ib)),q(e.B,e.jc),e.U=U(e.U),e.g=o(e.g,Wt);return 0}function ir(e){e.B={},e.e={},e.Gb=t(192),e.Zb=t(12),e.Cb=t(12),e.Db=t(12),e.Eb=t(12),e.pb=t(192),e.kb=t(4),e.kc=t(114),e.Fb=_t({},4),e.Rb=dr({}),e.sb=dr({}),e.gb={};for(var r=0;4>r;++r)e.kb[r]=_t({},6);return e}function _r(e){e.B.h=0,e.B.o=0,gt(e.Gb),gt(e.pb),gt(e.Zb),gt(e.Cb),gt(e.Db),gt(e.Eb),gt(e.kc),lr(e.gb);for(var r=0;4>r;++r)gt(e.kb[r].G);pr(e.Rb),pr(e.sb),gt(e.Fb.G),St(e.e)}function ar(e,r){var t,o,n,s,i,_,a;if(5>r.length)return 0;for(a=255&r[0],n=a%9,_=~~(a/9),s=_%5,i=~~(_/5),t=0,o=0;4>o;++o)t+=(255&r[1+o])<<8*o;return t>99999999||!ur(e,n,s,i)?0:cr(e,t)}function cr(e,r){return 0>r?0:(e.Ob!=r&&(e.Ob=r,e.nb=Math.max(e.Ob,1),j(e.B,Math.max(e.nb,4096))),1)}function ur(e,r,t,o){if(r>8||t>4||o>4)return 0;hr(e.gb,t,r);var n=1<<o;return fr(e.Rb,n),fr(e.sb,n),e.Dc=n-1,1}function fr(e,r){for(;r>e.O;++e.O)e.ec[e.O]=_t({},3),e.hc[e.O]=_t({},3)}function mr(e,r,t){if(!vt(r,e.wc,0))return at(e.ec[t],r);var o=8;return o+=vt(r,e.wc,1)?8+at(e.tc,r):at(e.hc[t],r)}function dr(e){return e.wc=t(2),e.ec=t(16),e.hc=t(16),e.tc=_t({},8),e.O=0,e}function pr(e){gt(e.wc);for(var r=0;e.O>r;++r)gt(e.ec[r].G),gt(e.hc[r].G);gt(e.tc.G)}function hr(e,r,o){var n,s;if(null==e.V||e.u!=o||e.I!=r)for(e.I=r,e.qc=(1<<r)-1,e.u=o,s=1<<e.u+e.I,e.V=t(s),n=0;s>n;++n)e.V[n]=Sr({})}function Pr(e,r,t){return e.V[((r&e.qc)<<e.u)+((255&t)>>>8-e.u)]}function lr(e){var r,t;for(t=1<<e.u+e.I,r=0;t>r;++r)gt(e.V[r].Ib)}function vr(e,r){var t=1;do t=t<<1|vt(r,e.Ib,t);while(256>t);return t<<24>>24}function Br(e,r,t){var o,n,s=1;do if(n=t>>7&1,t<<=1,o=vt(r,e.Ib,(1+n<<8)+s),s=s<<1|o,n!=o){for(;256>s;)s=s<<1|vt(r,e.Ib,s);break}while(256>s);return s<<24>>24}function Sr(e){return e.Ib=t(768),e}function gr(e,r){var t,o,n,s;e.jb=r,n=e.a[r].r,o=e.a[r].j;do e.a[r].t&&(st(e.a[n]),e.a[n].r=n-1,e.a[r].Ac&&(e.a[n-1].t=0,e.a[n-1].r=e.a[r].r2,e.a[n-1].j=e.a[r].j2)),s=n,t=o,o=e.a[s].j,n=e.a[s].r,e.a[s].j=t,e.a[s].r=r,r=s;while(r>0);return e.mb=e.a[0].j,e.q=e.a[0].r}function kr(e){e.l=0,e.J=0;for(var r=0;4>r;++r)e.v[r]=0}function Rr(e,r,t,n){var i,u,f,m,d,p,P,l,v,B,S,g,k,R,M;if(r[0]=Gt,t[0]=Gt,n[0]=1,e.oc&&(e.b.cc=e.oc,G(e.b),e.W=1,e.oc=null),!e.pc){if(e.pc=1,R=e.g,_(e.g,Gt)){if(!F(e.b))return void Er(e,c(e.g));xr(e),k=c(e.g)&e.y,kt(e.d,e.C,(e.l<<4)+k,0),e.l=U(e.l),f=C(e.b,-e.s),rt(Xr(e.A,c(e.g),e.J),e.d,f),e.J=f,--e.s,e.g=o(e.g,Wt)}if(!F(e.b))return void Er(e,c(e.g));for(;;){if(P=Lr(e,c(e.g)),B=e.mb,k=c(e.g)&e.y,u=(e.l<<4)+k,1==P&&-1==B)kt(e.d,e.C,u,0),f=C(e.b,-e.s),M=Xr(e.A,c(e.g),e.J),7>e.l?rt(M,e.d,f):(v=C(e.b,-e.v[0]-1-e.s),tt(M,e.d,v,f)),e.J=f,e.l=U(e.l);else{if(kt(e.d,e.C,u,1),4>B){if(kt(e.d,e.bb,e.l,1),B?(kt(e.d,e.hb,e.l,1),1==B?kt(e.d,e.Ub,e.l,0):(kt(e.d,e.Ub,e.l,1),kt(e.d,e.vc,e.l,B-2))):(kt(e.d,e.hb,e.l,0),1==P?kt(e.d,e._,u,0):kt(e.d,e._,u,1)),1==P?e.l=7>e.l?9:11:(Kr(e.i,e.d,P-2,k),e.l=7>e.l?8:11),m=e.v[B],0!=B){for(p=B;p>=1;--p)e.v[p]=e.v[p-1];e.v[0]=m}}else{for(kt(e.d,e.bb,e.l,0),e.l=7>e.l?7:10,Kr(e.$,e.d,P-2,k),B-=4,g=Tr(B),l=Q(P),mt(e.K[l],e.d,g),g>=4&&(d=(g>>1)-1,i=(2|1&g)<<d,S=B-i,14>g?Pt(e.Sb,i-g-1,e.d,d,S):(Rt(e.d,S>>4,d-4),pt(e.S,e.d,15&S),++e.Qb)),m=B,p=3;p>=1;--p)e.v[p]=e.v[p-1];e.v[0]=m,++e.Mb}e.J=C(e.b,P-1-e.s)}if(e.s-=P,e.g=o(e.g,a(P)),!e.s){if(e.Mb>=128&&wr(e),e.Qb>=16&&br(e),r[0]=e.g,t[0]=Mt(e.d),!F(e.b))return void Er(e,c(e.g));if(s(h(e.g,R),[4096,0])>=0)return e.pc=0,void(n[0]=0)}}}}function Mr(e){var r,t;e.b||(r={},t=4,e.X||(t=2),Z(r,t),e.b=r),Ur(e.A,e.eb,e.fb),(e.ab!=e.wb||e.Hb!=e.n)&&(A(e.b,e.ab,4096,e.n,274),e.wb=e.ab,e.Hb=e.n)}function Dr(e){var r;for(e.v=t(4),e.a=[],e.d={},e.C=t(192),e.bb=t(12),e.hb=t(12),e.Ub=t(12),e.vc=t(12),e._=t(192),e.K=[],e.Sb=t(114),e.S=ft({},4),e.$=qr({}),e.i=qr({}),e.A={},e.m=[],e.P=[],e.lb=[],e.nc=t(16),e.x=t(4),e.Q=t(4),e.Xb=[Gt],e.uc=[Gt],e.Kc=[0],e.fc=t(5),e.yc=t(128),e.vb=0,e.X=1,e.D=0,e.Hb=-1,e.mb=0,r=0;4096>r;++r)e.a[r]={};for(r=0;4>r;++r)e.K[r]=ft({},6);return e}function br(e){for(var r=0;16>r;++r)e.nc[r]=ht(e.S,r);e.Qb=0}function wr(e){var r,t,o,n,s,i,_,a;for(n=4;128>n;++n)i=Tr(n),o=(i>>1)-1,r=(2|1&i)<<o,e.yc[n]=lt(e.Sb,r-i-1,o,n-r);for(s=0;4>s;++s){for(t=e.K[s],_=s<<6,i=0;e.$b>i;++i)e.P[_+i]=dt(t,i);for(i=14;e.$b>i;++i)e.P[_+i]+=(i>>1)-1-4<<6;for(a=128*s,n=0;4>n;++n)e.lb[a+n]=e.P[_+n];for(;128>n;++n)e.lb[a+n]=e.P[_+Tr(n)]+e.yc[n]}e.Mb=0}function Er(e,r){Nr(e),Wr(e,r&e.y);for(var t=0;5>t;++t)bt(e.d)}function Lr(e,r){var t,o,n,s,i,_,a,c,u,f,m,d,p,h,P,l,v,B,S,g,k,R,M,D,b,w,E,L,y,I,x,N,O,A,H,G,W,T,Z,Y,V,j,$,K,q,J,Q,X,er,rr;if(e.jb!=e.q)return p=e.a[e.q].r-e.q,e.mb=e.a[e.q].j,e.q=e.a[e.q].r,p;if(e.q=e.jb=0,e.N?(d=e.vb,e.N=0):d=xr(e),E=e.D,b=F(e.b)+1,2>b)return e.mb=-1,1;for(b>273&&(b=273),Y=0,u=0;4>u;++u)e.x[u]=e.v[u],e.Q[u]=z(e.b,-1,e.x[u],273),e.Q[u]>e.Q[Y]&&(Y=u);if(e.Q[Y]>=e.n)return e.mb=Y,p=e.Q[Y],Ir(e,p-1),p;if(d>=e.n)return e.mb=e.m[E-1]+4,Ir(e,d-1),d;if(a=C(e.b,-1),v=C(e.b,-e.v[0]-1-1),2>d&&a!=v&&2>e.Q[Y])return e.mb=-1,1;if(e.a[0].Hc=e.l,A=r&e.y,e.a[1].z=Yt[e.C[(e.l<<4)+A]>>>2]+nt(Xr(e.A,r,e.J),e.l>=7,v,a),st(e.a[1]),B=Yt[2048-e.C[(e.l<<4)+A]>>>2],Z=B+Yt[2048-e.bb[e.l]>>>2],v==a&&(V=Z+zr(e,e.l,A),e.a[1].z>V&&(e.a[1].z=V,it(e.a[1]))),m=d>=e.Q[Y]?d:e.Q[Y],2>m)return e.mb=e.a[1].j,1;e.a[1].r=0,e.a[0].bc=e.x[0],e.a[0].ac=e.x[1],e.a[0].dc=e.x[2],e.a[0].lc=e.x[3],f=m;do e.a[f--].z=268435455;while(f>=2);for(u=0;4>u;++u)if(T=e.Q[u],!(2>T)){G=Z+Cr(e,u,e.l,A);do s=G+Jr(e.i,T-2,A),x=e.a[T],x.z>s&&(x.z=s,x.r=0,x.j=u,x.t=0);while(--T>=2)}if(D=B+Yt[e.bb[e.l]>>>2],f=e.Q[0]>=2?e.Q[0]+1:2,d>=f){for(L=0;f>e.m[L];)L+=2;for(;c=e.m[L+1],s=D+yr(e,c,f,A),x=e.a[f],x.z>s&&(x.z=s,x.r=0,x.j=c+4,x.t=0),f!=e.m[L]||(L+=2,L!=E);++f);}for(t=0;;){if(++t,t==m)return gr(e,t);if(S=xr(e),E=e.D,S>=e.n)return e.vb=S,e.N=1,gr(e,t);if(++r,O=e.a[t].r,e.a[t].t?(--O,e.a[t].Ac?($=e.a[e.a[t].r2].Hc,$=4>e.a[t].j2?7>$?8:11:7>$?7:10):$=e.a[O].Hc,$=U($)):$=e.a[O].Hc,O==t-1?$=e.a[t].j?U($):7>$?9:11:(e.a[t].t&&e.a[t].Ac?(O=e.a[t].r2,N=e.a[t].j2,$=7>$?8:11):(N=e.a[t].j,$=4>N?7>$?8:11:7>$?7:10),I=e.a[O],4>N?N?1==N?(e.x[0]=I.ac,e.x[1]=I.bc,e.x[2]=I.dc,e.x[3]=I.lc):2==N?(e.x[0]=I.dc,e.x[1]=I.bc,e.x[2]=I.ac,e.x[3]=I.lc):(e.x[0]=I.lc,e.x[1]=I.bc,e.x[2]=I.ac,e.x[3]=I.dc):(e.x[0]=I.bc,e.x[1]=I.ac,e.x[2]=I.dc,e.x[3]=I.lc):(e.x[0]=N-4,e.x[1]=I.bc,e.x[2]=I.ac,e.x[3]=I.dc)),e.a[t].Hc=$,e.a[t].bc=e.x[0],e.a[t].ac=e.x[1],e.a[t].dc=e.x[2],e.a[t].lc=e.x[3],_=e.a[t].z,a=C(e.b,-1),v=C(e.b,-e.x[0]-1-1),A=r&e.y,o=_+Yt[e.C[($<<4)+A]>>>2]+nt(Xr(e.A,r,C(e.b,-2)),$>=7,v,a),R=e.a[t+1],g=0,R.z>o&&(R.z=o,R.r=t,R.j=-1,R.t=0,g=1),B=_+Yt[2048-e.C[($<<4)+A]>>>2],Z=B+Yt[2048-e.bb[$]>>>2],v!=a||t>R.r&&!R.j||(V=Z+(Yt[e.hb[$]>>>2]+Yt[e._[($<<4)+A]>>>2]),R.z>=V&&(R.z=V,R.r=t,R.j=0,R.t=0,g=1)),w=F(e.b)+1,w=w>4095-t?4095-t:w,b=w,!(2>b)){if(b>e.n&&(b=e.n),!g&&v!=a&&(q=Math.min(w-1,e.n),P=z(e.b,0,e.x[0],q),P>=2)){for(K=U($),H=r+1&e.y,M=o+Yt[2048-e.C[(K<<4)+H]>>>2]+Yt[2048-e.bb[K]>>>2],y=t+1+P;y>m;)e.a[++m].z=268435455;s=M+(J=Jr(e.i,P-2,H),J+Cr(e,0,K,H)),x=e.a[y],x.z>s&&(x.z=s,x.r=t+1,x.j=0,x.t=1,x.Ac=0)}for(j=2,W=0;4>W;++W)if(h=z(e.b,-1,e.x[W],b),!(2>h)){l=h;do{for(;t+h>m;)e.a[++m].z=268435455;s=Z+(Q=Jr(e.i,h-2,A),Q+Cr(e,W,$,A)),x=e.a[t+h],x.z>s&&(x.z=s,x.r=t,x.j=W,x.t=0)}while(--h>=2);if(h=l,W||(j=h+1),w>h&&(q=Math.min(w-1-h,e.n),P=z(e.b,h,e.x[W],q),P>=2)){for(K=7>$?8:11,H=r+h&e.y,n=Z+(X=Jr(e.i,h-2,A),X+Cr(e,W,$,A))+Yt[e.C[(K<<4)+H]>>>2]+nt(Xr(e.A,r+h,C(e.b,h-1-1)),1,C(e.b,h-1-(e.x[W]+1)),C(e.b,h-1)),K=U(K),H=r+h+1&e.y,k=n+Yt[2048-e.C[(K<<4)+H]>>>2],M=k+Yt[2048-e.bb[K]>>>2],y=h+1+P;t+y>m;)e.a[++m].z=268435455;s=M+(er=Jr(e.i,P-2,H),er+Cr(e,0,K,H)),x=e.a[t+y],x.z>s&&(x.z=s,x.r=t+h+1,x.j=0,x.t=1,x.Ac=1,x.r2=t,x.j2=W)}}if(S>b){for(S=b,E=0;S>e.m[E];E+=2);e.m[E]=S,E+=2}if(S>=j){for(D=B+Yt[e.bb[$]>>>2];t+S>m;)e.a[++m].z=268435455;for(L=0;j>e.m[L];)L+=2;for(h=j;;++h)if(i=e.m[L+1],s=D+yr(e,i,h,A),x=e.a[t+h],x.z>s&&(x.z=s,x.r=t,x.j=i+4,x.t=0),h==e.m[L]){if(w>h&&(q=Math.min(w-1-h,e.n),P=z(e.b,h,i,q),P>=2)){for(K=7>$?7:10,H=r+h&e.y,n=s+Yt[e.C[(K<<4)+H]>>>2]+nt(Xr(e.A,r+h,C(e.b,h-1-1)),1,C(e.b,h-(i+1)-1),C(e.b,h-1)),K=U(K),H=r+h+1&e.y,k=n+Yt[2048-e.C[(K<<4)+H]>>>2],M=k+Yt[2048-e.bb[K]>>>2],y=h+1+P;t+y>m;)e.a[++m].z=268435455;s=M+(rr=Jr(e.i,P-2,H),rr+Cr(e,0,K,H)),x=e.a[t+y],x.z>s&&(x.z=s,x.r=t+h+1,x.j=0,x.t=1,x.Ac=1,x.r2=t,x.j2=i+4)}if(L+=2,L==E)break}}}}}function yr(e,r,t,o){var n,s=Q(t);return n=128>r?e.lb[128*s+r]:e.P[(s<<6)+Zr(r)]+e.nc[15&r],n+Jr(e.$,t-2,o)}function Cr(e,r,t,o){var n;return r?(n=Yt[2048-e.hb[t]>>>2],1==r?n+=Yt[e.Ub[t]>>>2]:(n+=Yt[2048-e.Ub[t]>>>2],n+=wt(e.vc[t],r-2))):(n=Yt[e.hb[t]>>>2],n+=Yt[2048-e._[(t<<4)+o]>>>2]),n}function zr(e,r,t){return Yt[e.hb[r]>>>2]+Yt[e._[(r<<4)+t]>>>2]}function Fr(e){kr(e),Dt(e.d),gt(e.C),gt(e._),gt(e.bb),gt(e.hb),gt(e.Ub),gt(e.vc),gt(e.Sb),et(e.A);for(var r=0;4>r;++r)gt(e.K[r].G);jr(e.$,1<<e.Y),jr(e.i,1<<e.Y),gt(e.S.G),e.N=0,e.jb=0,e.q=0,e.s=0}function Ir(e,r){r>0&&(Y(e.b,r),e.s+=r)}function xr(e){var r=0;return e.D=H(e.b,e.m),e.D>0&&(r=e.m[e.D-2],r==e.n&&(r+=z(e.b,r-1,e.m[e.D-1],273-r))),++e.s,r}function Nr(e){e.b&&e.W&&(e.b.cc=null,e.W=0)}function Or(e){Nr(e),e.d.Ab=null}function Ar(e,r){e.ab=r;for(var t=0;r>1<<t;++t);e.$b=2*t}function Hr(e,r){var t=e.X;e.X=r,e.b&&t!=e.X&&(e.wb=-1,e.b=null)}function Gr(e,r){e.fc[0]=9*(5*e.Y+e.eb)+e.fb<<24>>24;for(var t=0;4>t;++t)e.fc[1+t]=e.ab>>8*t<<24>>24;k(r,e.fc,0,5)}function Wr(e,r){if(e.Gc){kt(e.d,e.C,(e.l<<4)+r,1),kt(e.d,e.bb,e.l,0),e.l=7>e.l?7:10,Kr(e.$,e.d,0,r);var t=Q(2);mt(e.K[t],e.d,63),Rt(e.d,67108863,26),pt(e.S,e.d,15)}}function Tr(e){return 2048>e?Zt[e]:2097152>e?Zt[e>>10]+20:Zt[e>>20]+40}function Zr(e){return 131072>e?Zt[e>>6]+12:134217728>e?Zt[e>>16]+32:Zt[e>>26]+52}function Yr(e,r,t,o){8>t?(kt(r,e.db,0,0),mt(e.Vb[o],r,t)):(t-=8,kt(r,e.db,0,1),8>t?(kt(r,e.db,1,0),mt(e.Wb[o],r,t)):(kt(r,e.db,1,1),mt(e.ic,r,t-8)))}function Vr(e){e.db=t(2),e.Vb=t(16),e.Wb=t(16),e.ic=ft({},8);for(var r=0;16>r;++r)e.Vb[r]=ft({},3),e.Wb[r]=ft({},3);return e}function jr(e,r){gt(e.db);for(var t=0;r>t;++t)gt(e.Vb[t].G),gt(e.Wb[t].G);gt(e.ic.G)}function $r(e,r,t,o,n){var s,i,_,a,c;for(s=Yt[e.db[0]>>>2],i=Yt[2048-e.db[0]>>>2],_=i+Yt[e.db[1]>>>2],a=i+Yt[2048-e.db[1]>>>2],c=0,c=0;8>c;++c){if(c>=t)return;o[n+c]=s+dt(e.Vb[r],c)}for(;16>c;++c){if(c>=t)return;o[n+c]=_+dt(e.Wb[r],c-8)}for(;t>c;++c)o[n+c]=a+dt(e.ic,c-8-8)}function Kr(e,r,t,o){Yr(e,r,t,o),0==--e.sc[o]&&($r(e,o,e.rb,e.Cc,272*o),e.sc[o]=e.rb)}function qr(e){return Vr(e),e.Cc=[],e.sc=[],e}function Jr(e,r,t){return e.Cc[272*t+r]}function Qr(e,r){for(var t=0;r>t;++t)$r(e,t,e.rb,e.Cc,272*t),e.sc[t]=e.rb}function Ur(e,r,o){var n,s;if(null==e.V||e.u!=o||e.I!=r)for(e.I=r,e.qc=(1<<r)-1,e.u=o,s=1<<e.u+e.I,e.V=t(s),n=0;s>n;++n)e.V[n]=ot({})}function Xr(e,r,t){return e.V[((r&e.qc)<<e.u)+((255&t)>>>8-e.u)]}function et(e){var r,t=1<<e.u+e.I;for(r=0;t>r;++r)gt(e.V[r].tb)}function rt(e,r,t){var o,n,s=1;for(n=7;n>=0;--n)o=t>>n&1,kt(r,e.tb,s,o),s=s<<1|o}function tt(e,r,t,o){var n,s,i,_,a=1,c=1;for(s=7;s>=0;--s)n=o>>s&1,_=c,a&&(i=t>>s&1,_+=1+i<<8,a=i==n),kt(r,e.tb,_,n),c=c<<1|n}function ot(e){return e.tb=t(768),e}function nt(e,r,t,o){var n,s,i=1,_=7,a=0;if(r)for(;_>=0;--_)if(s=t>>_&1,n=o>>_&1,a+=wt(e.tb[(1+s<<8)+i],n),i=i<<1|n,s!=n){--_;break}for(;_>=0;--_)n=o>>_&1,a+=wt(e.tb[i],n),i=i<<1|n;return a}function st(e){e.j=-1,e.t=0}function it(e){e.j=0,e.t=0}function _t(e,r){return e.F=r,e.G=t(1<<r),e}function at(e,r){var t,o=1;for(t=e.F;0!=t;--t)o=(o<<1)+vt(r,e.G,o);return o-(1<<e.F)}function ct(e,r){var t,o,n=1,s=0;for(o=0;e.F>o;++o)t=vt(r,e.G,n),n<<=1,n+=t,s|=t<<o;return s}function ut(e,r,t,o){var n,s,i=1,_=0;for(s=0;o>s;++s)n=vt(t,e,r+i),i<<=1,i+=n,_|=n<<s;return _}function ft(e,r){return e.F=r,e.G=t(1<<r),e}function mt(e,r,t){var o,n,s=1;for(n=e.F;0!=n;)--n,o=t>>>n&1,kt(r,e.G,s,o),s=s<<1|o}function dt(e,r){var t,o,n=1,s=0;for(o=e.F;0!=o;)--o,t=r>>>o&1,s+=wt(e.G[n],t),n=(n<<1)+t;return s}function pt(e,r,t){var o,n,s=1;for(n=0;e.F>n;++n)o=1&t,kt(r,e.G,s,o),s=s<<1|o,t>>=1}function ht(e,r){var t,o,n=1,s=0;for(o=e.F;0!=o;--o)t=1&r,r>>>=1,s+=wt(e.G[n],t),n=n<<1|t;return s}function Pt(e,r,t,o,n){var s,i,_=1;for(i=0;o>i;++i)s=1&n,kt(t,e,r+_,s),_=_<<1|s,n>>=1}function lt(e,r,t,o){var n,s,i=1,_=0;for(s=t;0!=s;--s)n=1&o,o>>>=1,_+=Yt[(2047&(e[r+i]-n^-n))>>>2],i=i<<1|n;return _}function vt(e,r,t){var o,n=r[t];return o=(e.E>>>11)*n,(-2147483648^o)>(-2147483648^e.Bb)?(e.E=o,r[t]=n+(2048-n>>>5)<<16>>16,-16777216&e.E||(e.Bb=e.Bb<<8|l(e.Ab),e.E<<=8),0):(e.E-=o,e.Bb-=o,r[t]=n-(n>>>5)<<16>>16,-16777216&e.E||(e.Bb=e.Bb<<8|l(e.Ab),e.E<<=8),1)}function Bt(e,r){var t,o,n=0;for(t=r;0!=t;--t)e.E>>>=1,o=e.Bb-e.E>>>31,e.Bb-=e.E&o-1,n=n<<1|1-o,-16777216&e.E||(e.Bb=e.Bb<<8|l(e.Ab),e.E<<=8);return n}function St(e){e.Bb=0,e.E=-1;for(var r=0;5>r;++r)e.Bb=e.Bb<<8|l(e.Ab)}function gt(e){for(var r=e.length-1;r>=0;--r)e[r]=1024}function kt(e,r,t,s){var i,_=r[t];i=(e.E>>>11)*_,s?(e.xc=o(e.xc,n(a(i),[4294967295,0])),e.E-=i,r[t]=_-(_>>>5)<<16>>16):(e.E=i,r[t]=_+(2048-_>>>5)<<16>>16),-16777216&e.E||(e.E<<=8,bt(e))}function Rt(e,r,t){for(var n=t-1;n>=0;--n)e.E>>>=1,1==(r>>>n&1)&&(e.xc=o(e.xc,a(e.E))),-16777216&e.E||(e.E<<=8,bt(e))}function Mt(e){return o(o(a(e.Jb),e.mc),[4,0])}function Dt(e){e.mc=Gt,e.xc=Gt,e.E=-1,e.Jb=1,e.Oc=0}function bt(e){var r,t=c(p(e.xc,32));if(0!=t||s(e.xc,[4278190080,0])<0){e.mc=o(e.mc,a(e.Jb)),r=e.Oc;do g(e.Ab,r+t),r=255;while(0!=--e.Jb);e.Oc=c(e.xc)>>>24}++e.Jb,e.xc=m(n(e.xc,[16777215,0]),8)}function wt(e,r){return Yt[(2047&(e-r^-r))>>>2]}function Et(e){for(var r,t,o,n=0,s=0,i=e.length,_=[],a=[];i>n;++n,++s){if(r=255&e[n],128&r)if(192==(224&r)){if(n+1>=i)return e;if(t=255&e[++n],128!=(192&t))return e;a[s]=(31&r)<<6|63&t}else{if(224!=(240&r))return e;
 if(n+2>=i)return e;if(t=255&e[++n],128!=(192&t))return e;if(o=255&e[++n],128!=(192&o))return e;a[s]=(15&r)<<12|(63&t)<<6|63&o}else{if(!r)return e;a[s]=r}16383==s&&(_.push(String.fromCharCode.apply(String,a)),s=-1)}return s>0&&(a.length=s,_.push(String.fromCharCode.apply(String,a))),_.join("")}function Lt(e){var r,t,o,n=[],s=0,i=e.length;if("object"==typeof e)return e;for(R(e,0,i,n,0),o=0;i>o;++o)r=n[o],r>=1&&127>=r?++s:s+=!r||r>=128&&2047>=r?2:3;for(t=[],s=0,o=0;i>o;++o)r=n[o],r>=1&&127>=r?t[s++]=r<<24>>24:!r||r>=128&&2047>=r?(t[s++]=(192|r>>6&31)<<24>>24,t[s++]=(128|63&r)<<24>>24):(t[s++]=(224|r>>12&15)<<24>>24,t[s++]=(128|r>>6&63)<<24>>24,t[s++]=(128|63&r)<<24>>24);return t}function yt(e){return e[1]+e[0]}function Ct(e,t,o,n){function s(){try{for(var e,r=(new Date).getTime();rr(a.c.yb);)if(i=yt(a.c.yb.Pb)/yt(a.c.Tb),(new Date).getTime()-r>200)return n(i),Nt(s,0),0;n(1),e=S(a.c.Nb),Nt(o.bind(null,e),0)}catch(t){o(null,t)}}var i,_,a={},c=void 0===o&&void 0===n;if("function"!=typeof o&&(_=o,o=n=0),n=n||function(e){return void 0!==_?r(e,_):void 0},o=o||function(e,r){return void 0!==_?postMessage({action:Ft,cbn:_,result:e,error:r}):void 0},c){for(a.c=w({},Lt(e),Vt(t));rr(a.c.yb););return S(a.c.Nb)}try{a.c=w({},Lt(e),Vt(t)),n(0)}catch(u){return o(null,u)}Nt(s,0)}function zt(e,t,o){function n(){try{for(var e,r=0,i=(new Date).getTime();rr(c.d.yb);)if(++r%1e3==0&&(new Date).getTime()-i>200)return _&&(s=yt(c.d.yb.Z.g)/a,o(s)),Nt(n,0),0;o(1),e=Et(S(c.d.Nb)),Nt(t.bind(null,e),0)}catch(u){t(null,u)}}var s,i,_,a,c={},u=void 0===t&&void 0===o;if("function"!=typeof t&&(i=t,t=o=0),o=o||function(e){return void 0!==i?r(_?e:-1,i):void 0},t=t||function(e,r){return void 0!==i?postMessage({action:It,cbn:i,result:e,error:r}):void 0},u){for(c.d=L({},e);rr(c.d.yb););return Et(S(c.d.Nb))}try{c.d=L({},e),a=yt(c.d.Tb),_=a>-1,o(0)}catch(f){return t(null,f)}Nt(n,0)}var Ft=1,It=2,xt=3,Nt="function"==typeof setImmediate?setImmediate:setTimeout,Ot=4294967296,At=[4294967295,-Ot],Ht=[0,-0x8000000000000000],Gt=[0,0],Wt=[1,0],Tt=function(){var e,r,t,o=[];for(e=0;256>e;++e){for(t=e,r=0;8>r;++r)0!=(1&t)?t=t>>>1^-306674912:t>>>=1;o[e]=t}return o}(),Zt=function(){var e,r,t,o=2,n=[0,1];for(t=2;22>t;++t)for(r=1<<(t>>1)-1,e=0;r>e;++e,++o)n[o]=t<<24>>24;return n}(),Yt=function(){var e,r,t,o,n=[];for(r=8;r>=0;--r)for(o=1<<9-r-1,e=1<<9-r,t=o;e>t;++t)n[t]=(r<<6)+(e-t<<6>>>9-r-1);return n}(),Vt=function(){var e=[{s:16,f:64,m:0},{s:20,f:64,m:0},{s:19,f:64,m:1},{s:20,f:64,m:1},{s:21,f:128,m:1},{s:22,f:128,m:1},{s:23,f:128,m:1},{s:24,f:255,m:1},{s:25,f:255,m:1}];return function(r){return e[r-1]||e[6]}}();return"undefined"==typeof onmessage||"undefined"!=typeof window&&void 0!==window.document||!function(){onmessage=function(r){r&&r.gc&&(r.gc.action==It?e.decompress(r.gc.gc,r.gc.cbn):r.gc.action==Ft&&e.compress(r.gc.gc,r.gc.Rc,r.gc.cbn))}}(),{compress:Ct,decompress:zt}}();this.LZMA=this.LZMA_WORKER=e;
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.DOMPurify=t()}(this,function(){"use strict";function e(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)}function t(e){return function(t){for(var r=arguments.length,n=Array(r>1?r-1:0),o=1;o<r;o++)n[o-1]=arguments[o];return m(e,t,n)}}function r(e){return function(){for(var t=arguments.length,r=Array(t),n=0;n<t;n++)r[n]=arguments[n];return y(e,r)}}function n(e,t){c&&c(e,null);for(var r=t.length;r--;){var n=t[r];if("string"==typeof n){var o=x(n);o!==n&&(s(t)||(t[r]=o),n=o)}e[n]=!0}return e}function o(e){var t={},r=void 0;for(r in e)m(l,e,[r])&&(t[r]=e[r]);return t}function i(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)}function a(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:V(),t=function(e){return a(e)};if(t.version="2.0.8",t.removed=[],!e||!e.document||9!==e.document.nodeType)return t.isSupported=!1,t;var r=e.document,l=!1,c=!1,s=e.document,f=e.DocumentFragment,p=e.HTMLTemplateElement,m=e.Node,y=e.NodeFilter,X=e.NamedNodeMap,$=void 0===X?e.NamedNodeMap||e.MozNamedAttrMap:X,J=e.Text,Q=e.Comment,Z=e.DOMParser,ee=e.trustedTypes;if("function"==typeof p){var te=s.createElement("template");te.content&&te.content.ownerDocument&&(s=te.content.ownerDocument)}var re=Y(ee,r),ne=re?re.createHTML(""):"",oe=s,ie=oe.implementation,ae=oe.createNodeIterator,le=oe.getElementsByTagName,ce=oe.createDocumentFragment,se=r.importNode,ue={};t.isSupported=ie&&void 0!==ie.createHTMLDocument&&9!==s.documentMode;var de=j,fe=U,pe=P,me=W,ye=q,ge=G,he=B,ve=null,be=n({},[].concat(i(O),i(w),i(D),i(R),i(H))),Te=null,Ae=n({},[].concat(i(C),i(F),i(z),i(I))),xe=null,Se=null,Le=!0,Ee=!0,Me=!1,ke=!1,_e=!1,Ne=!1,Oe=!1,we=!1,De=!1,Re=!1,He=!1,Ce=!1,Fe=!0,ze=!0,Ie=!1,je={},Ue=n({},["annotation-xml","audio","colgroup","desc","foreignobject","head","iframe","math","mi","mn","mo","ms","mtext","noembed","noframes","plaintext","script","style","svg","template","thead","title","video","xmp"]),Pe=n({},["audio","video","img","source","image"]),We=null,Be=n({},["alt","class","for","id","label","name","pattern","placeholder","summary","title","value","style","xmlns"]),qe=null,Ge=s.createElement("form"),Ke=function(e){qe&&qe===e||(e&&"object"===(void 0===e?"undefined":K(e))||(e={}),ve="ALLOWED_TAGS"in e?n({},e.ALLOWED_TAGS):be,Te="ALLOWED_ATTR"in e?n({},e.ALLOWED_ATTR):Ae,We="ADD_URI_SAFE_ATTR"in e?n(o(Be),e.ADD_URI_SAFE_ATTR):Be,xe="FORBID_TAGS"in e?n({},e.FORBID_TAGS):{},Se="FORBID_ATTR"in e?n({},e.FORBID_ATTR):{},je="USE_PROFILES"in e&&e.USE_PROFILES,Le=!1!==e.ALLOW_ARIA_ATTR,Ee=!1!==e.ALLOW_DATA_ATTR,Me=e.ALLOW_UNKNOWN_PROTOCOLS||!1,ke=e.SAFE_FOR_JQUERY||!1,_e=e.SAFE_FOR_TEMPLATES||!1,Ne=e.WHOLE_DOCUMENT||!1,De=e.RETURN_DOM||!1,Re=e.RETURN_DOM_FRAGMENT||!1,He=e.RETURN_DOM_IMPORT||!1,Ce=e.RETURN_TRUSTED_TYPE||!1,we=e.FORCE_BODY||!1,Fe=!1!==e.SANITIZE_DOM,ze=!1!==e.KEEP_CONTENT,Ie=e.IN_PLACE||!1,he=e.ALLOWED_URI_REGEXP||he,_e&&(Ee=!1),Re&&(De=!0),je&&(ve=n({},[].concat(i(H))),Te=[],!0===je.html&&(n(ve,O),n(Te,C)),!0===je.svg&&(n(ve,w),n(Te,F),n(Te,I)),!0===je.svgFilters&&(n(ve,D),n(Te,F),n(Te,I)),!0===je.mathMl&&(n(ve,R),n(Te,z),n(Te,I))),e.ADD_TAGS&&(ve===be&&(ve=o(ve)),n(ve,e.ADD_TAGS)),e.ADD_ATTR&&(Te===Ae&&(Te=o(Te)),n(Te,e.ADD_ATTR)),e.ADD_URI_SAFE_ATTR&&n(We,e.ADD_URI_SAFE_ATTR),ze&&(ve["#text"]=!0),Ne&&n(ve,["html","head","body"]),ve.table&&(n(ve,["tbody"]),delete xe.tbody),d&&d(e),qe=e)},Ve=function(e){T(t.removed,{element:e});try{e.parentNode.removeChild(e)}catch(t){e.outerHTML=ne}},Ye=function(e,r){try{T(t.removed,{attribute:r.getAttributeNode(e),from:r})}catch(e){T(t.removed,{attribute:null,from:r})}r.removeAttribute(e)},Xe=function(e){var t=void 0,r=void 0;if(we)e="<remove></remove>"+e;else{var o=S(e,/^[\s]+/);r=o&&o[0]}var i=re?re.createHTML(e):e;if(l)try{t=(new Z).parseFromString(i,"text/html")}catch(e){}if(c&&n(xe,["title"]),!t||!t.documentElement){var a=(t=ie.createHTMLDocument("")).body;a.parentNode.removeChild(a.parentNode.firstElementChild),a.outerHTML=i}return e&&r&&t.body.insertBefore(s.createTextNode(r),t.body.childNodes[0]||null),le.call(t,Ne?"html":"body")[0]};t.isSupported&&(function(){try{Xe('<svg><p><textarea><img src="</textarea><img src=x abc=1//">').querySelector("svg img")&&(l=!0)}catch(e){}}(),function(){try{var e=Xe("<x/><title>&lt;/title&gt;&lt;img&gt;");k(/<\/title/,e.querySelector("title").innerHTML)&&(c=!0)}catch(e){}}());var $e=function(e){return ae.call(e.ownerDocument||e,e,y.SHOW_ELEMENT|y.SHOW_COMMENT|y.SHOW_TEXT,function(){return y.FILTER_ACCEPT},!1)},Je=function(e){return!(e instanceof J||e instanceof Q)&&!("string"==typeof e.nodeName&&"string"==typeof e.textContent&&"function"==typeof e.removeChild&&e.attributes instanceof $&&"function"==typeof e.removeAttribute&&"function"==typeof e.setAttribute&&"string"==typeof e.namespaceURI)},Qe=function(e){return"object"===(void 0===m?"undefined":K(m))?e instanceof m:e&&"object"===(void 0===e?"undefined":K(e))&&"number"==typeof e.nodeType&&"string"==typeof e.nodeName},Ze=function(e,r,n){ue[e]&&g(ue[e],function(e){e.call(t,r,n,qe)})},et=function(e){var r=void 0;if(Ze("beforeSanitizeElements",e,null),Je(e))return Ve(e),!0;var n=x(e.nodeName);if(Ze("uponSanitizeElement",e,{tagName:n,allowedTags:ve}),("svg"===n||"math"===n)&&0!==e.querySelectorAll("p, br").length)return Ve(e),!0;if(!ve[n]||xe[n]){if(ze&&!Ue[n]&&"function"==typeof e.insertAdjacentHTML)try{var o=e.innerHTML;e.insertAdjacentHTML("AfterEnd",re?re.createHTML(o):o)}catch(e){}return Ve(e),!0}return"noscript"===n&&k(/<\/noscript/i,e.innerHTML)?(Ve(e),!0):"noembed"===n&&k(/<\/noembed/i,e.innerHTML)?(Ve(e),!0):(!ke||e.firstElementChild||e.content&&e.content.firstElementChild||!k(/</g,e.textContent)||(T(t.removed,{element:e.cloneNode()}),e.innerHTML?e.innerHTML=L(e.innerHTML,/</g,"&lt;"):e.innerHTML=L(e.textContent,/</g,"&lt;")),_e&&3===e.nodeType&&(r=e.textContent,r=L(r,de," "),r=L(r,fe," "),e.textContent!==r&&(T(t.removed,{element:e.cloneNode()}),e.textContent=r)),Ze("afterSanitizeElements",e,null),!1)},tt=function(e,t,r){if(Fe&&("id"===t||"name"===t)&&(r in s||r in Ge))return!1;if(Ee&&k(pe,t));else if(Le&&k(me,t));else{if(!Te[t]||Se[t])return!1;if(We[t]);else if(k(he,L(r,ge,"")));else if("src"!==t&&"xlink:href"!==t&&"href"!==t||"script"===e||0!==E(r,"data:")||!Pe[e]){if(Me&&!k(ye,L(r,ge,"")));else if(r)return!1}else;}return!0},rt=function(e){var r=void 0,n=void 0,o=void 0,i=void 0,a=void 0;Ze("beforeSanitizeAttributes",e,null);var l=e.attributes;if(l){var c={attrName:"",attrValue:"",keepAttr:!0,allowedAttributes:Te};for(a=l.length;a--;){var s=r=l[a],d=s.name,f=s.namespaceURI;if(n=M(r.value),o=x(d),c.attrName=o,c.attrValue=n,c.keepAttr=!0,c.forceKeepAttr=void 0,Ze("uponSanitizeAttribute",e,c),n=c.attrValue,!c.forceKeepAttr){if("name"===o&&"IMG"===e.nodeName&&l.id)i=l.id,l=A(l,[]),Ye("id",e),Ye(d,e),h(l,i)>a&&e.setAttribute("id",i.value);else{if("INPUT"===e.nodeName&&"type"===o&&"file"===n&&c.keepAttr&&(Te[o]||!Se[o]))continue;"id"===d&&e.setAttribute(d,""),Ye(d,e)}if(c.keepAttr)if(ke&&k(/\/>/i,n))Ye(d,e);else if(k(/svg|math/i,e.namespaceURI)&&k(_("</("+v(u(Ue),"|")+")","i"),n))Ye(d,e);else{_e&&(n=L(n,de," "),n=L(n,fe," "));var p=e.nodeName.toLowerCase();if(tt(p,o,n))try{f?e.setAttributeNS(f,d,n):e.setAttribute(d,n),b(t.removed)}catch(e){}}}}Ze("afterSanitizeAttributes",e,null)}},nt=function e(t){var r=void 0,n=$e(t);for(Ze("beforeSanitizeShadowDOM",t,null);r=n.nextNode();)Ze("uponSanitizeShadowNode",r,null),et(r)||(r.content instanceof f&&e(r.content),rt(r));Ze("afterSanitizeShadowDOM",t,null)};return t.sanitize=function(n,o){var i=void 0,a=void 0,l=void 0,c=void 0,s=void 0;if(n||(n="\x3c!--\x3e"),"string"!=typeof n&&!Qe(n)){if("function"!=typeof n.toString)throw N("toString is not a function");if("string"!=typeof(n=n.toString()))throw N("dirty is not a string, aborting")}if(!t.isSupported){if("object"===K(e.toStaticHTML)||"function"==typeof e.toStaticHTML){if("string"==typeof n)return e.toStaticHTML(n);if(Qe(n))return e.toStaticHTML(n.outerHTML)}return n}if(Oe||Ke(o),t.removed=[],"string"==typeof n&&(Ie=!1),Ie);else if(n instanceof m)1===(a=(i=Xe("\x3c!--\x3e")).ownerDocument.importNode(n,!0)).nodeType&&"BODY"===a.nodeName?i=a:"HTML"===a.nodeName?i=a:i.appendChild(a);else{if(!De&&!_e&&!Ne&&Ce&&-1===n.indexOf("<"))return re?re.createHTML(n):n;if(!(i=Xe(n)))return De?null:ne}i&&we&&Ve(i.firstChild);for(var u=$e(Ie?n:i);l=u.nextNode();)3===l.nodeType&&l===c||et(l)||(l.content instanceof f&&nt(l.content),rt(l),c=l);if(c=null,Ie)return n;if(De){if(Re)for(s=ce.call(i.ownerDocument);i.firstChild;)s.appendChild(i.firstChild);else s=i;return He&&(s=se.call(r,s,!0)),s}var d=Ne?i.outerHTML:i.innerHTML;return _e&&(d=L(d,de," "),d=L(d,fe," ")),re&&Ce?re.createHTML(d):d},t.setConfig=function(e){Ke(e),Oe=!0},t.clearConfig=function(){qe=null,Oe=!1},t.isValidAttribute=function(e,t,r){qe||Ke({});var n=x(e),o=x(t);return tt(n,o,r)},t.addHook=function(e,t){"function"==typeof t&&(ue[e]=ue[e]||[],T(ue[e],t))},t.removeHook=function(e){ue[e]&&b(ue[e])},t.removeHooks=function(e){ue[e]&&(ue[e]=[])},t.removeAllHooks=function(){ue={}},t}var l=Object.hasOwnProperty,c=Object.setPrototypeOf,s=Object.isFrozen,u=Object.keys,d=Object.freeze,f=Object.seal,p="undefined"!=typeof Reflect&&Reflect,m=p.apply,y=p.construct;m||(m=function(e,t,r){return e.apply(t,r)}),d||(d=function(e){return e}),f||(f=function(e){return e}),y||(y=function(t,r){return new(Function.prototype.bind.apply(t,[null].concat(e(r))))});var g=t(Array.prototype.forEach),h=t(Array.prototype.indexOf),v=t(Array.prototype.join),b=t(Array.prototype.pop),T=t(Array.prototype.push),A=t(Array.prototype.slice),x=t(String.prototype.toLowerCase),S=t(String.prototype.match),L=t(String.prototype.replace),E=t(String.prototype.indexOf),M=t(String.prototype.trim),k=t(RegExp.prototype.test),_=r(RegExp),N=r(TypeError),O=d(["a","abbr","acronym","address","area","article","aside","audio","b","bdi","bdo","big","blink","blockquote","body","br","button","canvas","caption","center","cite","code","col","colgroup","content","data","datalist","dd","decorator","del","details","dfn","dir","div","dl","dt","element","em","fieldset","figcaption","figure","font","footer","form","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","img","input","ins","kbd","label","legend","li","main","map","mark","marquee","menu","menuitem","meter","nav","nobr","ol","optgroup","option","output","p","picture","pre","progress","q","rp","rt","ruby","s","samp","section","select","shadow","small","source","spacer","span","strike","strong","style","sub","summary","sup","table","tbody","td","template","textarea","tfoot","th","thead","time","tr","track","tt","u","ul","var","video","wbr"]),w=d(["svg","a","altglyph","altglyphdef","altglyphitem","animatecolor","animatemotion","animatetransform","audio","canvas","circle","clippath","defs","desc","ellipse","filter","font","g","glyph","glyphref","hkern","image","line","lineargradient","marker","mask","metadata","mpath","path","pattern","polygon","polyline","radialgradient","rect","stop","style","switch","symbol","text","textpath","title","tref","tspan","video","view","vkern"]),D=d(["feBlend","feColorMatrix","feComponentTransfer","feComposite","feConvolveMatrix","feDiffuseLighting","feDisplacementMap","feDistantLight","feFlood","feFuncA","feFuncB","feFuncG","feFuncR","feGaussianBlur","feMerge","feMergeNode","feMorphology","feOffset","fePointLight","feSpecularLighting","feSpotLight","feTile","feTurbulence"]),R=d(["math","menclose","merror","mfenced","mfrac","mglyph","mi","mlabeledtr","mmultiscripts","mn","mo","mover","mpadded","mphantom","mroot","mrow","ms","mspace","msqrt","mstyle","msub","msup","msubsup","mtable","mtd","mtext","mtr","munder","munderover"]),H=d(["#text"]),C=d(["accept","action","align","alt","autocomplete","background","bgcolor","border","cellpadding","cellspacing","checked","cite","class","clear","color","cols","colspan","controls","coords","crossorigin","datetime","default","dir","disabled","download","enctype","face","for","headers","height","hidden","high","href","hreflang","id","integrity","ismap","label","lang","list","loop","low","max","maxlength","media","method","min","minlength","multiple","name","noshade","novalidate","nowrap","open","optimum","pattern","placeholder","poster","preload","pubdate","radiogroup","readonly","rel","required","rev","reversed","role","rows","rowspan","spellcheck","scope","selected","shape","size","sizes","span","srclang","start","src","srcset","step","style","summary","tabindex","title","type","usemap","valign","value","width","xmlns"]),F=d(["accent-height","accumulate","additive","alignment-baseline","ascent","attributename","attributetype","azimuth","basefrequency","baseline-shift","begin","bias","by","class","clip","clip-path","clip-rule","color","color-interpolation","color-interpolation-filters","color-profile","color-rendering","cx","cy","d","dx","dy","diffuseconstant","direction","display","divisor","dur","edgemode","elevation","end","fill","fill-opacity","fill-rule","filter","filterunits","flood-color","flood-opacity","font-family","font-size","font-size-adjust","font-stretch","font-style","font-variant","font-weight","fx","fy","g1","g2","glyph-name","glyphref","gradientunits","gradienttransform","height","href","id","image-rendering","in","in2","k","k1","k2","k3","k4","kerning","keypoints","keysplines","keytimes","lang","lengthadjust","letter-spacing","kernelmatrix","kernelunitlength","lighting-color","local","marker-end","marker-mid","marker-start","markerheight","markerunits","markerwidth","maskcontentunits","maskunits","max","mask","media","method","mode","min","name","numoctaves","offset","operator","opacity","order","orient","orientation","origin","overflow","paint-order","path","pathlength","patterncontentunits","patterntransform","patternunits","points","preservealpha","preserveaspectratio","primitiveunits","r","rx","ry","radius","refx","refy","repeatcount","repeatdur","restart","result","rotate","scale","seed","shape-rendering","specularconstant","specularexponent","spreadmethod","stddeviation","stitchtiles","stop-color","stop-opacity","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke","stroke-width","style","surfacescale","tabindex","targetx","targety","transform","text-anchor","text-decoration","text-rendering","textlength","type","u1","u2","unicode","values","viewbox","visibility","version","vert-adv-y","vert-origin-x","vert-origin-y","width","word-spacing","wrap","writing-mode","xchannelselector","ychannelselector","x","x1","x2","xmlns","y","y1","y2","z","zoomandpan"]),z=d(["accent","accentunder","align","bevelled","close","columnsalign","columnlines","columnspan","denomalign","depth","dir","display","displaystyle","encoding","fence","frame","height","href","id","largeop","length","linethickness","lspace","lquote","mathbackground","mathcolor","mathsize","mathvariant","maxsize","minsize","movablelimits","notation","numalign","open","rowalign","rowlines","rowspacing","rowspan","rspace","rquote","scriptlevel","scriptminsize","scriptsizemultiplier","selection","separator","separators","stretchy","subscriptshift","supscriptshift","symmetric","voffset","width","xmlns"]),I=d(["xlink:href","xml:id","xlink:title","xml:space","xmlns:xlink"]),j=f(/\{\{[\s\S]*|[\s\S]*\}\}/gm),U=f(/<%[\s\S]*|[\s\S]*%>/gm),P=f(/^data-[\-\w.\u00B7-\uFFFF]/),W=f(/^aria-[\-\w]+$/),B=f(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i),q=f(/^(?:\w+script|data):/i),G=f(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205f\u3000]/g),K="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},V=function(){return"undefined"==typeof window?null:window},Y=function(e,t){if("object"!==(void 0===e?"undefined":K(e))||"function"!=typeof e.createPolicy)return null;var r=null;t.currentScript&&t.currentScript.hasAttribute("data-tt-policy-suffix")&&(r=t.currentScript.getAttribute("data-tt-policy-suffix"));var n="dompurify"+(r?"#"+r:"");try{return e.createPolicy(n,{createHTML:function(e){return e}})}catch(e){return console.warn("TrustedTypes policy "+n+" could not be created."),null}};return a()});
+//# sourceMappingURL=purify.min.js.map
+
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -523,6 +526,14 @@ var pxtc = ts.pxtc;
                 localStorage.setItem("editorlangpref", lang);
             }
             Util.setEditorLanguagePref = setEditorLanguagePref;
+            function getToolboxAnimation() {
+                return localStorage.getItem("toolboxanimation");
+            }
+            Util.getToolboxAnimation = getToolboxAnimation;
+            function setToolboxAnimation() {
+                localStorage.setItem("toolboxanimation", "1");
+            }
+            Util.setToolboxAnimation = setToolboxAnimation;
             // small deep equals for primitives, objects, arrays. returns error message
             function deq(a, b) {
                 if (a === b)
@@ -1506,10 +1517,15 @@ var ts;
             Util.downloadLiveTranslationsAsync = downloadLiveTranslationsAsync;
             Util.pxtLangCookieId = "PXT_LANG";
             Util.langCookieExpirationDays = 30;
+            // "lang-code": { englishName: "", localizedName: ""},
+            // Crowdin code: https://support.crowdin.com/api/language-codes/
+            // English name and localized name: https://en.wikipedia.org/wiki/List_of_language_names
             Util.allLanguages = {
                 "af": { englishName: "Afrikaans", localizedName: "Afrikaans" },
                 "ar": { englishName: "Arabic", localizedName: "العربية" },
+                "az": { englishName: "Azerbaijani", localizedName: "آذربایجان دیلی" },
                 "bg": { englishName: "Bulgarian", localizedName: "български" },
+                "bn": { englishName: "Bengali", localizedName: "বাংলা" },
                 "ca": { englishName: "Catalan", localizedName: "Català" },
                 "cs": { englishName: "Czech", localizedName: "Čeština" },
                 "da": { englishName: "Danish", localizedName: "Dansk" },
@@ -1518,9 +1534,13 @@ var ts;
                 "en": { englishName: "English", localizedName: "English" },
                 "es-ES": { englishName: "Spanish (Spain)", localizedName: "Español (España)" },
                 "es-MX": { englishName: "Spanish (Mexico)", localizedName: "Español (México)" },
+                "et": { englishName: "Estonian", localizedName: "Eesti" },
+                "eu": { englishName: "Basque", localizedName: "Euskara" },
+                "fa": { englishName: "Persian", localizedName: "فارسی" },
                 "fi": { englishName: "Finnish", localizedName: "Suomi" },
                 "fr": { englishName: "French", localizedName: "Français" },
                 "fr-CA": { englishName: "French (Canada)", localizedName: "Français (Canada)" },
+                "gu-IN": { englishName: "Gujarati", localizedName: "ગુજરાતી" },
                 "he": { englishName: "Hebrew", localizedName: "עברית" },
                 "hr": { englishName: "Croatian", localizedName: "Hrvatski" },
                 "hu": { englishName: "Hungarian", localizedName: "Magyar" },
@@ -1529,11 +1549,19 @@ var ts;
                 "is": { englishName: "Icelandic", localizedName: "Íslenska" },
                 "it": { englishName: "Italian", localizedName: "Italiano" },
                 "ja": { englishName: "Japanese", localizedName: "日本語" },
+                "kab": { englishName: "Kabyle", localizedName: "شئعم" },
                 "ko": { englishName: "Korean", localizedName: "한국어" },
+                "kmr": { englishName: "Kurmanji (Kurdish)", localizedName: "کورمانجی‎" },
+                "kn": { englishName: "Kannada", localizedName: "ಕನ್ನಡ" },
                 "lt": { englishName: "Lithuanian", localizedName: "Lietuvių" },
+                "lv": { englishName: "Latvian", localizedName: "Latviešu" },
+                "ml-IN": { englishName: "Malayalam", localizedName: "മലയാളം" },
+                "mr": { englishName: "Marathi", localizedName: "मराठी" },
                 "nl": { englishName: "Dutch", localizedName: "Nederlands" },
                 "no": { englishName: "Norwegian", localizedName: "Norsk" },
                 "nb": { englishName: "Norwegian Bokmal", localizedName: "Norsk bokmål" },
+                "nn-NO": { englishName: "Norwegian Nynorsk", localizedName: "Norsk nynorsk" },
+                "pa-IN": { englishName: "Punjabi", localizedName: "ਪੰਜਾਬੀ" },
                 "pl": { englishName: "Polish", localizedName: "Polski" },
                 "pt-BR": { englishName: "Portuguese (Brazil)", localizedName: "Português (Brasil)" },
                 "pt-PT": { englishName: "Portuguese (Portugal)", localizedName: "Português (Portugal)" },
@@ -1543,10 +1571,16 @@ var ts;
                 "sk": { englishName: "Slovak", localizedName: "Slovenčina" },
                 "sl": { englishName: "Slovenian", localizedName: "Slovenski" },
                 "sr": { englishName: "Serbian", localizedName: "Srpski" },
+                "su": { englishName: "Sundanese", localizedName: "ᮘᮞ ᮞᮥᮔ᮪ᮓ" },
                 "sv-SE": { englishName: "Swedish (Sweden)", localizedName: "Svenska (Sverige)" },
                 "ta": { englishName: "Tamil", localizedName: "தமிழ்" },
+                "te": { englishName: "Telugu", localizedName: "తెలుగు" },
+                "th": { englishName: "Thai", localizedName: "ภาษาไทย" },
+                "tl": { englishName: "Tagalog", localizedName: "ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔" },
                 "tr": { englishName: "Turkish", localizedName: "Türkçe" },
                 "uk": { englishName: "Ukrainian", localizedName: "Українська" },
+                "ur-IN": { englishName: "Urdu (India)", localizedName: "اردو (ہندوستان)" },
+                "ur-PK": { englishName: "Urdu (Pakistan)", localizedName: "اردو (پاکستان)" },
                 "vi": { englishName: "Vietnamese", localizedName: "Tiếng việt" },
                 "zh-CN": { englishName: "Chinese (Simplified)", localizedName: "简体中文" },
                 "zh-TW": { englishName: "Chinese (Traditional)", localizedName: "繁体中文" },
@@ -2279,6 +2313,7 @@ var pxt;
             workerjs: "/worker.js",
             monacoworkerjs: "/monacoworker.js",
             gifworkerjs: "/gifjs/gif.worker.js",
+            serviceworkerjs: "/serviceworker.js",
             pxtVersion: "local",
             pxtRelId: "",
             pxtCdnUrl: "/cdn/",
@@ -2290,6 +2325,8 @@ var pxt;
             targetRelId: "",
             targetId: pxt.appTarget ? pxt.appTarget.id : "",
             simUrl: "/sim/simulator.html",
+            simserviceworkerUrl: "/simulatorserviceworker.js",
+            simworkerconfigUrl: "/sim/workerConfig.js",
             partsUrl: "/sim/siminstructions.html"
         };
         return r;
@@ -2501,6 +2538,16 @@ var pxt;
             }
         }
         blocks.compileInfo = compileInfo;
+        function hasHandler(fn) {
+            return fn.parameters && fn.parameters.some(function (p) {
+                var _a, _b;
+                return (p.type == "() => void" ||
+                    p.type == "Action" ||
+                    !!((_a = p.properties) === null || _a === void 0 ? void 0 : _a.length) ||
+                    !!((_b = p.handlerParameters) === null || _b === void 0 ? void 0 : _b.length));
+            });
+        }
+        blocks.hasHandler = hasHandler;
         /**
          * Returns which Blockly block type to use for an argument reporter based
          * on the specified TypeScript type.
@@ -2934,6 +2981,16 @@ var pxt;
                         PROCEDURES_CALLNORETURN_TITLE: pxt.Util.lf("call function")
                     }
                 },
+                'function_return': {
+                    name: pxt.Util.lf("return a value from within a function"),
+                    tooltip: pxt.Util.lf("Return a value from within a user-defined function."),
+                    url: 'types/function/return',
+                    category: 'functions',
+                    block: {
+                        message_with_value: pxt.Util.lf("return %1"),
+                        message_no_value: pxt.Util.lf("return")
+                    }
+                },
                 'function_definition': {
                     name: pxt.Util.lf("define the function"),
                     tooltip: pxt.Util.lf("Create a function."),
@@ -2951,6 +3008,13 @@ var pxt;
                     block: {
                         FUNCTIONS_CALL_TITLE: pxt.Util.lf("call")
                     }
+                },
+                'function_call_output': {
+                    name: pxt.Util.lf("call the function with a return value"),
+                    tooltip: pxt.Util.lf("Call the user-defined function with a return value."),
+                    url: 'types/function/call',
+                    category: 'functions',
+                    block: {}
                 }
             };
             _blockDefinitions[pxtc.ON_START_TYPE] = {
@@ -3137,12 +3201,13 @@ var pxt;
             return isPxtElectron() || isIpcRenderer();
         }
         BrowserUtils.isElectron = isElectron;
-        function isLocalHost() {
+        function isLocalHost(ignoreFlags) {
+            var _a, _b;
             try {
                 return typeof window !== "undefined"
                     && /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(window.location.href)
-                    && !/nolocalhost=1/.test(window.location.href)
-                    && !(pxt.webConfig && pxt.webConfig.isStatic);
+                    && (ignoreFlags || !/nolocalhost=1/.test(window.location.href))
+                    && !((_b = (_a = pxt) === null || _a === void 0 ? void 0 : _a.webConfig) === null || _b === void 0 ? void 0 : _b.isStatic);
             }
             catch (e) {
                 return false;
@@ -4101,6 +4166,8 @@ var pxt;
         commands.patchCompileResultAsync = undefined;
         commands.browserDownloadAsync = undefined;
         commands.saveOnlyAsync = undefined;
+        commands.renderBrowserDownloadInstructions = undefined;
+        commands.renderUsbPairDialog = undefined;
         commands.showUploadInstructionsAsync = undefined;
         commands.saveProjectAsync = undefined;
         commands.electronDeployAsync = undefined; // A pointer to the Electron deploy function, so that targets can access it in their extension.ts
@@ -4273,18 +4340,34 @@ var pxt;
             };
             var constsName = "dal.d.ts";
             var sourcePath = "/source/";
-            var mainDeps = mainPkg.sortedDeps(true);
-            for (var _i = 0, mainDeps_1 = mainDeps; _i < mainDeps_1.length; _i++) {
-                var pkg = mainDeps_1[_i];
+            var disabledDeps = "";
+            var mainDeps = [];
+            for (var _i = 0, _a = mainPkg.sortedDeps(true); _i < _a.length; _i++) {
+                var pkg = _a[_i];
+                if (pkg.disablesVariant(pxt.appTargetVariant) ||
+                    pkg.resolvedDependencies().some(function (d) { return d.disablesVariant(pxt.appTargetVariant); })) {
+                    if (pkg.id != "this") {
+                        if (disabledDeps)
+                            disabledDeps += ", ";
+                        disabledDeps += pkg.id;
+                    }
+                    pxt.debug("disable variant " + pxt.appTargetVariant + " due to " + pkg.id);
+                    continue;
+                }
+                mainDeps.push(pkg);
                 pkg.addSnapshot(pkgSnapshot, [constsName, ".h", ".cpp"]);
             }
             var key = JSON.stringify(pkgSnapshot);
-            if (prevExtInfos[key]) {
+            var prevInfo = prevExtInfos[key];
+            if (prevInfo) {
                 pxt.debug("Using cached extinfo");
-                return prevExtInfos[key];
+                var r = U.flatClone(prevInfo);
+                r.disabledDeps = disabledDeps;
+                return r;
             }
             pxt.debug("Generating new extinfo");
             var res = pxtc.emptyExtInfo();
+            res.disabledDeps = disabledDeps;
             var compileService = pxt.appTarget.compileService;
             if (!compileService)
                 compileService = {
@@ -4335,8 +4418,8 @@ var pxt;
                 return name.trim().replace(/[\_\*]$/, "");
             }
             var makefile = "";
-            for (var _a = 0, mainDeps_2 = mainDeps; _a < mainDeps_2.length; _a++) {
-                var pkg = mainDeps_2[_a];
+            for (var _b = 0, mainDeps_1 = mainDeps; _b < mainDeps_1.length; _b++) {
+                var pkg = mainDeps_1[_b];
                 if (pkg.getFiles().indexOf(constsName) >= 0) {
                     var src = pkg.host().readFile(pkg, constsName);
                     pxt.Util.assert(!!src, constsName + " not found in " + pkg.id);
@@ -4928,9 +5011,8 @@ var pxt;
                             if (src == null)
                                 U.userError(lf("C++ file {0} is missing in extension {1}.", fn, pkg.config.name));
                             fileName = fullName;
-                            // parseCpp() will remove doc comments, to prevent excessive recompilation
-                            // pxt.debug("Parse C++: " + fullName)
                             parseCpp(src, isHeader);
+                            src = src.replace(/^[ \t]*/mg, ""); // shrink the files
                             res.extensionFiles[sourcePath + fullName] = src;
                             if (pkg.level == 0)
                                 res.onlyPublic = false;
@@ -4946,8 +5028,8 @@ var pxt;
                         allErrors += lf("Extension {0}:\n", pkg.id) + thisErrors;
                     }
                 };
-                for (var _b = 0, mainDeps_3 = mainDeps; _b < mainDeps_3.length; _b++) {
-                    var pkg = mainDeps_3[_b];
+                for (var _c = 0, mainDeps_2 = mainDeps; _c < mainDeps_2.length; _c++) {
+                    var pkg = mainDeps_2[_c];
                     _loop_1(pkg);
                 }
             }
@@ -5030,8 +5112,8 @@ var pxt;
                 res.generatedFiles["/module.json"] = JSON.stringify(moduleJson, null, 4) + "\n";
                 pxt.debug("module.json: " + res.generatedFiles["/module.json"]);
             }
-            for (var _c = 0, _d = Object.keys(cpp_options); _c < _d.length; _c++) {
-                var k = _d[_c];
+            for (var _d = 0, _e = Object.keys(cpp_options); _d < _e.length; _d++) {
+                var k = _e[_d];
                 pxtConfig += "#define " + k + " " + cpp_options[k] + "\n";
             }
             if (compile.uf2Family)
@@ -5683,23 +5765,23 @@ var pxt;
             }
             function handleResponseAsync(resp) {
                 var code = resp.statusCode;
-                var data = pxt.Util.jsonTryParse(resp.text) || {};
+                var errorData = pxt.Util.jsonTryParse(resp.text) || {};
                 pxt.debug("upload result: " + code);
-                if (code == 404 && data.error && data.error.code == 8) {
+                if (code == 404 && errorData.error && errorData.error.code == 8) {
                     pxt.log("create new translation file: " + filename);
                     return uploadAsync("add-file", {});
                 }
-                else if (code == 404 && data.error && data.error.code == 17) {
+                else if (code == 404 && errorData.error && errorData.error.code == 17) {
                     return createDirectoryAsync(branch, prj, key, filename.replace(/\/[^\/]+$/, ""), incr)
                         .then(function () { return startAsync(); });
                 }
-                else if (!data.success && data.error && data.error.code == 53) {
+                else if (!errorData.success && errorData.error && errorData.error.code == 53) {
                     // file is being updated
                     pxt.log(filename + " being updated, waiting 5s and retry...");
                     return Promise.delay(5000) // wait 5s and try again
                         .then(function () { return uploadTranslationAsync(branch, prj, key, filename, data); });
                 }
-                else if (code == 200 || data.success) {
+                else if (code == 200 || errorData.success) {
                     // something crowdin reports 500 with success=true
                     return Promise.resolve();
                 }
@@ -6495,6 +6577,7 @@ var pxt;
     })(discourse = pxt.discourse || (pxt.discourse = {}));
 })(pxt || (pxt = {}));
 /// <reference path='../localtypings/pxtarget.d.ts' />
+/// <reference path='../localtypings/dompurify.d.ts' />
 /// <reference path="commonutil.ts"/>
 var pxt;
 (function (pxt) {
@@ -6565,6 +6648,13 @@ var pxt;
             if (typeof require === "undefined")
                 return undefined;
             return require("marked");
+        };
+        docs.requireDOMSanitizer = function () {
+            if (typeof DOMPurify !== "undefined")
+                return DOMPurify.sanitize;
+            if (typeof require === "undefined")
+                return undefined;
+            return require("DOMPurify").sanitize;
         };
         function parseHtmlAttrs(s) {
             var attrs = {};
@@ -6928,6 +7018,7 @@ var pxt;
                 var html = linkRenderer.call(renderer, href, title, text);
                 return html.replace(/^<a /, "<a " + (target ? "target=\"" + target + "\"" : '') + " rel=\"nofollow noopener\" ");
             };
+            var sanitizer = docs.requireDOMSanitizer();
             markedInstance.setOptions({
                 renderer: renderer,
                 gfm: true,
@@ -6935,6 +7026,7 @@ var pxt;
                 breaks: false,
                 pedantic: false,
                 sanitize: true,
+                sanitizer: sanitizer,
                 smartLists: true,
                 smartypants: true
             });
@@ -7246,13 +7338,15 @@ var pxt;
             if (!summaryMD)
                 return null;
             var markedInstance = pxt.docs.requireMarked();
+            var sanitizer = docs.requireDOMSanitizer();
             var options = {
                 renderer: new markedInstance.Renderer(),
                 gfm: true,
                 tables: false,
                 breaks: false,
                 pedantic: false,
-                sanitize: false,
+                sanitize: true,
+                sanitizer: sanitizer,
                 smartLists: false,
                 smartypants: false
             };
@@ -7442,7 +7536,7 @@ var pxt;
             var _a;
             if (!md)
                 return undefined;
-            var m = /```(blocks?|typescript|python|spy)\s+((.|\s)+?)\s*```/i.exec(md);
+            var m = /```(blocks?|typescript|python|spy|sim)\s+((.|\s)+?)\s*```/i.exec(md);
             if (!m)
                 return undefined;
             var dependencies = parsePackagesFromMarkdown(md);
@@ -7522,11 +7616,6 @@ var pxt;
                 .then(function (md) { return parseGalleryMardown(md); });
         }
         gallery_1.loadGalleryAsync = loadGalleryAsync;
-        function loadExampleAsync(name, path) {
-            return pxt.Cloud.markdownAsync(path)
-                .then(function (md) { return parseExampleMarkdown(name, md); });
-        }
-        gallery_1.loadExampleAsync = loadExampleAsync;
     })(gallery = pxt.gallery || (pxt.gallery = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -7774,18 +7863,23 @@ var pxt;
     (function (github) {
         github.token = null;
         github.forceProxy = false;
-        function useProxy() {
+        function hasProxy() {
+            var _a, _b, _c;
             if (github.forceProxy)
                 return true;
             if (pxt.U.isNodeJS)
                 return false; // bypass proxy for CLI
-            if (github.token)
-                return false;
-            if (pxt.appTarget && pxt.appTarget.cloud && pxt.appTarget.cloud.noGithubProxy)
+            if ((_c = (_b = (_a = pxt) === null || _a === void 0 ? void 0 : _a.appTarget) === null || _b === void 0 ? void 0 : _b.cloud) === null || _c === void 0 ? void 0 : _c.noGithubProxy)
                 return false; // target requests no proxy
             return true;
         }
-        github.useProxy = useProxy;
+        function useProxy() {
+            if (github.forceProxy)
+                return true;
+            if (github.token)
+                return false;
+            return hasProxy();
+        }
         var isPrivateRepoCache = {};
         function ghRequestAsync(opts) {
             if (github.token) {
@@ -7802,13 +7896,25 @@ var pxt;
                     opts.headers['Authorization'] = "token " + github.token;
                 }
             }
-            return pxt.U.requestAsync(opts);
+            return pxt.U.requestAsync(opts)
+                .catch(function (e) {
+                if (github.handleGithubNetworkError) {
+                    var retry = github.handleGithubNetworkError(e);
+                    if (retry)
+                        return pxt.U.requestAsync(opts);
+                }
+                throw e;
+            });
         }
         function ghGetJsonAsync(url) {
             return ghRequestAsync({ url: url }).then(function (resp) { return resp.json; });
         }
         function ghProxyJsonAsync(path) {
             return pxt.Cloud.apiRequestWithCdnAsync({ url: "gh/" + path }).then(function (r) { return r.json; });
+        }
+        function ghProxyHandleException(e) {
+            pxt.log("github proxy error: " + e.message);
+            pxt.debug(e);
         }
         var MemoryGithubDb = /** @class */ (function () {
             function MemoryGithubDb() {
@@ -7828,37 +7934,73 @@ var pxt;
                 return ghProxyJsonAsync(repopath + "/" + tag + "/text")
                     .then(function (v) { return _this.packages[key] = { files: v }; });
             };
+            MemoryGithubDb.prototype.cacheConfig = function (key, v) {
+                var cfg = pxt.Package.parseAndValidConfig(v);
+                this.configs[key] = cfg;
+                return pxt.U.clone(cfg);
+            };
             MemoryGithubDb.prototype.loadConfigAsync = function (repopath, tag) {
-                var _this = this;
-                if (!tag)
-                    tag = "master";
-                // cache lookup
-                var key = repopath + "/" + tag;
-                var res = this.configs[key];
-                if (res) {
-                    pxt.debug("github cache " + repopath + "/" + tag + "/config");
-                    return Promise.resolve(pxt.U.clone(res));
-                }
-                var cacheConfig = function (v) {
-                    var cfg = JSON.parse(v);
-                    _this.configs[key] = cfg;
-                    return pxt.U.clone(cfg);
-                };
-                // download and cache
-                if (useProxy()) {
-                    // this is a bit wasteful, we just need pxt.json and download everything
-                    return this.proxyLoadPackageAsync(repopath, tag)
-                        .then(function (v) { return cacheConfig(v.files[pxt.CONFIG_NAME]); });
-                }
-                return downloadTextAsync(repopath, tag, pxt.CONFIG_NAME)
-                    .then(function (cfg) { return cacheConfig(cfg); });
+                return __awaiter(this, void 0, void 0, function () {
+                    var key, res, gpkg, e_1, cfg;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!tag)
+                                    tag = "master";
+                                key = repopath + "/" + tag;
+                                res = this.configs[key];
+                                if (res) {
+                                    pxt.debug("github cache " + repopath + "/" + tag + "/config");
+                                    return [2 /*return*/, pxt.U.clone(res)];
+                                }
+                                if (!hasProxy()) return [3 /*break*/, 4];
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, this.proxyLoadPackageAsync(repopath, tag)];
+                            case 2:
+                                gpkg = _a.sent();
+                                return [2 /*return*/, this.cacheConfig(key, gpkg.files[pxt.CONFIG_NAME])];
+                            case 3:
+                                e_1 = _a.sent();
+                                ghProxyHandleException(e_1);
+                                return [3 /*break*/, 4];
+                            case 4: return [4 /*yield*/, downloadTextAsync(repopath, tag, pxt.CONFIG_NAME)];
+                            case 5:
+                                cfg = _a.sent();
+                                return [2 /*return*/, this.cacheConfig(key, cfg)];
+                        }
+                    });
+                });
             };
             MemoryGithubDb.prototype.loadPackageAsync = function (repopath, tag) {
+                return __awaiter(this, void 0, void 0, function () {
+                    var e_2;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!tag)
+                                    tag = "master";
+                                if (!hasProxy()) return [3 /*break*/, 4];
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, this.proxyLoadPackageAsync(repopath, tag).then(function (v) { return pxt.U.clone(v); })];
+                            case 2: return [2 /*return*/, _a.sent()];
+                            case 3:
+                                e_2 = _a.sent();
+                                ghProxyHandleException(e_2);
+                                return [3 /*break*/, 4];
+                            case 4: return [4 /*yield*/, this.githubLoadPackageAsync(repopath, tag)];
+                            case 5: 
+                            // try using github apis
+                            return [2 /*return*/, _a.sent()];
+                        }
+                    });
+                });
+            };
+            MemoryGithubDb.prototype.githubLoadPackageAsync = function (repopath, tag) {
                 var _this = this;
-                if (!tag)
-                    tag = "master";
-                if (useProxy())
-                    return this.proxyLoadPackageAsync(repopath, tag).then(function (v) { return pxt.U.clone(v); });
                 return tagToShaAsync(repopath, tag)
                     .then(function (sha) {
                     // cache lookup
@@ -8282,7 +8424,7 @@ var pxt;
                 node.default_branch = node.defaultBranchRef.name;
                 var pxtJson = pxt.Package.parseAndValidConfig(node.pxtjson && node.pxtjson.text);
                 var readme = node.readme && node.readme.text;
-                // needs to have a valid pxt.json file                    
+                // needs to have a valid pxt.json file
                 if (!pxtJson)
                     return false;
                 // new style of supported annontation
@@ -8308,7 +8450,7 @@ var pxt;
         github.createRepoAsync = createRepoAsync;
         function enablePagesAsync(repo) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, status_1, e_1, r, rep;
+                var url, status_1, e_3, r, rep, e_4;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -8324,7 +8466,7 @@ var pxt;
                                 url = status_1.html_url;
                             return [3 /*break*/, 4];
                         case 3:
-                            e_1 = _a.sent();
+                            e_3 = _a.sent();
                             return [3 /*break*/, 4];
                         case 4:
                             if (!!url) return [3 /*break*/, 6];
@@ -8341,18 +8483,24 @@ var pxt;
                             url = r.html_url;
                             _a.label = 6;
                         case 6:
-                            if (!url) return [3 /*break*/, 9];
+                            if (!url) return [3 /*break*/, 11];
                             return [4 /*yield*/, ghGetJsonAsync("https://api.github.com/repos/" + repo)];
                         case 7:
                             rep = _a.sent();
-                            if (!(rep && !rep.homepage)) return [3 /*break*/, 9];
-                            return [4 /*yield*/, ghPostAsync("https://api.github.com/repos/" + repo, {
-                                    "homepage": url
-                                }, undefined, "PATCH")];
+                            if (!(rep && !rep.homepage)) return [3 /*break*/, 11];
+                            _a.label = 8;
                         case 8:
+                            _a.trys.push([8, 10, , 11]);
+                            return [4 /*yield*/, ghPostAsync("https://api.github.com/repos/" + repo, { "homepage": url }, undefined, "PATCH")];
+                        case 9:
                             _a.sent();
-                            _a.label = 9;
-                        case 9: return [2 /*return*/];
+                            return [3 /*break*/, 11];
+                        case 10:
+                            e_4 = _a.sent();
+                            // just ignore if fail to update the homepage
+                            pxt.tickEvent("github.homepage.error");
+                            return [3 /*break*/, 11];
+                        case 11: return [2 /*return*/];
                     }
                 });
             });
@@ -8434,13 +8582,37 @@ var pxt;
             return false;
         }
         function repoAsync(id, config) {
-            var rid = parseRepoId(id);
-            var status = repoStatus(rid, config);
-            if (status == GitRepoStatus.Banned)
-                return Promise.resolve(undefined);
-            if (!useProxy())
-                return ghGetJsonAsync("https://api.github.com/repos/" + rid.fullName)
-                    .then(function (r) { return mkRepo(r, config, rid.tag); });
+            return __awaiter(this, void 0, void 0, function () {
+                var rid, status, e_5, r;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            rid = parseRepoId(id);
+                            if (!rid)
+                                return [2 /*return*/, undefined];
+                            status = repoStatus(rid, config);
+                            if (status == GitRepoStatus.Banned)
+                                return [2 /*return*/, undefined];
+                            if (!hasProxy()) return [3 /*break*/, 4];
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, proxyRepoAsync(rid, status)];
+                        case 2: return [2 /*return*/, _a.sent()];
+                        case 3:
+                            e_5 = _a.sent();
+                            ghProxyHandleException(e_5);
+                            return [3 /*break*/, 4];
+                        case 4: return [4 /*yield*/, ghGetJsonAsync("https://api.github.com/repos/" + rid.fullName)];
+                        case 5:
+                            r = _a.sent();
+                            return [2 /*return*/, mkRepo(r, config, rid.tag)];
+                    }
+                });
+            });
+        }
+        github.repoAsync = repoAsync;
+        function proxyRepoAsync(rid, status) {
             // always use proxy
             return ghProxyJsonAsync("" + rid.fullName)
                 .then(function (meta) {
@@ -8461,7 +8633,6 @@ var pxt;
                 return undefined;
             });
         }
-        github.repoAsync = repoAsync;
         function searchAsync(query, config) {
             if (!config)
                 return Promise.resolve([]);
@@ -8469,11 +8640,8 @@ var pxt;
             if (repos.length > 0)
                 return Promise.all(repos.map(function (id) { return repoAsync(id.path, config); }))
                     .then(function (rs) { return rs.filter(function (r) { return r && r.status != GitRepoStatus.Banned; }); }); // allow deep links to github repos
-            var fetch = function () { return useProxy()
-                ? pxt.U.httpGetJsonAsync(pxt.Cloud.apiRoot + "ghsearch/" + pxt.appTarget.id + "/" + (pxt.appTarget.platformid || pxt.appTarget.id) + "?q="
-                    + encodeURIComponent(query))
-                : ghGetJsonAsync("https://api.github.com/search/repositories?q="
-                    + encodeURIComponent(query + (" in:name,description,readme \"for PXT/" + (pxt.appTarget.platformid || pxt.appTarget.id) + "\""))); };
+            var fetch = function () { return pxt.U.httpGetJsonAsync(pxt.Cloud.apiRoot + "ghsearch/" + pxt.appTarget.id + "/" + (pxt.appTarget.platformid || pxt.appTarget.id) + "?q="
+                + encodeURIComponent(query)); };
             return fetch()
                 .then(function (rs) {
                 return rs.items.map(function (item) { return mkRepo(item, config); })
@@ -8487,46 +8655,42 @@ var pxt;
         function parseRepoUrl(url) {
             if (!url)
                 return undefined;
-            var m = /^((https:\/\/)?github.com\/)?([^/]+\/[^/#]+)\/?(#(\w+))?$/i.exec(url.trim());
-            if (!m)
-                return undefined;
-            var r = {
-                repo: m ? m[3].toLowerCase() : null,
-                tag: m ? m[5] : null
-            };
-            r.path = r.repo + (r.tag ? '#' + r.tag : '');
-            return r;
+            url = url.trim();
+            // match github.com urls
+            var m = /^((https:\/\/)?github.com\/)?([^/]+\/[^/#]+)\/?(#(\w+))?$/i.exec(url);
+            if (m) {
+                var r = {
+                    repo: m ? m[3].toLowerCase() : null,
+                    tag: m ? m[5] : null
+                };
+                r.path = r.repo + (r.tag ? '#' + r.tag : '');
+                return r;
+            }
+            return undefined;
         }
-        github.parseRepoUrl = parseRepoUrl;
         // parse https://github.com/[company]/[project](/filepath)(#tag)
         function parseRepoId(repo) {
             if (!repo)
                 return undefined;
+            repo = repo.trim();
+            // convert github pages into github repo
+            var mgh = /^https:\/\/([^./#]+)\.github\.io\/([^/#]+)\/?$/i.exec(repo);
+            if (mgh)
+                repo = "github:" + mgh[1] + "/" + mgh[2];
             repo = repo.replace(/^github:/i, "");
             repo = repo.replace(/^https:\/\/github\.com\//i, "");
             repo = repo.replace(/\.git\b/i, "");
-            var m = /([^#]+)(#(.*))?/.exec(repo);
-            var nameAndFile = m ? m[1] : null;
-            var tag = m ? m[3] : null;
-            var owner;
-            var project;
-            var fullName;
-            var fileName;
-            if (m) {
-                var parts = nameAndFile.split('/');
-                owner = parts[0];
-                project = parts[1];
-                fullName = owner + "/" + project;
-                if (parts.length > 2)
-                    fileName = parts.slice(2).join('/');
-            }
-            else {
-                fullName = repo.toLowerCase();
-            }
+            var m = /^([^#\/:]+)\/([^#\/:]+)(\/([^#]+))?(#([^\/:]*))?$/.exec(repo);
+            if (!m)
+                return undefined;
+            var owner = m[1];
+            var project = m[2];
+            var fileName = m[4];
+            var tag = m[6];
             return {
                 owner: owner,
                 project: project,
-                fullName: fullName,
+                fullName: owner + "/" + project,
                 tag: tag,
                 fileName: fileName
             };
@@ -8551,6 +8715,8 @@ var pxt;
         github.stringifyRepo = stringifyRepo;
         function normalizeRepoId(id) {
             var gid = parseRepoId(id);
+            if (!gid)
+                return undefined;
             gid.tag = gid.tag || "master";
             return stringifyRepo(gid);
         }
@@ -8573,7 +8739,7 @@ var pxt;
                     if (targetVersion && config.releases && config.releases["v" + targetVersion.major]) {
                         var release_1 = config.releases["v" + targetVersion.major]
                             .map(function (repo) { return pxt.github.parseRepoId(repo); })
-                            .filter(function (repo) { return repo.fullName.toLowerCase() == parsed.fullName.toLowerCase(); })[0];
+                            .filter(function (repo) { return repo && repo.fullName.toLowerCase() == parsed.fullName.toLowerCase(); })[0];
                         if (release_1) {
                             // this repo is frozen to a particular tag for this target
                             if (tags.some(function (t) { return t == release_1.tag; })) { // tag still exists!!!
@@ -8811,15 +8977,21 @@ var pxt;
                 this.io = io;
                 this.cmdSeq = pxt.U.randomUint32();
                 this.lock = new pxt.U.PromiseQueue();
+                this.flashing = false;
                 this.rawMode = false;
                 this.maxMsgSize = 63; // when running in forwarding mode, we do not really know
                 this.bootloaderMode = false;
                 this.reconnectTries = 0;
                 this.autoReconnect = false;
+                this.icon = "usb";
                 this.msgs = new pxt.U.PromiseBuffer();
                 this.eventHandlers = {};
                 this.onSerial = function (buf, isStderr) { };
                 var frames = [];
+                io.onDeviceConnectionChanged = function (connect) {
+                    return _this.disconnectAsync()
+                        .then(function () { return connect && _this.reconnectAsync(); });
+                };
                 io.onSerial = function (b, e) { return _this.onSerial(b, e); };
                 io.onData = function (buf) {
                     var tp = buf[0] & HF2.HF2_FLAG_MASK;
@@ -8897,12 +9069,9 @@ var pxt;
                 pxt.U.assert(!!(id & HF2.HF2_EV_MASK));
                 this.eventHandlers[id + ""] = f;
             };
-            Wrapper.prototype.reconnectAsync = function (first) {
+            Wrapper.prototype.reconnectAsync = function () {
                 var _this = this;
-                if (first === void 0) { first = false; }
                 this.resetState();
-                if (first)
-                    return this.initAsync();
                 log("reconnect raw=" + this.rawMode);
                 return this.io.reconnectAsync()
                     .then(function () { return _this.initAsync(); })
@@ -9037,12 +9206,20 @@ var pxt;
                         _this.error("cannot switch into bootloader mode");
                 });
             };
-            Wrapper.prototype.reflashAsync = function (blocks) {
+            Wrapper.prototype.isFlashing = function () {
+                return !!this.flashing;
+            };
+            Wrapper.prototype.reflashAsync = function (resp) {
                 var _this = this;
                 log("reflash");
-                return this.flashAsync(blocks)
+                pxt.U.assert(pxt.appTarget.compile.useUF2);
+                var f = resp.outfiles[pxtc.BINARY_UF2];
+                var blocks = pxtc.UF2.parseFile(pxt.Util.stringToUint8Array(atob(f)));
+                this.flashing = true;
+                return this.io.reconnectAsync()
+                    .then(function () { return _this.flashAsync(blocks); })
                     .then(function () { return Promise.delay(100); })
-                    .then(function () { return _this.reconnectAsync(); });
+                    .finally(function () { return _this.flashing = false; });
             };
             Wrapper.prototype.writeWordsAsync = function (addr, words) {
                 pxt.U.assert(words.length <= 64); // just sanity check
@@ -9161,6 +9338,11 @@ var pxt;
             return Wrapper;
         }());
         HF2.Wrapper = Wrapper;
+        function mkPacketIOWrapper(io) {
+            pxt.log("packetio: wrapper hf2");
+            return new Wrapper(io);
+        }
+        HF2.mkPacketIOWrapper = mkPacketIOWrapper;
         function readChecksumBlockAsync(readWordsAsync) {
             if (!pxt.appTarget.compile.flashChecksumAddr)
                 return Promise.resolve(null);
@@ -9514,8 +9696,8 @@ var pxt;
                 var f = lastCompileResult.outfiles[pxtc.BINARY_UF2];
                 var blockBuf = U.stringToUint8Array(atob(f));
                 lastFlash = pxtc.UF2.toBin(blockBuf);
-                var blocks = pxtc.UF2.parseFile(blockBuf);
-                return hid.reflashAsync(blocks); // this will reset into app at the end
+                return hid.reflashAsync(lastCompileResult)
+                    .then(function () { return hid.reconnectAsync(); }); // this will reset into app at the end
             })
                 .then(function () { return hid.talkAsync(HF2_DBG_RESTART).catch(function (e) { }); })
                 .then(function () { return Promise.delay(200); })
@@ -9736,10 +9918,10 @@ var pxt;
             var files = {
                 "tsconfig.json": template.TS_CONFIG,
                 "test.ts": "// " + lf("tests go here; this will not be compiled when this package is used as an extension.") + "\n",
-                "_config.yml": "makecode:\n  target: @TARGET@\n  platform: @PLATFORM@\n  home_url: @HOMEURL@\ntheme: jekyll-theme-slate\ninclude: assets\n",
+                "_config.yml": "makecode:\n  target: @TARGET@\n  platform: @PLATFORM@\n  home_url: @HOMEURL@\ntheme: jekyll-theme-slate\ninclude:\n  - assets\n  - README.md\n",
                 "Makefile": "all: deploy\n\nbuild:\n\tpxt build\n\ndeploy:\n\tpxt deploy\n\ntest:\n\tpxt test\n",
                 "Gemfile": "source 'https://rubygems.org'\ngem 'github-pages', group: :jekyll_plugins",
-                "README.md": "> " + lf("Open this page at {0}", "[https://@REPOOWNER@.github.io/@REPONAME@/](https://@REPOOWNER@.github.io/@REPONAME@/)") + "\n\n## " + lf("Use this extension") + "\n\n" + lf("This repository can be added as an **extension** in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **New Project**") + "\n* " + lf("click on **Extensions** under the gearwheel menu") + "\n* " + lf("search for **https://github.com/@REPO@** and import") + "\n\n## " + lf("Edit this extension") + " ![" + lf("Build status badge") + "](https://github.com/@REPO@/workflows/MakeCode/badge.svg)\n\n" + lf("To edit this repository in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **Import** then click on **Import URL**") + "\n* " + lf("paste **https://github.com/@REPO@** and click import") + "\n\n## " + lf("Blocks preview") + "\n\n" + lf("This image shows the blocks code from the last commit in master.") + "\n" + lf("This image may take a few minutes to refresh.") + "\n\n![" + lf("A rendered view of the blocks") + "](https://github.com/@REPO@/raw/master/.github/makecode/blocks.png)\n\n#### " + lf("Metadata (used for search, rendering)") + "\n\n* for PXT/@TARGET@\n<script src=\"https://makecode.com/gh-pages-embed.js\"></script><script>makeCodeRender(\"{{ site.makecode.home_url }}\", \"{{ site.github.owner_name }}/{{ site.github.repository_name }}\");</script>\n",
+                "README.md": "\n> " + lf("Open this page at {0}", "[https://@REPOOWNER@.github.io/@REPONAME@/](https://@REPOOWNER@.github.io/@REPONAME@/)") + "\n\n## " + lf("Use as Extension") + "\n\n" + lf("This repository can be added as an **extension** in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **New Project**") + "\n* " + lf("click on **Extensions** under the gearwheel menu") + "\n* " + lf("search for **https://github.com/@REPO@** and import") + "\n\n## " + lf("Edit this project") + " ![" + lf("Build status badge") + "](https://github.com/@REPO@/workflows/MakeCode/badge.svg)\n\n" + lf("To edit this repository in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **Import** then click on **Import URL**") + "\n* " + lf("paste **https://github.com/@REPO@** and click import") + "\n\n## " + lf("Blocks preview") + "\n\n" + lf("This image shows the blocks code from the last commit in master.") + "\n" + lf("This image may take a few minutes to refresh.") + "\n\n![" + lf("A rendered view of the blocks") + "](https://github.com/@REPO@/raw/master/.github/makecode/blocks.png)\n\n#### " + lf("Metadata (used for search, rendering)") + "\n\n* for PXT/@TARGET@\n<script src=\"https://makecode.com/gh-pages-embed.js\"></script><script>makeCodeRender(\"{{ site.makecode.home_url }}\", \"{{ site.github.owner_name }}/{{ site.github.repository_name }}\");</script>\n",
                 ".gitignore": "built\nnode_modules\nyotta_modules\nyotta_targets\npxt_modules\n_site\n*.db\n*.tgz\n.header.json\n",
                 ".vscode/settings.json": "{\n    \"editor.formatOnType\": true,\n    \"files.autoSave\": \"afterDelay\",\n    \"files.watcherExclude\": {\n        \"**/.git/objects/**\": true,\n        \"**/built/**\": true,\n        \"**/node_modules/**\": true,\n        \"**/yotta_modules/**\": true,\n        \"**/yotta_targets\": true,\n        \"**/pxt_modules/**\": true\n    },\n    \"files.associations\": {\n        \"*.blocks\": \"html\",\n        \"*.jres\": \"json\"\n    },\n    \"search.exclude\": {\n        \"**/built\": true,\n        \"**/node_modules\": true,\n        \"**/yotta_modules\": true,\n        \"**/yotta_targets\": true,\n        \"**/pxt_modules\": true\n    }\n}",
                 ".github/workflows/makecode.yml": "name: MakeCode\n\non: [push]\n\njobs:\n  build:\n\n    runs-on: ubuntu-latest\n\n    strategy:\n      matrix:\n        node-version: [8.x]\n\n    steps:\n      - uses: actions/checkout@v1\n      - name: Use Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n      - name: npm install\n        run: |\n          npm install -g pxt\n          pxt target @TARGET@\n      - name: build\n        run: |\n          pxt install\n          pxt build --cloud\n        env:\n          CI: true\n",
@@ -10352,6 +10534,9 @@ var pxt;
             return Object.keys(pkgs).map(function (id) { return JSON.parse(pkgs[id][pxt.CONFIG_NAME]); })
                 .filter(function (cfg) { return !!cfg; });
         };
+        Package.prototype.disablesVariant = function (v) {
+            return this.config && this.config.disablesVariants && this.config.disablesVariants.indexOf(v) >= 0;
+        };
         Package.prototype.invalid = function () {
             return /^invalid:/.test(this.version());
         };
@@ -10750,6 +10935,10 @@ var pxt;
                 });
             }
         };
+        Package.prototype.resolvedDependencies = function () {
+            var _this = this;
+            return Object.keys(this.dependencies()).map(function (n) { return _this.resolveDep(n); });
+        };
         Package.prototype.dependencies = function (includeCpp) {
             if (includeCpp === void 0) { includeCpp = false; }
             if (!this.config)
@@ -10774,7 +10963,7 @@ var pxt;
             if (this.isLoaded)
                 return Promise.resolve();
             var initPromise = Promise.resolve();
-            if (this.level == 0)
+            if (this.level == 0 && !pxt.appTarget.multiVariants)
                 pxt.setAppTargetVariant(null);
             this.isLoaded = true;
             var str = this.readFile(pxt.CONFIG_NAME);
@@ -10937,7 +11126,7 @@ var pxt;
         Package.prototype.packageLocalizationStringsAsync = function (lang) {
             var _this = this;
             var targetId = pxt.appTarget.id;
-            var filenames = [this.id + "-jsdoc", this.id];
+            var filenames = [this.config.name + "-jsdoc", this.config.name];
             var r = {};
             var theme = pxt.appTarget.appTheme || {};
             if (this.config.skipLocalization)
@@ -11105,7 +11294,7 @@ var pxt;
         MainPackage.prototype.getCompileOptionsAsync = function (target) {
             if (target === void 0) { target = this.getTargetOptions(); }
             return __awaiter(this, void 0, void 0, function () {
-                var opts, generateFile, fillExtInfoAsync, variants, ext, _i, variants_1, v, curr, noFileEmbed, files, headerString, programText, buf, _a, _b, pkg, _c, _d, f, sn, functionOpts;
+                var opts, generateFile, fillExtInfoAsync, variants, ext, _i, variants_1, v, etarget, einfo, noFileEmbed, files, headerString, programText, buf, _a, _b, pkg, _c, _d, f, sn, functionOpts;
                 var _this = this;
                 return __generator(this, function (_e) {
                     switch (_e.label) {
@@ -11126,24 +11315,28 @@ var pxt;
                                 }
                             };
                             fillExtInfoAsync = function (variant) { return __awaiter(_this, void 0, void 0, function () {
-                                var ext, inf, _a;
+                                var res, einfo, inf, _a;
                                 return __generator(this, function (_b) {
                                     switch (_b.label) {
                                         case 0:
+                                            res = {
+                                                extinfo: null,
+                                                target: null
+                                            };
                                             if (variant)
                                                 pxt.setAppTargetVariant(variant, { temporary: true });
                                             _b.label = 1;
                                         case 1:
                                             _b.trys.push([1, , 5, 6]);
-                                            ext = pxt.cpp.getExtensionInfo(this);
+                                            einfo = pxt.cpp.getExtensionInfo(this);
                                             if (!variant) {
-                                                if (ext.shimsDTS)
-                                                    generateFile("shims.d.ts", ext.shimsDTS);
-                                                if (ext.enumsDTS)
-                                                    generateFile("enums.d.ts", ext.enumsDTS);
+                                                if (einfo.shimsDTS)
+                                                    generateFile("shims.d.ts", einfo.shimsDTS);
+                                                if (einfo.enumsDTS)
+                                                    generateFile("enums.d.ts", einfo.enumsDTS);
                                             }
                                             if (!target.isNative) return [3 /*break*/, 3];
-                                            return [4 /*yield*/, this.host().getHexInfoAsync(ext)];
+                                            return [4 /*yield*/, this.host().getHexInfoAsync(einfo)];
                                         case 2:
                                             _a = _b.sent();
                                             return [3 /*break*/, 4];
@@ -11152,19 +11345,21 @@ var pxt;
                                             _b.label = 4;
                                         case 4:
                                             inf = _a;
-                                            ext = pxt.U.flatClone(ext);
+                                            einfo = pxt.U.flatClone(einfo);
                                             if (!target.keepCppFiles) {
-                                                delete ext.compileData;
-                                                delete ext.generatedFiles;
-                                                delete ext.extensionFiles;
+                                                delete einfo.compileData;
+                                                delete einfo.generatedFiles;
+                                                delete einfo.extensionFiles;
                                             }
-                                            ext.hexinfo = inf;
+                                            einfo.hexinfo = inf;
+                                            res.extinfo = einfo;
+                                            res.target = pxt.appTarget.compile;
                                             return [3 /*break*/, 6];
                                         case 5:
                                             if (variant)
                                                 pxt.setAppTargetVariant(null, { temporary: true });
                                             return [7 /*endfinally*/];
-                                        case 6: return [2 /*return*/, ext];
+                                        case 6: return [2 /*return*/, res];
                                     }
                                 });
                             }); };
@@ -11175,7 +11370,7 @@ var pxt;
                             opts.target.preferredEditor = this.getPreferredEditor();
                             pxt.debug("building: " + this.sortedDeps().map(function (p) { return p.config.name; }).join(", "));
                             variants = pxt.appTarget.multiVariants;
-                            if (!variants || pxt.appTargetVariant) {
+                            if (!variants || pxt.appTargetVariant || (!pxt.appTarget.alwaysMultiVariant && !pxt.appTarget.compile.switches.multiVariant)) {
                                 variants = [pxt.appTargetVariant || ""];
                             }
                             ext = null;
@@ -11188,15 +11383,16 @@ var pxt;
                                 pxt.debug("building for " + v);
                             return [4 /*yield*/, fillExtInfoAsync(ext ? v : null)];
                         case 3:
-                            curr = _e.sent();
-                            curr.appVariant = v;
-                            curr.outputPrefix = variants.length == 1 || !v ? "" : v + "-";
+                            etarget = _e.sent();
+                            einfo = etarget.extinfo;
+                            einfo.appVariant = v;
+                            einfo.outputPrefix = variants.length == 1 || !v ? "" : v + "-";
                             if (ext) {
-                                ext.otherMultiVariants.push(curr);
+                                opts.otherMultiVariants.push(etarget);
                             }
                             else {
-                                ext = curr;
-                                ext.otherMultiVariants = [];
+                                ext = einfo;
+                                opts.otherMultiVariants = [];
                             }
                             _e.label = 4;
                         case 4:
@@ -11368,6 +11564,93 @@ var pxt;
         return cfg && /\bbeta\b/.test(cfg.description);
     }
     pxt.isPkgBeta = isPkgBeta;
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var packetio;
+    (function (packetio) {
+        var wrapper;
+        var initPromise;
+        var onConnectionChangedHandler = function () { };
+        var onSerialHandler;
+        /**
+         * A DAP wrapper is active
+         */
+        function isActive() {
+            return !!wrapper;
+        }
+        packetio.isActive = isActive;
+        /**
+         * The DAP wrapper is active and the device is connected
+         */
+        function isConnected() {
+            return !!wrapper && wrapper.io.isConnected();
+        }
+        packetio.isConnected = isConnected;
+        function isConnecting() {
+            return !!wrapper && wrapper.io.isConnecting();
+        }
+        packetio.isConnecting = isConnecting;
+        function icon() {
+            return !!wrapper && (wrapper.icon || "usb");
+        }
+        packetio.icon = icon;
+        function disconnectAsync() {
+            pxt.log('disconnect');
+            var p = Promise.resolve();
+            if (wrapper) {
+                p = p.then(function () { return wrapper.disconnectAsync(); })
+                    .then(function () { return wrapper.io.disposeAsync(); })
+                    .catch(function (e) {
+                    // swallow execeptions
+                    pxt.reportException(e);
+                })
+                    .finally(function () {
+                    initPromise = undefined; // dubious
+                    wrapper = undefined;
+                });
+            }
+            if (onConnectionChangedHandler)
+                p = p.then(function () { return onConnectionChangedHandler(); });
+            return p;
+        }
+        packetio.disconnectAsync = disconnectAsync;
+        function configureEvents(onConnectionChanged, onSerial) {
+            onConnectionChangedHandler = onConnectionChanged;
+            onSerialHandler = onSerial;
+            if (wrapper) {
+                wrapper.io.onConnectionChanged = onConnectionChangedHandler;
+                wrapper.onSerial = onSerialHandler;
+            }
+        }
+        packetio.configureEvents = configureEvents;
+        function wrapperAsync() {
+            if (wrapper)
+                return Promise.resolve(wrapper);
+            pxt.log("packetio: new wrapper");
+            return packetio.mkPacketIOAsync()
+                .then(function (io) {
+                io.onConnectionChanged = onConnectionChangedHandler;
+                wrapper = packetio.mkPacketIOWrapper(io);
+                if (onSerialHandler)
+                    wrapper.onSerial = onSerialHandler;
+                return wrapper;
+            });
+        }
+        function initAsync(force) {
+            if (force === void 0) { force = false; }
+            pxt.log("packetio: init " + (force ? "(force)" : ""));
+            if (!initPromise) {
+                var p = Promise.resolve();
+                if (force)
+                    p = p.then(function () { return disconnectAsync(); });
+                initPromise = p.then(function () { return wrapperAsync(); })
+                    .finally(function () { initPromise = undefined; });
+            }
+            return initPromise;
+        }
+        packetio.initAsync = initAsync;
+    })(packetio = pxt.packetio || (pxt.packetio = {}));
 })(pxt || (pxt = {}));
 var pxt;
 (function (pxt) {
@@ -11626,6 +11909,7 @@ var ts;
         pxtc.TS_BREAK_TYPE = "break_keyword";
         pxtc.TS_CONTINUE_TYPE = "continue_keyword";
         pxtc.TS_OUTPUT_TYPE = "typescript_expression";
+        pxtc.TS_RETURN_STATEMENT_TYPE = "function_return";
         pxtc.PAUSE_UNTIL_TYPE = "pxt_pause_until";
         pxtc.COLLAPSED_BLOCK = "pxt_collapsed_block";
         pxtc.FUNCTION_DEFINITION_TYPE = "function_definition";
@@ -13157,9 +13441,9 @@ var pxt;
             generateIcons(syms);
             return syms.map(function (sym) {
                 var splitTags = (sym.attributes.tags || "")
-                    .toLowerCase()
                     .split(" ")
-                    .filter(function (el) { return !!el; });
+                    .filter(function (el) { return !!el; })
+                    .map(function (tag) { return pxt.Util.startsWith(tag, "category-") ? tag : tag.toLowerCase(); });
                 return {
                     qName: sym.qName,
                     src: sym.attributes.iconURL,
@@ -14502,9 +14786,14 @@ var pxt;
                 return undefined; // error parsing steps
             // collect code and infer editor
             var _c = computeBodyMetadata(body), code = _c.code, templateCode = _c.templateCode, editor = _c.editor, language = _c.language;
-            if (!metadata.noDiffs
-                && (editor != pxt.BLOCKS_PROJECT_NAME || pxt.appTarget.appTheme.tutorialBlocksDiff))
+            // noDiffs legacy
+            if (metadata.diffs === true // enabled in tutorial
+                || (metadata.diffs !== false && metadata.noDiffs !== true // not disabled
+                    && ((editor == pxt.BLOCKS_PROJECT_NAME && pxt.appTarget.appTheme.tutorialBlocksDiff) //blocks enabled always
+                        || (editor != pxt.BLOCKS_PROJECT_NAME && pxt.appTarget.appTheme.tutorialTextDiff) // text enabled always
+                    ))) {
                 diffify(steps, activities);
+            }
             // strip hidden snippets
             steps.forEach(function (step) {
                 step.contentMd = stripHiddenSnippets(step.contentMd);
@@ -14526,7 +14815,7 @@ var pxt;
         function computeBodyMetadata(body) {
             // collect code and infer editor
             var editor = undefined;
-            var regex = /```(sim|block|blocks|filterblocks|spy|ghost|typescript|ts|js|javascript|template|python)?\s*\n([\s\S]*?)\n```/gmi;
+            var regex = /``` *(sim|block|blocks|filterblocks|spy|ghost|typescript|ts|js|javascript|template|python)?\s*\n([\s\S]*?)\n```/gmi;
             var code = '';
             var templateCode;
             var language;
@@ -15727,7 +16016,6 @@ var pxt;
         }
         webBluetooth.pairAsync = pairAsync;
         function flashAsync(resp, d) {
-            if (d === void 0) { d = {}; }
             pxt.tickEvent("webble.flash");
             var hex = resp.outfiles[ts.pxtc.BINARY_HEX];
             return connectAsync()
@@ -15774,40 +16062,66 @@ var pxt;
         ;
         ;
         ;
-        var HID = /** @class */ (function () {
-            function HID(dev) {
-                var _this = this;
-                this.dev = dev;
+        var WebUSBHID = /** @class */ (function () {
+            function WebUSBHID() {
                 this.ready = false;
+                this.connecting = false;
                 this.readLoopStarted = false;
+                this.onDeviceConnectionChanged = function (connect) { };
+                this.onConnectionChanged = function () { };
                 this.onData = function (v) { };
                 this.onError = function (e) { };
                 this.onEvent = function (v) { };
-                navigator.usb.addEventListener('disconnect', function (event) {
-                    if (event.device == _this.dev) {
-                        _this.log("Device disconnected");
-                        _this.clearDev();
-                    }
-                });
+                this.handleUSBConnected = this.handleUSBConnected.bind(this);
+                this.handleUSBDisconnected = this.handleUSBDisconnected.bind(this);
+                navigator.usb.addEventListener('disconnect', this.handleUSBDisconnected, false);
+                navigator.usb.addEventListener('connect', this.handleUSBConnected, false);
+                this.log("registered webusb events");
             }
-            HID.prototype.clearDev = function () {
-                this.dev = null;
-                this.epIn = null;
-                this.epOut = null;
+            WebUSBHID.prototype.disposeAsync = function () {
+                navigator.usb.removeEventListener('disconnect', this.handleUSBDisconnected);
+                navigator.usb.removeEventListener('connect', this.handleUSBConnected);
+                this.log("unregistered webusb events");
+                return Promise.resolve();
             };
-            HID.prototype.error = function (msg) {
+            WebUSBHID.prototype.handleUSBDisconnected = function (event) {
+                this.log("device disconnected");
+                if (event.device == this.dev) {
+                    this.log("clear device");
+                    this.clearDev();
+                    if (this.onDeviceConnectionChanged)
+                        this.onDeviceConnectionChanged(false);
+                }
+            };
+            WebUSBHID.prototype.handleUSBConnected = function (event) {
+                var newdev = event.device;
+                this.log("device connected " + newdev.serialNumber);
+                if (!this.dev) {
+                    this.log("attach device");
+                    if (this.onDeviceConnectionChanged)
+                        this.onDeviceConnectionChanged(true);
+                }
+            };
+            WebUSBHID.prototype.clearDev = function () {
+                if (this.dev) {
+                    this.dev = null;
+                    this.epIn = null;
+                    this.epOut = null;
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
+                }
+            };
+            WebUSBHID.prototype.error = function (msg) {
                 throw new USBError(pxt.U.lf("USB error on device {0} ({1})", this.dev.productName, msg));
             };
-            HID.prototype.log = function (msg) {
-                msg = "WebUSB: " + msg;
-                pxt.log(msg);
-                //pxt.debug(msg)
+            WebUSBHID.prototype.log = function (msg) {
+                pxt.log("webusb: " + msg);
             };
-            HID.prototype.disconnectAsync = function () {
+            WebUSBHID.prototype.disconnectAsync = function () {
                 var _this = this;
+                this.ready = false;
                 if (!this.dev)
                     return Promise.resolve();
-                this.ready = false;
                 this.log("close device");
                 return this.dev.close()
                     .catch(function (e) {
@@ -15818,18 +16132,37 @@ var pxt;
                     return Promise.delay(500);
                 });
             };
-            HID.prototype.reconnectAsync = function () {
+            WebUSBHID.prototype.reconnectAsync = function () {
                 var _this = this;
                 this.log("reconnect");
+                this.setConnecting(true);
                 return this.disconnectAsync()
                     .then(getDeviceAsync)
-                    .then(function (dev) {
-                    _this.log("got device: " + dev.manufacturerName + " " + dev.productName);
-                    _this.dev = dev;
-                    return _this.initAsync();
-                });
+                    .then(function (dev) { return _this.connectAsync(dev); })
+                    .finally(function () { return _this.setConnecting(false); });
             };
-            HID.prototype.sendPacketAsync = function (pkt) {
+            WebUSBHID.prototype.setConnecting = function (v) {
+                if (v != this.connecting) {
+                    this.connecting = v;
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
+                }
+            };
+            WebUSBHID.prototype.isConnecting = function () {
+                return this.connecting;
+            };
+            WebUSBHID.prototype.isConnected = function () {
+                return !!this.dev && this.ready;
+            };
+            WebUSBHID.prototype.connectAsync = function (dev) {
+                var _this = this;
+                this.setConnecting(true);
+                this.log("connect device: " + dev.manufacturerName + " " + dev.productName);
+                this.dev = dev;
+                return this.initAsync()
+                    .finally(function () { return _this.setConnecting(false); });
+            };
+            WebUSBHID.prototype.sendPacketAsync = function (pkt) {
                 var _this = this;
                 if (!this.dev)
                     return Promise.reject(new Error("Disconnected"));
@@ -15854,7 +16187,7 @@ var pxt;
                         _this.error("USB OUT transfer failed");
                 });
             };
-            HID.prototype.recvOne = function () {
+            WebUSBHID.prototype.recvOne = function () {
                 var _this = this;
                 this.recvPacketAsync()
                     .then(function (buf) {
@@ -15863,7 +16196,7 @@ var pxt;
                     _this.onError(err);
                 });
             };
-            HID.prototype.readLoop = function () {
+            WebUSBHID.prototype.readLoop = function () {
                 var _this = this;
                 if (this.readLoopStarted)
                     return;
@@ -15892,7 +16225,7 @@ var pxt;
                 };
                 loop();
             };
-            HID.prototype.recvPacketAsync = function () {
+            WebUSBHID.prototype.recvPacketAsync = function () {
                 var _this = this;
                 var final = function (res) {
                     if (res.status != "ok")
@@ -15916,7 +16249,7 @@ var pxt;
                 return this.dev.transferIn(this.epIn.endpointNumber, 64)
                     .then(final);
             };
-            HID.prototype.initAsync = function () {
+            WebUSBHID.prototype.initAsync = function () {
                 var _this = this;
                 if (!this.dev)
                     return Promise.reject(new Error("Disconnected"));
@@ -15967,57 +16300,48 @@ var pxt;
                     _this.ready = true;
                     if (_this.epIn || isHF2)
                         _this.readLoop();
+                    if (_this.onConnectionChanged)
+                        _this.onConnectionChanged();
                 });
             };
-            return HID;
+            return WebUSBHID;
         }());
         function pairAsync() {
             return navigator.usb.requestDevice({
                 filters: usb.filters
-            }).then(function (dev) {
-                // try connecting to it
-                return mkPacketIOAsync();
-            }).then(function (io) { return io.reconnectAsync(); });
-        }
-        usb.pairAsync = pairAsync;
-        function isPairedAsync() {
-            if (!usb.isEnabled)
-                return Promise.resolve(false);
-            return getDeviceAsync()
-                .then(function (dev) {
-                return true;
             })
-                .catch(function () {
-                return false;
+                .then(function (dev) { return !!dev; })
+                .catch(function (e) {
+                // user cancelled
+                if (e.name == "NotFoundError")
+                    return undefined;
+                throw e;
             });
         }
-        usb.isPairedAsync = isPairedAsync;
-        function getDeviceAsync() {
+        usb.pairAsync = pairAsync;
+        function tryGetDeviceAsync() {
+            pxt.log("webusb: get devices");
             return navigator.usb.getDevices()
-                .then(function (devs) {
-                if (!devs || !devs.length) {
+                .then(function (devs) { return devs && devs[0]; });
+        }
+        usb.tryGetDeviceAsync = tryGetDeviceAsync;
+        function getDeviceAsync() {
+            return tryGetDeviceAsync()
+                .then(function (dev) {
+                if (!dev) {
                     var err = new Error(pxt.U.lf("No USB device selected or connected; try pairing!"));
-                    err.isUserError = true;
                     err.type = "devicenotfound";
                     throw err;
                 }
-                return devs[0];
+                return dev;
             });
         }
-        var getDevPromise;
+        var _hid;
         function mkPacketIOAsync() {
-            if (!getDevPromise)
-                getDevPromise = getDeviceAsync()
-                    .then(function (dev) {
-                    var h = new HID(dev);
-                    return h.initAsync()
-                        .then(function () { return h; });
-                })
-                    .catch(function (e) {
-                    getDevPromise = null;
-                    return Promise.reject(e);
-                });
-            return getDevPromise;
+            pxt.log("packetio: mk webusb io");
+            if (!_hid)
+                _hid = new WebUSBHID();
+            return Promise.resolve(_hid);
         }
         usb.mkPacketIOAsync = mkPacketIOAsync;
         usb.isEnabled = false;
@@ -16028,6 +16352,8 @@ var pxt;
         }
         usb.setEnabled = setEnabled;
         function isAvailable() {
+            if (pxt.BrowserUtils.isElectron())
+                return false;
             if (!!navigator.usb) {
                 // Windows versions:
                 // 5.1 - XP, 6.0 - Vista, 6.1 - Win7, 6.2 - Win8, 6.3 - Win8.1, 10.0 - Win10
@@ -16144,6 +16470,84 @@ var pxt;
         }
         worker_1.makeWebSocket = makeWebSocket;
     })(worker = pxt.worker || (pxt.worker = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var youtube;
+    (function (youtube) {
+        youtube.apiKey = undefined;
+        function checkKey() {
+            if (!youtube.apiKey)
+                pxt.U.userError("YouTube API key missing");
+        }
+        function resolveThumbnail(thumbnails) {
+            var url = (thumbnails.medium || thumbnails.high || thumbnails.standard || thumbnails.default).url;
+            return url;
+        }
+        function resolveDescription(d) {
+            // grab first paragraph.
+            return d.split(/\n\s+/, 1)[0].trim();
+        }
+        function playlistItemToCodeCard(video) {
+            return {
+                "name": video.snippet.title.replace(/[^-]*-/, '').trim(),
+                "description": resolveDescription(video.snippet.description),
+                "youTubeId": video.snippet.resourceId.videoId,
+                "youTubePlaylistId": video.snippet.playlistId,
+                "imageUrl": resolveThumbnail(video.snippet.thumbnails)
+            };
+        }
+        youtube.playlistItemToCodeCard = playlistItemToCodeCard;
+        function playlistInfoAsync(playlistId) {
+            checkKey();
+            var url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=" + playlistId + "&key=" + youtube.apiKey;
+            return pxt.Util.httpGetJsonAsync(url)
+                .then(function (res) { return res.items[0]; });
+        }
+        youtube.playlistInfoAsync = playlistInfoAsync;
+        function listPlaylistVideosAsync(playlistId) {
+            return __awaiter(this, void 0, void 0, function () {
+                var items, pageToken, url, videos;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            checkKey();
+                            items = [];
+                            pageToken = undefined;
+                            _a.label = 1;
+                        case 1:
+                            url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + playlistId + "&key=" + youtube.apiKey;
+                            if (pageToken)
+                                url += "&pageToken=" + pageToken;
+                            return [4 /*yield*/, pxt.Util.httpGetJsonAsync(url)];
+                        case 2:
+                            videos = _a.sent();
+                            items = items.concat(videos.items);
+                            pageToken = videos.nextPageToken;
+                            _a.label = 3;
+                        case 3:
+                            if (pageToken) return [3 /*break*/, 1];
+                            _a.label = 4;
+                        case 4: return [2 /*return*/, items];
+                    }
+                });
+            });
+        }
+        youtube.listPlaylistVideosAsync = listPlaylistVideosAsync;
+        function watchUrl(videoId, playlistId) {
+            var url = undefined;
+            if (videoId) {
+                url = "https://www.youtube.com/watch?v=" + videoId;
+                if (playlistId)
+                    url += "&list=" + playlistId;
+            }
+            else if (playlistId) {
+                url = "https://www.youtube.com/playlist?list=" + playlistId;
+            }
+            return url;
+        }
+        youtube.watchUrl = watchUrl;
+    })(youtube = pxt.youtube || (pxt.youtube = {}));
 })(pxt || (pxt = {}));
 /* tslint:disable:no-conditional-assignment */
 // TODO: add a macro facility to make 8-bit assembly easier?
@@ -18184,12 +18588,31 @@ var pxt;
     (function (winrt) {
         var WindowsRuntimeIO = /** @class */ (function () {
             function WindowsRuntimeIO() {
+                this.onDeviceConnectionChanged = function (connect) { };
+                this.onConnectionChanged = function () { };
                 this.onData = function (v) { };
                 this.onEvent = function (v) { };
                 this.onError = function (e) { };
+                this.connecting = false;
             }
+            WindowsRuntimeIO.prototype.disposeAsync = function () {
+                return Promise.resolve();
+            };
             WindowsRuntimeIO.prototype.error = function (msg) {
                 throw new Error(pxt.U.lf("USB/HID error ({0})", msg));
+            };
+            WindowsRuntimeIO.prototype.setConnecting = function (v) {
+                if (v != this.connecting) {
+                    this.connecting = v;
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
+                }
+            };
+            WindowsRuntimeIO.prototype.isConnecting = function () {
+                return this.connecting;
+            };
+            WindowsRuntimeIO.prototype.isConnected = function () {
+                return !!this.dev;
             };
             WindowsRuntimeIO.prototype.reconnectAsync = function () {
                 var _this = this;
@@ -18197,13 +18620,18 @@ var pxt;
                     .then(function () { return _this.initAsync(); });
             };
             WindowsRuntimeIO.prototype.isSwitchingToBootloader = function () {
-                isSwitchingToBootloader();
+                return false;
             };
             WindowsRuntimeIO.prototype.disconnectAsync = function () {
                 if (this.dev) {
                     var d = this.dev;
                     delete this.dev;
-                    d.close();
+                    try {
+                        d.close();
+                    }
+                    catch (e) { }
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
                 }
                 return Promise.resolve();
             };
@@ -18231,7 +18659,6 @@ var pxt;
                 var whid = wd.HumanInterfaceDevice.HidDevice;
                 var rejectDeviceNotFound = function () {
                     var err = new Error(pxt.U.lf("Device not found"));
-                    err.notifyUser = true;
                     err.type = "devicenotfound";
                     return Promise.reject(err);
                 };
@@ -18244,6 +18671,7 @@ var pxt;
                         return wd.Enumeration.DeviceInformation.findAllAsync(currentSelector, null);
                     });
                 }, Promise.resolve(null));
+                this.setConnecting(true);
                 var deviceId;
                 return getDevicesPromise
                     .then(function (devices) {
@@ -18278,7 +18706,12 @@ var pxt;
                         }
                         _this.onData(new Uint8Array(values));
                     });
+                    if (_this.onConnectionChanged)
+                        _this.onConnectionChanged();
                     return Promise.resolve();
+                })
+                    .finally(function () {
+                    _this.setConnecting(false);
                 })
                     .catch(function (e) {
                     if (isRetry) {
@@ -18299,6 +18732,7 @@ var pxt;
         winrt.packetIO = undefined;
         function mkPacketIOAsync() {
             pxt.U.assert(!winrt.packetIO);
+            pxt.log("packetio: mk winrt");
             winrt.packetIO = new WindowsRuntimeIO();
             return winrt.packetIO.initAsync()
                 .catch(function (e) {
@@ -19142,8 +19576,7 @@ var pxt;
                                             .then(function () { return projectView.printCode(); });
                                     }
                                     case "pair": {
-                                        return Promise.resolve()
-                                            .then(function () { return projectView.pair(); });
+                                        return projectView.pairAsync();
                                     }
                                     case "info": {
                                         return Promise.resolve()
@@ -19335,12 +19768,6 @@ var pxt;
                         feedbackUrl: "https://github.com/microsoft/pxt/issues/5297"
                     },
                     {
-                        id: "autoWebUSBDownload",
-                        name: lf("WebUSB Download"),
-                        description: lf("Automatically try to download via WebUSB"),
-                        feedbackUrl: "https://github.com/microsoft/pxt/issues/5344"
-                    },
-                    {
                         id: "qrCode",
                         name: lf("Shared QR Code"),
                         description: lf("Generate a QR Code form the shared project url"),
@@ -19395,7 +19822,23 @@ var pxt;
                     {
                         id: "openProjectNewTab",
                         name: lf("Open in New Tab"),
+                        description: lf("Open an editor in a new tab.")
+                    },
+                    {
+                        id: "openProjectNewDependentTab",
+                        name: lf("Open in New Connected Tab"),
                         description: lf("Open connected editors in different browser tabs.")
+                    },
+                    {
+                        id: "accessibleBlocks",
+                        name: lf("Accessible Blocks"),
+                        description: lf("Use the WASD keys to move and modify blocks."),
+                        feedbackUrl: "https://github.com/microsoft/pxt/issues/6850"
+                    },
+                    {
+                        id: "errorList",
+                        name: lf("Error List"),
+                        description: lf("Show an error list panel for JavaScript and Python.")
                     }
                 ].filter(function (experiment) { return ids.indexOf(experiment.id) > -1; });
             }
@@ -19656,7 +20099,7 @@ var pxt;
                 lineNumbersMinChars: 3,
                 formatOnPaste: true,
                 folding: hasFieldEditors,
-                glyphMargin: hasFieldEditors,
+                glyphMargin: hasFieldEditors || pxt.appTarget.appTheme.debugger,
                 minimap: {
                     enabled: false
                 },
@@ -22119,6 +22562,16 @@ var pxsim;
         }
         return stackFrame.retval;
     }
+    function injectEnvironmentGlobals(msg, heap) {
+        var environmentGlobals = pxsim.runtime.environmentGlobals;
+        var keys = Object.keys(environmentGlobals);
+        if (!keys.length)
+            return;
+        var envVars = msg.environmentGlobals = {};
+        Object.keys(environmentGlobals)
+            .forEach(function (n) { return envVars[n] = valToJSON(pxsim.runtime.environmentGlobals[n], heap); });
+    }
+    pxsim.injectEnvironmentGlobals = injectEnvironmentGlobals;
     function getBreakpointMsg(s, brkId, userGlobals) {
         var heap = {};
         var msg = {
@@ -22438,6 +22891,7 @@ var pxsim;
     }());
 })(pxsim || (pxsim = {}));
 /// <reference path="../localtypings/pxtparts.d.ts"/>
+/// <reference path="../localtypings/pxtarget.d.ts"/>
 var pxsim;
 (function (pxsim) {
     function print(delay) {
@@ -22461,7 +22915,7 @@ var pxsim;
         function start() {
             window.addEventListener("message", receiveMessage, false);
             Embed.frameid = window.location.hash.slice(1);
-            initAppcache();
+            initServiceWorker();
             pxsim.Runtime.postMessage({ type: 'ready', frameid: Embed.frameid });
         }
         Embed.start = start;
@@ -22610,13 +23064,29 @@ var pxsim;
             window.parent.postMessage(message, "*");
         }
     }
-    function initAppcache() {
-        if (typeof window !== 'undefined' && window.applicationCache) {
-            if (window.applicationCache.status === window.applicationCache.UPDATEREADY)
-                reload();
-            window.applicationCache.addEventListener("updateready", function () {
-                if (window.applicationCache.status === window.applicationCache.UPDATEREADY)
-                    reload();
+    function initServiceWorker() {
+        // pxsim is included in both the webapp and the simulator so we need to check if the ---simulator is
+        // present in the window location
+        if ("serviceWorker" in navigator && window.location.href.indexOf("---simulator") !== -1 && !pxsim.U.isLocalHost()) {
+            // We don't have access to the webconfig in pxtsim so we need to extract the ref from the URL
+            var pathname = window.location.pathname;
+            var ref_1 = pathname.substring(1, pathname.indexOf("---"));
+            // Only reload if there is already a service worker installed
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.addEventListener("message", function (ev) {
+                    var message = ev.data;
+                    // We need to check the ref of the activated service worker so that we don't reload if you have
+                    // index.html and beta open at the same time
+                    if (message && message.type === "serviceworker" && message.state === "activated" && message.ref === ref_1) {
+                        reload();
+                    }
+                });
+            }
+            var serviceWorkerUrl = window.location.href.replace(/---simulator.*$/, "---simserviceworker");
+            navigator.serviceWorker.register(serviceWorkerUrl).then(function (registration) {
+                console.log("Simulator ServiceWorker registration successful with scope: ", registration.scope);
+            }, function (err) {
+                console.log("Simulator ServiceWorker registration failed: ", err);
             });
         }
     }
@@ -24719,6 +25189,17 @@ var pxsim;
             return res;
         }
         U.toUTF8 = toUTF8;
+        function isLocalHost() {
+            try {
+                return typeof window !== "undefined"
+                    && /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(window.location.href)
+                    && !/nolocalhost=1/.test(window.location.href);
+            }
+            catch (e) {
+                return false;
+            }
+        }
+        U.isLocalHost = isLocalHost;
     })(U = pxsim.U || (pxsim.U = {}));
     var BreakLoopException = /** @class */ (function () {
         function BreakLoopException() {
@@ -25119,6 +25600,7 @@ var pxsim;
             this.pausedTime = 0;
             this.lastPauseTimestamp = 0;
             this.globals = {};
+            this.environmentGlobals = {};
             this.otherFrames = [];
             this.loopLock = null;
             this.loopLockWaitList = [];
@@ -25246,6 +25728,7 @@ var pxsim;
                 s.r0 = r0;
                 var _a = pxsim.getBreakpointMsg(s, brkId, userGlobals), msg = _a.msg, heap = _a.heap;
                 dbgHeap = heap;
+                pxsim.injectEnvironmentGlobals(msg, heap);
                 Runtime.postMessage(msg);
                 breakpoints[0] = 0;
                 breakFrame = null;
@@ -25287,11 +25770,9 @@ var pxsim;
             function trace(brkId, s, retPc, info) {
                 setupResume(s, retPc);
                 if (info.functionName === "<main>" || info.fileName === "main.ts") {
-                    Runtime.postMessage({
-                        type: "debugger",
-                        subtype: "trace",
-                        breakpointId: brkId,
-                    });
+                    var msg_1 = pxsim.getBreakpointMsg(s, brkId, userGlobals).msg;
+                    msg_1.subtype = "trace";
+                    Runtime.postMessage(msg_1);
                     pxsim.thread.pause(tracePauseMs || 1);
                 }
                 else {
@@ -25384,10 +25865,11 @@ var pxsim;
                         __this.errorHandler(e);
                     else {
                         console.error("Simulator crashed, no error handler", e.stack);
-                        var msg_1 = pxsim.getBreakpointMsg(p, p.lastBrkId, userGlobals).msg;
-                        msg_1.exceptionMessage = e.message;
-                        msg_1.exceptionStack = e.stack;
-                        Runtime.postMessage(msg_1);
+                        var _a = pxsim.getBreakpointMsg(p, p.lastBrkId, userGlobals), msg_2 = _a.msg, heap = _a.heap;
+                        pxsim.injectEnvironmentGlobals(msg_2, heap);
+                        msg_2.exceptionMessage = e.message;
+                        msg_2.exceptionStack = e.stack;
+                        Runtime.postMessage(msg_2);
                         if (__this.postError)
                             __this.postError(e);
                     }
@@ -26085,6 +26567,9 @@ var pxsim;
         SimulatorDriver.prototype.isDebug = function () {
             return this._runOptions && !!this._runOptions.debug;
         };
+        SimulatorDriver.prototype.isTracing = function () {
+            return this._runOptions && !!this._runOptions.trace;
+        };
         SimulatorDriver.prototype.hasParts = function () {
             return this._runOptions && this._runOptions.parts && !!this._runOptions.parts.length;
         };
@@ -26659,7 +27144,7 @@ var pxsim;
                     if (this.options.onDebuggerWarning)
                         this.options.onDebuggerWarning(msg);
                     break;
-                case "breakpoint":
+                case "breakpoint": {
                     var brk = msg;
                     if (this.state == SimulatorState.Running) {
                         if (brk.exceptionMessage)
@@ -26681,11 +27166,14 @@ var pxsim;
                         console.error("debugger: trying to pause from " + this.state);
                     }
                     break;
-                case "trace":
-                    if (this.options.onTraceMessage) {
-                        this.options.onTraceMessage(msg);
+                }
+                case "trace": {
+                    var brk = msg;
+                    if (this.state == SimulatorState.Running && this.options.onTraceMessage) {
+                        this.options.onTraceMessage(brk);
                     }
                     break;
+                }
                 default:
                     var seq = msg.req_seq;
                     if (seq) {
@@ -27695,52 +28183,6 @@ var pxsim;
         return LightSensorState;
     }());
     pxsim.LightSensorState = LightSensorState;
-})(pxsim || (pxsim = {}));
-var pxsim;
-(function (pxsim) {
-    var NeoPixelMode;
-    (function (NeoPixelMode) {
-        NeoPixelMode[NeoPixelMode["RGB"] = 0] = "RGB";
-        NeoPixelMode[NeoPixelMode["RGBW"] = 1] = "RGBW";
-    })(NeoPixelMode = pxsim.NeoPixelMode || (pxsim.NeoPixelMode = {}));
-    ;
-    var NeoPixelState = /** @class */ (function () {
-        function NeoPixelState() {
-            this.buffers = {};
-            this.colors = {};
-            this.dirty = {};
-        }
-        NeoPixelState.prototype.updateBuffer = function (buffer, pin) {
-            this.buffers[pin] = buffer;
-            this.dirty[pin] = true;
-        };
-        NeoPixelState.prototype.getColors = function (pin, mode) {
-            var outColors = this.colors[pin] || (this.colors[pin] = []);
-            if (this.dirty[pin]) {
-                var buf = this.buffers[pin] || (this.buffers[pin] = new Uint8Array([]));
-                this.readNeoPixelBuffer(buf, outColors, mode);
-                this.dirty[pin] = false;
-            }
-            return outColors;
-        };
-        NeoPixelState.prototype.readNeoPixelBuffer = function (inBuffer, outColors, mode) {
-            var buf = inBuffer;
-            var stride = mode === NeoPixelMode.RGBW ? 4 : 3;
-            var pixelCount = Math.floor(buf.length / stride);
-            for (var i = 0; i < pixelCount; i++) {
-                // NOTE: for whatever reason, NeoPixels pack GRB not RGB
-                var r = buf[i * stride + 1];
-                var g = buf[i * stride + 0];
-                var b = buf[i * stride + 2];
-                var w = 0;
-                if (stride === 4)
-                    w = buf[i * stride + 3];
-                outColors[i] = [r, g, b, w];
-            }
-        };
-        return NeoPixelState;
-    }());
-    pxsim.NeoPixelState = NeoPixelState;
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {

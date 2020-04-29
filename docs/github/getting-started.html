@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta name="twitter:image" content="https://img.youtube.com/vi/J-pI1sEWPV0/0.jpg" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta property="og:image" content="https://img.youtube.com/vi/J-pI1sEWPV0/0.jpg" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1684,6 +1715,14 @@
 					
     <div class="ui text">
         <h1 id="getting-started">Getting started</h1><p>Let’s start discovering GitHub by explaining a common usage scenario: you are editing your own project and using GitHub to save your changes.</p>
+<h3 id="youtube"></h3>
+    <div class="ui grid">
+        <div class="ten wide column">
+            <div class="ui embed mdvid" data-source="youtube" data-id="J-pI1sEWPV0"
+                data-placeholder="https://img.youtube.com/vi/J-pI1sEWPV0/0.jpg">
+            </div>
+        </div>
+    </div>
 <h2 id="step-1-create-a-repository">Step 1 - Create a repository</h2><p>A <strong>repository</strong> is used to organize a single project. Repositories will contain all the files needed for your MakeCode projects.</p>
 <ol>
 <li>Open the <a target="_blank" rel="nofollow noopener" href="https://makecode.microbit.org/">editor</a>, create a new project</li>
@@ -1693,25 +1732,24 @@
 
     <div class="ui info message">
         <div class="content">
-            <h3 id="sign-in">Sign in</h3><p>If you haven’t signed in yet with GitHub, you will be redirected to the GitHub sign in page. On your first use of MakeCode, you will also be asked to authorize the <strong>Microsoft MakeCode with GitHub</strong> app. This integrates MakeCode with GitHub using our GitHub app.</p>
+            <h4 id="sign-in">Sign in</h4><p>If you haven’t signed in yet with GitHub, you will be redirected to the GitHub sign in page. On your first use of MakeCode, you will also be asked to authorize the <strong>Microsoft MakeCode with GitHub</strong> app. This integrates MakeCode with GitHub using our GitHub app.</p>
 <p>Advanced users can use a <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/token.html">developer token</a> so that they can work directly with GitHub without having to sign in with the app.</p>
 
         </div>
     </div>
-<h2 id="step-2-commit-push-changes">Step 2 - Commit &amp; push changes</h2><p>Make any change in the code editor and you will notice that an up arrow is displayed
+<h2 id="step-2-make-code-changes">Step 2 - Make code changes</h2><p>Go ahead and make some changes to the code in your project.</p>
+<h2 id="step-3-review-your-changes">Step 3 - Review your changes</h2><p>Make any change in the code editor and you will notice that an up arrow is displayed
 on the <strong>GitHub</strong> button. The arrow means that there are changes stored on your computer and they need to get saved to GitHub. Click on that button to open the <strong>GitHub view</strong>.</p>
-<p>You will see a <strong>commit &amp; push changes</strong> button and a list of <strong>diffs</strong> under it. A <strong>commit</strong> is a bundled set of changes that can be uploaded to GitHub (read more about <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/commit.html">commits</a>). A <strong>diff</strong> is common jargon used by developers to describe a formatted display of differences between two pieces of text (read about using <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/diff.html">diffs</a>). Look at the diff carefully, it tells you which lines you added, deleted or modified.</p>
+<p>You will see the list of modified files and their differences, or <strong>diffs</strong>. A <strong>diff</strong> is common jargon used by developers to describe a formatted display of differences between two pieces of text (read about using <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/diff.html">diffs</a>). Look at the diff carefully, it tells you which lines you added, deleted or modified.</p>
 
     <div class="ui info message">
         <div class="content">
-            <h3 id="review-your-code">Review your code</h3><p>It’s always a good idea to review the changes you’ve made to your code before committing them!</p>
+            <h4 id="reverting-local-changes">Reverting local changes</h4><p>If you do not like some of your changes, you can click on the <strong>Revert</strong> button next to the modified file. It allows you to undo all the changes in that file and roll it back to the content in the previous commit.</p>
 
         </div>
     </div>
-<p>Click on the <strong>commit &amp; push changes</strong> button to save these changes to GitHub. </p>
-<h2 id="step-3-reverting-local-changes">Step 3 - Reverting local changes</h2><p>Go back (there’s a <strong>go back</strong> button you can click) to the code editor and make another change. Click on the GitHub view to see diffs of your changes.</p>
-<p>You will notice a <strong>Revert</strong> button next to the modified file. It allows you to undo all the changes in that file and roll it back to the content in the previous commit.</p>
-<p>Click on <strong>Revert</strong> to see how it works.</p>
+<h2 id="step-4-commit-push-changes">Step 4 - Commit &amp; push changes</h2><p>Click on the <strong>commit &amp; push changes</strong> button to save these changes to GitHub. This will create a new <strong>commit</strong> in your repository. A <strong>commit</strong> is a bundled set of changes that can be uploaded to GitHub (read more about <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/github/commit.html">commits</a>).</p>
+<p>That’s it! Each time you want to keep a set of changes to your code, repeat steps 2, 3, and 4!</p>
 
     </div>
 
@@ -1750,7 +1788,7 @@ on the <strong>GitHub</strong> button. The arrow means that there are changes st
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

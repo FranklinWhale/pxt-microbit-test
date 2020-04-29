@@ -167,7 +167,11 @@
             "KitronikLtd/pxt-kitronik-clip-detector",
             "DFRobot/pxt-DFRobot-NaturalScience",
             "strawbees/pxt-robotic-inventions",
-            "daferdur/pxt-myHX711"
+            "daferdur/pxt-myHX711",
+            "CytronTechnologies/pxt-edubit",
+            "MakeAndLearn/pxt-microshield",
+            "4tronix/Orbit",
+            "elecfreaks/pxt-TPBot"
         ],
         "preferredRepos": [
             "Microsoft/pxt-neopixel",
@@ -183,6 +187,7 @@
     },
     "galleries": {
         "Tutorials": "tutorials",
+        "Live Coding": "live-coding",
         "Games": "projects/games",
         "Radio Games": "projects/radio-games",
         "Fashion": "projects/fashion",

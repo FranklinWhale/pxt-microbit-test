@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1689,55 +1720,50 @@
 always put in <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/blocks/on-start.html"><code>||on start||</code></a>. But, you can also put some other part of your
 program in <code>||control:run in parallel||</code>. This is useful when you want your program to keep doing important things
 and you don’t want to wait for some other actions to happen first.</p>
-<h2 id="tasks">Separate tasks </h2><p>As an example, you could have a small task to rotate the pixel lights the pixel strip. This is
-placed inside a <code>||control:run in parallel||</code> block:</p>
-<pre><code class="lang-blocks">let spinit = true;
-let pixels = light.createStrip();
+<h2 id="tasks">Separate tasks </h2><p>As an example, you could have a small task to rotate a bit in a 16 character
+string of zeros. This is placed inside a <code>||control:run in parallel||</code> block:</p>
+<pre><code class="lang-blocks">let bitPos = 0
+let rorit = true
+let zeros = &quot;&quot;
 
-control.runInParallel(() =&gt; {
-    while (spinit) {
-        pixels.move(LightMove.Rotate, 1);
-        pause(200);
+control.runInParallel(function() {
+    while (rorit) {
+        if (bitPos &gt; 15) {
+            bitPos = 0
+        }
+        zeros = &quot;&quot;
+        for (let i = 0; i &lt; 16; i++) {
+            if (bitPos == i) {
+                zeros = zeros + &quot;1&quot;
+            } else {
+                zeros = zeros + &quot;0&quot;
+            }
+        }
+        console.log(zeros)
+        pause(200)
     }
 })</code></pre>
-<p>Code is added to the main part of the program to turn the pixels on. It turns on one pixel, waits
-for <code>5</code> seconds and turns on another pixel. Then, it waits for <code>5</code> more seconds and stops the rotate
-loop in the background task.</p>
-<pre><code class="lang-blocks">let spinit = true;
-let pixels = light.createStrip();
-
-pixels.setPixelColor(0, 0x0000ff);
-pause(5000);
-pixels.setPixelColor(0, 0x0000ff);
-pause(5000);
-spinit = false;
-pixels.clear();</code></pre>
+<p>Code is added to the main part of the program to turn the bit rotation on, pause for <code>5</code> seconds and then turn it off. It pauses for another <code>5</code> seconds and then trys to turn the bit rotation back on. However, the parallel task has finished and
+the bit rotation won’t start again.</p>
+<pre><code class="lang-blocks">let rorit = true
+pause(5000)
+rorit = false
+pause(5000)
+rorit = true</code></pre>
 <h2 id="parameters">Parameters</h2><ul>
 <li><strong>a</strong>: the code to run in the background.</li>
 </ul>
-<h2 id="example">Example </h2><p>Automatically rotate lighted pixels as they are added to the pixel strip.</p>
-<p><strong>First</strong>: As a background task, rotate the lighted pixels on the pixel strip.</p>
-<p><strong>Next</strong>: In the main part of the program, slowly add a few more lights to the strip.</p>
-<p><strong>Finally</strong>: When the <code>A</code> button is pressed, stop the rotate task and turn off all the all the pixels.</p>
-<pre><code class="lang-blocks">let spinit = false;
-let pixels = light.createStrip();
+<h2 id="example">Example </h2><p>Use a parallel task to generate a magic number. In the main program check the value of the magic number twice. The first time check the value right away. The
+second time, check <code>2</code> seconds later after the parallel task has time to run.</p>
+<pre><code class="lang-blocks">let magic = 0
 
-input.buttonA.onEvent(ButtonEvent.Click, () =&gt; {
-    spinit = false;
-    pixels.clear();
-    control.runInParallel(() =&gt; {
-        pixels.setPixelColor(0, 0x0000ff);
-        while (spinit) {
-            pixels.move(LightMove.Rotate, 1);
-            pause(250);
-        }
-    })
+control.runInParallel(function() {
+    magic = Math.randomRange(1000, 5000) 
 })
-spinit = true;
-for (let i = 0; i &lt; 5; i++) {
-    pause(1000);
-    pixels.setPixelColor(0, 0x0000ff);
-}</code></pre>
+
+console.logValue(&quot;magic&quot;, magic)
+pause(2000)
+console.logValue(&quot;magic&quot;, magic)</code></pre>
 <h2 id="seealso"></h2>
     </div>
 
@@ -1776,7 +1802,7 @@ for (let i = 0; i &lt; 5; i++) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

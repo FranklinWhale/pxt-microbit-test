@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta name="twitter:image" content="/static/webusb/unpair.gif" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta property="og:image" content="/static/webusb/unpair.gif" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,10 +1714,11 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="webusb">WebUSB</h1><p>WebUSB is an emerging web standard that allows to access micro:bit from web pages. 
+        <h1 id="webusb">WebUSB</h1><p><a target="_blank" rel="nofollow noopener" href="https://wicg.github.io/webusb/">WebUSB</a> is an emerging web standard that allows to access micro:bit from web pages. 
 It allows for a <strong>one-click download</strong> without installing any additional app or software! It also allows to receive data from the micro:bit.</p>
 <h2 id="support">Support</h2><ul>
-<li>Chrome 65+ browser for Android, Chrome OS, Linux, macOS and Windows 10.</li>
+<li>Chrome 79+ browser for Android, Chrome OS, Linux, macOS and Windows 10.</li>
+<li>Microsoft Edge 79+ browser for Android, Chrome OS, Linux, macOS and Windows 10.</li>
 </ul>
 <h2 id="prepare-your-micro-bit">Prepare your micro:bit</h2><p>Make sure that your micro:bit is running version <strong>0249</strong> or above of the firmware. Upgrading is as easy as dragging a file and it takes a few seconds to get it done.</p>
 <ul>
@@ -1695,11 +1727,18 @@ It allows for a <strong>one-click download</strong> without installing any addit
 <h2 id="pair-your-micro-bit">Pair your micro:bit</h2><p>Here are the steps on the supported browsers:</p>
 <ul>
 <li>connect your micro:bit to your computer with the microUSB cable</li>
-<li>open a project.</li>
-<li>open the gearwheel menu and select <strong>Pair device</strong></li>
+<li>open a project</li>
+<li>click the triple dot icon on the <strong>Download</strong> button and click <strong>Pair device</strong></li>
 <li>click on the <strong>Pair device</strong> button and select <strong>BBC micro:bit CMSIS-DAP</strong> or <strong>DAPLink CMSIS-DAP</strong> from the list.</li>
 </ul>
 <p>If you don’t see any devices in the list and micro:bit has the right firmware (<strong>0249</strong> or above), you can create a <a target="_blank" rel="nofollow noopener" href="https://support.microbit.org/support/tickets/new">support ticket</a> to notify the Micro:bit Foundation of the problem. Skip the rest of these steps.</p>
+<h2 id="unpair">Unpair your micro:bit </h2><p>You will need to unpair your device from the editor to disable WebUSB.</p>
+<ul>
+<li>Click on the <strong>lock</strong> icon in the address bar</li>
+<li>Uncheck each <strong>BBC micro:bit CMSIS-DAP</strong> or <strong>DAPLink CMSIS-DAP</strong> device</li>
+<li>Reload the page</li>
+</ul>
+<p><img class="ui image" src="/static/webusb/unpair.gif" alt="" loading="lazy"></p>
 <h2 id="one-click-download">One-click Download</h2><p>Once your micro:bit is paired, MakeCode will use WebUSB to transfer the code without having to drag and drop. Happy coding!</p>
 <h2 id="console-output">Console output</h2><p>MakeCode will be able to “listen” to your micro:bit and display the console output.</p>
 
@@ -1740,7 +1779,7 @@ It allows for a <strong>one-click download</strong> without installing any addit
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

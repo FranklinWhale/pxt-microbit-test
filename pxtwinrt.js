@@ -70,12 +70,31 @@ var pxt;
     (function (winrt) {
         var WindowsRuntimeIO = /** @class */ (function () {
             function WindowsRuntimeIO() {
+                this.onDeviceConnectionChanged = function (connect) { };
+                this.onConnectionChanged = function () { };
                 this.onData = function (v) { };
                 this.onEvent = function (v) { };
                 this.onError = function (e) { };
+                this.connecting = false;
             }
+            WindowsRuntimeIO.prototype.disposeAsync = function () {
+                return Promise.resolve();
+            };
             WindowsRuntimeIO.prototype.error = function (msg) {
                 throw new Error(pxt.U.lf("USB/HID error ({0})", msg));
+            };
+            WindowsRuntimeIO.prototype.setConnecting = function (v) {
+                if (v != this.connecting) {
+                    this.connecting = v;
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
+                }
+            };
+            WindowsRuntimeIO.prototype.isConnecting = function () {
+                return this.connecting;
+            };
+            WindowsRuntimeIO.prototype.isConnected = function () {
+                return !!this.dev;
             };
             WindowsRuntimeIO.prototype.reconnectAsync = function () {
                 var _this = this;
@@ -83,13 +102,18 @@ var pxt;
                     .then(function () { return _this.initAsync(); });
             };
             WindowsRuntimeIO.prototype.isSwitchingToBootloader = function () {
-                isSwitchingToBootloader();
+                return false;
             };
             WindowsRuntimeIO.prototype.disconnectAsync = function () {
                 if (this.dev) {
                     var d = this.dev;
                     delete this.dev;
-                    d.close();
+                    try {
+                        d.close();
+                    }
+                    catch (e) { }
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
                 }
                 return Promise.resolve();
             };
@@ -117,7 +141,6 @@ var pxt;
                 var whid = wd.HumanInterfaceDevice.HidDevice;
                 var rejectDeviceNotFound = function () {
                     var err = new Error(pxt.U.lf("Device not found"));
-                    err.notifyUser = true;
                     err.type = "devicenotfound";
                     return Promise.reject(err);
                 };
@@ -130,6 +153,7 @@ var pxt;
                         return wd.Enumeration.DeviceInformation.findAllAsync(currentSelector, null);
                     });
                 }, Promise.resolve(null));
+                this.setConnecting(true);
                 var deviceId;
                 return getDevicesPromise
                     .then(function (devices) {
@@ -164,7 +188,12 @@ var pxt;
                         }
                         _this.onData(new Uint8Array(values));
                     });
+                    if (_this.onConnectionChanged)
+                        _this.onConnectionChanged();
                     return Promise.resolve();
+                })
+                    .finally(function () {
+                    _this.setConnecting(false);
                 })
                     .catch(function (e) {
                     if (isRetry) {
@@ -185,6 +214,7 @@ var pxt;
         winrt.packetIO = undefined;
         function mkPacketIOAsync() {
             pxt.U.assert(!winrt.packetIO);
+            pxt.log("packetio: mk winrt");
             winrt.packetIO = new WindowsRuntimeIO();
             return winrt.packetIO.initAsync()
                 .catch(function (e) {

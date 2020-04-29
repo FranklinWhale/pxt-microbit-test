@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1685,13 +1716,13 @@
     <div class="ui text">
         <h1 id="digi-yoyo-quiz-answers">digi yoyo quiz answers</h1><p>Answers for digi yoyo quiz. </p>
 <p>This is the answer key for the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/lessons/digi-yoyo/quiz.html">digi yoyo quiz</a>.</p>
-<h2 id="1-describe-what-a-while-loop-does-">1. Describe what a “while loop” does?</h2><p><br/></p>
+<h2 id="1-describe-what-a-while-loop-does-">1. Describe what a “while loop” does?</h2><p><br /></p>
 <p>A loop that repeats code while a condition is true.</p>
 <h2 id="2-write-the-code-that-will-create-a-variable-called-count-and-set-the-variable-to-0-">2. Write the code that will create a <strong>variable</strong> called <code>count</code> and set the variable to 0.</h2><p><img class="ui image" src="/static/mb/lessons/counter-0.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let count = 0</code></pre>
 <h2 id="3-create-a-while-loop-that-will-loop-until-the-variable-count-equals-4-">3. Create a <code>while loop</code> that will loop until the <strong>variable</strong> <code>count</code> equals 4.</h2><p><img class="ui image" src="/static/mb/lessons/digi-yoyo-0.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let count = 0
 while (count &lt; 5) {
     count = count + 1
@@ -1734,7 +1765,7 @@ while (count &lt; 5) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

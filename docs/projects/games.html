@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1690,18 +1721,100 @@
   &quot;url&quot;:&quot;/projects/rock-paper-scissors&quot;,
   &quot;description&quot;: &quot;Make the Rock-Paper-Scissors game on your micro:bit and challenge your friends.&quot;,
   &quot;imageUrl&quot;:&quot;/docs/static/mb/projects/a4-motion.png&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;94lLBB3b1kU&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/rock-paper-scissors&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/rock-paper-scissors&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Coin Flipper&quot;,
   &quot;url&quot;:&quot;/projects/coin-flipper&quot;,
   &quot;description&quot;: &quot;Guess the coin toss and see if you&#39;re lucky.&quot;,
   &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/coin-flipper.png&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;678ATmGGlvk&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/coin-flipper&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/coin-flipper&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
+}, {
+  &quot;name&quot;: &quot;7 seconds&quot;,
+  &quot;url&quot;:&quot;/projects/7-seconds&quot;,
+  &quot;description&quot;: &quot;Press a button after exactly 7 seconds.&quot;,
+  &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/7-seconds.png&quot;,
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;LINr5wa4okg&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/7-seconds&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/7-seconds&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
+}, {
+  &quot;name&quot;: &quot;Hot Potato&quot;,
+  &quot;url&quot;:&quot;/projects/hot-potato&quot;,
+  &quot;description&quot;: &quot;Toss the potato around before time is up and you&#39;re caught holding it.&quot;,
+  &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/hot-potato.png&quot;,
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;xLEy1B_gWKY&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/hot-potato&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/hot-potato&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
+}, {
+  &quot;name&quot;: &quot;Heads Guess!&quot;,
+  &quot;url&quot;:&quot;/projects/heads-guess&quot;,
+  &quot;description&quot;: &quot;Try to guess words with your friends!&quot;,
+  &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/heads-guess.png&quot;,
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/heads-guess&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/heads-guess&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Reaction Time&quot;,
   &quot;url&quot;:&quot;/projects/reaction-time&quot;,
   &quot;description&quot;: &quot;Make a reaction time experiment that responds to your body&#39;s conductivity!&quot;,
   &quot;imageUrl&quot;:&quot;/docs/static/mb/projects/reaction.jpg&quot;
+}, {
+  &quot;name&quot;: &quot;Tug-Of-LED&quot;,
+  &quot;url&quot;:&quot;/projects/tug-of-led&quot;,
+  &quot;description&quot;: &quot;Button smashing rope pulling games using LEDs&quot;,
+  &quot;imageUrl&quot;:&quot;/docs/static/mb/projects/tug-of-led.png&quot;,
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/tug-of-led&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/tug-of-led&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Magic Button Trick&quot;,
   &quot;url&quot;:&quot;/projects/magic-button-trick&quot;,
@@ -1712,7 +1825,16 @@
   &quot;url&quot;: &quot;/projects/snap-the-dot&quot;,
   &quot;description&quot;: &quot;Use the game blocks to create a skill game&quot;,
   &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/snap-the-dot.png&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/snap-the-dot&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/snap-the-dot&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Salute!&quot;,
   &quot;url&quot;:&quot;/projects/salute&quot;,
@@ -1729,6 +1851,7 @@
   &quot;url&quot;:&quot;/projects/crashy-bird&quot;,
   &quot;imageUrl&quot;:&quot;/docs/static/mb/projects/crashy-bird.png&quot;
 }]</code></pre>
+<h2 id="flipgrid">Flipgrid</h2><p><a target="_blank" rel="nofollow noopener" href="https://flipgrid.com/makecodemicrobit">https://flipgrid.com/makecodemicrobit</a></p>
 
     </div>
 
@@ -1767,7 +1890,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

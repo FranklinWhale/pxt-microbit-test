@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta name="twitter:image" content="https://img.youtube.com/vi/vkOWnBfBqak/0.jpg" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta property="og:image" content="https://img.youtube.com/vi/vkOWnBfBqak/0.jpg" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1684,11 +1715,19 @@
 					
     <div class="ui text">
         <h1 id="github-pages">GitHub Pages</h1><p>MakeCode uses <a target="_blank" rel="nofollow noopener" href="https://pages.github.com/">GitHub Pages</a> to convert your repository into a full web site!</p>
-<p>The page web site will either show the rendered README.md file; or the compiled game running in full screen for Arcade.</p>
+<p>The <strong>pages</strong> web site will either show the rendered <code>README.md</code> file; or the compiled game running in full screen for Arcade.</p>
+<h3 id="youtube"></h3>
+    <div class="ui grid">
+        <div class="ten wide column">
+            <div class="ui embed mdvid" data-source="youtube" data-id="vkOWnBfBqak"
+                data-placeholder="https://img.youtube.com/vi/vkOWnBfBqak/0.jpg">
+            </div>
+        </div>
+    </div>
 
     <div class="ui info message">
         <div class="content">
-            <p>It may take up to 10 minutes for updates to be reflected on the GitHub pages web site.</p>
+            <h4 id="wait-for-the-update">Wait for the update</h4><p>It may take up to 10 minutes for updates to be reflected on the GitHub pages web site.</p>
 
         </div>
     </div>
@@ -1730,7 +1769,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

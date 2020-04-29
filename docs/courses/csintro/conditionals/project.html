@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1780,9 +1811,9 @@ input.onGesture(Gesture.Shake, () =&gt; {
 <h2 id="board-game-example">Board game example</h2><p>Space Race by K. and S.</p>
 <ul>
 <li>How to win:  Starting from Earth, your goal is to progress to Mars.  The first person to reach Mars is the winner.</li>
-<li>Rules:<br/><blockquote>
-<p><strong>1</strong> - Shake the micro:bit to randomize how far you get to advance.<br/>
-<strong>2</strong> - If you land on a pink square, press “B” on the micro:bit until your previous roll number appears. Then press A and B at the same time to see whether or not you move based upon the number on the square.<br/>
+<li>Rules:<br /><blockquote>
+<p><strong>1</strong> - Shake the micro:bit to randomize how far you get to advance.<br />
+<strong>2</strong> - If you land on a pink square, press “B” on the micro:bit until your previous roll number appears. Then press A and B at the same time to see whether or not you move based upon the number on the square.<br />
 <strong>3</strong> - Up to four players.</p>
 </blockquote>
 </li>
@@ -1831,45 +1862,45 @@ basic.showString(&quot;SPACE RACE&quot;)
 previous_roll = 0</code></pre>
 <h2 id="assessment">Assessment</h2><p><strong>Competency scores</strong>: 4, 3, 2, 1</p>
 <h3 id="rules">Rules</h3><blockquote>
-<p><strong>4 =</strong> All game rules are clear and complete.<br/>
-<strong>3 =</strong> A game rule is missing or not complete or not clear.<br/>
-<strong>2 =</strong> More than one game rule is missing or not complete or not clear<br/>
+<p><strong>4 =</strong> All game rules are clear and complete.<br />
+<strong>3 =</strong> A game rule is missing or not complete or not clear.<br />
+<strong>2 =</strong> More than one game rule is missing or not complete or not clear<br />
 <strong>1 =</strong> Most of the game rules are missing or it is not clear what the rules are.</p>
 </blockquote>
 <h3 id="game-board">Game board</h3><blockquote>
-<p><strong>4 =</strong> Game board is:<br/>
-<code>*</code> Complete<br/>
-<code>*</code> Neat<br/>
-<code>*</code> Fits with the theme of the game<br/>
-<code>*</code> micro:bit is a central part of the game<br/>
-<strong>3 =</strong> Game board meets only 3 of the conditions listed for a score of 4.<br/>
-<strong>2 =</strong> Game board meets only 2 of the conditions listed for a score of 4.<br/>
+<p><strong>4 =</strong> Game board is:<br />
+<code>*</code> Complete<br />
+<code>*</code> Neat<br />
+<code>*</code> Fits with the theme of the game<br />
+<code>*</code> micro:bit is a central part of the game<br />
+<strong>3 =</strong> Game board meets only 3 of the conditions listed for a score of 4.<br />
+<strong>2 =</strong> Game board meets only 2 of the conditions listed for a score of 4.<br />
 <strong>1 =</strong> Game board meets only 1 of the conditions listed for a score of 4.</p>
 </blockquote>
 <h3 id="micro-bit-program">micro:bit program</h3><blockquote>
-<p><strong>4 =</strong> micro:bit program:<br/>
-<code>*</code> Uses the micro:bit in a way that is integral to the game<br/>
-<code>*</code> Uses conditionals correctly<br/>
-<code>*</code> Compiles and runs as intended<br/>
-<code>*</code> JavaScript includes comments in code<br/>
-<strong>3 =</strong> micro:bit program lacks 1 of the required elements.<br/>
-<strong>2 =</strong> micro:bit program lacks 2 of the required elements.<br/>
+<p><strong>4 =</strong> micro:bit program:<br />
+<code>*</code> Uses the micro:bit in a way that is integral to the game<br />
+<code>*</code> Uses conditionals correctly<br />
+<code>*</code> Compiles and runs as intended<br />
+<code>*</code> JavaScript includes comments in code<br />
+<strong>3 =</strong> micro:bit program lacks 1 of the required elements.<br />
+<strong>2 =</strong> micro:bit program lacks 2 of the required elements.<br />
 <strong>1 =</strong> micro:bit program lacks 3 of the required elements. </p>
 </blockquote>
 <h3 id="photo-documentation">Photo documentation</h3><blockquote>
-<p><strong>4 =</strong> Complete photo documentation that includes photos of game board and code and captions.<br/>
-<strong>3 =</strong> A photo is missing or of poor quality or a caption is missing.<br/>
-<strong>2 =</strong> Multiple photos and/or captions missing or of poor quality.<br/>
+<p><strong>4 =</strong> Complete photo documentation that includes photos of game board and code and captions.<br />
+<strong>3 =</strong> A photo is missing or of poor quality or a caption is missing.<br />
+<strong>2 =</strong> Multiple photos and/or captions missing or of poor quality.<br />
 <strong>1 =</strong> Most photos and/or captions missing or of poor quality.</p>
 </blockquote>
 <h3 id="collaboration-reflection">Collaboration reflection</h3><blockquote>
-<p><strong>4 =</strong> Reflection piece includes:<br/>
-<code>*</code> Brainstorming ideas<br/>
-<code>*</code> Construction<br/>
-<code>*</code> Programming<br/>
-<code>*</code> Beta testing<br/>
-<strong>3 =</strong> Reflection piece lacks 1 of the required elements.<br/>
-<strong>2 =</strong> Reflection piece lacks 2 of the required elements.<br/>
+<p><strong>4 =</strong> Reflection piece includes:<br />
+<code>*</code> Brainstorming ideas<br />
+<code>*</code> Construction<br />
+<code>*</code> Programming<br />
+<code>*</code> Beta testing<br />
+<strong>3 =</strong> Reflection piece lacks 1 of the required elements.<br />
+<strong>2 =</strong> Reflection piece lacks 2 of the required elements.<br />
 <strong>1 =</strong> Reflection piece lacks 3 of the required elements. </p>
 </blockquote>
 
@@ -1910,7 +1941,7 @@ previous_roll = 0</code></pre>
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

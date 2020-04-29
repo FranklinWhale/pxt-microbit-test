@@ -185,6 +185,7 @@ var pxt;
                 simulatorClass: 'lang-sim',
                 linksClass: 'lang-cards',
                 namespacesClass: 'lang-namespaces',
+                apisClass: 'lang-apis',
                 codeCardClass: 'lang-codecard',
                 packageClass: 'lang-package',
                 projectClass: 'lang-project',
@@ -348,8 +349,10 @@ var pxt;
             if (woptions.run && !theme.hideDocsSimulator) {
                 var $runBtn = snippetBtn(lf("Run"), "play icon").click(function () {
                     pxt.tickEvent("docs.btn", { button: "sim" });
-                    if ($c.find('.sim')[0])
+                    if ($c.find('.sim')[0]) {
                         $c.find('.sim').remove(); // remove previous simulators
+                        scrollJQueryIntoView($c);
+                    }
                     else {
                         var padding = '81.97%';
                         if (pxt.appTarget.simulator)
@@ -359,6 +362,7 @@ var pxt;
                         var data = encodeURIComponent($js.text());
                         var $embed = $("<div class=\"ui card sim\"><div class=\"ui content\"><div style=\"position:relative;height:0;padding-bottom:" + padding + ";overflow:hidden;\"><iframe style=\"position:absolute;top:0;left:0;width:100%;height:100%;\" src=\"" + url + "\" data-code=\"" + data + "\" allowfullscreen=\"allowfullscreen\" sandbox=\"allow-popups allow-forms allow-scripts allow-same-origin\" frameborder=\"0\"></iframe></div></div></div>");
                         $c.append($embed);
+                        scrollJQueryIntoView($embed);
                     }
                 });
                 $menu.append($runBtn);
@@ -382,13 +386,16 @@ var pxt;
                     return;
                 var $svgBtn = snippetBtn(lf("Blocks"), BLOCKS_ICON).click(function () {
                     pxt.tickEvent("docs.btn", { button: "blocks" });
-                    if ($c.find('.blocks')[0])
+                    if ($c.find('.blocks')[0]) {
                         $c.find('.blocks').remove();
+                        scrollJQueryIntoView($c);
+                    }
                     else {
                         if ($js)
                             appendBlocks($js.parent(), $svg);
                         else
                             appendBlocks($c, $svg);
+                        scrollJQueryIntoView($svg);
                     }
                 });
                 $menu.append($svgBtn);
@@ -401,13 +408,16 @@ var pxt;
                 else {
                     var $jsBtn = snippetBtn("JavaScript", JS_ICON).click(function () {
                         pxt.tickEvent("docs.btn", { button: "js" });
-                        if ($c.find('.js')[0])
+                        if ($c.find('.js')[0]) {
                             $c.find('.js').remove();
+                            scrollJQueryIntoView($c);
+                        }
                         else {
                             if ($svg)
                                 appendJs($svg.parent(), $js, woptions);
                             else
                                 appendJs($c, $js, woptions);
+                            scrollJQueryIntoView($js);
                         }
                     });
                     $menu.append($jsBtn);
@@ -422,17 +432,27 @@ var pxt;
                 else {
                     var $pyBtn = snippetBtn("Python", PY_ICON).click(function () {
                         pxt.tickEvent("docs.btn", { button: "py" });
-                        if ($c.find('.py')[0])
+                        if ($c.find('.py')[0]) {
                             $c.find('.py').remove();
+                            scrollJQueryIntoView($c);
+                        }
                         else {
                             if ($svg)
                                 appendPy($svg.parent(), $py, woptions);
                             else
                                 appendPy($c, $py, woptions);
+                            scrollJQueryIntoView($py);
                         }
                     });
                     $menu.append($pyBtn);
                 }
+            }
+            function scrollJQueryIntoView($toScrollTo) {
+                var _a;
+                (_a = $toScrollTo[0]) === null || _a === void 0 ? void 0 : _a.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
             }
         }
         var renderQueue = [];
@@ -441,6 +461,7 @@ var pxt;
             return consumeNext()
                 .then(function () {
                 Blockly.Workspace.getAll().forEach(function (el) { return el.dispose(); });
+                pxt.blocks.cleanRenderingWorkspace();
             });
             function consumeNext() {
                 var job = renderQueue.shift();
@@ -532,6 +553,7 @@ var pxt;
         }
         function renderSignaturesAsync(options) {
             return renderNextSnippetAsync(options.signatureClass, function (c, r) {
+                var _a, _b, _c, _d, _e;
                 var cjs = r.compileProgram;
                 if (!cjs)
                     return;
@@ -543,14 +565,14 @@ var pxt;
                 if (!symbolInfo)
                     return;
                 var block = Blockly.Blocks[symbolInfo.attributes.blockId];
-                var xml = block && block.codeCard ? block.codeCard.blocksXml : undefined;
-                var blocksHtml = xml ? pxt.blocks.render(xml) : r.compileBlocks && r.compileBlocks.success ? r.blocksSvg : undefined;
+                var xml = ((_b = (_a = block) === null || _a === void 0 ? void 0 : _a.codeCard) === null || _b === void 0 ? void 0 : _b.blocksXml) || undefined;
+                var blocksHtml = xml ? pxt.blocks.render(xml) : ((_c = r.compileBlocks) === null || _c === void 0 ? void 0 : _c.success) ? r.blocksSvg : undefined;
                 var s = blocksHtml ? $(blocksHtml) : undefined;
-                var sig = info.decl.getText().replace(/^export/, '');
-                sig = sig.slice(0, sig.indexOf('{')).trim() + ';';
-                var js = $('<code class="lang-typescript highlight"/>').text(sig);
-                // TODO python
-                var py = undefined; // $('<code class="lang-python highlight"/>').text(sig);
+                var jsSig = ts.pxtc.service.displayStringForSymbol(symbolInfo, /** python **/ false, r.apiInfo)
+                    .split("\n")[1] + ";";
+                var js = $('<code class="lang-typescript highlight"/>').text(jsSig);
+                var pySig = ((_e = (_d = pxt.appTarget) === null || _d === void 0 ? void 0 : _d.appTheme) === null || _e === void 0 ? void 0 : _e.python) && ts.pxtc.service.displayStringForSymbol(symbolInfo, /** python **/ true, r.apiInfo).split("\n")[1];
+                var py = pySig && $('<code class="lang-python highlight"/>').text(pySig);
                 if (options.snippetReplaceParent)
                     c = c.parent();
                 // add an html widge that allows to translate the block
@@ -757,10 +779,16 @@ var pxt;
             }
             return renderNextDiffAsync(cls);
         }
+        var decompileApiPromise;
+        function decompileApiAsync(options) {
+            if (!decompileApiPromise)
+                decompileApiPromise = pxt.runner.decompileSnippetAsync('', options);
+            return decompileApiPromise;
+        }
         function renderNamespaces(options) {
             if (pxt.appTarget.id == "core")
                 return Promise.resolve();
-            return pxt.runner.decompileSnippetAsync('', options)
+            return decompileApiAsync(options)
                 .then(function (r) {
                 var res = {};
                 var info = r.compileBlocks.blocksInfo;
@@ -867,6 +895,74 @@ var pxt;
             }
             return render();
         }
+        function renderApisAsync(options, replaceParent) {
+            var cls = options.apisClass;
+            if (!cls)
+                return Promise.resolve();
+            var apisEl = $('.' + cls);
+            if (!apisEl.length)
+                return Promise.resolve();
+            return decompileApiAsync(options)
+                .then(function (r) {
+                var info = r.compileBlocks.blocksInfo;
+                var symbols = pxt.Util.values(info.apis.byQName)
+                    .filter(function (symbol) { return !symbol.attributes.hidden && !!symbol.attributes.jsDoc && !/^__/.test(symbol.name); });
+                apisEl.each(function (i, e) {
+                    var c = $(e);
+                    var namespaces = pxt.Util.toDictionary(c.text().split('\n'), function (n) { return n; }); // list of namespace to list apis for.
+                    var csymbols = symbols.filter(function (symbol) { return !!namespaces[symbol.namespace]; });
+                    if (!csymbols.length)
+                        return;
+                    csymbols.sort(function (l, r) {
+                        // render cards first
+                        var lcard = !l.attributes.blockHidden && Blockly.Blocks[l.attributes.blockId];
+                        var rcard = !r.attributes.blockHidden && Blockly.Blocks[r.attributes.blockId];
+                        if (!!lcard != !!rcard)
+                            return -(lcard ? 1 : 0) + (rcard ? 1 : 0);
+                        // sort alphabetically
+                        return l.name.localeCompare(r.name);
+                    });
+                    var ul = $('<div />').addClass('ui divided items');
+                    ul.attr("role", "listbox");
+                    csymbols.forEach(function (symbol) { return addSymbolCardItem(ul, symbol, "item"); });
+                    if (replaceParent)
+                        c = c.parent();
+                    c.replaceWith(ul);
+                });
+            });
+        }
+        function addCardItem(ul, card) {
+            if (!card)
+                return;
+            var mC = /^\/(v\d+)/.exec(card.url);
+            var mP = /^\/(v\d+)/.exec(window.location.pathname);
+            var inEditor = /#doc/i.test(window.location.href);
+            if (card.url && !mC && mP && !inEditor)
+                card.url = "/" + mP[1] + "/" + card.url;
+            ul.append(pxt.docs.codeCard.render(card, { hideHeader: true, shortName: true }));
+        }
+        function addSymbolCardItem(ul, symbol, cardStyle) {
+            var _a;
+            var attributes = symbol.attributes;
+            var block = !attributes.blockHidden && Blockly.Blocks[attributes.blockId];
+            var card = (_a = block) === null || _a === void 0 ? void 0 : _a.codeCard;
+            if (card) {
+                var ccard = pxt.U.clone(block.codeCard);
+                if (cardStyle)
+                    ccard.style = cardStyle;
+                addCardItem(ul, ccard);
+            }
+            else {
+                // default to text
+                // no block available here
+                addCardItem(ul, {
+                    name: symbol.qName,
+                    description: attributes.jsDoc,
+                    url: attributes.help || undefined,
+                    style: cardStyle
+                });
+            }
+        }
         function renderLinksAsync(options, cls, replaceParent, ns) {
             return renderNextSnippetAsync(cls, function (c, r) {
                 var cjs = r.compileProgram;
@@ -876,25 +972,17 @@ var pxt;
                 var stmts = file.statements.slice(0);
                 var ul = $('<div />').addClass('ui cards');
                 ul.attr("role", "listbox");
-                var addItem = function (card) {
-                    if (!card)
-                        return;
-                    var mC = /^\/(v\d+)/.exec(card.url);
-                    var mP = /^\/(v\d+)/.exec(window.location.pathname);
-                    var inEditor = /#doc/i.test(window.location.href);
-                    if (card.url && !mC && mP && !inEditor)
-                        card.url = "/" + mP[1] + "/" + card.url;
-                    ul.append(pxt.docs.codeCard.render(card, { hideHeader: true, shortName: true }));
-                };
                 stmts.forEach(function (stmt) {
+                    var kind = stmt.kind;
                     var info = decompileCallInfo(stmt);
                     if (info && r.apiInfo && r.apiInfo.byQName[info.qName]) {
-                        var attributes = r.apiInfo.byQName[info.qName].attributes;
+                        var symbol = r.apiInfo.byQName[info.qName];
+                        var attributes = symbol.attributes;
                         var block = Blockly.Blocks[attributes.blockId];
                         if (ns) {
-                            var ii = r.compileBlocks.blocksInfo.apis.byQName[info.qName];
+                            var ii = symbol;
                             var nsi = r.compileBlocks.blocksInfo.apis.byQName[ii.namespace];
-                            addItem({
+                            addCardItem(ul, {
                                 name: nsi.attributes.blockNamespace || nsi.name,
                                 url: nsi.attributes.help || ("reference/" + (nsi.attributes.blockNamespace || nsi.name).toLowerCase()),
                                 description: nsi.attributes.jsDoc,
@@ -905,29 +993,18 @@ var pxt;
                                         : undefined
                             });
                         }
-                        else if (block) {
-                            var card = pxt.U.clone(block.codeCard);
-                            if (card) {
-                                addItem(card);
-                            }
-                        }
                         else {
-                            // no block available here
-                            addItem({
-                                name: info.qName,
-                                description: attributes.jsDoc,
-                                url: attributes.help || undefined
-                            });
+                            addSymbolCardItem(ul, symbol);
                         }
                     }
                     else
-                        switch (stmt.kind) {
-                            case ts.SyntaxKind.ExpressionStatement:
+                        switch (kind) {
+                            case ts.SyntaxKind.ExpressionStatement: {
                                 var es = stmt;
                                 switch (es.expression.kind) {
                                     case ts.SyntaxKind.TrueKeyword:
                                     case ts.SyntaxKind.FalseKeyword:
-                                        addItem({
+                                        addCardItem(ul, {
                                             name: "Boolean",
                                             url: "blocks/logic/boolean",
                                             description: lf("True or false values"),
@@ -939,8 +1016,9 @@ var pxt;
                                         break;
                                 }
                                 break;
+                            }
                             case ts.SyntaxKind.IfStatement:
-                                addItem({
+                                addCardItem(ul, {
                                     name: ns ? "Logic" : "if",
                                     url: "blocks/logic" + (ns ? "" : "/if"),
                                     description: ns ? lf("Logic operators and constants") : lf("Conditional statement"),
@@ -948,7 +1026,7 @@ var pxt;
                                 });
                                 break;
                             case ts.SyntaxKind.WhileStatement:
-                                addItem({
+                                addCardItem(ul, {
                                     name: ns ? "Loops" : "while",
                                     url: "blocks/loops" + (ns ? "" : "/while"),
                                     description: ns ? lf("Loops and repetition") : lf("Repeat code while a condition is true."),
@@ -956,7 +1034,7 @@ var pxt;
                                 });
                                 break;
                             case ts.SyntaxKind.ForOfStatement:
-                                addItem({
+                                addCardItem(ul, {
                                     name: ns ? "Loops" : "for of",
                                     url: "blocks/loops" + (ns ? "" : "/for-of"),
                                     description: ns ? lf("Loops and repetition") : lf("Repeat code for each item in a list."),
@@ -964,7 +1042,7 @@ var pxt;
                                 });
                                 break;
                             case ts.SyntaxKind.BreakStatement:
-                                addItem({
+                                addCardItem(ul, {
                                     name: ns ? "Loops" : "break",
                                     url: "blocks/loops" + (ns ? "" : "/break"),
                                     description: ns ? lf("Loops and repetition") : lf("Break out of the current loop."),
@@ -972,14 +1050,14 @@ var pxt;
                                 });
                                 break;
                             case ts.SyntaxKind.ContinueStatement:
-                                addItem({
+                                addCardItem(ul, {
                                     name: ns ? "Loops" : "continue",
                                     url: "blocks/loops" + (ns ? "" : "/continue"),
                                     description: ns ? lf("Loops and repetition") : lf("Skip iteration and continue the current loop."),
                                     blocksXml: '<xml xmlns="http://www.w3.org/1999/xhtml"><block type="continue_keyboard"></block></xml>'
                                 });
                                 break;
-                            case ts.SyntaxKind.ForStatement:
+                            case ts.SyntaxKind.ForStatement: {
                                 var fs = stmt;
                                 // look for the 'repeat' loop style signature in the condition expression, explicitly: (let i = 0; i < X; i++)
                                 // for loops will have the '<=' conditional.
@@ -989,7 +1067,7 @@ var pxt;
                                         fs.condition.getChildAt(1).kind == ts.SyntaxKind.LessThanToken);
                                 }
                                 if (forloop) {
-                                    addItem({
+                                    addCardItem(ul, {
                                         name: ns ? "Loops" : "for",
                                         url: "blocks/loops" + (ns ? "" : "/for"),
                                         description: ns ? lf("Loops and repetition") : lf("Repeat code for a given number of times using an index."),
@@ -997,7 +1075,7 @@ var pxt;
                                     });
                                 }
                                 else {
-                                    addItem({
+                                    addCardItem(ul, {
                                         name: ns ? "Loops" : "repeat",
                                         url: "blocks/loops" + (ns ? "" : "/repeat"),
                                         description: ns ? lf("Loops and repetition") : lf("Repeat code for a given number of times."),
@@ -1005,8 +1083,9 @@ var pxt;
                                     });
                                 }
                                 break;
+                            }
                             case ts.SyntaxKind.VariableStatement:
-                                addItem({
+                                addCardItem(ul, {
                                     name: ns ? "Variables" : "variable declaration",
                                     url: "blocks/variables" + (ns ? "" : "/assign"),
                                     description: ns ? lf("Variables") : lf("Assign a value to a named variable."),
@@ -1014,7 +1093,7 @@ var pxt;
                                 });
                                 break;
                             default:
-                                pxt.debug("card kind: " + stmt.kind);
+                                pxt.debug("card kind: " + kind);
                         }
                 });
                 if (replaceParent)
@@ -1241,6 +1320,7 @@ var pxt;
                 .then(function () { return renderInlineBlocksAsync(options); })
                 .then(function () { return renderLinksAsync(options, options.linksClass, options.snippetReplaceParent, false); })
                 .then(function () { return renderLinksAsync(options, options.namespacesClass, options.snippetReplaceParent, true); })
+                .then(function () { return renderApisAsync(options, options.snippetReplaceParent); })
                 .then(function () { return renderSignaturesAsync(options); })
                 .then(function () { return renderSnippetsAsync(options); })
                 .then(function () { return renderBlocksAsync(options); })
@@ -1260,7 +1340,6 @@ var pxt;
 /// <reference path="../built/pxteditor.d.ts" />
 /// <reference path="../built/pxtcompiler.d.ts" />
 /// <reference path="../built/pxtblocks.d.ts" />
-/// <reference path="../built/pxteditor.d.ts" />
 /// <reference path="../built/pxtsim.d.ts" />
 var pxt;
 (function (pxt) {
@@ -1928,7 +2007,7 @@ var pxt;
                 return renderMarkdownAsync(content, md);
             });
         }
-        var template = "\n<aside id=button class=box>\n   <a class=\"ui primary button\" href=\"@ARGS@\">@BODY@</a>\n</aside>\n\n<aside id=vimeo>\n<div class=\"ui two column stackable grid container\">\n<div class=\"column\">\n    <div class=\"ui embed mdvid\" data-source=\"vimeo\" data-id=\"@ARGS@\" data-placeholder=\"/thumbnail/1024/vimeo/@ARGS@\" data-icon=\"video play\">\n    </div>\n</div></div>\n</aside>\n\n<aside id=youtube>\n<div class=\"ui two column stackable grid container\">\n<div class=\"column\">\n    <div class=\"ui embed mdvid\" data-source=\"youtube\" data-id=\"@ARGS@\" data-placeholder=\"https://img.youtube.com/vi/@ARGS@/0.jpg\">\n    </div>\n</div></div>\n</aside>\n\n<aside id=section>\n    <!-- section @ARGS@ -->\n</aside>\n\n<aside id=hide class=box>\n    <div style='display:none'>\n        @BODY@\n    </div>\n</aside>\n\n<aside id=avatar class=box>\n    <div class='avatar @ARGS@'>\n        <div class='avatar-image'></div>\n        <div class='ui compact message'>\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=hint class=box>\n    <div class=\"ui icon green message\">\n        <div class=\"content\">\n            <div class=\"header\">Hint</div>\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=tutorialhint class=box>\n    <div class=\"ui icon orange message\" data-inferred>\n        <div class=\"content\">\n            <div class=\"header\">Tutorial Hint</div>\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<!-- wrapped around ordinary content -->\n<aside id=main-container class=box>\n    <div class=\"ui text\">\n        @BODY@\n    </div>\n</aside>\n\n<!-- used for 'column' box - they are collected and wrapped in 'column-container' -->\n<aside id=column class=aside>\n    <div class='column'>\n        @BODY@\n    </div>\n</aside>\n<aside id=column-container class=box>\n    <div class=\"ui three column stackable grid text\">\n        @BODY@\n    </div>\n</aside>\n@breadcrumb@\n@body@";
+        var template = "\n<aside id=button class=box>\n   <a class=\"ui primary button\" href=\"@ARGS@\">@BODY@</a>\n</aside>\n\n<aside id=vimeo>\n<div class=\"ui two column stackable grid container\">\n<div class=\"column\">\n    <div class=\"ui embed mdvid\" data-source=\"vimeo\" data-id=\"@ARGS@\" data-placeholder=\"/thumbnail/1024/vimeo/@ARGS@\" data-icon=\"video play\">\n    </div>\n</div></div>\n</aside>\n\n<aside id=youtube>\n<div class=\"ui two column stackable grid container\">\n<div class=\"column\">\n    <div class=\"ui embed mdvid\" data-source=\"youtube\" data-id=\"@ARGS@\" data-placeholder=\"https://img.youtube.com/vi/@ARGS@/0.jpg\">\n    </div>\n</div></div>\n</aside>\n\n<aside id=section>\n    <!-- section @ARGS@ -->\n</aside>\n\n<aside id=hide class=box>\n    <div style='display:none'>\n        @BODY@\n    </div>\n</aside>\n\n<aside id=avatar class=box>\n    <div class='avatar @ARGS@'>\n        <div class='avatar-image'></div>\n        <div class='ui compact message'>\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=hint class=box>\n    <div class=\"ui info message\">\n        <div class=\"content\">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=tutorialhint class=box>\n    <div class=\"ui hint message\">\n        <div class=\"content\">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=reminder class=box>\n    <div class=\"ui warning message\">\n        <div class=\"content\">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=alert class=box>\n    <div class=\"ui negative message\">\n        <div class=\"content\">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<aside id=tip class=box>\n    <div class=\"ui positive message\">\n        <div class=\"content\">\n            @BODY@\n        </div>\n    </div>\n</aside>\n\n<!-- wrapped around ordinary content -->\n<aside id=main-container class=box>\n    <div class=\"ui text\">\n        @BODY@\n    </div>\n</aside>\n\n<!-- used for 'column' box - they are collected and wrapped in 'column-container' -->\n<aside id=column class=aside>\n    <div class='column'>\n        @BODY@\n    </div>\n</aside>\n<aside id=column-container class=box>\n    <div class=\"ui three column stackable grid text\">\n        @BODY@\n    </div>\n</aside>\n@breadcrumb@\n@body@";
         function renderMarkdownAsync(content, md, options) {
             if (options === void 0) { options = {}; }
             var html = pxt.docs.renderMarkdown({

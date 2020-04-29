@@ -22,14 +22,14 @@
 <meta name="twitter:site" content="@msmakecode" />
 <meta name="twitter:title" content="Microsoft MakeCode for micro:bit" />
 <meta name="twitter:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
-<meta name="twitter:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta name="twitter:image" content="https://img.youtube.com/vi/vkOWnBfBqak/0.jpg" />
 
 <meta property="og:title" content="Microsoft MakeCode for micro:bit" />
 <meta property="og:site_name" content="Microsoft MakeCode" />
 <meta property="og:type" content="website" />
 <meta property="og:description" content="A Blocks / JavaScript code editor for the micro:bit powered by Microsoft MakeCode." />
 <meta property="fb:app_id" content="" />
-<meta property="og:image" content="docs/static/icons/apple-touch-icon.png" />
+<meta property="og:image" content="https://img.youtube.com/vi/vkOWnBfBqak/0.jpg" />
 
 <meta name="format-detection" content="telephone=no">
 <link rel="apple-touch-icon" href="docs/static/icons/apple-touch-icon.png">
@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1686,6 +1717,14 @@
         <h1 id="github-releases">GitHub Releases</h1><p>If you plan to reuse your repository in other projects as an extension, you will need to create releases for it.</p>
 <p>Releases mark a specific point in your repository’s history and allow you to publish your extension
 for use by others when you think your changes are ready.</p>
+<h3 id="youtube"></h3>
+    <div class="ui grid">
+        <div class="ten wide column">
+            <div class="ui embed mdvid" data-source="youtube" data-id="vkOWnBfBqak"
+                data-placeholder="https://img.youtube.com/vi/vkOWnBfBqak/0.jpg">
+            </div>
+        </div>
+    </div>
 <h2 id="versioning">Versioning </h2><p>In MakeCode, the each of the 3 numbers in the extension version have a special meaning. It follows a common scheme called <a target="_blank" rel="nofollow noopener" href="https://semver.org/">semver</a>.</p>
 <p>Whenever, you see a version number like <strong>1.3.19</strong>,
 it really means <strong>major</strong> version is <code>1</code>, <strong>minor</strong>
@@ -1696,7 +1735,7 @@ version is <code>3</code>, and <strong>patch</strong> number is <code>19</code>.
 <li><code>MINOR</code> version when you add functionality in a backwards compatible manner.</li>
 <li><code>PATCH</code> version when you make backwards compatible bug fixes.</li>
 </ul>
-<h2 id="pre-compiled-javascript">Pre-compiled javascript</h2><p>Releases also upload a pre-compiled version of your application so that the GitHub pages web site can be using it.
+<h2 id="pre-compiled-javascript">Pre-compiled javascript</h2><p>Releases also upload a pre-compiled version of your application so that the GitHub pages web site can use it.
 You will find the file at <code>assets/js/binary.js</code>.</p>
 <h2 id="license">License </h2><p>You can include an open source license in your repository to make it easier for other people to contribute.</p>
 <h2 id="see-also">See Also</h2><p><a target="_blank" rel="nofollow noopener" href="https://help.github.com/en/articles/licensing-a-repository">GitHub Licensing Documentation</a>,
@@ -1739,7 +1778,7 @@ You will find the file at <code>assets/js/binary.js</code>.</p>
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1725,6 +1756,15 @@ let root = Math.sqrt(side)</code></pre>
 </ul>
 <pre><code class="lang-block">let minval = Math.min(0, 1);
 let maxval = Math.max(8, 2);</code></pre>
+<h2 id="round">Round</h2><p>If a number has a fractional part, you can make the number change to be the closest, next integer value. This is called <em>rounding</em>. Rounding the number <code>6.78</code> will make it be <code>7</code> and rounding <code>9.3</code> will give you <code>9</code>. If a number has a fractional part greater than or equal to <code>0.5</code>, the number will round up to the next whole integer value with the higher value. Otherwise, it will round down to the next lowest integer value.</p>
+<p>For negative numbers, they round toward the absolute value (the absolute value of <code>-8</code> is <code>8</code>) of the number. So, <code>-5.23</code> rounds to <code>-5</code> and <code>-2.68</code> rounds to <code>-3</code>.</p>
+<pre><code class="lang-block">let rounded = Math.round(5.5)</code></pre>
+<h2 id="ceiling">Ceiling</h2><p>To make a number change to the next higher whole number (integer), get the number’s <em>ceiling</em> value. The ceiling value for <code>1.234</code> is <code>2</code> since that is the next higher whole number. For the negative number of <code>-3.63</code>, its ceiling is <code>-3</code> since that’s the next higher whole number.</p>
+<pre><code class="lang-block">let nextup = Math.ceil(8.435)</code></pre>
+<h2 id="floor">Floor</h2><p>To make a number change to the next lower whole number (integer), get the number’s <em>floor</em> value. The floor value for <code>8.76</code> is <code>8</code> since that is the next lower whole number. For the negative number of <code>6.17</code>, its floor is <code>-7</code> since that’s the next lower whole number.</p>
+<pre><code class="lang-block">let nextdown = Math.floor(4.97)</code></pre>
+<h2 id="truncate">Truncate</h2><p>The fractional part of a number is removed by <em>truncating</em> it. If a number has the value <code>54.234</code> its truncated value is <code>54</code>. Truncation works the same way for a negative number. The truncated value of <code>-34.913</code> is <code>-34</code>.</p>
+<pre><code class="lang-block">let nonfraction = Math.trunc(87.23455)</code></pre>
 <h2 id="random-value">Random value</h2><p>Make up any number from a minimum value to a some maximum value. If you want a random number up to
 100, say: <strong>Math.randomRange(0, 100)</strong>.</p>
 <pre><code class="lang-block">let myRandom = Math.randomRange(0, 5);</code></pre>
@@ -1768,7 +1808,7 @@ let maxval = Math.max(8, 2);</code></pre>
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

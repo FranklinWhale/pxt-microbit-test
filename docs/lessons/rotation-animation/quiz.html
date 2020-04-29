@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1686,8 +1717,8 @@
         <h1 id="rotation-animation-quiz">rotation animation quiz</h1><p>Learn how to create a rotating image with a while loop.</p>
 <h2 id="name">Name</h2><h2 id="directions">Directions</h2><p>Use this activity document to guide your work in the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/lessons/rotation-animation/activity.html">rotation animation tutorial</a>.</p>
 <p>Answer the questions while completing the tutorial. Pay attention to the dialogues!</p>
-<h2 id="1-what-is-a-variable-">1. What is a “ variable”?</h2><p><br/></p>
-<h2 id="2-write-the-code-to-create-a-variable-called-foo-that-stores-a-boolean-and-initialize-it-to-false-">2. Write the code to create a variable called foo that stores a boolean and initialize it to false.</h2><p><br/></p>
+<h2 id="1-what-is-a-variable-">1. What is a “ variable”?</h2><p><br /></p>
+<h2 id="2-write-the-code-to-create-a-variable-called-foo-that-stores-a-boolean-and-initialize-it-to-false-">2. Write the code to create a variable called foo that stores a boolean and initialize it to false.</h2><p><br /></p>
 <h2 id="3-explain-why-you-use-a-while-loop-with-a-variable">3. Explain why you use a while loop with a variable</h2><pre><code class="lang-blocks">let rotating = true;
 while (rotating) {
     basic.showLeds(`
@@ -1706,7 +1737,7 @@ while (rotating) {
         `)
 }
 </code></pre>
-<p><br/></p>
+<p><br /></p>
 <h2 id="4-draw-the-areas-on-the-micro-bits-to-illustrate-the-code-below-explain-why-you-chose-to-draw-in-those-areas-">4. Draw the areas on the micro:bits to illustrate the code below. Explain why you chose to draw in those areas.</h2><pre><code class="lang-blocks">basic.showLeds(`
         . . # . .
         . . # . .
@@ -1737,7 +1768,7 @@ basic.showLeds(`
         `)
 </code></pre>
 <p><img class="ui image" src="/static/mb/lessons/looper-2.png" alt="" loading="lazy"></p>
-<p><br/></p>
+<p><br /></p>
 
     </div>
 
@@ -1776,7 +1807,7 @@ basic.showLeds(`
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

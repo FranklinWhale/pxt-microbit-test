@@ -459,6 +459,29 @@ var pxsim;
     })(pxtcore = pxsim.pxtcore || (pxsim.pxtcore = {}));
 })(pxsim || (pxsim = {}));
 (function (pxsim) {
+    var BufferMethods;
+    (function (BufferMethods) {
+        function fnv1(data) {
+            var h = 0x811c9dc5;
+            for (var i = 0; i < data.length; ++i) {
+                h = Math.imul(h, 0x1000193) ^ data[i];
+            }
+            return h;
+        }
+        function hash(buf, bits) {
+            bits |= 0;
+            if (bits < 1)
+                return 0;
+            var h = fnv1(buf.data);
+            if (bits >= 32)
+                return h >>> 0;
+            else
+                return ((h ^ (h >>> bits)) & ((1 << bits) - 1)) >>> 0;
+        }
+        BufferMethods.hash = hash;
+    })(BufferMethods = pxsim.BufferMethods || (pxsim.BufferMethods = {}));
+})(pxsim || (pxsim = {}));
+(function (pxsim) {
     var control;
     (function (control) {
         control.runInParallel = pxsim.thread.runInBackground;
@@ -1097,7 +1120,7 @@ var pxsim;
             var old = this.value;
             this.value = value;
             var b = pxsim.board();
-            if (b && this.eventMode == 1 /* DEVICE_PIN_EVENT_ON_EDGE */ && old != this.value)
+            if (b && this.eventMode == 2 /* DEVICE_PIN_EVENT_ON_EDGE */ && old != this.value)
                 b.bus.queue(this.id, this.value > 0 ? 2 /* DEVICE_PIN_EVT_RISE */ : 3 /* DEVICE_PIN_EVT_FALL */);
         };
         Pin.prototype.digitalReadPin = function () {
@@ -1113,6 +1136,17 @@ var pxsim;
         };
         Pin.prototype.setPull = function (pull) {
             this.pull = pull;
+            switch (pull) {
+                case 2 /*PinPullMode.PullDown*/:
+                    this.value = 0;
+                    break;
+                case 1 /*PinPullMode.PullUp*/:
+                    this.value = 1023;
+                    break;
+                default:
+                    this.value = pxsim.Math_.randomRange(0, 1023);
+                    break;
+            }
         };
         Pin.prototype.analogReadPin = function () {
             this.mode = PinFlags.Analog | PinFlags.Input;
@@ -1150,11 +1184,11 @@ var pxsim;
             switch (ev) {
                 case 4 /* DEVICE_PIN_EVT_PULSE_HI */:
                 case 5 /* DEVICE_PIN_EVT_PULSE_LO */:
-                    this.eventMode = 2 /* DEVICE_PIN_EVENT_ON_PULSE */;
+                    this.eventMode = 3 /* DEVICE_PIN_EVENT_ON_PULSE */;
                     break;
                 case 2 /* DEVICE_PIN_EVT_RISE */:
                 case 3 /* DEVICE_PIN_EVT_FALL */:
-                    this.eventMode = 1 /* DEVICE_PIN_EVENT_ON_EDGE */;
+                    this.eventMode = 2 /* DEVICE_PIN_EVENT_ON_EDGE */;
                     break;
                 default:
                     return;
@@ -1454,7 +1488,7 @@ var pxsim;
         NeoPixelMode[NeoPixelMode["RGBW"] = 2] = "RGBW";
         NeoPixelMode[NeoPixelMode["RGB_RGB"] = 3] = "RGB_RGB";
         NeoPixelMode[NeoPixelMode["DotStar"] = 4] = "DotStar";
-    })(NeoPixelMode || (NeoPixelMode = {}));
+    })(NeoPixelMode = pxsim.NeoPixelMode || (pxsim.NeoPixelMode = {}));
     var CommonNeoPixelState = /** @class */ (function () {
         function CommonNeoPixelState() {
             this.mode = NeoPixelMode.RGB; // GRB
@@ -1490,6 +1524,21 @@ var pxsim;
         return CommonNeoPixelState;
     }());
     pxsim.CommonNeoPixelState = CommonNeoPixelState;
+    function neopixelState(pinId) {
+        return pxsim.board().neopixelState(pinId);
+    }
+    pxsim.neopixelState = neopixelState;
+    function sendBufferAsm(buffer, pin) {
+        var b = pxsim.board();
+        if (!b)
+            return;
+        var p = b.edgeConnectorState.getPin(pin);
+        if (!p)
+            return;
+        var mode = NeoPixelMode.RGB_RGB; // RGB_RGB
+        pxsim.light.sendBuffer(p, undefined, mode, buffer);
+    }
+    pxsim.sendBufferAsm = sendBufferAsm;
 })(pxsim || (pxsim = {}));
 (function (pxsim) {
     var light;
@@ -1497,12 +1546,173 @@ var pxsim;
         // Currently only modifies the builtin pixels
         function sendBuffer(pin, clk, mode, b) {
             var state = pxsim.neopixelState(pin.id);
+            if (!state)
+                return;
             state.mode = mode & 0xff; // TODO RGBW support
             state.buffer = b.data;
             pxsim.runtime.queueDisplayUpdate();
         }
         light.sendBuffer = sendBuffer;
     })(light = pxsim.light || (pxsim.light = {}));
+})(pxsim || (pxsim = {}));
+(function (pxsim) {
+    var visuals;
+    (function (visuals) {
+        var PIXEL_SPACING = visuals.PIN_DIST * 3;
+        var PIXEL_RADIUS = visuals.PIN_DIST;
+        var CANVAS_WIDTH = 1.2 * visuals.PIN_DIST;
+        var CANVAS_HEIGHT = 12 * visuals.PIN_DIST;
+        var CANVAS_VIEW_WIDTH = CANVAS_WIDTH;
+        var CANVAS_VIEW_HEIGHT = CANVAS_HEIGHT;
+        var CANVAS_VIEW_PADDING = visuals.PIN_DIST * 4;
+        var CANVAS_LEFT = 1.4 * visuals.PIN_DIST;
+        var CANVAS_TOP = visuals.PIN_DIST;
+        // For the instructions parts list
+        function mkNeoPixelPart(xy) {
+            if (xy === void 0) { xy = [0, 0]; }
+            var NP_PART_XOFF = -13.5;
+            var NP_PART_YOFF = -11;
+            var NP_PART_WIDTH = 87.5;
+            var NP_PART_HEIGHT = 190;
+            var NEOPIXEL_PART_IMG = "<svg viewBox=\"-5 -1 53 112\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:bx=\"https://boxy-svg.com\">\n  <rect x=\"2.5\" width=\"38\" height=\"100\" style=\"fill: rgb(68, 68, 68);\"/>\n  <rect x=\"11.748\" y=\"3.2\" width=\"1.391\" height=\"2.553\" style=\"fill: none; stroke-linejoin: round; stroke-width: 3; stroke: rgb(165, 103, 52);\"/>\n  <rect x=\"20.75\" y=\"3.2\" width=\"1.391\" height=\"2.553\" style=\"fill: none; stroke-linejoin: round; stroke-width: 3; stroke: rgb(165, 103, 52);\"/>\n  <rect x=\"29.75\" y=\"3.2\" width=\"1.391\" height=\"2.553\" style=\"fill: none; stroke-linejoin: round; stroke-width: 3; stroke: rgb(165, 103, 52);\"/>\n  <g>\n    <rect x=\"9\" y=\"16.562\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"9\" y=\"22.562\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"9\" y=\"28.563\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"11.607\" y=\"14.833\" width=\"19.787\" height=\"18.697\" style=\"fill: rgb(0, 0, 0);\"/>\n    <ellipse style=\"fill: rgb(216, 216, 216);\" cx=\"21.5\" cy=\"24.181\" rx=\"7\" ry=\"7\"/>\n  </g>\n  <path d=\"M -7.25 -103.2 L -2.5 -100.003 L -12 -100.003 L -7.25 -103.2 Z\" style=\"fill: rgb(68, 68, 68);\" transform=\"matrix(-1, 0, 0, -1, 0, 0)\" bx:shape=\"triangle -12 -103.2 9.5 3.197 0.5 0 1@ad6f5cac\"/>\n  <path d=\"M -16.75 -103.197 L -12 -100 L -21.5 -100 L -16.75 -103.197 Z\" style=\"fill: rgb(68, 68, 68);\" transform=\"matrix(-1, 0, 0, -1, 0, 0)\" bx:shape=\"triangle -21.5 -103.197 9.5 3.197 0.5 0 1@07d73149\"/>\n  <path d=\"M -26.25 -103.2 L -21.5 -100.003 L -31 -100.003 L -26.25 -103.2 Z\" style=\"fill: rgb(68, 68, 68);\" transform=\"matrix(-1, 0, 0, -1, 0, 0)\" bx:shape=\"triangle -31 -103.2 9.5 3.197 0.5 0 1@54403e2d\"/>\n  <path d=\"M -35.75 -103.197 L -31 -100 L -40.5 -100 L -35.75 -103.197 Z\" style=\"fill: rgb(68, 68, 68);\" transform=\"matrix(-1, 0, 0, -1, 0, 0)\" bx:shape=\"triangle -40.5 -103.197 9.5 3.197 0.5 0 1@21c9b772\"/>\n  <g transform=\"matrix(1, 0, 0, 1, 0.000002, 29.999994)\">\n    <rect x=\"9\" y=\"16.562\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"9\" y=\"22.562\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"9\" y=\"28.563\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"11.607\" y=\"14.833\" width=\"19.787\" height=\"18.697\" style=\"fill: rgb(0, 0, 0);\"/>\n    <ellipse style=\"fill: rgb(216, 216, 216);\" cx=\"21.5\" cy=\"24.181\" rx=\"7\" ry=\"7\"/>\n  </g>\n  <g transform=\"matrix(1, 0, 0, 1, 0.000005, 59.999992)\">\n    <rect x=\"9\" y=\"16.562\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"9\" y=\"22.562\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"9\" y=\"28.563\" width=\"25\" height=\"3.238\" style=\"fill: rgb(216, 216, 216);\"/>\n    <rect x=\"11.607\" y=\"14.833\" width=\"19.787\" height=\"18.697\" style=\"fill: rgb(0, 0, 0);\"/>\n    <ellipse style=\"fill: rgb(216, 216, 216);\" cx=\"21.5\" cy=\"24.181\" rx=\"7\" ry=\"7\"/>\n  </g>\n</svg>";
+            var x = xy[0], y = xy[1];
+            var l = x + NP_PART_XOFF;
+            var t = y + NP_PART_YOFF;
+            var w = NP_PART_WIDTH;
+            var h = NP_PART_HEIGHT;
+            var img = pxsim.svg.elt("image");
+            pxsim.svg.hydrate(img, {
+                class: "sim-neopixel-strip", x: l, y: t, width: w, height: h,
+                href: pxsim.svg.toDataUri(NEOPIXEL_PART_IMG)
+            });
+            return { el: img, x: l, y: t, w: w, h: h };
+        }
+        visuals.mkNeoPixelPart = mkNeoPixelPart;
+        var NeoPixel = /** @class */ (function () {
+            function NeoPixel(xy) {
+                if (xy === void 0) { xy = [0, 0]; }
+                var el = pxsim.svg.elt("rect");
+                var r = PIXEL_RADIUS;
+                var cx = xy[0], cy = xy[1];
+                var y = cy - r;
+                pxsim.svg.hydrate(el, { x: "-50%", y: y, width: "100%", height: r * 2, class: "sim-neopixel" });
+                this.el = el;
+                this.cy = cy;
+            }
+            NeoPixel.prototype.setRgb = function (rgb) {
+                var hsl = visuals.rgbToHsl(rgb);
+                var h = hsl[0], s = hsl[1], l = hsl[2];
+                // at least 70% luminosity
+                l = Math.max(l, 60);
+                var fill = "hsl(" + h + ", " + s + "%, " + l + "%)";
+                this.el.setAttribute("fill", fill);
+            };
+            return NeoPixel;
+        }());
+        visuals.NeoPixel = NeoPixel;
+        var NeoPixelCanvas = /** @class */ (function () {
+            function NeoPixelCanvas(pin) {
+                this.pixels = [];
+                this.pin = pin;
+                var el = pxsim.svg.elt("svg");
+                pxsim.svg.hydrate(el, {
+                    "class": "sim-neopixel-canvas",
+                    "x": "0px",
+                    "y": "0px",
+                    "width": CANVAS_WIDTH + "px",
+                    "height": CANVAS_HEIGHT + "px",
+                });
+                this.canvas = el;
+                this.background = pxsim.svg.child(el, "rect", { class: "sim-neopixel-background hidden" });
+                this.updateViewBox(-CANVAS_VIEW_WIDTH / 2, 0, CANVAS_VIEW_WIDTH, CANVAS_VIEW_HEIGHT);
+            }
+            NeoPixelCanvas.prototype.updateViewBox = function (x, y, w, h) {
+                this.viewBox = [x, y, w, h];
+                pxsim.svg.hydrate(this.canvas, { "viewBox": x + " " + y + " " + w + " " + h });
+                pxsim.svg.hydrate(this.background, { "x": x, "y": y, "width": w, "height": h });
+            };
+            NeoPixelCanvas.prototype.update = function (colors) {
+                if (!colors || colors.length <= 0)
+                    return;
+                for (var i = 0; i < colors.length; i++) {
+                    var pixel = this.pixels[i];
+                    if (!pixel) {
+                        var cxy = [0, CANVAS_VIEW_PADDING + i * PIXEL_SPACING];
+                        pixel = this.pixels[i] = new NeoPixel(cxy);
+                        pxsim.svg.hydrate(pixel.el, { title: "offset: " + i });
+                        this.canvas.appendChild(pixel.el);
+                    }
+                    var color = colors[i];
+                    pixel.setRgb(color);
+                }
+                //show the canvas if it's hidden
+                pxsim.U.removeClass(this.background, "hidden");
+                //resize if necessary
+                var _a = [this.pixels[0], this.pixels[this.pixels.length - 1]], first = _a[0], last = _a[1];
+                var yDiff = last.cy - first.cy;
+                var newH = yDiff + CANVAS_VIEW_PADDING * 2;
+                var _b = this.viewBox, oldX = _b[0], oldY = _b[1], oldW = _b[2], oldH = _b[3];
+                if (oldH < newH) {
+                    var scalar = newH / oldH;
+                    var newW = oldW * scalar;
+                    this.updateViewBox(-newW / 2, oldY, newW, newH);
+                }
+            };
+            NeoPixelCanvas.prototype.setLoc = function (xy) {
+                var x = xy[0], y = xy[1];
+                pxsim.svg.hydrate(this.canvas, { x: x, y: y });
+            };
+            return NeoPixelCanvas;
+        }());
+        visuals.NeoPixelCanvas = NeoPixelCanvas;
+        ;
+        var NeoPixelView = /** @class */ (function () {
+            function NeoPixelView(parsePinString) {
+                this.parsePinString = parsePinString;
+                this.style = "\n            .sim-neopixel-canvas {\n            }\n            .sim-neopixel-canvas-parent:hover {\n                transform-origin: center;\n                transform: scale(4) translateY(-60px);\n                -moz-transform: scale(4) translateY(-220px);\n            }\n            .sim-neopixel-canvas .hidden {\n                visibility:hidden;\n            }\n            .sim-neopixel-background {\n                fill: rgba(255,255,255,0.9);\n            }\n            .sim-neopixel-strip {\n            }\n        ";
+            }
+            NeoPixelView.prototype.init = function (bus, state, svgEl, otherParams) {
+                this.stripGroup = pxsim.svg.elt("g");
+                this.element = this.stripGroup;
+                this.pin = this.parsePinString(otherParams["dataPin"] || otherParams["pin"])
+                    || this.parsePinString("pins.NEOPIXEL")
+                    || this.parsePinString("pins.MOSI");
+                this.lastLocation = [0, 0];
+                this.state = state(this.pin);
+                var part = mkNeoPixelPart();
+                this.part = part;
+                this.stripGroup.appendChild(part.el);
+                var canvas = new NeoPixelCanvas(this.pin.id);
+                this.canvas = canvas;
+                var canvasG = pxsim.svg.elt("g", { class: "sim-neopixel-canvas-parent" });
+                this.overElement = canvasG;
+                canvasG.appendChild(canvas.canvas);
+                this.updateStripLoc();
+            };
+            NeoPixelView.prototype.moveToCoord = function (xy) {
+                var x = xy[0], y = xy[1];
+                var loc = [x, y];
+                this.lastLocation = loc;
+                this.updateStripLoc();
+            };
+            NeoPixelView.prototype.updateStripLoc = function () {
+                var _a = this.lastLocation, x = _a[0], y = _a[1];
+                pxsim.U.assert(typeof x === "number" && typeof y === "number", "invalid x,y for NeoPixel strip");
+                this.canvas.setLoc([x + CANVAS_LEFT, y + CANVAS_TOP]);
+                pxsim.svg.hydrate(this.part.el, { transform: "translate(" + x + " " + y + ")" }); //TODO: update part's l,h, etc.
+            };
+            NeoPixelView.prototype.updateState = function () {
+                var colors = [];
+                for (var i = 0; i < this.state.length; i++) {
+                    colors.push(this.state.pixelColor(i));
+                }
+                this.canvas.update(colors);
+            };
+            NeoPixelView.prototype.updateTheme = function () { };
+            return NeoPixelView;
+        }());
+        visuals.NeoPixelView = NeoPixelView;
+    })(visuals = pxsim.visuals || (pxsim.visuals = {}));
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {
@@ -1866,13 +2076,6 @@ var pxsim;
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {
-    function neopixelState(pinId) {
-        return pxsim.board().neopixelState(pinId);
-    }
-    pxsim.neopixelState = neopixelState;
-})(pxsim || (pxsim = {}));
-var pxsim;
-(function (pxsim) {
     var visuals;
     (function (visuals) {
         var SWITCH_PART_XOFF = -1;
@@ -2131,8 +2334,10 @@ var pxsim;
         /**
          * Write a buffer to the jacdac physical layer.
          **/
-        function __physSendPacket(buf) {
+        function __physSendPacket(buf, data) {
             var state = pxsim.getJacDacState();
+            if (data.data.length)
+                pxsim.U.userError("data not implemented yet");
             if (state)
                 state.sendPacket(buf);
         }
@@ -2211,6 +2416,10 @@ var pxsim;
             console.log("kb: function " + key + " " + events[event]);
         }
         keyboard.__functionKey = __functionKey;
+        function __modifierKey(key, event) {
+            console.log("kb: modifier " + key + " " + events[event]);
+        }
+        keyboard.__modifierKey = __modifierKey;
     })(keyboard = pxsim.keyboard || (pxsim.keyboard = {}));
 })(pxsim || (pxsim = {}));
 var pxsim;

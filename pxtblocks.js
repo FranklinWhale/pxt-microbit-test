@@ -151,10 +151,16 @@ var pxt;
         // holds.
         function returnType(e, b) {
             assert(b != null);
-            if (b.type == "placeholder" || b.type === pxtc.TS_OUTPUT_TYPE)
+            if (isPlaceholderBlock(b)) {
+                if (!b.p)
+                    b.p = mkPoint(null);
                 return find(b.p);
+            }
             if (b.type == "variables_get")
                 return find(lookup(e, b, b.getField("VAR").getText()).type);
+            if (b.type == "function_call_output") {
+                return getReturnTypeOfFunctionCall(e, b);
+            }
             if (!b.outputConnection) {
                 return ground(pUnit.type);
             }
@@ -211,6 +217,48 @@ var pxt;
                 return mkPoint(null);
             }
             return ground(check);
+        }
+        function getReturnTypeOfFunction(e, name) {
+            if (!e.userFunctionReturnValues[name]) {
+                var definition = Blockly.Functions.getDefinition(name, e.workspace);
+                var res = mkPoint("void");
+                if (isFunctionRecursive(definition, true)) {
+                    res = mkPoint("any");
+                }
+                else {
+                    var returnTypes = [];
+                    for (var _i = 0, _a = definition.getDescendants(false); _i < _a.length; _i++) {
+                        var child = _a[_i];
+                        if (child.type === "function_return") {
+                            attachPlaceholderIf(e, child, "RETURN_VALUE");
+                            returnTypes.push(returnType(e, getInputTargetBlock(child, "RETURN_VALUE")));
+                        }
+                    }
+                    if (returnTypes.length) {
+                        try {
+                            var unified = mkPoint(null);
+                            for (var _b = 0, returnTypes_1 = returnTypes; _b < returnTypes_1.length; _b++) {
+                                var point = returnTypes_1[_b];
+                                union(unified, point);
+                            }
+                            res = unified;
+                        }
+                        catch (err) {
+                            e.diagnostics.push({
+                                blockId: definition.id,
+                                message: pxt.Util.lf("Function '{0}' has an invalid return type", name)
+                            });
+                            res = mkPoint("any");
+                        }
+                    }
+                }
+                e.userFunctionReturnValues[name] = res;
+            }
+            return e.userFunctionReturnValues[name];
+        }
+        function getReturnTypeOfFunctionCall(e, call) {
+            var name = call.getField("function_name").getText();
+            return getReturnTypeOfFunction(e, name);
         }
         // Basic type unification routine; easy, because there's no structural types.
         // FIXME: Generics are not supported
@@ -279,7 +327,7 @@ var pxt;
         }
         function infer(allBlocks, e, w) {
             if (allBlocks)
-                allBlocks.filter(function (b) { return !b.disabled; }).forEach(function (b) {
+                allBlocks.filter(function (b) { return b.isEnabled(); }).forEach(function (b) {
                     try {
                         switch (b.type) {
                             case "math_op2":
@@ -379,10 +427,17 @@ var pxt;
                                 handleGenericType(b, "LIST");
                                 unionParam(e, b, "INDEX", ground(pNumber.type));
                                 break;
+                            case 'function_definition':
+                                getReturnTypeOfFunction(e, b.getField("function_name").getText());
+                                break;
                             case 'function_call':
+                            case 'function_call_output':
                                 b.getArguments().forEach(function (arg) {
                                     unionParam(e, b, arg.id, ground(arg.type));
                                 });
+                                break;
+                            case pxtc.TS_RETURN_STATEMENT_TYPE:
+                                attachPlaceholderIf(e, b, "RETURN_VALUE");
                                 break;
                             case pxtc.PAUSE_UNTIL_TYPE:
                                 unionParam(e, b, "PREDICATE", pBoolean);
@@ -651,8 +706,9 @@ var pxt;
             var argsDeclaration = b.getArguments().map(function (a) {
                 return escapeVarName(a.name, e) + ": " + a.type;
             });
+            var isRecursive = isFunctionRecursive(b, false);
             return [
-                blocks_1.mkText("function " + name + " (" + argsDeclaration.join(", ") + ")"),
+                blocks_1.mkText("function " + name + " (" + argsDeclaration.join(", ") + ")" + (isRecursive ? ": any" : "")),
                 compileStatements(e, stmts)
             ];
         }
@@ -668,7 +724,7 @@ var pxt;
             var name = escapeVarName(b.getFieldValue("NAME"), e, true);
             return blocks_1.mkStmt(blocks_1.mkText(name + "()"));
         }
-        function compileFunctionCall(e, b, comments) {
+        function compileFunctionCall(e, b, comments, statement) {
             var name = escapeVarName(b.getField("function_name").getText(), e, true);
             var externalInputs = !b.getInputsInline();
             var args = b.getArguments().map(function (a) {
@@ -678,7 +734,20 @@ var pxt;
                 };
             });
             var compiledArgs = args.map(function (a) { return compileArgument(e, b, a, comments); });
-            return blocks_1.mkStmt(blocks_1.H.stdCall(name, compiledArgs, externalInputs));
+            var res = blocks_1.H.stdCall(name, compiledArgs, externalInputs);
+            if (statement) {
+                return blocks_1.mkStmt(res);
+            }
+            return res;
+        }
+        function compileReturnStatement(e, b, comments) {
+            var expression = getInputTargetBlock(b, "RETURN_VALUE");
+            if (expression && expression.type != "placeholder") {
+                return blocks_1.mkStmt(blocks_1.mkText("return "), compileExpression(e, expression, comments));
+            }
+            else {
+                return blocks_1.mkStmt(blocks_1.mkText("return"));
+            }
         }
         function compileArgumentReporter(e, b, comments) {
             var name = escapeVarName(b.getFieldValue("VALUE"), e);
@@ -715,7 +784,7 @@ var pxt;
             e.stats[b.type] = (e.stats[b.type] || 0) + 1;
             maybeAddComment(b, comments);
             var expr;
-            if (b.disabled || b.type == "placeholder") {
+            if (b.type == "placeholder" || !(b.isEnabled && b.isEnabled())) {
                 var ret = find(returnType(e, b));
                 if (ret.type === "Array") {
                     // FIXME: Can't use default type here because TS complains about
@@ -795,6 +864,9 @@ var pxt;
                     case "argument_reporter_custom":
                         expr = compileArgumentReporter(e, b, comments);
                         break;
+                    case "function_call_output":
+                        expr = compileFunctionCall(e, b, comments, false);
+                        break;
                     default:
                         var call = e.stdCallTable[b.type];
                         if (call) {
@@ -820,6 +892,8 @@ var pxt;
             return {
                 workspace: w,
                 stdCallTable: {},
+                userFunctionReturnValues: {},
+                diagnostics: [],
                 errors: [],
                 renames: {
                     oldToNew: {},
@@ -1204,7 +1278,10 @@ var pxt;
                     r = [compileProcedureCall(e, b, comments)];
                     break;
                 case 'function_call':
-                    r = [compileFunctionCall(e, b, comments)];
+                    r = [compileFunctionCall(e, b, comments, true)];
+                    break;
+                case pxtc.TS_RETURN_STATEMENT_TYPE:
+                    r = [compileReturnStatement(e, b, comments)];
                     break;
                 case ts.pxtc.ON_START_TYPE:
                     r = compileStartEvent(e, b).children;
@@ -1233,13 +1310,13 @@ var pxt;
                     break;
             }
             var l = r[r.length - 1];
-            if (l)
+            if (l && !l.id)
                 l.id = b.id;
             if (comments.length) {
                 addCommentNodes(comments, r);
             }
             r.forEach(function (l) {
-                if (l.type === blocks_1.NT.Block || l.type === blocks_1.NT.Prefix && pxt.Util.startsWith(l.op, "//")) {
+                if ((l.type === blocks_1.NT.Block || l.type === blocks_1.NT.Prefix && pxt.Util.startsWith(l.op, "//")) && (b.type != pxtc.ON_START_TYPE || !l.id)) {
                     l.id = b.id;
                 }
             });
@@ -1247,10 +1324,10 @@ var pxt;
         }
         function compileStatements(e, b) {
             var stmts = [];
-            for (; b; b = b.getNextBlock()) {
-                if (!b.disabled) {
+            while (b) {
+                if (b.isEnabled())
                     append(stmts, compileStatementBlock(e, b));
-                }
+                b = b.getNextBlock();
             }
             return blocks_1.mkBlock(stmts);
         }
@@ -1342,7 +1419,7 @@ var pxt;
                         imageLiteral: fn.attributes.imageLiteral,
                         imageLiteralColumns: fn.attributes.imageLiteralColumns,
                         imageLiteralRows: fn.attributes.imageLiteralRows,
-                        hasHandler: !!comp.handlerArgs.length || fn.parameters && fn.parameters.some(function (p) { return (p.type == "() => void" || p.type == "Action" || !!p.properties); }),
+                        hasHandler: pxt.blocks.hasHandler(fn),
                         property: !fn.parameters,
                         isIdentity: fn.attributes.shim == "TD_ID"
                     };
@@ -1390,8 +1467,8 @@ var pxt;
                 // update disable blocks
                 updateDisabledBlocks(e, allBlocks, topblocks);
                 // drop disabled blocks
-                allBlocks = allBlocks.filter(function (b) { return !b.disabled; });
-                topblocks = topblocks.filter(function (b) { return !b.disabled; });
+                allBlocks = allBlocks.filter(function (b) { return b.isEnabled(); });
+                topblocks = topblocks.filter(function (b) { return b.isEnabled(); });
                 trackAllVariables(topblocks, e);
                 infer(allBlocks, e, w);
                 var stmtsMain_1 = [];
@@ -1406,7 +1483,7 @@ var pxt;
                         });
                     }
                     if (b.type == ts.pxtc.ON_START_TYPE)
-                        append(stmtsMain_1, compileStartEvent(e, b).children);
+                        append(stmtsMain_1, compileStatementBlock(e, b));
                     else {
                         var compiled = blocks_1.mkBlock(compileStatementBlock(e, b));
                         if (compiled.type == blocks_1.NT.Block)
@@ -1488,18 +1565,17 @@ var pxt;
                     ]));
                 }
                 var leftoverVars = e.allVariables.filter(function (v) { return !v.alreadyDeclared; }).map(function (v) { return mkVariableDeclaration(v, e); });
-                var diags_1 = [];
                 e.allVariables.filter(function (v) { return v.alreadyDeclared === BlockDeclarationType.Implicit && !v.isAssigned; }).forEach(function (v) {
                     var t = getConcreteType(v.type);
                     // The primitive types all get initializers set to default values, other types are set to null
                     if (t.type === "string" || t.type === "number" || t.type === "boolean" || isArrayType(t.type))
                         return;
-                    diags_1.push({
+                    e.diagnostics.push({
                         blockId: v.scopes.find(function (s) { return s.variables[v.name] !== undefined && s.variables[v.name].firstReferencingBlock !== undefined; }).variables[v.name].firstReferencingBlock.id,
                         message: lf("Variable '{0}' is never assigned", v.name)
                     });
                 });
-                return [stmtsEnums_1.concat(leftoverVars.concat(stmtsMain_1)), diags_1, e.generatedVarDeclarations];
+                return [stmtsEnums_1.concat(leftoverVars.concat(stmtsMain_1)), e.diagnostics, e.generatedVarDeclarations];
             }
             catch (err) {
                 var be = err.block;
@@ -1646,44 +1722,16 @@ var pxt;
         }
         function addCommentNodes(comments, r) {
             var commentNodes = [];
-            var paragraphs = [];
             for (var _i = 0, comments_1 = comments; _i < comments_1.length; _i++) {
                 var comment = comments_1[_i];
                 for (var _a = 0, _b = comment.split("\n"); _a < _b.length; _a++) {
-                    var paragraph = _b[_a];
-                    paragraphs.push(paragraph);
-                }
-            }
-            for (var i = 0; i < paragraphs.length; i++) {
-                // Wrap paragraph lines
-                var words = paragraphs[i].split(/\s/);
-                var currentLine = void 0;
-                for (var _c = 0, words_1 = words; _c < words_1.length; _c++) {
-                    var word = words_1[_c];
-                    if (!currentLine) {
-                        currentLine = word;
-                    }
-                    else if (currentLine.length + word.length > MAX_COMMENT_LINE_LENGTH) {
-                        commentNodes.push(blocks_1.mkText("// " + currentLine));
-                        commentNodes.push(blocks_1.mkNewLine());
-                        currentLine = word;
-                    }
-                    else {
-                        currentLine += " " + word;
-                    }
-                }
-                if (currentLine) {
-                    commentNodes.push(blocks_1.mkText("// " + currentLine));
-                    commentNodes.push(blocks_1.mkNewLine());
-                }
-                // The decompiler expects an empty comment line between paragraphs
-                if (i !== paragraphs.length - 1) {
-                    commentNodes.push(blocks_1.mkText("//"));
+                    var line = _b[_a];
+                    commentNodes.push(blocks_1.mkText("// " + line));
                     commentNodes.push(blocks_1.mkNewLine());
                 }
             }
-            for (var _d = 0, _e = commentNodes.reverse(); _d < _e.length; _d++) {
-                var commentNode = _e[_d];
+            for (var _c = 0, _d = commentNodes.reverse(); _c < _d.length; _c++) {
+                var commentNode = _d[_c];
                 r.unshift(commentNode);
             }
         }
@@ -2181,6 +2229,46 @@ var pxt;
         function isFunctionDefinition(b) {
             return b.type === "procedures_defnoreturn" || b.type === "function_definition";
         }
+        function getFunctionName(functionBlock) {
+            return functionBlock.getField("function_name").getText();
+        }
+        // @param strict - if true, only return true if there is a return statement
+        // somewhere in the call graph that returns a call to this function. If false,
+        // return true if the function is called as an expression anywhere in the call
+        // graph
+        function isFunctionRecursive(b, strict) {
+            var functionName = getFunctionName(b);
+            var visited = {};
+            return checkForCallRecursive(b);
+            function checkForCallRecursive(functionDefinition) {
+                var calls;
+                if (strict) {
+                    calls = functionDefinition.getDescendants(false)
+                        .filter(function (child) { return child.type == "function_return"; })
+                        .map(function (returnStatement) { return getInputTargetBlock(returnStatement, "RETURN_VALUE"); })
+                        .filter(function (returnValue) { return returnValue && returnValue.type === "function_call_output"; });
+                }
+                else {
+                    calls = functionDefinition.getDescendants(false).filter(function (child) { return child.type == "function_call_output"; });
+                }
+                for (var _i = 0, calls_1 = calls; _i < calls_1.length; _i++) {
+                    var call = calls_1[_i];
+                    var callName = getFunctionName(call);
+                    if (callName === functionName)
+                        return true;
+                    if (visited[callName])
+                        continue;
+                    visited[callName] = true;
+                    if (checkForCallRecursive(Blockly.Functions.getDefinition(callName, call.workspace))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+        function isPlaceholderBlock(b) {
+            return b.type == "placeholder" || b.type === pxtc.TS_OUTPUT_TYPE;
+        }
     })(blocks = pxt.blocks || (pxt.blocks = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -2345,9 +2433,9 @@ var pxt;
                 }
             });
             // we'll ignore disabled blocks in the final output
-            var oldBlocks = oldWs.getAllBlocks().filter(function (b) { return !b.disabled; });
-            var oldTopBlocks = oldWs.getTopBlocks(false).filter(function (b) { return !b.disabled; });
-            var newBlocks = newWs.getAllBlocks().filter(function (b) { return !b.disabled; });
+            var oldBlocks = oldWs.getAllBlocks().filter(function (b) { return b.isEnabled(); });
+            var oldTopBlocks = oldWs.getTopBlocks(false).filter(function (b) { return b.isEnabled(); });
+            var newBlocks = newWs.getAllBlocks().filter(function (b) { return b.isEnabled(); });
             log("blocks", newBlocks.map(function (b) { return b.toDevString(); }));
             log(newBlocks);
             if (oldBlocks.length == 0 && newBlocks.length == 0) {
@@ -2369,7 +2457,7 @@ var pxt;
             var newXml = pxt.blocks.saveWorkspaceXml(newWs, true);
             pxt.blocks.domToWorkspaceNoEvents(Blockly.Xml.textToDom(newXml), ws);
             // delete disabled blocks from final workspace
-            ws.getAllBlocks().filter(function (b) { return b.disabled; }).forEach(function (b) {
+            ws.getAllBlocks().filter(function (b) { return !b.isEnabled(); }).forEach(function (b) {
                 log('disabled ', b.toDevString());
                 b.dispose(false);
             });
@@ -2533,9 +2621,9 @@ var pxt;
                 a.rendered = false;
                 b.inputList.forEach(function (i) { return i.fieldRow.forEach(function (f) {
                     f.init();
-                    if (f.box_) {
-                        f.box_.setAttribute('fill', b.getColour());
-                        f.box_.setAttribute('stroke', b.getColourTertiary());
+                    if (f.borderRect_) {
+                        f.borderRect_.setAttribute('fill', b.getColour());
+                        f.borderRect_.setAttribute('stroke', b.getColourTertiary());
                     }
                 }); });
             }
@@ -3000,7 +3088,7 @@ var pxt;
             function alignBlocks(blockInfo, oldWs, newWs) {
                 var env;
                 var newBlocks; // support for multiple events with similar name
-                oldWs.getTopBlocks(false).filter(function (ob) { return !ob.disabled; })
+                oldWs.getTopBlocks(false).filter(function (ob) { return ob.isEnabled(); })
                     .forEach(function (ob) {
                     var otp = ob.xy_;
                     if (otp && otp.x != 0 && otp.y != 0) {
@@ -3033,13 +3121,13 @@ var pxt;
                 if (comments.length + blocks.length < 2)
                     return svg;
                 var div = document.createElement("div");
-                div.className = "blocks-svg-list";
+                div.className = "blocks-svg-list " + ws.getInjectionDiv().className;
                 function extract(parentClass, otherClass, blocki, size, translate) {
                     var svgclone = svg.cloneNode(true);
                     // collect all blocks
                     var parentSvg = svgclone.querySelector("g.blocklyWorkspace > g." + parentClass);
                     var otherSvg = svgclone.querySelector("g.blocklyWorkspace > g." + otherClass);
-                    var blocksSvg = pxt.Util.toArray(parentSvg.querySelectorAll("g.blocklyWorkspace > g." + parentClass + " > g"));
+                    var blocksSvg = pxt.Util.toArray(parentSvg.querySelectorAll("g.blocklyWorkspace > g." + parentClass + " > g[data-id]"));
                     var blockSvg = blocksSvg.splice(blocki, 1)[0];
                     if (!blockSvg) {
                         // seems like no blocks were generated
@@ -3097,7 +3185,12 @@ var pxt;
                 });
             }
             layout.verticalAlign = verticalAlign;
-            ;
+            function setCollapsedAll(ws, collapsed) {
+                ws.getTopBlocks(false)
+                    .filter(function (b) { return b.isEnabled(); })
+                    .forEach(function (b) { return b.setCollapsed(collapsed); });
+            }
+            layout.setCollapsedAll = setCollapsedAll;
             function flow(ws, opts) {
                 if (opts) {
                     if (opts.useViewWidth) {
@@ -3187,7 +3280,7 @@ var pxt;
             layout.serializeSvgString = serializeSvgString;
             function cleanUpBlocklySvg(svg) {
                 pxt.BrowserUtils.removeClass(svg, "blocklySvg");
-                pxt.BrowserUtils.addClass(svg, "blocklyPreview");
+                pxt.BrowserUtils.addClass(svg, "blocklyPreview pxt-renderer");
                 pxt.U.toArray(svg.querySelectorAll('.blocklyMainBackground,.blocklyScrollbarBackground'))
                     .forEach(function (el) { if (el)
                     el.parentNode.removeChild(el); });
@@ -3344,7 +3437,7 @@ var pxt;
                         }
                     }
                     var f = formattable(block);
-                    if (!onStart && !block.disabled && block.type === pxtc.ON_START_TYPE) { // there might be duplicate on-start blocks
+                    if (!onStart && block.isEnabled() && block.type === pxtc.ON_START_TYPE) { // there might be duplicate on-start blocks
                         onStart = f;
                     }
                     else {
@@ -3922,7 +4015,7 @@ var pxt;
                     anchor.shift();
                 block.setHelpUrl("/pkg/" + fn.pkg + "#" + encodeURIComponent(anchor.join('-')));
             }
-            block.setColour(color, fn.attributes.colorSecondary, fn.attributes.colorTertiary);
+            block.setColour(color);
             var blockShape = Blockly.OUTPUT_SHAPE_ROUND;
             if (fn.retType == "boolean")
                 blockShape = Blockly.OUTPUT_SHAPE_HEXAGONAL;
@@ -4000,8 +4093,9 @@ var pxt;
             if (fn.attributes.imageLiteral) {
                 var columns = (fn.attributes.imageLiteralColumns || 5) * fn.attributes.imageLiteral;
                 var rows = fn.attributes.imageLiteralRows || 5;
+                var scale = fn.attributes.imageLiteralScale;
                 var ri = block.appendDummyInput();
-                ri.appendField(new pxtblockly.FieldMatrix("", { columns: columns, rows: rows }), "LEDS");
+                ri.appendField(new pxtblockly.FieldMatrix("", { columns: columns, rows: rows, scale: scale }), "LEDS");
             }
             if (fn.attributes.inlineInputMode === "external") {
                 block.setInputsInline(false);
@@ -4262,7 +4356,7 @@ var pxt;
             goog.provide('Blockly.Blocks.device');
             goog.require('Blockly.Blocks');
             Blockly.FieldCheckbox.CHECK_CHAR = '■';
-            Blockly.BlockSvg.START_HAT = !!pxt.appTarget.appTheme.blockHats;
+            Blockly.Constants.ADD_START_HATS = !!pxt.appTarget.appTheme.blockHats;
             blocks.initFieldEditors();
             initContextMenu();
             initOnStart();
@@ -4755,32 +4849,29 @@ var pxt;
             msg.DELETE_ALL_BLOCKS = lf("Delete All Blocks");
             msg.HELP = lf("Help");
             // inject hook to handle openings docs
-            Blockly.BlockSvg.prototype.showHelp_ = function () {
+            Blockly.BlockSvg.prototype.showHelp = function () {
                 var url = goog.isFunction(this.helpUrl) ? this.helpUrl() : this.helpUrl;
                 if (url)
                     (pxt.blocks.openHelpUrl || window.open)(url);
             };
-            /**
-             * Show the context menu for the workspace.
-             * @param {!Event} e Mouse event.
-             * @private
-             */
-            Blockly.WorkspaceSvg.prototype.showContextMenu_ = function (e) {
+            // Use Blockly hook to customize context menu
+            Blockly.WorkspaceSvg.prototype.configureContextMenu = function (options) {
                 var _this = this;
                 if (this.options.readOnly || this.isFlyout) {
                     return;
                 }
-                var menuOptions = [];
-                var topBlocks = this.getTopBlocks();
-                var topComments = this.getTopComments();
+                // Store workspace comment option
+                var commentOption = options.find(function (el) { return el.text.toLowerCase().includes("comment"); });
+                // Clear default Blockly options
+                options.length = 0;
+                var topBlocks = this.getTopBlocks(true);
                 var eventGroup = Blockly.utils.genUid();
+                var topComments = this.getTopComments();
                 var ws = this;
                 // Option to add a workspace comment.
                 if (this.options.comments && !pxt.BrowserUtils.isIE()) {
-                    menuOptions.push(Blockly.ContextMenu.workspaceCommentOption(ws, e));
+                    options.push(commentOption);
                 }
-                // Add a little animation to deleting.
-                var DELAY = 10;
                 // Option to delete all blocks.
                 // Count the number of blocks that are deletable.
                 var deleteList = Blockly.WorkspaceSvg.buildDeleteList_(topBlocks);
@@ -4790,6 +4881,8 @@ var pxt;
                         deleteCount++;
                     }
                 }
+                // Add a little animation to deleting.
+                var DELAY = 10;
                 function deleteNext() {
                     Blockly.Events.setGroup(eventGroup);
                     var block = deleteList.shift();
@@ -4821,7 +4914,7 @@ var pxt;
                         }
                     }
                 };
-                menuOptions.push(deleteOption);
+                options.push(deleteOption);
                 var formatCodeOption = {
                     text: lf("Format Code"),
                     enabled: true,
@@ -4830,7 +4923,29 @@ var pxt;
                         pxt.blocks.layout.flow(_this, { useViewWidth: true });
                     }
                 };
-                menuOptions.push(formatCodeOption);
+                options.push(formatCodeOption);
+                if (pxt.appTarget.appTheme.blocksCollapsing) {
+                    // Option to collapse all top-level (enabled) blocks
+                    var collapseAllOption = {
+                        text: lf("Collapse Blocks"),
+                        enabled: topBlocks.length && topBlocks.find(function (b) { return b.isEnabled() && !b.isCollapsed(); }),
+                        callback: function () {
+                            pxt.tickEvent("blocks.context.collapse", undefined, { interactiveConsent: true });
+                            pxt.blocks.layout.setCollapsedAll(_this, true);
+                        }
+                    };
+                    options.push(collapseAllOption);
+                    // Option to expand all collapsed blocks
+                    var expandAllOption = {
+                        text: lf("Expand Blocks"),
+                        enabled: topBlocks.length && topBlocks.find(function (b) { return b.isEnabled() && b.isCollapsed(); }),
+                        callback: function () {
+                            pxt.tickEvent("blocks.context.expand", undefined, { interactiveConsent: true });
+                            pxt.blocks.layout.setCollapsedAll(_this, false);
+                        }
+                    };
+                    options.push(expandAllOption);
+                }
                 if (pxt.blocks.layout.screenshotEnabled()) {
                     var screenshotOption = {
                         text: lf("Snapshot"),
@@ -4843,14 +4958,13 @@ var pxt;
                                     uri = uri.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
                                 pxt.BrowserUtils.browserDownloadDataUri(uri, (pxt.appTarget.nickname || pxt.appTarget.id) + "-" + lf("screenshot") + ".png");
                             });
-                        }
+                        },
                     };
-                    menuOptions.push(screenshotOption);
+                    options.push(screenshotOption);
                 }
                 // custom options...
                 if (blocks.onShowContextMenu)
-                    blocks.onShowContextMenu(this, menuOptions);
-                Blockly.ContextMenu.show(e, menuOptions, this.RTL);
+                    blocks.onShowContextMenu(this, options);
             };
             // Get rid of bumping behavior
             Blockly.Constants.Logic.LOGIC_COMPARE_ONCHANGE_MIXIN.onchange = function () { };
@@ -5371,7 +5485,7 @@ var pxt;
             var proceduresDef = pxt.blocks.getBlockDefinition(proceduresDefId);
             msg.PROCEDURES_DEFNORETURN_TITLE = proceduresDef.block["PROCEDURES_DEFNORETURN_TITLE"];
             msg.PROCEDURE_ALREADY_EXISTS = proceduresDef.block["PROCEDURE_ALREADY_EXISTS"];
-            Blockly.Blocks['procedures_defnoreturn'].init = function () {
+            (Blockly.Blocks['procedures_defnoreturn']).init = function () {
                 var nameField = new Blockly.FieldTextInput('', Blockly.Procedures.rename);
                 //nameField.setSpellcheck(false); //TODO
                 this.appendDummyInput()
@@ -5389,7 +5503,7 @@ var pxt;
             // builtin procedures_defnoreturn
             var proceduresCallId = "procedures_callnoreturn";
             var proceduresCallDef = pxt.blocks.getBlockDefinition(proceduresCallId);
-            msg.PROCEDURES_CALLRETURN_TOOLTIP = proceduresDef.tooltip;
+            msg.PROCEDURES_CALLRETURN_TOOLTIP = proceduresDef.tooltip.toString();
             Blockly.Blocks['procedures_callnoreturn'] = {
                 init: function () {
                     var nameField = new pxtblockly.FieldProcedure('');
@@ -5526,6 +5640,39 @@ var pxt;
             var functionCall = pxt.blocks.getBlockDefinition(functionCallId);
             msg.FUNCTIONS_CALL_TITLE = functionCall.block["FUNCTIONS_CALL_TITLE"];
             installBuiltinHelpInfo(functionCallId);
+            installBuiltinHelpInfo("function_call_output");
+            var functionReturnId = "function_return";
+            Blockly.Blocks[functionReturnId] = {
+                init: function () {
+                    blocks.initReturnStatement(this);
+                },
+                onchange: function (event) {
+                    var block = this;
+                    if (!block.workspace || block.workspace.isFlyout) {
+                        // Block is deleted or is in a flyout.
+                        return;
+                    }
+                    var thisWasCreated = event.type === Blockly.Events.BLOCK_CREATE && event.ids.indexOf(block.id) != -1;
+                    var thisWasDragged = event.type === Blockly.Events.END_DRAG && event.allNestedIds.indexOf(block.id) != -1;
+                    if (thisWasCreated || thisWasDragged) {
+                        var rootBlock = block.getRootBlock();
+                        var isTopBlock = rootBlock.type === functionReturnId;
+                        if (isTopBlock || rootBlock.previousConnection != null) {
+                            // Statement is by itself on the workspace, or it is slotted into a
+                            // stack of statements that is not attached to a function or event. Let
+                            // it exist until it is connected to a function
+                            return;
+                        }
+                        if (rootBlock.type !== functionDefinitionId) {
+                            // Not a function block, so disconnect
+                            Blockly.Events.setGroup(event.group);
+                            block.previousConnection.disconnect();
+                            Blockly.Events.setGroup(false);
+                        }
+                    }
+                }
+            };
+            installBuiltinHelpInfo(functionReturnId);
             Blockly.Procedures.flyoutCategory = function (workspace) {
                 var xmlList = [];
                 if (!pxt.appTarget.appTheme.hideFlyoutHeadings) {
@@ -5631,9 +5778,36 @@ var pxt;
             var oldFlyout = Blockly.Functions.flyoutCategory;
             Blockly.Functions.flyoutCategory = function (workspace) {
                 var elems = oldFlyout(workspace);
+                if (elems.length > 1) {
+                    var returnBlock = mkReturnStatementBlock();
+                    // Insert after the "make a function" button
+                    elems.splice(1, 0, returnBlock);
+                }
+                var functionsWithReturn = Blockly.Functions.getAllFunctionDefinitionBlocks(workspace)
+                    .filter(function (def) { return def.getDescendants(false).some(function (child) { return child.type === "function_return" && child.getInputTargetBlock("RETURN_VALUE"); }); })
+                    .map(function (def) { return def.getField("function_name").getText(); });
                 var headingLabel = createFlyoutHeadingLabel(lf("Functions"), pxt.toolbox.getNamespaceColor('functions'), pxt.toolbox.getNamespaceIcon('functions'), 'blocklyFlyoutIconfunctions');
                 elems.unshift(headingLabel);
-                return elems;
+                var res = [];
+                var _loop_1 = function (e) {
+                    res.push(e);
+                    if (e.getAttribute("type") === "function_call") {
+                        var mutation = e.children.item(0);
+                        if (mutation) {
+                            var name_5 = mutation.getAttribute("name");
+                            if (functionsWithReturn.some(function (n) { return n === name_5; })) {
+                                var clone = e.cloneNode(true);
+                                clone.setAttribute("type", "function_call_output");
+                                res.push(clone);
+                            }
+                        }
+                    }
+                };
+                for (var _i = 0, elems_1 = elems; _i < elems_1.length; _i++) {
+                    var e = elems_1[_i];
+                    _loop_1(e);
+                }
+                return res;
             };
             // Configure function editor argument icons
             var iconsMap = {
@@ -5657,7 +5831,7 @@ var pxt;
                 // The logic for setting the output check relies on the internals of PXT
                 // too much to be refactored into pxt-blockly, so we need to monkey patch
                 // it here
-                Blockly.Blocks["argument_reporter_custom"].domToMutation = function (xmlElement) {
+                (Blockly.Blocks["argument_reporter_custom"]).domToMutation = function (xmlElement) {
                     var typeName = xmlElement.getAttribute('typename');
                     this.typeName_ = typeName;
                     setOutputCheck(this, typeName, cachedBlockInfo);
@@ -5773,22 +5947,23 @@ var pxt;
                 }
                 return tip;
             };
-            // TODO: update this when pulling new blockly
             /**
-             * Create the tooltip and show it.
+             * Override Blockly tooltip rendering with our own.
+             * TODO shakao check if tooltip can be modified in a cleaner way
              * @private
              */
             Blockly.Tooltip.show_ = function () {
-                Blockly.Tooltip.poisonedElement_ = Blockly.Tooltip.element_;
+                var BlocklyTooltip = Blockly.Tooltip;
+                BlocklyTooltip.poisonedElement_ = BlocklyTooltip.element_;
                 if (!Blockly.Tooltip.DIV) {
                     return;
                 }
                 // Erase all existing text.
                 goog.dom.removeChildren(/** @type {!Element} */ (Blockly.Tooltip.DIV));
                 // Get the new text.
-                var card = Blockly.Tooltip.element_.codeCard;
+                var card = BlocklyTooltip.element_.codeCard;
                 function render() {
-                    var rtl = Blockly.Tooltip.element_.RTL;
+                    var rtl = BlocklyTooltip.element_.RTL;
                     var windowSize = goog.dom.getViewportSize();
                     // Display the tooltip.
                     var tooltip = Blockly.Tooltip.DIV;
@@ -5796,14 +5971,14 @@ var pxt;
                     tooltip.style.display = 'block';
                     Blockly.Tooltip.visible = true;
                     // Move the tooltip to just below the cursor.
-                    var anchorX = Blockly.Tooltip.lastX_;
+                    var anchorX = BlocklyTooltip.lastX_;
                     if (rtl) {
                         anchorX -= Blockly.Tooltip.OFFSET_X + tooltip.offsetWidth;
                     }
                     else {
                         anchorX += Blockly.Tooltip.OFFSET_X;
                     }
-                    var anchorY = Blockly.Tooltip.lastY_ + Blockly.Tooltip.OFFSET_Y;
+                    var anchorY = BlocklyTooltip.lastY_ + Blockly.Tooltip.OFFSET_Y;
                     if (anchorY + tooltip.offsetHeight >
                         windowSize.height + window.scrollY) {
                         // Falling off the bottom of the screen; shift the tooltip up.
@@ -5827,13 +6002,13 @@ var pxt;
                 }
                 if (card) {
                     var cardEl = pxt.docs.codeCard.render({
-                        header: renderTip(Blockly.Tooltip.element_)
+                        header: renderTip(BlocklyTooltip.element_)
                     });
                     Blockly.Tooltip.DIV.appendChild(cardEl);
                     render();
                 }
                 else {
-                    var tip = renderTip(Blockly.Tooltip.element_);
+                    var tip = renderTip(BlocklyTooltip.element_);
                     tip = Blockly.utils._string.wrap(tip, Blockly.Tooltip.LIMIT);
                     // Create new text, line by line.
                     var lines = tip.split('\n');
@@ -5880,6 +6055,17 @@ var pxt;
             return fieldBlock;
         }
         blocks.mkFieldBlock = mkFieldBlock;
+        function mkReturnStatementBlock() {
+            var block = document.createElement("block");
+            block.setAttribute("type", "function_return");
+            var value = document.createElement("value");
+            value.setAttribute("name", "RETURN_VALUE");
+            block.appendChild(value);
+            var shadow = mkFieldBlock("math_number", "NUM", "0", true);
+            value.appendChild(shadow);
+            return block;
+        }
+        blocks.mkReturnStatementBlock = mkReturnStatementBlock;
         var jresIconCache = {};
         function iconToFieldImage(id) {
             var url = jresIconCache[id];
@@ -6094,7 +6280,7 @@ var pxt;
                 // Initialize flyout workspace's top block and add sub-blocks based on visible parameters
                 var topBlock = workspace.newBlock(this.topBlockType);
                 topBlock.initSvg();
-                var _loop_1 = function (input) {
+                var _loop_2 = function (input) {
                     if (input.name === MutatorHelper.mutatorStatmentInput) {
                         var currentConnection_1 = input.connection;
                         this_1.getVisibleBlockTypes().forEach(function (sub) {
@@ -6109,7 +6295,7 @@ var pxt;
                 var this_1 = this;
                 for (var _i = 0, _a = topBlock.inputList; _i < _a.length; _i++) {
                     var input = _a[_i];
-                    var state_1 = _loop_1(input);
+                    var state_1 = _loop_2(input);
                     if (state_1 === "break")
                         break;
                 }
@@ -6322,10 +6508,10 @@ var pxt;
                 }
                 this.currentlyVisible.forEach(function (param) {
                     if (_this.parameters.indexOf(param) === -1) {
-                        var name_5 = _this.getVarFieldValue(param);
+                        var name_6 = _this.getVarFieldValue(param);
                         // Persist renames
-                        if (name_5 !== param) {
-                            _this.parameterRenames[param] = name_5;
+                        if (name_6 !== param) {
+                            _this.parameterRenames[param] = name_6;
                         }
                         dummyInput.removeField(param);
                     }
@@ -6536,11 +6722,14 @@ var pxt;
                 blocklyDiv.style.height = "1px";
                 document.body.appendChild(blocklyDiv);
                 workspace = Blockly.inject(blocklyDiv, {
-                    scrollbars: false,
+                    move: {
+                        scrollbars: false
+                    },
                     readOnly: true,
-                    sound: false,
+                    sounds: false,
                     media: pxt.webConfig.commitCdnUrl + "blockly/media/",
-                    rtl: pxt.Util.isUserLanguageRtl()
+                    rtl: pxt.Util.isUserLanguageRtl(),
+                    renderer: "pxt"
                 });
             }
             pxt.blocks.clearWithoutEvents(workspace);
@@ -6678,12 +6867,6 @@ var pxt;
                 if (options === void 0) { options = {}; }
                 var repeat = pxt.Util.repeatMap;
                 var color = card.color || "";
-                if (!color) {
-                    if (card.hardware && !card.software)
-                        color = 'black';
-                    else if (card.software && !card.hardware)
-                        color = 'teal';
-                }
                 var url = card.url ? /^[^:]+:\/\//.test(card.url) ? card.url : ('/' + card.url.replace(/^\.?\/?/, ''))
                     : card.youTubeId ? "https://youtu.be/" + card.youTubeId : undefined;
                 var link = !!url;
@@ -6708,20 +6891,14 @@ var pxt;
                     parent.appendChild(d);
                     return d;
                 };
-                var r = div(null, 'ui card ' + (card.color || '') + (link ? ' link' : ''), link ? "a" : "div");
+                var style = card.style || "card";
+                var r = div(null, 'ui ' + style + ' ' + (card.color || '') + (link ? ' link' : ''), link ? "a" : "div");
                 r.setAttribute("role", "option");
                 r.setAttribute("aria-selected", "true");
                 if (url)
                     r.href = url;
-                if (!options.hideHeader && (card.header || card.blocks || card.javascript || card.hardware || card.software || card.any)) {
+                if (!options.hideHeader && card.header) {
                     var h = div(r, "ui content " + (card.responsive ? " tall desktop only" : ""));
-                    var hr_1 = div(h, "right floated meta");
-                    if (card.any)
-                        div(hr_1, "ui grey circular label tiny", "i", card.any > 0 ? card.any : "");
-                    repeat(card.blocks, function (k) { return div(hr_1, "puzzle orange icon", "i"); });
-                    repeat(card.javascript, function (k) { return div(hr_1, "align left blue icon", "i"); });
-                    repeat(card.hardware, function (k) { return div(hr_1, "certificate black icon", "i"); });
-                    repeat(card.software, function (k) { return div(hr_1, "square teal icon", "i"); });
                     if (card.header)
                         div(h, 'description', 'span', card.header);
                 }
@@ -6750,7 +6927,7 @@ var pxt;
                     pre.appendChild(document.createTextNode(card.typeScript));
                     img.appendChild(pre);
                 }
-                var imgUrl = card.imageUrl || (card.youTubeId && "https://img.youtube.com/vi/" + card.youTubeId + "/0.jpg");
+                var imgUrl = card.imageUrl || (card.youTubeId ? "https://img.youtube.com/vi/" + card.youTubeId + "/0.jpg" : undefined);
                 if (imgUrl) {
                     var imageWrapper = document.createElement("div");
                     imageWrapper.className = "ui imagewrapper";
@@ -6922,8 +7099,8 @@ var pxt;
                         if (!isNaN(val)) {
                             var delta = val - (state.getNumber(numVisibleAttr) || 0);
                             if (state.getBoolean(inputInitAttr)) {
-                                if (b.rendered) {
-                                    updateShape(delta, true);
+                                if (b.rendered || b.isInsertionMarker()) {
+                                    updateShape(delta, true, b.isInsertionMarker());
                                 }
                                 else {
                                     state.setValue(numVisibleAttr, addDelta(delta));
@@ -7053,6 +7230,124 @@ var pxt;
             }
         }
         blocks.initExpandableBlock = initExpandableBlock;
+        function initReturnStatement(b) {
+            var returnDef = pxt.blocks.getBlockDefinition("function_return");
+            var buttonAddName = "0_add_button";
+            var buttonRemName = "0_rem_button";
+            Blockly.Extensions.apply('inline-svgs', b, false);
+            var returnValueVisible = true;
+            updateShape();
+            // When the value input is removed, we disconnect the block that was connected to it. This
+            // is the id of whatever block was last connected
+            var lastConnectedId;
+            b.domToMutation = function (saved) {
+                if (saved.hasAttribute("last_connected_id")) {
+                    lastConnectedId = saved.getAttribute("last_connected_id");
+                }
+                returnValueVisible = hasReturnValue(saved);
+                updateShape();
+            };
+            b.mutationToDom = function () {
+                var mutation = document.createElement("mutation");
+                setReturnValue(mutation, !!b.getInput("RETURN_VALUE"));
+                if (lastConnectedId) {
+                    mutation.setAttribute("last_connected_id", lastConnectedId);
+                }
+                return mutation;
+            };
+            function updateShape() {
+                var returnValueInput = b.getInput("RETURN_VALUE");
+                if (returnValueVisible) {
+                    if (!returnValueInput) {
+                        // Remove any labels
+                        while (b.getInput(""))
+                            b.removeInput("");
+                        b.jsonInit({
+                            "message0": returnDef.block["message_with_value"],
+                            "args0": [
+                                {
+                                    "type": "input_value",
+                                    "name": "RETURN_VALUE",
+                                    "check": null
+                                }
+                            ],
+                            "previousStatement": null,
+                            "colour": pxt.toolbox.getNamespaceColor('functions')
+                        });
+                    }
+                    if (b.getInput(buttonAddName)) {
+                        b.removeInput(buttonAddName);
+                    }
+                    if (!b.getInput(buttonRemName)) {
+                        addMinusButton();
+                    }
+                    if (lastConnectedId) {
+                        var lastConnected = b.workspace.getBlockById(lastConnectedId);
+                        if (lastConnected && lastConnected.outputConnection && !lastConnected.outputConnection.targetBlock()) {
+                            b.getInput("RETURN_VALUE").connection.connect(lastConnected.outputConnection);
+                        }
+                        lastConnectedId = undefined;
+                    }
+                }
+                else {
+                    if (returnValueInput) {
+                        var target = returnValueInput.connection.targetBlock();
+                        if (target) {
+                            if (target.isShadow())
+                                target.setShadow(false);
+                            returnValueInput.connection.disconnect();
+                            lastConnectedId = target.id;
+                        }
+                        b.removeInput("RETURN_VALUE");
+                        b.jsonInit({
+                            "message0": returnDef.block["message_no_value"],
+                            "args0": [],
+                            "previousStatement": null,
+                            "colour": pxt.toolbox.getNamespaceColor('functions')
+                        });
+                    }
+                    if (b.getInput(buttonRemName)) {
+                        b.removeInput(buttonRemName);
+                    }
+                    if (!b.getInput(buttonAddName)) {
+                        addPlusButton();
+                    }
+                }
+                b.setInputsInline(true);
+            }
+            function setReturnValue(mutation, hasReturnValue) {
+                mutation.setAttribute("no_return_value", hasReturnValue ? "false" : "true");
+            }
+            function hasReturnValue(mutation) {
+                return mutation.getAttribute("no_return_value") !== "true";
+            }
+            function addPlusButton() {
+                addButton(buttonAddName, b.ADD_IMAGE_DATAURI, lf("Add return value"));
+            }
+            function addMinusButton() {
+                addButton(buttonRemName, b.REMOVE_IMAGE_DATAURI, lf("Remove return value"));
+            }
+            function mutationString() {
+                return Blockly.Xml.domToText(b.mutationToDom());
+            }
+            function fireMutationChange(pre, post) {
+                if (pre !== post)
+                    Blockly.Events.fire(new Blockly.Events.BlockChange(b, "mutation", null, pre, post));
+            }
+            function addButton(name, uri, alt) {
+                b.appendDummyInput(name)
+                    .appendField(new Blockly.FieldImage(uri, 24, 24, alt, function () {
+                    var oldMutation = mutationString();
+                    returnValueVisible = !returnValueVisible;
+                    var preUpdate = mutationString();
+                    fireMutationChange(oldMutation, preUpdate);
+                    updateShape();
+                    var postUpdate = mutationString();
+                    fireMutationChange(preUpdate, postUpdate);
+                }, false));
+            }
+        }
+        blocks.initReturnStatement = initReturnStatement;
         var MutationState = /** @class */ (function () {
             function MutationState(block, initState) {
                 this.block = block;
@@ -7365,9 +7660,8 @@ var pxtblockly;
             var bg = new svg.Rect()
                 .at(PADDING + ICON_WIDTH, PADDING)
                 .size(BG_WIDTH, BG_WIDTH)
-                .fill("#dedede")
-                .stroke("#898989", 1)
-                .corner(4);
+                .corner(4)
+                .setClass("blocklyAnimationField");
             this.fieldGroup_.appendChild(bg.el);
             var icon = new svg.Text("\uf008")
                 .at(PADDING, 5 + (TOTAL_HEIGHT >> 1))
@@ -7542,7 +7836,6 @@ var pxtblockly;
         };
         FieldBreakpoint.prototype.updateSize_ = function () {
             this.size_.width = 30;
-            this.arrowWidth_ = 0;
         };
         /**
          * Return 'TRUE' if the toggle is ON, 'FALSE' otherwise.
@@ -7581,8 +7874,8 @@ var pxtblockly;
                 this.checkElement_.setAttribute('transform', "translate(-7, -1) scale(0.3)");
             }
         };
-        FieldBreakpoint.prototype.updateTextNode_ = function () {
-            _super.prototype.updateTextNode_.call(this);
+        FieldBreakpoint.prototype.updateDisplay_ = function (newValue) {
+            _super.prototype.updateDisplay_.call(this, newValue);
             if (this.textElement_)
                 pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
         };
@@ -7780,6 +8073,8 @@ var pxtblockly;
                 }
                 _this.setColours(p, t);
             }
+            // Set to first color in palette (for toolbox)
+            _this.setValue(_this.getColours_()[0]);
             if (params.columns)
                 _this.setColumns(parseInt(params.columns));
             if (params.className)
@@ -7788,6 +8083,23 @@ var pxtblockly;
                 _this.valueMode_ = params.valueMode;
             return _this;
         }
+        /**
+         * @override
+         */
+        FieldColorNumber.prototype.applyColour = function () {
+            var _a, _b, _c, _d, _e, _f;
+            if (this.borderRect_) {
+                this.borderRect_.style.fill = this.value_;
+            }
+            else if (this.sourceBlock_) {
+                (_c = (_b = (_a = this.sourceBlock_) === null || _a === void 0 ? void 0 : _a.pathObject) === null || _b === void 0 ? void 0 : _b.svgPath) === null || _c === void 0 ? void 0 : _c.setAttribute('fill', this.value_);
+                (_f = (_e = (_d = this.sourceBlock_) === null || _d === void 0 ? void 0 : _d.pathObject) === null || _e === void 0 ? void 0 : _e.svgPath) === null || _f === void 0 ? void 0 : _f.setAttribute('stroke', '#fff');
+            }
+        };
+        ;
+        FieldColorNumber.prototype.doClassValidation_ = function (colour) {
+            return "string" != typeof colour ? null : parseColour(colour, this.getColours_());
+        };
         /**
          * Return the current colour.
          * @param {boolean} opt_asHex optional field if the returned value should be a hex
@@ -7822,23 +8134,14 @@ var pxtblockly;
          * Set the colour.
          * @param {string} colour The new colour in '#rrggbb' format.
          */
-        FieldColorNumber.prototype.setValue = function (colour) {
-            colour = parseColour(colour, this.getColours_());
-            if (!colour)
-                return;
-            if (this.sourceBlock_ && Blockly.Events.isEnabled() &&
-                this.value_ != colour) {
-                Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.value_, colour));
-            }
-            this.value_ = colour;
-            if (this.sourceBlock_) {
-                this.sourceBlock_.setColour(colour, colour, colour);
-            }
+        FieldColorNumber.prototype.doValueUpdate_ = function (colour) {
+            this.value_ = parseColour(colour, this.getColours_());
+            this.applyColour();
         };
         FieldColorNumber.prototype.showEditor_ = function () {
             _super.prototype.showEditor_.call(this);
-            if (this.className_ && this.colorPicker_)
-                pxt.BrowserUtils.addClass(this.colorPicker_, this.className_);
+            if (this.className_ && this.picker_)
+                pxt.BrowserUtils.addClass(this.picker_, this.className_);
         };
         FieldColorNumber.prototype.getColours_ = function () {
             return this.colours_;
@@ -7984,7 +8287,7 @@ var pxtblockly;
             var columns = this.columns_;
             var rowContent = document.createElement('div');
             rowContent.className = 'blocklyGridPickerRow';
-            var _loop_2 = function (i) {
+            var _loop_3 = function (i) {
                 var content = options[i][0]; // Human-readable text or image.
                 var value = options[i][1]; // Language-neutral value.
                 var menuItem = document.createElement('div');
@@ -8099,7 +8402,7 @@ var pxtblockly;
             };
             var this_2 = this;
             for (var i = (columns * row); i < Math.min((columns * row) + columns, options.length); i++) {
-                _loop_2(i);
+                _loop_3(i);
             }
             return rowContent;
         };
@@ -8111,41 +8414,9 @@ var pxtblockly;
         FieldGridPicker.prototype.shouldShowRect_ = function () {
             return !this.hideRect_ ? !this.sourceBlock_.isShadow() : false;
         };
-        /**
-         * Set the language-neutral value for this dropdown menu.
-         * We have to override this from field.js because the grid picker needs to redraw the selected item's image.
-         * @param {string} newValue New value to set.
-         */
-        FieldGridPicker.prototype.setValue = function (newValue) {
-            if (newValue === null || newValue === this.value_) {
-                return; // No change if null.
-            }
-            if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
-                Blockly.Events.fire(new Blockly.Events.BlockChange(this.sourceBlock_, 'field', this.name, this.value_, newValue));
-            }
-            this.value_ = newValue;
-            // Look up and display the human-readable text.
-            var options = this.getOptions();
-            for (var i = 0; i < options.length; i++) {
-                // Options are tuples of human-readable text and language-neutral values.
-                if (options[i][1] == newValue) {
-                    var content = options[i][0];
-                    if (typeof content == 'object') {
-                        this.imageJson_ = content;
-                        this.setText(content.alt); // Use setText() because it handles displaying image selection
-                    }
-                    else {
-                        this.imageJson_ = null;
-                        this.setText(content); // Use setText() because it handles displaying image selection
-                    }
-                    return;
-                }
-            }
-            // Value not found.  Add it, maybe it will become valid once set
-            // (like variable names).
-            this.setText(newValue); // Use setText() because it handles displaying image selection
+        FieldGridPicker.prototype.doClassValidation_ = function (newValue) {
+            return newValue;
         };
-        ;
         /**
          * Closes the gridpicker.
          */
@@ -8250,7 +8521,7 @@ var pxtblockly;
             return !pxt.BrowserUtils.isMobile();
         };
         FieldGridPicker.prototype.getAnchorDimensions_ = function () {
-            var boundingBox = this.getScaledBBox_();
+            var boundingBox = this.getScaledBBox();
             if (this.sourceBlock_.RTL) {
                 boundingBox.right += Blockly.FieldDropdown.CHECKMARK_OVERHANG;
             }
@@ -8454,122 +8725,6 @@ var pxtblockly;
         FieldGridPicker.prototype.onClose_ = function () {
             this.disposeTooltip();
         };
-        /**
-         * Sets the text in this field.  Trigger a rerender of the source block.
-         * @param {?string} text New text.
-         */
-        FieldGridPicker.prototype.setText = function (text) {
-            if (text === null || text === this.text_) {
-                // No change if null.
-                return;
-            }
-            this.text_ = text;
-            this.updateTextNode_();
-            if (this.imageJson_ && this.textElement_) {
-                // Update class for dropdown text.
-                // This class is reset every time updateTextNode_ is called.
-                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyHidden');
-                this.imageElement_.parentNode.appendChild(this.arrow_);
-            }
-            else if (this.textElement_) {
-                // Update class for dropdown text.
-                // This class is reset every time updateTextNode_ is called.
-                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyDropdownText');
-                this.textElement_.parentNode.appendChild(this.arrow_);
-            }
-            var sourceBlock = this.sourceBlock_;
-            if (sourceBlock && sourceBlock.rendered) {
-                sourceBlock.render();
-                sourceBlock.bumpNeighbours_();
-            }
-        };
-        ;
-        /**
-         * Updates the width of the field. This calls getCachedWidth which won't cache
-         * the approximated width on IE/Microsoft Edge when `getComputedTextLength` fails. Once
-         * it eventually does succeed, the result will be cached.
-         **/
-        FieldGridPicker.prototype.updateSize_ = function () {
-            var width;
-            if (this.imageJson_) {
-                width = this.imageJson_.width + 5;
-                this.arrowY_ = this.imageJson_.height / 2;
-            }
-            else {
-                // Calculate width of field
-                width = Blockly.Field.getCachedWidth(this.textElement_);
-            }
-            // Add padding to left and right of text.
-            if (this.EDITABLE) {
-                width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
-            }
-            // Adjust width for drop-down arrows.
-            this.arrowWidth_ = 0;
-            if (this.positionArrow) {
-                this.arrowWidth_ = this.positionArrow(width);
-                width += this.arrowWidth_;
-            }
-            // Add padding to any drawn box.
-            if (this.box_) {
-                width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
-            }
-            // Set width of the field.
-            this.size_.width = width;
-        };
-        ;
-        /**
-         * Update the text node of this field to display the current text.
-         * @private
-         */
-        FieldGridPicker.prototype.updateTextNode_ = function () {
-            if (!this.textElement_ && !this.imageElement_) {
-                // Not rendered yet.
-                return;
-            }
-            var text = this.text_;
-            if (text.length > this.maxDisplayLength) {
-                // Truncate displayed string and add an ellipsis ('...').
-                text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
-                // Add special class for sizing font when truncated
-                this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
-            }
-            else {
-                this.textElement_.setAttribute('class', 'blocklyText');
-            }
-            // Empty the text element.
-            goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
-            goog.dom.removeNode(this.imageElement_);
-            this.imageElement_ = null;
-            if (this.imageJson_) {
-                // Image option is selected.
-                this.imageElement_ = Blockly.utils.dom.createSvgElement('image', {
-                    'y': 5, 'x': 8, 'height': this.imageJson_.height + 'px',
-                    'width': this.imageJson_.width + 'px', cursor: 'pointer'
-                }, null);
-                this.imageElement_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.imageJson_.src);
-                this.size_.height = Number(this.imageJson_.height) + 10;
-                if (this.sourceBlock_.RTL)
-                    this.imageElement_.setAttribute('transform', 'translate(' + this.arrowWidth_ + ', 0)');
-                this.textElement_.parentNode.appendChild(this.imageElement_);
-            }
-            else {
-                // Replace whitespace with non-breaking spaces so the text doesn't collapse.
-                text = text.replace(/\s/g, Blockly.Field.NBSP);
-                if (this.sourceBlock_.RTL && text) {
-                    // The SVG is LTR, force text to be RTL.
-                    text += '\u200F';
-                }
-                if (!text) {
-                    // Prevent the field from disappearing if empty.
-                    text = Blockly.Field.NBSP;
-                }
-                var textNode = document.createTextNode(text);
-                this.textElement_.appendChild(textNode);
-            }
-            // Cached width is obsolete.  Clear it.
-            this.size_.width = 0;
-        };
-        ;
         FieldGridPicker.DEFAULT_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
         return FieldGridPicker;
     }(Blockly.FieldDropdown));
@@ -8594,7 +8749,6 @@ var pxtblockly;
                 if (!value)
                     return;
                 this.setValue(value);
-                this.setText(value);
                 Blockly.DropDownDiv.hide();
             };
             _this.columns_ = parseInt(options.columns);
@@ -8609,6 +8763,7 @@ var pxtblockly;
          * @private
          */
         FieldImageDropdown.prototype.showEditor_ = function () {
+            var _a, _b;
             // If there is an existing drop-down we own, this is a request to hide the drop-down.
             if (Blockly.DropDownDiv.hideIfOwner(this)) {
                 return;
@@ -8695,140 +8850,33 @@ var pxtblockly;
             }
             Blockly.DropDownDiv.setColour(this.backgroundColour_, this.borderColour_);
             Blockly.DropDownDiv.showPositionedByBlock(this, this.sourceBlock_, this.onHide_.bind(this));
-            if (this.sourceBlock_.isShadow()) {
-                this.savedPrimary_ = this.sourceBlock_.getColour();
-                this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(), this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+            var source = this.sourceBlock_;
+            this.savedPrimary_ = (_a = source) === null || _a === void 0 ? void 0 : _a.getColour();
+            if ((_b = source) === null || _b === void 0 ? void 0 : _b.isShadow()) {
+                source.setColour(source.getColourTertiary());
             }
-            else if (this.box_) {
-                this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', source.getColourTertiary());
             }
         };
         /**
          * Callback for when the drop-down is hidden.
          */
         FieldImageDropdown.prototype.onHide_ = function () {
+            var _a;
             var content = Blockly.DropDownDiv.getContentDiv();
             content.removeAttribute('role');
             content.removeAttribute('aria-haspopup');
             content.removeAttribute('aria-activedescendant');
             content.style.width = '';
             content.style.paddingRight = '';
-            if (this.sourceBlock_) {
-                if (this.sourceBlock_.isShadow()) {
-                    this.sourceBlock_.setColour(this.savedPrimary_, this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
-                }
-                else if (this.box_) {
-                    this.box_.setAttribute('fill', this.sourceBlock_.getColour());
-                }
+            var source = this.sourceBlock_;
+            if ((_a = source) === null || _a === void 0 ? void 0 : _a.isShadow()) {
+                this.sourceBlock_.setColour(this.savedPrimary_);
             }
-        };
-        ;
-        /**
-         * Sets the text in this field.  Trigger a rerender of the source block.
-         * @param {?string} text New text.
-         */
-        FieldImageDropdown.prototype.setText = function (text) {
-            if (text === null || text === this.text_) {
-                // No change if null.
-                return;
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', this.savedPrimary_);
             }
-            this.text_ = text;
-            this.updateTextNode_();
-            if (this.imageJson_ && this.textElement_) {
-                // Update class for dropdown text.
-                // This class is reset every time updateTextNode_ is called.
-                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyHidden');
-                this.imageElement_.parentNode.appendChild(this.arrow_);
-            }
-            else if (this.textElement_) {
-                // Update class for dropdown text.
-                // This class is reset every time updateTextNode_ is called.
-                this.textElement_.setAttribute('class', this.textElement_.getAttribute('class') + ' blocklyDropdownText');
-                this.textElement_.parentNode.appendChild(this.arrow_);
-            }
-            var sourceBlock = this.sourceBlock_;
-            if (sourceBlock && sourceBlock.rendered) {
-                sourceBlock.render();
-                sourceBlock.bumpNeighbours_();
-            }
-        };
-        ;
-        /**
-         * Updates the width of the field. This calls getCachedWidth which won't cache
-         * the approximated width on IE/Microsoft Edge when `getComputedTextLength` fails. Once
-         * it eventually does succeed, the result will be cached.
-         **/
-        FieldImageDropdown.prototype.updateSize_ = function () {
-            // Calculate width of field
-            var width = this.imageJson_.width + 5;
-            // Add padding to left and right of text.
-            if (this.EDITABLE) {
-                width += Blockly.BlockSvg.EDITABLE_FIELD_PADDING;
-            }
-            this.arrowY_ = this.imageJson_.height / 2;
-            // Adjust width for drop-down arrows.
-            this.arrowWidth_ = 0;
-            if (this.positionArrow) {
-                this.arrowWidth_ = this.positionArrow(width);
-                width += this.arrowWidth_;
-            }
-            // Add padding to any drawn box.
-            if (this.box_) {
-                width += 2 * Blockly.BlockSvg.BOX_FIELD_PADDING;
-            }
-            // Set width of the field.
-            this.size_.width = width;
-        };
-        ;
-        /**
-         * Update the text node of this field to display the current text.
-         * @private
-         */
-        FieldImageDropdown.prototype.updateTextNode_ = function () {
-            if (!this.textElement_ && !this.imageElement_) {
-                // Not rendered yet.
-                return;
-            }
-            var text = this.text_;
-            if (text.length > this.maxDisplayLength) {
-                // Truncate displayed string and add an ellipsis ('...').
-                text = text.substring(0, this.maxDisplayLength - 2) + '\u2026';
-                // Add special class for sizing font when truncated
-                this.textElement_.setAttribute('class', 'blocklyText blocklyTextTruncated');
-            }
-            else {
-                this.textElement_.setAttribute('class', 'blocklyText');
-            }
-            // Empty the text element.
-            goog.dom.removeChildren(/** @type {!Element} */ (this.textElement_));
-            goog.dom.removeNode(this.imageElement_);
-            this.imageElement_ = null;
-            if (this.imageJson_) {
-                // Image option is selected.
-                this.imageElement_ = Blockly.utils.dom.createSvgElement('image', {
-                    'y': 5, 'x': 8, 'height': this.imageJson_.height + 'px',
-                    'width': this.imageJson_.width + 'px'
-                }, null);
-                this.imageElement_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.imageJson_.src);
-                this.size_.height = Number(this.imageJson_.height) + 10;
-                this.textElement_.parentNode.appendChild(this.imageElement_);
-            }
-            else {
-                // Replace whitespace with non-breaking spaces so the text doesn't collapse.
-                text = text.replace(/\s/g, Blockly.Field.NBSP);
-                if (this.sourceBlock_.RTL && text) {
-                    // The SVG is LTR, force text to be RTL.
-                    text += '\u200F';
-                }
-                if (!text) {
-                    // Prevent the field from disappearing if empty.
-                    text = Blockly.Field.NBSP;
-                }
-                var textNode = document.createTextNode(text);
-                this.textElement_.appendChild(textNode);
-            }
-            // Cached width is obsolete.  Clear it.
-            this.size_.width = 0;
         };
         ;
         return FieldImageDropdown;
@@ -8851,10 +8899,12 @@ var pxtblockly;
          * @private
          */
         FieldImages.prototype.showEditor_ = function () {
+            var _a, _b;
             // If there is an existing drop-down we own, this is a request to hide the drop-down.
             if (Blockly.DropDownDiv.hideIfOwner(this)) {
                 return;
             }
+            var sourceBlock = this.sourceBlock_;
             // If there is an existing drop-down someone else owns, hide it immediately and clear it.
             Blockly.DropDownDiv.hideWithoutAnimation();
             Blockly.DropDownDiv.clearContent();
@@ -8893,14 +8943,14 @@ var pxtblockly;
                     button.style.width = content.width + 'px';
                     button.style.height = content.height + 'px';
                 }
-                var backgroundColor = this.sourceBlock_.getColour();
+                var backgroundColor = sourceBlock.getColour();
                 if (value == this.getValue()) {
                     // This icon is selected, show it in a different colour
-                    backgroundColor = this.sourceBlock_.getColourTertiary();
+                    backgroundColor = sourceBlock.getColourTertiary();
                     button.setAttribute('aria-selected', 'true');
                 }
                 button.style.backgroundColor = backgroundColor;
-                button.style.borderColor = this.sourceBlock_.getColourTertiary();
+                button.style.borderColor = sourceBlock.getColourTertiary();
                 Blockly.bindEvent_(button, 'click', this, this.buttonClick_);
                 Blockly.bindEvent_(button, 'mouseover', button, function () {
                     this.setAttribute('class', 'blocklyDropDownButton blocklyDropDownButtonHover');
@@ -8927,27 +8977,27 @@ var pxtblockly;
             }
             contentDiv.style.width = this.width_ + 'px';
             dropdownDiv.appendChild(contentDiv);
-            Blockly.DropDownDiv.setColour(this.sourceBlock_.getColour(), this.sourceBlock_.getColourTertiary());
-            // Calculate positioning based on the field position.
-            var scale = this.sourceBlock_.workspace.scale;
-            var bBox = { width: this.size_.width, height: this.size_.height };
-            bBox.width *= scale;
-            bBox.height *= scale;
-            var position = this.fieldGroup_.getBoundingClientRect();
-            var primaryX = position.left + bBox.width / 2;
-            var primaryY = position.top + bBox.height;
-            var secondaryX = primaryX;
-            var secondaryY = position.top;
-            // Set bounds to workspace; show the drop-down.
-            Blockly.DropDownDiv.setBoundsElement(this.sourceBlock_.workspace.getParentSvg().parentNode);
-            Blockly.DropDownDiv.show(this, primaryX, primaryY, secondaryX, secondaryY, this.onHide_.bind(this));
+            Blockly.DropDownDiv.setColour(sourceBlock.getColour(), sourceBlock.getColourTertiary());
+            // Position based on the field position.
+            Blockly.DropDownDiv.showPositionedByField(this, this.onHideCallback.bind(this));
             // Update colour to look selected.
-            if (this.sourceBlock_.isShadow()) {
-                this.savedPrimary_ = this.sourceBlock_.getColour();
-                this.sourceBlock_.setColour(this.sourceBlock_.getColourTertiary(), this.sourceBlock_.getColourSecondary(), this.sourceBlock_.getColourTertiary());
+            this.savedPrimary_ = (_a = sourceBlock) === null || _a === void 0 ? void 0 : _a.getColour();
+            if ((_b = sourceBlock) === null || _b === void 0 ? void 0 : _b.isShadow()) {
+                sourceBlock.setColour(sourceBlock.style.colourTertiary);
             }
-            else if (this.box_) {
-                this.box_.setAttribute('fill', this.sourceBlock_.getColourTertiary());
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', sourceBlock.style.colourTertiary);
+            }
+        };
+        // Update color (deselect) on dropdown hide
+        FieldImages.prototype.onHideCallback = function () {
+            var _a;
+            var source = this.sourceBlock_;
+            if ((_a = source) === null || _a === void 0 ? void 0 : _a.isShadow()) {
+                source.setColour(this.savedPrimary_);
+            }
+            else if (this.borderRect_) {
+                this.borderRect_.setAttribute('fill', this.savedPrimary_);
             }
         };
         FieldImages.prototype.createTextNode_ = function (text) {
@@ -8969,40 +9019,40 @@ var pxtblockly;
             _this.opts = opts;
             return _this;
         }
-        FieldKind.prototype.init = function () {
-            _super.prototype.init.call(this);
+        FieldKind.prototype.initView = function () {
+            _super.prototype.initView.call(this);
             this.initVariables();
         };
-        FieldKind.prototype.onItemSelected = function (menu, menuItem) {
+        FieldKind.prototype.onItemSelected_ = function (menu, menuItem) {
             var _this = this;
             var value = menuItem.getValue();
             if (value === "CREATE") {
                 promptAndCreateKind(this.sourceBlock_.workspace, this.opts, lf("New {0}:", this.opts.memberName), function (newName) { return newName && _this.setValue(newName); });
             }
             else {
-                _super.prototype.onItemSelected.call(this, menu, menuItem);
+                _super.prototype.onItemSelected_.call(this, menu, menuItem);
             }
+        };
+        FieldKind.prototype.doClassValidation_ = function (value) {
+            var _a;
+            // update cached option list when adding a new kind
+            if (((_a = this.opts) === null || _a === void 0 ? void 0 : _a.initialMembers) && !this.opts.initialMembers.find(function (el) { return el == value; }))
+                this.getOptions();
+            return _super.prototype.doClassValidation_.call(this, value);
         };
         FieldKind.prototype.initVariables = function () {
             var _this = this;
             if (this.sourceBlock_ && this.sourceBlock_.workspace) {
-                if (this.sourceBlock_.isInFlyout) {
-                    // Can't create variables from within the flyout, so we just have to fake it
-                    // by setting the text instead of the value
-                    this.setText(this.opts.initialMembers[0]);
-                }
-                else {
-                    var ws_1 = this.sourceBlock_.workspace;
-                    var existing_1 = getExistingKindMembers(ws_1, this.opts.name);
-                    this.opts.initialMembers.forEach(function (memberName) {
-                        if (existing_1.indexOf(memberName) === -1) {
-                            createVariableForKind(ws_1, _this.opts, memberName);
-                        }
-                    });
-                    if (this.getValue() === "CREATE") {
-                        if (this.opts.initialMembers.length) {
-                            this.setValue(this.opts.initialMembers[0]);
-                        }
+                var ws_1 = this.sourceBlock_.workspace;
+                var existing_1 = getExistingKindMembers(ws_1, this.opts.name);
+                this.opts.initialMembers.forEach(function (memberName) {
+                    if (existing_1.indexOf(memberName) === -1) {
+                        createVariableForKind(ws_1, _this.opts, memberName);
+                    }
+                });
+                if (this.getValue() === "CREATE") {
+                    if (this.opts.initialMembers.length) {
+                        this.setValue(this.opts.initialMembers[0]);
                     }
                 }
             }
@@ -9019,6 +9069,10 @@ var pxtblockly;
                 options.forEach(function (model) {
                     res.push([model.name, model.name]);
                 });
+            }
+            else {
+                // Can't create variables from within the flyout, so we just have to fake it
+                opts.initialMembers.forEach(function (e) { return res.push([e, e]); });
             }
             res.push([lf("Add a new {0}...", opts.memberName), "CREATE"]);
             return res;
@@ -9042,8 +9096,8 @@ var pxtblockly;
                 }
                 var existing = getExistingKindMembers(ws, opts.name);
                 for (var i = 0; i < existing.length; i++) {
-                    var name_6 = existing[i];
-                    if (name_6 === response) {
+                    var name_7 = existing[i];
+                    if (name_7 === response) {
                         Blockly.alert(lf("A {0} named '{1}' already exists.", opts.memberName, response), function () { return promptAndCreateKind(ws, opts, message, cb); });
                         return;
                     }
@@ -9089,6 +9143,7 @@ var pxtblockly;
             _this.isFieldCustom_ = true;
             _this.SERIALIZABLE = true;
             _this.onColor = "#FFFFFF";
+            _this.scale = 1;
             // The number of columns
             _this.matrixWidth = 5;
             // The number of rows
@@ -9157,6 +9212,12 @@ var pxtblockly;
             if (_this.params.offColor !== undefined) {
                 _this.offColor = _this.params.offColor;
             }
+            if (_this.params.scale !== undefined)
+                _this.scale = Math.max(0.6, Math.min(2, Number(_this.params.scale)));
+            else if (Math.max(_this.matrixWidth, _this.matrixHeight) > 15)
+                _this.scale = 0.85;
+            else if (Math.max(_this.matrixWidth, _this.matrixHeight) > 10)
+                _this.scale = 0.9;
             return _this;
         }
         /**
@@ -9186,10 +9247,10 @@ var pxtblockly;
                 }
                 this.updateValue();
                 if (this.xAxisLabel !== LabelMode.None) {
-                    var y = this.matrixHeight * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN;
+                    var y = this.scale * this.matrixHeight * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN;
                     var xAxis = pxsim.svg.child(this.elt, "g", { transform: "translate(" + 0 + " " + y + ")" });
                     for (var i = 0; i < this.matrixWidth; i++) {
-                        var x = this.getYAxisWidth() + i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_HORIZONTAL_MARGIN / 2;
+                        var x = this.getYAxisWidth() + this.scale * i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_HORIZONTAL_MARGIN / 2;
                         var lbl = pxsim.svg.child(xAxis, "text", { x: x, class: "blocklyText" });
                         lbl.textContent = this.getLabel(i, this.xAxisLabel);
                     }
@@ -9197,12 +9258,12 @@ var pxtblockly;
                 if (this.yAxisLabel !== LabelMode.None) {
                     var yAxis = pxsim.svg.child(this.elt, "g", {});
                     for (var i = 0; i < this.matrixHeight; i++) {
-                        var y = i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_VERTICAL_MARGIN * 2;
+                        var y = this.scale * i * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_WIDTH / 2 + FieldMatrix.CELL_VERTICAL_MARGIN * 2;
                         var lbl = pxsim.svg.child(yAxis, "text", { x: 0, y: y, class: "blocklyText" });
                         lbl.textContent = this.getLabel(i, this.yAxisLabel);
                     }
                 }
-                this.fieldGroup_.appendChild(this.elt);
+                this.fieldGroup_.replaceChild(this.elt, this.fieldGroup_.firstChild);
             }
         };
         FieldMatrix.prototype.getLabel = function (index, mode) {
@@ -9215,17 +9276,17 @@ var pxtblockly;
         };
         FieldMatrix.prototype.createCell = function (x, y) {
             var _this = this;
-            var tx = x * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_HORIZONTAL_MARGIN + this.getYAxisWidth();
-            var ty = y * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN;
+            var tx = this.scale * x * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + FieldMatrix.CELL_HORIZONTAL_MARGIN + this.getYAxisWidth();
+            var ty = this.scale * y * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN;
             var cellG = pxsim.svg.child(this.elt, "g", { transform: "translate(" + tx + " " + ty + ")" });
             var cellRect = pxsim.svg.child(cellG, "rect", {
                 'class': "blocklyLed" + (this.cellState[x][y] ? 'On' : 'Off'),
                 'cursor': 'pointer',
-                width: FieldMatrix.CELL_WIDTH, height: FieldMatrix.CELL_WIDTH,
+                width: this.scale * FieldMatrix.CELL_WIDTH, height: this.scale * FieldMatrix.CELL_WIDTH,
                 fill: this.getColor(x, y),
                 'data-x': x,
                 'data-y': y,
-                rx: FieldMatrix.CELL_CORNER_RADIUS
+                rx: Math.max(2, this.scale * FieldMatrix.CELL_CORNER_RADIUS)
             });
             this.cells[x][y] = cellRect;
             if (this.sourceBlock_.workspace.isFlyout)
@@ -9281,18 +9342,18 @@ var pxtblockly;
                 this.initMatrix();
             }
             // The height and width must be set by the render function
-            this.size_.height = Number(this.matrixHeight) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN + this.getXAxisHeight();
-            this.size_.width = Number(this.matrixWidth) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + this.getYAxisWidth();
+            this.size_.height = this.scale * Number(this.matrixHeight) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_VERTICAL_MARGIN) + FieldMatrix.CELL_VERTICAL_MARGIN * 2 + FieldMatrix.BOTTOM_MARGIN + this.getXAxisHeight();
+            this.size_.width = this.scale * Number(this.matrixWidth) * (FieldMatrix.CELL_WIDTH + FieldMatrix.CELL_HORIZONTAL_MARGIN) + this.getYAxisWidth();
         };
         // The return value of this function is inserted in the code
         FieldMatrix.prototype.getValue = function () {
             // getText() returns the value that is set by calls to setValue()
-            var text = removeQuotes(this.getText());
+            var text = removeQuotes(this.value_);
             return "`\n" + FieldMatrix.TAB + text + "\n" + FieldMatrix.TAB + "`";
         };
         // Restores the block state from the text value of the field
         FieldMatrix.prototype.restoreStateFromString = function () {
-            var r = this.getText();
+            var r = this.value_;
             if (r) {
                 var rows = r.split("\n").filter(function (r) { return rowRegex.test(r); });
                 for (var y = 0; y < rows.length && y < this.matrixHeight; y++) {
@@ -9349,7 +9410,7 @@ var pxtblockly;
     }
     var allQuotes = ["'", '"', "`"];
     function removeQuotes(str) {
-        str = str.trim();
+        str = (str || "").trim();
         var start = str.charAt(0);
         if (start === str.charAt(str.length - 1) && allQuotes.indexOf(start) !== -1) {
             return str.substr(1, str.length - 2).trim();
@@ -9588,7 +9649,7 @@ var pxtblockly;
         };
         // The height of the preview on the block itself
         FieldCustomMelody.prototype.getPreviewHeight = function () {
-            return Blockly.BlockSvg.FIELD_HEIGHT;
+            return this.constants_.FIELD_BORDER_RECT_HEIGHT;
         };
         FieldCustomMelody.prototype.getDropdownBackgroundColour = function () {
             return this.sourceBlock_.parentBlock_.getColour();
@@ -10198,12 +10259,12 @@ var pxtblockly;
          * refresh the text to get back into a valid state.
          **/
         FieldNote.prototype.refreshText = function () {
-            this.setText(this.getText());
             this.forceRerender();
         };
         FieldNote.prototype.onHtmlInputChange_ = function (e) {
             _super.prototype.onHtmlInputChange_.call(this, e);
             Blockly.DropDownDiv.hideWithoutAnimation();
+            this.htmlInput_.focus();
         };
         FieldNote.prototype.onFinishEditing_ = function (text) {
             this.refreshText();
@@ -10303,12 +10364,14 @@ var pxtblockly;
         };
         FieldNote.prototype.updateColor = function () {
             if (this.sourceBlock_.parentBlock_ && (this.sourceBlock_.isShadow() || hasOnlyOneField(this.sourceBlock_))) {
-                this.primaryColour = this.sourceBlock_.parentBlock_.getColour();
-                this.borderColour = this.sourceBlock_.parentBlock_.getColourTertiary();
+                var b = this.sourceBlock_.parentBlock_;
+                this.primaryColour = b.getColour();
+                this.borderColour = b.getColourTertiary();
             }
             else {
-                this.primaryColour = this.sourceBlock_.getColourTertiary();
-                this.borderColour = this.sourceBlock_.getColourTertiary();
+                var b = this.sourceBlock_;
+                this.primaryColour = b.getColourTertiary();
+                this.borderColour = b.getColourTertiary();
             }
         };
         FieldNote.prototype.setPage = function (page) {
@@ -10556,8 +10619,8 @@ var pxtblockly;
             // Now render the screen in the dropdown div below the slider
             this.renderScreenPicker();
         };
-        FieldPosition.prototype.setValue = function (value) {
-            _super.prototype.setValue.call(this, value);
+        FieldPosition.prototype.doValueUpdate_ = function (value) {
+            _super.prototype.doValueUpdate_.call(this, value);
             if (this.resetCrosshair)
                 this.resetCrosshair();
         };
@@ -10649,12 +10712,10 @@ var pxtblockly;
             var xField = this.getFieldByName(this.params.xInputName);
             if (xField && typeof xField.getValue() == "number") {
                 xField.setValue(String(x));
-                xField.setText(String(x));
             }
             var yField = this.getFieldByName(this.params.yInputName);
             if (yField && typeof yField.getValue() == "number") {
                 yField.setValue(String(y));
-                yField.setText(String(y));
             }
         };
         FieldPosition.prototype.getFieldByName = function (name) {
@@ -10719,7 +10780,7 @@ var pxtblockly;
     var FieldProcedure = /** @class */ (function (_super) {
         __extends(FieldProcedure, _super);
         function FieldProcedure(funcname, opt_validator) {
-            var _this = _super.call(this, null, opt_validator) || this;
+            var _this = _super.call(this, [["Temp", "Temp"]], opt_validator) || this;
             _this.setValue(funcname || '');
             return _this;
         }
@@ -10738,18 +10799,6 @@ var pxtblockly;
         FieldProcedure.prototype.setSourceBlock = function (block) {
             goog.asserts.assert(!block.isShadow(), 'Procedure fields are not allowed to exist on shadow blocks.');
             _super.prototype.setSourceBlock.call(this, block);
-        };
-        ;
-        FieldProcedure.prototype.getValue = function () {
-            return this.getText();
-        };
-        ;
-        FieldProcedure.prototype.doValueUpdate_ = function (newValue) {
-            if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
-                Blockly.Events.fire(new Blockly.Events.Change(this.sourceBlock_, 'field', this.name, this.value_, newValue));
-            }
-            this.value_ = newValue;
-            this.setText(newValue);
         };
         ;
         /**
@@ -10771,7 +10820,7 @@ var pxtblockly;
                 }
             }
             // Ensure that the currently selected variable is an option.
-            var name = this.getText();
+            var name = this.getValue();
             if (name && functionList.indexOf(name) == -1) {
                 functionList.push(name);
             }
@@ -11046,7 +11095,7 @@ var pxtblockly;
             var bg = new svg.Rect()
                 .at(PADDING, PADDING)
                 .size(BG_WIDTH, BG_WIDTH)
-                .fill("#dedede")
+                .setClass("blocklySpriteField")
                 .stroke("#898989", 1)
                 .corner(4);
             this.fieldGroup_.appendChild(bg.el);
@@ -11265,7 +11314,7 @@ var pxtblockly;
         };
         FieldTilemap.prototype.getValue = function () {
             if (this.isGreyBlock)
-                return pxt.Util.htmlUnescape(this.text_);
+                return pxt.Util.htmlUnescape(this.value_);
             return pxt.sprite.encodeTilemap(this.state, "typescript");
         };
         FieldTilemap.prototype.getTileset = function () {
@@ -11292,8 +11341,7 @@ var pxtblockly;
             var bg = new svg.Rect()
                 .at(PADDING, PADDING)
                 .size(BG_WIDTH, BG_WIDTH)
-                .fill("#dedede")
-                .stroke("#898989", 1)
+                .setClass("blocklyTilemapField")
                 .corner(4);
             this.fieldGroup_.appendChild(bg.el);
             if (this.state) {
@@ -11317,7 +11365,7 @@ var pxtblockly;
             }
             else if (newText.trim()) {
                 this.isGreyBlock = true;
-                this.text_ = newText;
+                this.value_ = newText;
             }
         };
         FieldTilemap.prototype.initState = function () {
@@ -11338,7 +11386,7 @@ var pxtblockly;
             Blockly.Events.setGroup(true);
             if (deleted.length) {
                 var allRefs = pxtblockly.getAllBlocksWithTilemaps(ws);
-                var _loop_3 = function (old) {
+                var _loop_4 = function (old) {
                     pxtblockly.deleteTilesetTileIfExists(ws, old);
                     for (var _i = 0, allRefs_2 = allRefs; _i < allRefs_2.length; _i++) {
                         var ref = allRefs_2[_i];
@@ -11355,7 +11403,7 @@ var pxtblockly;
                 };
                 for (var _i = 0, deleted_1 = deleted; _i < deleted_1.length; _i++) {
                     var old = deleted_1[_i];
-                    _loop_3(old);
+                    _loop_4(old);
                 }
                 for (var _a = 0, allRefs_1 = allRefs; _a < allRefs_1.length; _a++) {
                     var ref = allRefs_1[_a];
@@ -11377,7 +11425,7 @@ var pxtblockly;
         };
         FieldTilemap.prototype.restoreTilesFromWorkspace = function (tilemap, wsTiles) {
             var all = wsTiles || pxtblockly.getAllTilesetTiles(this.sourceBlock_.workspace);
-            var _loop_4 = function (t) {
+            var _loop_5 = function (t) {
                 if (t.projectId != undefined) {
                     var projectTile = all.find(function (pt) { return pt.projectId === t.projectId; });
                     if (projectTile) {
@@ -11387,10 +11435,10 @@ var pxtblockly;
             };
             for (var _i = 0, _a = tilemap.tileset.tiles; _i < _a.length; _i++) {
                 var t = _a[_i];
-                _loop_4(t);
+                _loop_5(t);
             }
             var id = 0;
-            var _loop_5 = function (t) {
+            var _loop_6 = function (t) {
                 id = t.projectId ? Math.max(t.projectId, id) : id;
                 if (!tilemap.tileset.tiles.some(function (pt) { return pt.projectId === t.projectId; })) {
                     tilemap.tileset.tiles.push(t);
@@ -11398,7 +11446,7 @@ var pxtblockly;
             };
             for (var _b = 0, all_1 = all; _b < all_1.length; _b++) {
                 var t = all_1[_b];
-                _loop_5(t);
+                _loop_6(t);
             }
             tilemap.nextId = id + 1;
             var prefix = pxt.sprite.TILE_NAMESPACE + "." + pxt.sprite.TILE_PREFIX;
@@ -11412,7 +11460,7 @@ var pxtblockly;
                 .map(function (qname) { return Number(qname.substr(prefix.length)); });
         };
         FieldTilemap.prototype.getDisplayText_ = function () {
-            var text = pxt.Util.htmlUnescape(this.text_);
+            var text = pxt.Util.htmlUnescape(this.value_);
             return text.substr(0, text.indexOf("(")) + "(...)";
             ;
         };
@@ -11472,7 +11520,7 @@ var pxtblockly;
             return false;
         if (!tilemap.tileset)
             return false;
-        var _loop_6 = function (tile) {
+        var _loop_7 = function (tile) {
             if (tile && (tile.projectId >= 0 || (tile.qualifiedName && galleryItems.some(function (g) { return g.qName === tile.qualifiedName; })))) {
                 return "continue";
             }
@@ -11480,7 +11528,7 @@ var pxtblockly;
         };
         for (var _i = 0, _a = tilemap.tileset.tiles; _i < _a.length; _i++) {
             var tile = _a[_i];
-            var state_2 = _loop_6(tile);
+            var state_2 = _loop_7(tile);
             if (typeof state_2 === "object")
                 return state_2.value;
         }
@@ -11548,7 +11596,7 @@ var pxtblockly;
             for (var _a = 0, tilemaps_1 = tilemaps; _a < tilemaps_1.length; _a++) {
                 var t = tilemaps_1[_a];
                 var ts_1 = t.ref.getTileset();
-                var _loop_7 = function (tile) {
+                var _loop_8 = function (tile) {
                     if (tile.qualifiedName) {
                         if (!FieldTileset.tileCache[tile.qualifiedName]) {
                             FieldTileset.tileCache[tile.qualifiedName] = pxtblockly.bitmapToImageURI(pxt.sprite.getBitmap(blocksInfo, tile.qualifiedName), ts_1.tileWidth, false);
@@ -11563,7 +11611,7 @@ var pxtblockly;
                 };
                 for (var _b = 0, _c = ts_1.tiles; _b < _c.length; _b++) {
                     var tile = _c[_b];
-                    _loop_7(tile);
+                    _loop_8(tile);
                 }
             }
             var tsRefs = pxtblockly.getAllBlocksWithTilesets(ws)
@@ -11572,7 +11620,7 @@ var pxtblockly;
                 return ref.getValue();
             })
                 .filter(function (qname) { return qname !== "null" && !pxt.Util.startsWith(qname, pxt.sprite.TILE_NAMESPACE); });
-            var _loop_8 = function (galleryRef) {
+            var _loop_9 = function (galleryRef) {
                 if (!FieldTileset.tileCache[galleryRef]) {
                     FieldTileset.tileCache[galleryRef] = pxtblockly.bitmapToImageURI(pxt.sprite.getBitmap(blocksInfo, galleryRef), 16, false);
                 }
@@ -11585,7 +11633,7 @@ var pxtblockly;
             };
             for (var _d = 0, tsRefs_1 = tsRefs; _d < tsRefs_1.length; _d++) {
                 var galleryRef = tsRefs_1[_d];
-                _loop_8(galleryRef);
+                _loop_9(galleryRef);
             }
         };
         FieldTileset.getTileKey = function (t) {
@@ -11682,17 +11730,17 @@ var pxtblockly;
             // If not in a shadow block, and has more than one input, draw a box.
             if (!this.sourceBlock_.isShadow()
                 && (this.sourceBlock_.inputList && this.sourceBlock_.inputList.length > 1)) {
-                this.box_ = Blockly.utils.dom.createSvgElement('rect', {
+                this.borderRect_ = Blockly.utils.dom.createSvgElement('rect', {
                     'rx': Blockly.BlockSvg.CORNER_RADIUS,
                     'ry': Blockly.BlockSvg.CORNER_RADIUS,
                     'x': 0,
                     'y': 0,
                     'width': this.size_.width,
                     'height': this.size_.height,
-                    'fill': Blockly.Colours.textField,
+                    'fill': this.sourceBlock_.getColour(),
                     'stroke': this.sourceBlock_.getColourTertiary()
                 }, null);
-                this.fieldGroup_.insertBefore(this.box_, this.textElement_);
+                this.fieldGroup_.insertBefore(this.borderRect_, this.textElement_);
             }
             // Adjust X to be flipped for RTL. Position is relative to horizontal start of source block.
             var size = this.getSize();
@@ -11734,7 +11782,9 @@ var pxtblockly;
                 'y': size.height / 2
             }, this.fieldGroup_);
             this.updateEditable();
-            this.sourceBlock_.getSvgRoot().appendChild(this.fieldGroup_);
+            var svgRoot = this.sourceBlock_.getSvgRoot();
+            svgRoot.appendChild(this.fieldGroup_);
+            svgRoot.querySelector(".blocklyBlockBackground").setAttribute('fill', this.sourceBlock_.getColourTertiary());
             this.switchToggle(this.state_);
             this.setValue(this.getValue());
             // Force a render.
@@ -11753,8 +11803,6 @@ var pxtblockly;
             return lf("False");
         };
         FieldToggle.prototype.updateSize_ = function () {
-            var innerWidth = this.getInnerWidth();
-            var halfInnerWidth = innerWidth / 2;
             switch (this.getOutputShape()) {
                 case Blockly.OUTPUT_SHAPE_ROUND:
                     this.size_.width = this.getInnerWidth() * 2 - 7;
@@ -11766,7 +11814,6 @@ var pxtblockly;
                     this.size_.width = 9 + this.getInnerWidth() * 2;
                     break;
             }
-            this.arrowWidth_ = 0;
         };
         FieldToggle.prototype.getInnerWidth = function () {
             return this.getMaxLength() * 10;
@@ -11777,6 +11824,19 @@ var pxtblockly;
         FieldToggle.prototype.getOutputShape = function () {
             return this.sourceBlock_.isShadow() ? this.sourceBlock_.getOutputShape() : Blockly.OUTPUT_SHAPE_SQUARE;
         };
+        FieldToggle.prototype.doClassValidation_ = function (newBool) {
+            return typeof this.fromVal(newBool) == "boolean" ? newBool : "false";
+        };
+        FieldToggle.prototype.applyColour = function () {
+            var color = this.sourceBlock_.getColourTertiary();
+            if (this.borderRect_) {
+                this.borderRect_.setAttribute('stroke', color);
+            }
+            else {
+                this.sourceBlock_.pathObject.svgPath.setAttribute('fill', color);
+            }
+        };
+        ;
         /**
          * Return 'TRUE' if the toggle is ON, 'FALSE' otherwise.
          * @return {string} Current state.
@@ -11790,7 +11850,7 @@ var pxtblockly;
          * unchecks otherwise.
          * @param {string|boolean} newBool New state.
          */
-        FieldToggle.prototype.setValue = function (newBool) {
+        FieldToggle.prototype.doValueUpdate_ = function (newBool) {
             var newState = this.fromVal(newBool);
             if (this.state_ !== newState) {
                 if (this.sourceBlock_ && Blockly.Events.isEnabled()) {
@@ -11798,7 +11858,7 @@ var pxtblockly;
                 }
                 this.state_ = newState;
                 this.switchToggle(this.state_);
-                this.setText(this.getDisplayText_());
+                this.isDirty_ = true;
             }
         };
         FieldToggle.prototype.switchToggle = function (newState) {
@@ -11823,10 +11883,10 @@ var pxtblockly;
                         halfWidth = width / 2;
                         var quarterWidth = halfWidth / 2;
                         // TODO: the left padding calculation is a hack, we should calculate left padding based on width (generic case)
-                        leftPadding = this.getMaxLength() > 3 ? -4 : 1;
+                        leftPadding = this.getMaxLength() > 3 ? -10 : 1;
                         rightPadding = -quarterWidth;
                         var topLeftPoint = -quarterWidth;
-                        var bottomRightPoint = quarterWidth;
+                        var bottomRightPoint = halfWidth;
                         this.toggleThumb_.setAttribute('points', topLeftPoint + ",-14 " + (topLeftPoint - 14) + ",0 " + topLeftPoint + ",14 " + bottomRightPoint + ",14 " + (bottomRightPoint + 14) + ",0 " + bottomRightPoint + ",-14");
                         break;
                     case Blockly.OUTPUT_SHAPE_ROUND:
@@ -11841,11 +11901,6 @@ var pxtblockly;
                 this.checkElement_.setAttribute('transform', "translate(" + (newState ? rightPadding + innerWidth_1 + halfWidth : halfWidth + leftPadding) + ", " + size.height / 2 + ")");
             }
         };
-        FieldToggle.prototype.updateTextNode_ = function () {
-            _super.prototype.updateTextNode_.call(this);
-            if (this.textElement_)
-                pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
-        };
         FieldToggle.prototype.render_ = function () {
             if (this.visible_ && this.textElement_) {
                 // Replace the text.
@@ -11855,17 +11910,16 @@ var pxtblockly;
                 pxt.BrowserUtils.addClass(this.textElement_, 'blocklyToggleText');
                 this.updateSize_();
                 // Update text centering, based on newly calculated width.
-                var halfWidth = this.size_.width / 2;
-                var centerTextX = this.state_ ? halfWidth + halfWidth / 2 : halfWidth / 2;
+                var width = this.size_.width;
+                var centerTextX = this.state_ ? (width + width / 8) : width / 2;
                 // Apply new text element x position.
-                var width = Blockly.Field.getCachedWidth(this.textElement_);
                 var newX = centerTextX - width / 2;
                 this.textElement_.setAttribute('x', "" + newX);
             }
             // Update any drawn box to the correct width and height.
-            if (this.box_) {
-                this.box_.setAttribute('width', "" + this.size_.width);
-                this.box_.setAttribute('height', "" + this.size_.height);
+            if (this.borderRect_) {
+                this.borderRect_.setAttribute('width', "" + this.size_.width);
+                this.borderRect_.setAttribute('height', "" + this.size_.height);
             }
         };
         /**
@@ -12071,6 +12125,13 @@ var pxtblockly;
         FieldTsExpression.prototype.setPythonText = function () {
             this.setText(pxt.Util.lf("<python code>"));
         };
+        FieldTsExpression.prototype.applyColour = function () {
+            if (this.sourceBlock_ && this.constants_.FULL_BLOCK_FIELDS) {
+                if (this.borderRect_) {
+                    this.borderRect_.setAttribute('stroke', this.sourceBlock_.style.colourTertiary);
+                }
+            }
+        };
         return FieldTsExpression;
     }(Blockly.FieldTextInput));
     pxtblockly.FieldTsExpression = FieldTsExpression;
@@ -12185,40 +12246,40 @@ var pxtblockly;
             _super.prototype.init.call(this);
             this.initVariables();
         };
-        FieldUserEnum.prototype.onItemSelected = function (menu, menuItem) {
+        FieldUserEnum.prototype.onItemSelected_ = function (menu, menuItem) {
             var _this = this;
             var value = menuItem.getValue();
             if (value === "CREATE") {
                 promptAndCreateEnum(this.sourceBlock_.workspace, this.opts, lf("New {0}:", this.opts.memberName), function (newName) { return newName && _this.setValue(newName); });
             }
             else {
-                _super.prototype.onItemSelected.call(this, menu, menuItem);
+                _super.prototype.onItemSelected_.call(this, menu, menuItem);
             }
+        };
+        FieldUserEnum.prototype.doClassValidation_ = function (value) {
+            var _a;
+            // update cached option list when adding a new kind
+            if (((_a = this.opts) === null || _a === void 0 ? void 0 : _a.initialMembers) && !this.opts.initialMembers.find(function (el) { return el == value; }))
+                this.getOptions();
+            return _super.prototype.doClassValidation_.call(this, value);
         };
         FieldUserEnum.prototype.initVariables = function () {
             var _this = this;
             if (this.sourceBlock_ && this.sourceBlock_.workspace) {
-                if (this.sourceBlock_.isInFlyout) {
-                    // Can't create variables from within the flyout, so we just have to fake it
-                    // by setting the text instead of the value
-                    this.setText(this.opts.initialMembers[0]);
-                }
-                else {
-                    var ws_2 = this.sourceBlock_.workspace;
-                    var existing_3 = getMembersForEnum(ws_2, this.opts.name);
-                    this.opts.initialMembers.forEach(function (memberName) {
-                        if (!existing_3.some(function (_a) {
-                            var name = _a[0], value = _a[1];
-                            return name === memberName;
-                        })) {
-                            createNewEnumMember(ws_2, _this.opts, memberName);
-                        }
-                    });
-                    if (this.getValue() === "CREATE") {
-                        var newValue = getVariableNameForMember(ws_2, this.opts.name, this.opts.initialMembers[0]);
-                        if (newValue) {
-                            this.setValue(newValue);
-                        }
+                var ws_2 = this.sourceBlock_.workspace;
+                var existing_3 = getMembersForEnum(ws_2, this.opts.name);
+                this.opts.initialMembers.forEach(function (memberName) {
+                    if (!existing_3.some(function (_a) {
+                        var name = _a[0], value = _a[1];
+                        return name === memberName;
+                    })) {
+                        createNewEnumMember(ws_2, _this.opts, memberName);
+                    }
+                });
+                if (this.getValue() === "CREATE") {
+                    var newValue = getVariableNameForMember(ws_2, this.opts.name, this.opts.initialMembers[0]);
+                    if (newValue) {
+                        this.setValue(newValue);
                     }
                 }
             }
@@ -12237,6 +12298,10 @@ var pxtblockly;
                     var withoutValue = model.name.replace(/^\d+/, "");
                     res.push([withoutValue, model.name]);
                 });
+            }
+            else {
+                // Can't create variables from within the flyout, so we just have to fake it
+                opts.initialMembers.forEach(function (e) { return res.push([e, e]); });
             }
             res.push([lf("Add a new {0}...", opts.memberName), "CREATE"]);
             return res;
@@ -12260,8 +12325,8 @@ var pxtblockly;
                 }
                 var existing = getMembersForEnum(ws, opts.name);
                 for (var i = 0; i < existing.length; i++) {
-                    var _a = existing[i], name_7 = _a[0], value = _a[1];
-                    if (name_7 === response) {
+                    var _a = existing[i], name_8 = _a[0], value = _a[1];
+                    if (name_8 === response) {
                         Blockly.alert(lf("A {0} named '{1}' already exists.", opts.memberName, response), function () { return promptAndCreateEnum(ws, opts, message, cb); });
                         return;
                     }
@@ -12325,8 +12390,8 @@ var pxtblockly;
         var existing = ws.getVariablesOfType(enumName);
         if (existing && existing.length) {
             for (var i = 0; i < existing.length; i++) {
-                var name_8 = parseName(existing[i])[0];
-                if (name_8 === memberName) {
+                var name_9 = parseName(existing[i])[0];
+                if (name_9 === memberName) {
                     return existing[i].name;
                 }
             }

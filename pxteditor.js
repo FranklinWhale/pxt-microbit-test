@@ -214,8 +214,7 @@ var pxt;
                                             .then(function () { return projectView.printCode(); });
                                     }
                                     case "pair": {
-                                        return Promise.resolve()
-                                            .then(function () { return projectView.pair(); });
+                                        return projectView.pairAsync();
                                     }
                                     case "info": {
                                         return Promise.resolve()
@@ -407,12 +406,6 @@ var pxt;
                         feedbackUrl: "https://github.com/microsoft/pxt/issues/5297"
                     },
                     {
-                        id: "autoWebUSBDownload",
-                        name: lf("WebUSB Download"),
-                        description: lf("Automatically try to download via WebUSB"),
-                        feedbackUrl: "https://github.com/microsoft/pxt/issues/5344"
-                    },
-                    {
                         id: "qrCode",
                         name: lf("Shared QR Code"),
                         description: lf("Generate a QR Code form the shared project url"),
@@ -467,7 +460,23 @@ var pxt;
                     {
                         id: "openProjectNewTab",
                         name: lf("Open in New Tab"),
+                        description: lf("Open an editor in a new tab.")
+                    },
+                    {
+                        id: "openProjectNewDependentTab",
+                        name: lf("Open in New Connected Tab"),
                         description: lf("Open connected editors in different browser tabs.")
+                    },
+                    {
+                        id: "accessibleBlocks",
+                        name: lf("Accessible Blocks"),
+                        description: lf("Use the WASD keys to move and modify blocks."),
+                        feedbackUrl: "https://github.com/microsoft/pxt/issues/6850"
+                    },
+                    {
+                        id: "errorList",
+                        name: lf("Error List"),
+                        description: lf("Show an error list panel for JavaScript and Python.")
                     }
                 ].filter(function (experiment) { return ids.indexOf(experiment.id) > -1; });
             }
@@ -728,7 +737,7 @@ var pxt;
                 lineNumbersMinChars: 3,
                 formatOnPaste: true,
                 folding: hasFieldEditors,
-                glyphMargin: hasFieldEditors,
+                glyphMargin: hasFieldEditors || pxt.appTarget.appTheme.debugger,
                 minimap: {
                     enabled: false
                 },

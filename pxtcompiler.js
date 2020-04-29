@@ -2133,7 +2133,6 @@ var ts;
                 writeRaw(proc.label() + ".isGetter = true;");
             if (proc.isRoot)
                 writeRaw(proc.label() + ".continuations = [ " + asyncContinuations.join(",") + " ]");
-            writeRaw(proc.label() + ".info = " + JSON.stringify(info));
             writeRaw(fnctor(proc.label() + "_mk", proc.label(), maxStack, Object.keys(localsCache)));
             writeRaw(hexlits);
             proc.cachedJS = resText;
@@ -2157,19 +2156,25 @@ var ts;
                 var id = s.breakpointInfo.id;
                 var lbl;
                 write("s.lastBrkId = " + id + ";");
-                if (bin.options.trace) {
+                if (bin.options.breakpoints) {
+                    lbl = ++lblIdx;
+                    var brkCall = "return breakpoint(s, " + lbl + ", " + id + ", r0);";
+                    if (s.breakpointInfo.isDebuggerStmt) {
+                        write(brkCall);
+                    }
+                    else {
+                        write("if ((breakpoints[0] && isBreakFrame(s)) || breakpoints[" + id + "]) " + brkCall);
+                        if (bin.options.trace) {
+                            write("else return trace(" + id + ", s, " + lbl + ", " + proc.label() + ".info);");
+                        }
+                    }
+                }
+                else if (bin.options.trace) {
                     lbl = ++lblIdx;
                     write("return trace(" + id + ", s, " + lbl + ", " + proc.label() + ".info);");
                 }
                 else {
-                    if (!bin.options.breakpoints)
-                        return;
-                    lbl = ++lblIdx;
-                    var brkCall = "return breakpoint(s, " + lbl + ", " + id + ", r0);";
-                    if (s.breakpointInfo.isDebuggerStmt)
-                        write(brkCall);
-                    else
-                        write("if ((breakpoints[0] && isBreakFrame(s)) || breakpoints[" + id + "]) " + brkCall);
+                    return;
                 }
                 writeRaw("  case " + lbl + ":");
             }
@@ -4469,6 +4474,9 @@ var ts;
                                 // If the enum declaration made it past the checker then it is emitted elsewhere
                                 markCommentsInRange(node, commentMap);
                                 return getNext();
+                            case SK.ReturnStatement:
+                                stmt = getReturnStatementBlock(node);
+                                break;
                             default:
                                 if (next) {
                                     error(node, pxtc.Util.lf("Unsupported statement in block: {0}", SK[node.kind]));
@@ -4642,6 +4650,20 @@ var ts;
                     var r = mkStmt(pxtc.TS_DEBUGGER_TYPE, node);
                     return r;
                 }
+                function getReturnStatementBlock(node) {
+                    var r = mkStmt(pxtc.TS_RETURN_STATEMENT_TYPE, node);
+                    if (node.expression) {
+                        r.inputs = [
+                            mkValue("RETURN_VALUE", getOutputBlock(node.expression), numberType)
+                        ];
+                    }
+                    else {
+                        r.mutation = {
+                            "no_return_value": "true"
+                        };
+                    }
+                    return r;
+                }
                 function getImageLiteralStatement(node, info) {
                     var arg = node.arguments[0];
                     if (arg.kind != SK.StringLiteral && arg.kind != SK.NoSubstitutionTemplateLiteral) {
@@ -4778,10 +4800,14 @@ var ts;
                         }
                     }
                     function checkBooleanCallExpression(n) {
-                        var callInfo = pxtc.pxtInfo(n.expression).callInfo;
+                        var callInfo = pxtc.pxtInfo(n).callInfo;
                         if (callInfo) {
                             var api = env.blocks.apis.byQName[callInfo.qName];
                             if (api && api.retType == "boolean") {
+                                return undefined;
+                            }
+                            else if (ts.isIdentifier(n.expression) && env.declaredFunctions[n.expression.text]) {
+                                // User functions have a return type of "any" in blocks so they are safe to decompile
                                 return undefined;
                             }
                         }
@@ -4999,7 +5025,12 @@ var ts;
                             var name_2 = getVariableName(node.expression);
                             if (env.declaredFunctions[name_2]) {
                                 var r_5;
-                                r_5 = mkStmt("function_call", node);
+                                var isStatement_1 = true;
+                                if (info.isExpression) {
+                                    var parent_1 = getParent(node)[0];
+                                    isStatement_1 = parent_1 && parent_1.kind === SK.ExpressionStatement;
+                                }
+                                r_5 = mkStmt(isStatement_1 ? "function_call" : "function_call_output", node);
                                 if (info.args.length) {
                                     r_5.mutationChildren = [];
                                     r_5.inputs = [];
@@ -5442,6 +5473,8 @@ var ts;
                         return checkEnumDeclaration(node, topLevel);
                     case SK.ModuleDeclaration:
                         return checkNamespaceDeclaration(node);
+                    case SK.ReturnStatement:
+                        return checkReturnStatement(node);
                     case SK.BreakStatement:
                     case SK.ContinueStatement:
                     case SK.DebuggerStatement:
@@ -5533,9 +5566,9 @@ var ts;
                 function checkArrowFunction(n, env) {
                     var fail = false;
                     if (n.parameters.length) {
-                        var parent_1 = getParent(n)[0];
-                        if (parent_1 && pxtc.pxtInfo(parent_1).callInfo) {
-                            var callInfo = pxtc.pxtInfo(parent_1).callInfo;
+                        var parent_2 = getParent(n)[0];
+                        if (parent_2 && pxtc.pxtInfo(parent_2).callInfo) {
+                            var callInfo = pxtc.pxtInfo(parent_2).callInfo;
                             if (env.attrs(callInfo).mutate === "objectdestructuring") {
                                 fail = n.parameters[0].name.kind !== SK.ObjectBindingPattern;
                             }
@@ -5591,12 +5624,16 @@ var ts;
                         return pxtc.Util.lf("Function call not supported in the blocks");
                     }
                     var attributes = env.attrs(info);
+                    var userFunction;
+                    if (ts.isIdentifier(n.expression)) {
+                        userFunction = env.declaredFunctions[n.expression.text];
+                    }
                     if (!asExpression) {
-                        if (info.isExpression) {
+                        if (info.isExpression && !userFunction) {
                             return pxtc.Util.lf("No output expressions as statements");
                         }
                     }
-                    else if (info.qName == "Math.pow") {
+                    if (info.qName == "Math.pow") {
                         return undefined;
                     }
                     else if (pxt.Util.startsWith(info.qName, "Math.")) {
@@ -5619,19 +5656,15 @@ var ts;
                     if (!attributes.blockId || !attributes.block) {
                         var builtin = pxt.blocks.builtinFunctionInfo[info.qName];
                         if (!builtin) {
-                            if (n.expression.kind === SK.Identifier) {
-                                var funcName = n.expression.text;
-                                if (!env.declaredFunctions[funcName]) {
-                                    return pxtc.Util.lf("Call statements must have a valid declared function");
-                                }
-                                else if (env.declaredFunctions[funcName].parameters.length !== info.args.length) {
-                                    return pxtc.Util.lf("Function calls in blocks must have the same number of arguments as the function definition");
-                                }
-                                else {
-                                    return undefined;
-                                }
+                            if (!userFunction) {
+                                return pxtc.Util.lf("Call statements must have a valid declared function");
                             }
-                            return pxtc.Util.lf("Function call not supported in the blocks");
+                            else if (userFunction.parameters.length !== info.args.length) {
+                                return pxtc.Util.lf("Function calls in blocks must have the same number of arguments as the function definition");
+                            }
+                            else {
+                                return undefined;
+                            }
                         }
                         attributes.blockId = builtin.blockId;
                     }
@@ -5888,15 +5921,6 @@ var ts;
                             }
                         }
                     }
-                    var fail = false;
-                    ts.forEachReturnStatement(n.body, function (stmt) {
-                        if (stmt.expression) {
-                            fail = true;
-                        }
-                    });
-                    if (fail) {
-                        return pxtc.Util.lf("Function with return value not supported in blocks");
-                    }
                     return undefined;
                 }
                 function checkEnumDeclaration(n, topLevel) {
@@ -5943,6 +5967,28 @@ var ts;
                     if (!tilesetCheck)
                         return undefined;
                     return kindCheck;
+                }
+                function checkReturnStatement(n) {
+                    if (checkIfWithinFunction(n)) {
+                        return undefined;
+                    }
+                    return pxtc.Util.lf("Return statements can only be used within top-level function declarations");
+                    function checkIfWithinFunction(n) {
+                        var enclosing = ts.getEnclosingBlockScopeContainer(n);
+                        if (enclosing) {
+                            switch (enclosing.kind) {
+                                case SK.SourceFile:
+                                case SK.ArrowFunction:
+                                case SK.FunctionExpression:
+                                    return false;
+                                case SK.FunctionDeclaration:
+                                    return enclosing.parent && enclosing.parent.kind === SK.SourceFile && !checkStatement(enclosing, env, false, true);
+                                default:
+                                    return checkIfWithinFunction(enclosing);
+                            }
+                        }
+                        return false;
+                    }
                 }
             }
             function checkKindNamespaceDeclaration(n, env) {
@@ -6204,10 +6250,10 @@ var ts;
                                     return undefined;
                             }
                             // Otherwise make sure this is in a dropdown on the block
-                            var _a = getParent(n), parent_2 = _a[0], child_1 = _a[1];
+                            var _a = getParent(n), parent_3 = _a[0], child_1 = _a[1];
                             var fail_2 = true;
-                            if (parent_2) {
-                                var parentInfo = pxtc.pxtInfo(parent_2).callInfo;
+                            if (parent_3) {
+                                var parentInfo = pxtc.pxtInfo(parent_3).callInfo;
                                 if (parentInfo && parentInfo.args) {
                                     var api_1 = env.blocks.apis.byQName[parentInfo.qName];
                                     var instance_2 = api_1.kind == 1 /* Method */ || api_1.kind == 2 /* Property */;
@@ -6566,9 +6612,6 @@ var ts;
                             out += line.trim() + "\n";
                         }
                     }
-                    if (comment.hasTrailingNewline) {
-                        out += "\n";
-                    }
                 }
                 return out.trim();
             }
@@ -6644,6 +6687,127 @@ var ts;
                 }
             }
         })(decompiler = pxtc.decompiler || (pxtc.decompiler = {}));
+    })(pxtc = ts.pxtc || (ts.pxtc = {}));
+})(ts || (ts = {}));
+var ts;
+(function (ts) {
+    var pxtc;
+    (function (pxtc) {
+        var service;
+        (function (service) {
+            /**
+             * Produces a markdown string for the symbol that is suitable for display in Monaco
+             */
+            function displayStringForSymbol(sym, python, apiInfo) {
+                if (!sym)
+                    return undefined;
+                switch (sym.kind) {
+                    case 3 /* Function */:
+                    case 1 /* Method */:
+                        return displayStringForFunction(sym, python, apiInfo);
+                    case 6 /* Enum */:
+                    case 7 /* EnumMember */:
+                        return displayStringForEnum(sym, python);
+                    case 5 /* Module */:
+                        return displayStringForNamepsace(sym, python);
+                    case 9 /* Interface */:
+                        return displayStringForInterface(sym, python);
+                    case 8 /* Class */:
+                        return displayStringForClass(sym, python);
+                    case 4 /* Variable */:
+                        return displayStringForVariable(sym, python, apiInfo);
+                    case 2 /* Property */:
+                        return displayStringForProperty(sym, python, apiInfo);
+                }
+                return "**" + sym.qName + "**";
+            }
+            service.displayStringForSymbol = displayStringForSymbol;
+            function displayStringForFunction(sym, python, apiInfo) {
+                var prefix = "";
+                if (sym.kind === 3 /* Function */) {
+                    prefix += python ? "def " : "function ";
+                }
+                else {
+                    prefix += "(method) ";
+                }
+                prefix += python ? sym.pyQName : sym.qName;
+                var argString = "";
+                if (sym.parameters && sym.parameters.length) {
+                    argString = sym.parameters.map(function (param) {
+                        return param.name + ": " + (python ? param.pyTypeString : param.type);
+                    }).join(", ");
+                }
+                var retType = sym.retType || "void";
+                if (python) {
+                    retType = getPythonReturnType(retType, apiInfo);
+                }
+                return codeBlock(prefix + "(" + argString + "): " + retType, python);
+            }
+            function displayStringForEnum(sym, python) {
+                var qName = python ? sym.pyQName : sym.qName;
+                if (sym.kind === 6 /* Enum */) {
+                    return codeBlock("enum " + qName, python);
+                }
+                var memberString = "(enum member) " + qName;
+                if (sym.attributes.enumval) {
+                    memberString += " = " + sym.attributes.enumval;
+                }
+                return codeBlock(memberString, false);
+            }
+            function displayStringForNamepsace(sym, python) {
+                return codeBlock("namespace " + (python ? sym.pyQName : sym.qName), false);
+            }
+            function displayStringForInterface(sym, python) {
+                return codeBlock("interface " + (python ? sym.pyQName : sym.qName), false);
+            }
+            function displayStringForClass(sym, python) {
+                return codeBlock("class " + (python ? sym.pyQName : sym.qName), python);
+            }
+            function displayStringForVariable(sym, python, apiInfo) {
+                var varString = python ? sym.pyQName : "let " + sym.qName;
+                if (sym.retType) {
+                    var retType = sym.retType;
+                    if (python) {
+                        retType = getPythonReturnType(retType, apiInfo);
+                    }
+                    return codeBlock(varString + ": " + retType, python);
+                }
+                return codeBlock(varString, python);
+            }
+            function displayStringForProperty(sym, python, apiInfo) {
+                var propString = "(property) " + (python ? sym.pyQName : sym.qName);
+                if (sym.retType) {
+                    var retType = sym.retType;
+                    if (python) {
+                        retType = getPythonReturnType(retType, apiInfo);
+                    }
+                    return codeBlock(propString + ": " + retType, false);
+                }
+                return codeBlock(propString, false);
+            }
+            function getPythonReturnType(type, apiInfo) {
+                var _a;
+                switch (type) {
+                    case "void": return "None";
+                    case "boolean": return "bool";
+                    case "string": return "str";
+                }
+                if ((_a = apiInfo.byQName[type]) === null || _a === void 0 ? void 0 : _a.pyQName) {
+                    return apiInfo.byQName[type].pyQName;
+                }
+                var arrayMatch = /^(?:Array<(.+)>)|(?:(.+)\[\])|(?:\[.+\])$/.exec(type);
+                if (arrayMatch) {
+                    return "List[" + getPythonReturnType(arrayMatch[1] || arrayMatch[2], apiInfo) + "]";
+                }
+                return type;
+            }
+            function codeBlock(content, python) {
+                // The stock TypeScript language service always uses js tags instead of ts. We
+                // don't include the js language service in monaco, so use ts instead. It produces
+                // slightly different syntax highlighting
+                return "```" + (python ? "python" : "ts") + "\n" + content + "\n```";
+            }
+        })(service = pxtc.service || (pxtc.service = {}));
     })(pxtc = ts.pxtc || (ts.pxtc = {}));
 })(ts || (ts = {}));
 /* Docs:
@@ -8790,8 +8954,8 @@ var ts;
                         case pxtc.SK.ExtendsKeyword:
                             var tp = typeOf(h.types[0]);
                             if (isClassType(tp)) {
-                                var parent_3 = tp.symbol.valueDeclaration;
-                                return inheritsFrom(parent_3, tgt);
+                                var parent_4 = tp.symbol.valueDeclaration;
+                                return inheritsFrom(parent_4, tgt);
                             }
                     }
                 }
@@ -11250,7 +11414,7 @@ var ts;
                 if (!decl)
                     return null;
                 var info = pxtInfo(decl);
-                if (info.constantFolded)
+                if (info.constantFolded !== undefined)
                     return info.constantFolded;
                 if (isVar(decl) && (decl.parent.flags & ts.NodeFlags.Const)) {
                     var vardecl = decl;
@@ -11278,6 +11442,8 @@ var ts;
                 return info.constantFolded;
             }
             function constantFold(e) {
+                if (!e)
+                    return null;
                 var info = pxtInfo(e);
                 if (info.constantFolded === undefined) {
                     info.constantFolded = null; // make sure we don't come back here recursively
@@ -11669,11 +11835,7 @@ var ts;
                     case pxtc.SK.PlusToken: return "numops::adds";
                     case pxtc.SK.MinusToken: return "numops::subs";
                     // we could expose __aeabi_idiv directly...
-                    case pxtc.SK.SlashToken: {
-                        if (opts.warnDiv)
-                            warning(node, 9274, "usage of / operator");
-                        return "numops::div";
-                    }
+                    case pxtc.SK.SlashToken: return "numops::div";
                     case pxtc.SK.PercentToken: return "numops::mod";
                     case pxtc.SK.AsteriskToken: return "numops::muls";
                     case pxtc.SK.AsteriskAsteriskToken: return "Math_::pow";
@@ -12224,9 +12386,9 @@ var ts;
             function bindingElementAccessExpression(bindingElement, parentAccess, parentType) {
                 var target = bindingElement.parent.parent;
                 if (target.kind === pxtc.SK.BindingElement) {
-                    var parent_4 = bindingElementAccessExpression(target, parentAccess, parentType);
-                    parentAccess = parent_4[0];
-                    parentType = parent_4[1];
+                    var parent_5 = bindingElementAccessExpression(target, parentAccess, parentType);
+                    parentAccess = parent_5[0];
+                    parentType = parent_5[1];
                 }
                 if (bindingElement.parent.kind == pxtc.SK.ArrayBindingPattern) {
                     var idx = bindingElement.parent.elements.indexOf(bindingElement);
@@ -12588,7 +12750,6 @@ var ts;
                 this.finalPass = false;
                 this.writeFile = function (fn, cont) { };
                 this.usedClassInfos = [];
-                this.sourceHash = "";
                 this.numStmts = 1;
                 this.commSize = 0;
                 this.itEntries = 0;
@@ -14261,6 +14422,8 @@ var ts;
                     m = /^:..(....)00/.exec(hexlines[i]);
                     if (m) {
                         var newAddr = parseInt(upperAddr + m[1], 16);
+                        if (!opts.flashUsableEnd && lastAddr && newAddr - lastAddr > 64 * 1024)
+                            hitEnd();
                         if (opts.flashUsableEnd && newAddr >= opts.flashUsableEnd)
                             hitEnd();
                         lastIdx = i;
@@ -14276,6 +14439,7 @@ var ts;
                         ctx.jmpStartIdx = i;
                     }
                 }
+                pxt.debug("code start: " + ctx.codeStartAddrPadded + ", jmptbl: " + ctx.jmpStartAddr);
                 if (!ctx.jmpStartAddr)
                     pxtc.oops("No hex start");
                 if (!ctx.codeStartAddr)
@@ -14842,7 +15006,7 @@ var ts;
             "GC"
         ];
         function asmHeader(bin) {
-            return "; start\n" + hexfile.hexPrelude() + "\n    .hex 708E3B92C615A841C49866C975EE5197 ; magic number\n    .hex " + hexfile.hexTemplateHash() + " ; hex template hash\n    .hex 0000000000000000 ; @SRCHASH@\n";
+            return "; start\n" + hexfile.hexPrelude() + "\n    .hex 708E3B92C615A841C49866C975EE5197 ; magic number\n    .hex " + hexfile.hexTemplateHash() + " ; hex template hash\n    .hex 873266330af9dbdb ; replaced in binary by program hash\n";
         }
         function serialize(bin, opts) {
             var asmsource = "\n    .short " + bin.globalsWords + "   ; num. globals\n    .short 0 ; patched with number of 64 bit words resulting from assembly\n    .word _pxt_config_data\n    .short 0 ; patched with comm section size\n    .short " + bin.nonPtrGlobals + " ; number of globals that are not pointers (they come first)\n    .word _pxt_iface_member_names\n    .word _pxt_lambda_trampoline@fn\n    .word _pxt_perf_counters\n    .word _pxt_restore_exception_state@fn\n    .word " + bin.emitString(bin.getTitle()) + " ; name\n";
@@ -14897,11 +15061,6 @@ var ts;
             asmsource += strs;
             asmsource += "_literals_end:\n";
             return asmsource;
-        }
-        function patchSrcHash(bin, src) {
-            var sha = pxtc.U.sha256(src);
-            bin.sourceHash = sha;
-            return src.replace(/\n.*@SRCHASH@\n/, "\n    .hex " + sha.slice(0, 16).toUpperCase() + " ; program hash\n");
         }
         function processorInlineAssemble(target, src) {
             var b = mkProcessorFile(target);
@@ -15000,8 +15159,13 @@ var ts;
             return res;
         }
         function assembleAndPatch(src, bin, opts, cres) {
+            if (opts.extinfo.disabledDeps) {
+                src =
+                    "; compilation disabled on this variant due to " + opts.extinfo.disabledDeps +
+                        ".hex 718E3B92C615A841C49866C975EE5197\n" +
+                        (".string \"" + opts.extinfo.disabledDeps + "\"");
+            }
             src = asmHeader(bin) + src;
-            src = patchSrcHash(bin, src);
             if (opts.embedBlob) {
                 bin.packedSource = packSource(opts.embedMeta, ts.pxtc.decodeBase64(opts.embedBlob));
                 // TODO more dynamic check for source size
@@ -15016,7 +15180,7 @@ var ts;
                 var k = 0;
                 while (pageSize > (1 << k))
                     k++;
-                var endMarker = parseInt(bin.sourceHash.slice(0, 8), 16);
+                var endMarker = parseInt(hexfile.hexTemplateHash().slice(8, 16), 16);
                 var progStart = hexfile.getStartAddress() / pageSize;
                 endMarker = (endMarker & 0xffffff00) | k;
                 var templBeg = 0;
@@ -15026,7 +15190,7 @@ var ts;
                     templBeg = Math.ceil((opts.target.flashChecksumAddr + 32) / pageSize);
                     templSize -= templBeg;
                 }
-                src += "\n    .balign 4\n__end_marker:\n    .word " + endMarker + "\n\n; ------- this will get removed from the final binary ------\n__flash_checksums:\n    .word 0x87eeb07c ; magic\n    .word __end_marker ; end marker position\n    .word " + endMarker + " ; end marker\n    ; template region\n    .short " + templBeg + ", " + templSize + "\n    .word 0x" + hexfile.hexTemplateHash().slice(0, 8) + "\n    ; user region\n    .short " + progStart + ", 0xffff\n    .word 0x" + bin.sourceHash.slice(0, 8) + "\n    .word 0x0 ; terminator\n";
+                src += "\n    .balign 4\n__end_marker:\n    .word " + endMarker + "\n\n; ------- this will get removed from the final binary ------\n__flash_checksums:\n    .word 0x87eeb07c ; magic\n    .word __end_marker ; end marker position\n    .word " + endMarker + " ; end marker\n    ; template region\n    .short " + templBeg + ", " + templSize + "\n    .word 0x" + hexfile.hexTemplateHash().slice(0, 8) + "\n    ; user region\n    .short " + progStart + ", 0xffff\n    .word 0x87326633 ; replaced later\n    .word 0x0 ; terminator\n";
             }
             var prefix = opts.extinfo.outputPrefix || "";
             bin.writeFile(prefix + pxtc.BINARY_ASM, src);
@@ -15050,21 +15214,33 @@ var ts;
                 bin.writeFile(prefix + "config.c", c);
             }
             if (res.buf) {
+                var buf = res.buf;
+                var binbuf = "";
+                for (var i = 0; i < buf.length; ++i)
+                    binbuf += String.fromCharCode(buf[i] & 0xff, buf[i] >> 8);
+                var sha_1 = pxtc.U.sha256(binbuf).slice(0, 16);
+                var shawords = pxtc.U.range(4).map(function (k) { return parseInt(sha_1.slice(k * 2, k * 2 + 2), 16); });
+                pxtc.U.assert(buf[12] == 0x3287);
+                for (var i = 0; i < shawords.length; ++i)
+                    buf[12 + i] = shawords[i];
                 if (opts.target.flashChecksumAddr) {
                     var pos = res.thumbFile.lookupLabel("__flash_checksums") / 2;
-                    pxtc.U.assert(pos == res.buf.length - checksumWords * 2);
-                    var chk = res.buf.slice(res.buf.length - checksumWords * 2);
-                    res.buf.splice(res.buf.length - checksumWords * 2, checksumWords * 2);
-                    var len = Math.ceil(res.buf.length * 2 / pageSize);
+                    pxtc.U.assert(pos == buf.length - checksumWords * 2);
+                    var chk = buf.slice(buf.length - checksumWords * 2);
+                    buf.splice(buf.length - checksumWords * 2, checksumWords * 2);
+                    var len = Math.ceil(buf.length * 2 / pageSize);
+                    pxtc.U.assert(chk[chk.length - 4] == 0x3287);
+                    chk[chk.length - 4] = shawords[0];
+                    chk[chk.length - 3] = shawords[1];
                     chk[chk.length - 5] = len;
                     bin.checksumBlock = chk;
                 }
                 if (!pxt.isOutputText(pxtc.target)) {
-                    var myhex = ts.pxtc.encodeBase64(hexfile.patchHex(bin, res.buf, false, !!pxtc.target.useUF2)[0]);
+                    var myhex = ts.pxtc.encodeBase64(hexfile.patchHex(bin, buf, false, !!pxtc.target.useUF2)[0]);
                     bin.writeFile(prefix + pxt.outputName(pxtc.target), myhex);
                 }
                 else {
-                    var myhex = hexfile.patchHex(bin, res.buf, false, false).join("\r\n") + "\r\n";
+                    var myhex = hexfile.patchHex(bin, buf, false, false).join("\r\n") + "\r\n";
                     bin.writeFile(prefix + pxt.outputName(pxtc.target), myhex);
                 }
             }
@@ -15086,15 +15262,17 @@ var ts;
             var src = serialize(bin, opts);
             var opts0 = pxtc.U.flatClone(opts);
             assembleAndPatch(src, bin, opts, cres);
-            var otherVariants = opts0.extinfo.otherMultiVariants || [];
+            var otherVariants = opts0.otherMultiVariants || [];
             if (otherVariants.length)
                 try {
                     for (var _i = 0, otherVariants_1 = otherVariants; _i < otherVariants_1.length; _i++) {
-                        var extinfo = otherVariants_1[_i];
+                        var other = otherVariants_1[_i];
                         var localOpts = pxtc.U.flatClone(opts0);
-                        localOpts.extinfo = extinfo;
+                        localOpts.extinfo = other.extinfo;
+                        other.target.isNative = true;
+                        localOpts.target = other.target;
                         //pxt.setAppTargetVariant(extinfo.appVariant, { temporary: true })
-                        hexfile.setupFor(localOpts.target, extinfo);
+                        hexfile.setupFor(localOpts.target, localOpts.extinfo);
                         assembleAndPatch(src, bin, localOpts, cres);
                     }
                 }
@@ -15307,7 +15485,8 @@ var ts;
             "control.createBuffer": { n: "bytearray", t: ts.SyntaxKind.Unknown },
             "control.createBufferFromArray": { n: "bytes", t: ts.SyntaxKind.Unknown },
             "!!": { n: "bool", t: ts.SyntaxKind.BooleanKeyword },
-            ".indexOf": { n: "Array.index", t: ts.SyntaxKind.NumberKeyword },
+            "Array.indexOf": { n: "Array.index", t: ts.SyntaxKind.Unknown },
+            "Array.push": { n: "Array.append", t: ts.SyntaxKind.Unknown },
             "parseInt": { n: "int", t: ts.SyntaxKind.NumberKeyword, snippet: 'int("0")' }
         };
         function snakify(s) {
@@ -15903,7 +16082,7 @@ var ts;
         pxtc.getFullName = getFullName;
     })(pxtc = ts.pxtc || (ts.pxtc = {}));
 })(ts || (ts = {}));
-(function (ts) {
+(function (ts_2) {
     var pxtc;
     (function (pxtc) {
         var service;
@@ -15957,8 +16136,8 @@ var ts;
                 };
                 Host.prototype.getScriptSnapshot = function (fileName) {
                     var f = this.opts.fileSystem[fileName];
-                    if (f)
-                        return ts.ScriptSnapshot.fromString(f);
+                    if (f != null)
+                        return ts_2.ScriptSnapshot.fromString(f);
                     else
                         return null;
                 };
@@ -16028,14 +16207,12 @@ var ts;
                     lastApiInfo = undefined;
                     lastGlobalNames = undefined;
                     host.reset();
-                    pxtc.transpile.resetCache();
                 },
                 setOptions: function (v) {
                     host.setOpts(v.options);
                 },
                 syntaxInfo: function (v) {
-                    // TODO: Currently this is only used for Python's language service. Ideally we should
-                    // use this for Typescript too but that might require some emitter or other work.
+                    // TODO: TypeScript currently only supports syntaxInfo for symbols
                     var src = v.fileContent;
                     if (v.fileContent) {
                         host.setFile(v.fileName, v.fileContent);
@@ -16046,20 +16223,28 @@ var ts;
                         position: v.position,
                         type: v.infoType
                     };
-                    if (opts.target.preferredEditor == pxt.PYTHON_PROJECT_NAME) {
+                    var isPython = opts.target.preferredEditor == pxt.PYTHON_PROJECT_NAME;
+                    var isSymbol = opts.syntaxInfo.type === "symbol";
+                    if (isPython) {
                         addApiInfo(opts);
                         var res = pxtc.transpile.pyToTs(opts);
                         if (res.globalNames)
                             lastGlobalNames = res.globalNames;
                     }
-                    else {
+                    else if (isSymbol) {
                         var info = getNodeAndSymbolAtLocation(service.getProgram(), v.fileName, v.position, getLastApiInfo(opts).apis);
                         if (info) {
                             var node = info[0], sym = info[1];
-                            opts.syntaxInfo.symbols = [sym];
-                            opts.syntaxInfo.beginPos = node.getStart();
-                            opts.syntaxInfo.endPos = node.getEnd();
+                            if (sym) {
+                                opts.syntaxInfo.symbols = [sym];
+                                opts.syntaxInfo.beginPos = node.getStart();
+                                opts.syntaxInfo.endPos = node.getEnd();
+                            }
                         }
+                    }
+                    if (isSymbol && opts.syntaxInfo.symbols) {
+                        var apiInfo_1 = getLastApiInfo(opts).apis;
+                        opts.syntaxInfo.auxResult = opts.syntaxInfo.symbols.map(function (s) { return service_1.displayStringForSymbol(s, isPython, apiInfo_1); });
                     }
                     return opts.syntaxInfo;
                 },
@@ -16069,6 +16254,7 @@ var ts;
                     if (fileContent) {
                         host.setFile(fileName, fileContent);
                     }
+                    var tsFilename = filenameWithExtension(fileName, "ts");
                     var span = { startPos: wordStartPos, endPos: wordEndPos };
                     var isPython = /\.py$/.test(fileName);
                     var dotIdx = -1;
@@ -16093,7 +16279,6 @@ var ts;
                     }
                     var lastNl = src.lastIndexOf("\n", position);
                     lastNl = Math.max(0, lastNl);
-                    var cursorLine = src.substring(lastNl, position);
                     if (dotIdx != -1)
                         complPosition = dotIdx;
                     var entries = {};
@@ -16113,23 +16298,25 @@ var ts;
                     var resultSymbols = [];
                     var tsPos;
                     if (isPython) {
+                        // for Python, we need to transpile into TS and map our location into
+                        // TS
                         var res_5 = pxtc.transpile.pyToTs(opts);
                         if (res_5.syntaxInfo && res_5.syntaxInfo.symbols) {
-                            resultSymbols = completionSymbols(opts.syntaxInfo.symbols);
+                            resultSymbols = completionSymbols(res_5.syntaxInfo.symbols);
                         }
                         if (res_5.globalNames)
                             lastGlobalNames = res_5.globalNames;
                         // update our language host
                         Object.keys(res_5.outfiles)
                             .forEach(function (k) {
-                            if (k.endsWith(".ts")) {
+                            if (k === tsFilename) {
                                 host.setFile(k, res_5.outfiles[k]);
                             }
                         });
                         // convert our location from python to typescript
                         if (res_5.sourceMap) {
                             var pySrc = src;
-                            var tsSrc = res_5.outfiles["main.ts"];
+                            var tsSrc = res_5.outfiles[tsFilename];
                             var srcMap = pxtc.BuildSourceMapHelpers(res_5.sourceMap, tsSrc, pySrc);
                             var smallest = srcMap.py.smallestOverlap(span);
                             if (smallest) {
@@ -16139,19 +16326,29 @@ var ts;
                     }
                     else {
                         tsPos = position;
+                        opts.ast = true;
+                        host.setOpts(opts);
+                        var res = runConversionsAndCompileUsingService();
                     }
                     var prog = service.getProgram();
-                    var tsAst = prog.getSourceFile("main.ts"); // TODO: work for non-main files
+                    var tsAst = prog.getSourceFile(tsFilename);
                     var tc = prog.getTypeChecker();
                     var isPropertyAccess = false;
+                    // special handing for member completion
                     if (dotIdx !== -1) {
                         var propertyAccessTarget = findInnerMostNodeAtPosition(tsAst, isPython ? tsPos : dotIdx - 1);
                         if (propertyAccessTarget) {
+                            var type = void 0;
                             var symbol = tc.getSymbolAtLocation(propertyAccessTarget);
                             if (symbol) {
-                                var type = tc.getTypeOfSymbolAtLocation(symbol, propertyAccessTarget);
-                                if (type && type.symbol) {
-                                    var qname_1 = tc.getFullyQualifiedName(type.symbol);
+                                type = tc.getTypeOfSymbolAtLocation(symbol, propertyAccessTarget);
+                            }
+                            else {
+                                type = tc.getTypeAtLocation(propertyAccessTarget);
+                            }
+                            if (type) {
+                                var qname_1 = type.symbol ? tc.getFullyQualifiedName(type.symbol) : getNameOfWidenedType(type, tc);
+                                if (qname_1) {
                                     var props = type.getApparentProperties()
                                         .map(function (prop) { return qname_1 + "." + prop.getName(); })
                                         .map(function (propQname) { return lastApiInfo.apis.byQName[propQname]; })
@@ -16166,6 +16363,7 @@ var ts;
                         }
                     }
                     var innerMost = findInnerMostNodeAtPosition(tsAst, tsPos);
+                    // special handling for call expressions
                     if (innerMost && innerMost.parent && ts.isCallExpression(innerMost.parent)) {
                         var call_1 = innerMost.parent;
                         function findArgIdx() {
@@ -16222,8 +16420,30 @@ var ts;
                         }
                     }
                     if (!isPython && !resultSymbols.length) {
-                        // TODO: get better default result symbols for typescript
+                        // TODO: share this with the "syntaxinfo" service
+                        // start with global api symbols
                         resultSymbols = completionSymbols(pxt.U.values(lastApiInfo.apis.byQName));
+                        // then use the typescript service to get symbols in scope
+                        var tsNode_1 = findInnerMostNodeAtPosition(tsAst, wordStartPos);
+                        var symSearch = ts_2.SymbolFlags.Variable;
+                        var inScopeTsSyms = tc.getSymbolsInScope(tsNode_1, symSearch);
+                        // filter these to just what's at the cursor, otherwise we get things
+                        //  like JS Array methods we don't support
+                        var matchStr_1 = tsNode_1.getText();
+                        inScopeTsSyms = inScopeTsSyms.filter(function (s) { return s.name.indexOf(matchStr_1) >= 0; });
+                        // convert these to pxt symbols
+                        var inScopePxtSyms = inScopeTsSyms
+                            .map(function (t) {
+                            var pxtSym = getPxtSymbolFromTsSymbol(t, lastApiInfo.apis, tc);
+                            if (!pxtSym) {
+                                var tsType = tc.getTypeOfSymbolAtLocation(t, tsNode_1);
+                                pxtSym = makePxtSymbolFromTsSymbol(t, tsType);
+                            }
+                            return pxtSym;
+                        })
+                            .filter(function (s) { return !!s; })
+                            .map(function (s) { return completionSymbol(s); });
+                        resultSymbols = __spreadArrays(resultSymbols, inScopePxtSyms);
                     }
                     // determine which names are taken for auto-generated variable names
                     var takenNames = {};
@@ -16245,7 +16465,7 @@ var ts;
                     }
                     function patchSymbolWithSnippet(si) {
                         var n = lastApiInfo.decls[si.qName];
-                        if (ts.isFunctionLike(n)) {
+                        if (ts_2.isFunctionLike(n)) {
                             // snippet/pySnippet might have been set already
                             if ((isPython && !si.pySnippet)
                                 || (!isPython && !si.snippet)) {
@@ -16366,6 +16586,42 @@ var ts;
                         // The block definition does not specify which tooltip or block text to use for search; join all values with a space
                         return Object.keys(tooltipOrBlock).map(function (k) { return tooltipOrBlock[k]; }).join(" ");
                     };
+                    // Fill default parameters in block string
+                    var computeBlockString = function (symbol) {
+                        var _a, _b, _c;
+                        if ((_a = symbol.attributes) === null || _a === void 0 ? void 0 : _a._def) {
+                            var block = [];
+                            var blockDef = symbol.attributes._def;
+                            var compileInfo = pxt.blocks.compileInfo(symbol);
+                            // Construct block string from parsed blockdef
+                            for (var _i = 0, _d = blockDef.parts; _i < _d.length; _i++) {
+                                var part = _d[_i];
+                                switch (part.kind) {
+                                    case "label":
+                                        block.push(part.text);
+                                        break;
+                                    case "param":
+                                        // In order, preference default value, var name, param name, blockdef param name
+                                        var actualParam = compileInfo.definitionNameToParam[part.name];
+                                        block.push(((_b = actualParam) === null || _b === void 0 ? void 0 : _b.defaultValue) || part.varName
+                                            || ((_c = actualParam) === null || _c === void 0 ? void 0 : _c.actualName)
+                                            || part.name);
+                                        break;
+                                }
+                            }
+                            return block.join(" ");
+                        }
+                        return symbol.attributes.block;
+                    };
+                    // Join parameter jsdoc into a string
+                    var computeParameterString = function (symbol) {
+                        var _a;
+                        var paramHelp = (_a = symbol.attributes) === null || _a === void 0 ? void 0 : _a.paramHelp;
+                        if (paramHelp) {
+                            Object.keys(paramHelp).map(function (p) { return paramHelp[p]; }).join(" ");
+                        }
+                        return "";
+                    };
                     if (!builtinItems) {
                         builtinItems = [];
                         blockDefinitions = pxt.blocks.blockDefinitions();
@@ -16430,10 +16686,11 @@ var ts;
                                 qName: s.qName,
                                 name: s.name,
                                 namespace: s.namespace,
-                                block: s.attributes.block,
+                                block: computeBlockString(s),
+                                params: computeParameterString(s),
                                 jsdoc: s.attributes.jsDoc,
                                 localizedCategory: tbSubset && typeof tbSubset[s.attributes.blockId] === "string"
-                                    ? tbSubset[s.attributes.blockId] : undefined
+                                    ? tbSubset[s.attributes.blockId] : undefined,
                             };
                             return mappedSi;
                         });
@@ -16462,6 +16719,7 @@ var ts;
                                 { name: 'namespace', weight: 0.1 },
                                 { name: 'localizedCategory', weight: 0.1 },
                                 { name: 'block', weight: 0.4375 },
+                                { name: 'params', weight: 0.0625 },
                                 { name: 'jsdoc', weight: 0.0625 }
                             ],
                             sortFn: function (a, b) {
@@ -16543,7 +16801,7 @@ var ts;
                 var enumVals = [];
                 for (var _i = 0, retApis_1 = retApis; _i < retApis_1.length; _i++) {
                     var r = retApis_1[_i];
-                    var asTsEnum = getTsSymbolFromPxtSymbol(r.symbol, location, ts.SymbolFlags.Enum);
+                    var asTsEnum = getTsSymbolFromPxtSymbol(r.symbol, location, ts_2.SymbolFlags.Enum);
                     if (asTsEnum) {
                         var enumType = tc.getTypeOfSymbolAtLocation(asTsEnum, location);
                         var mems = getEnumMembers(enumType);
@@ -16592,6 +16850,12 @@ var ts;
                     }
                     if (res.diagnostics.every(function (d) { return !pxtc.isPxtModulesFilename(d.fileName); }))
                         host.pxtModulesOK = currKey;
+                    if (res.ast) {
+                        // keep api info up to date after each compile
+                        var ai = pxtc.internalGetApiInfo(res.ast);
+                        if (ai)
+                            lastApiInfo = ai;
+                    }
                 }
                 return res;
             }
@@ -16624,7 +16888,8 @@ var ts;
             }
             var defaultTsImgList = "`\n. . . . .\n. . . . .\n. . # . .\n. . . . .\n. . . . .\n`";
             var defaultPyImgList = "\"\"\"\n. . . . .\n. . . . .\n. . # . .\n. . . . .\n. . . . .\n\"\"\"";
-            function getSnippet(apis, takenNames, runtimeOps, fn, decl, python) {
+            function getSnippet(apis, takenNames, runtimeOps, fn, decl, python, recursionDepth) {
+                if (recursionDepth === void 0) { recursionDepth = 0; }
                 var PY_INDENT = pxt.py.INDENT;
                 var preStmt = "";
                 var fnName = "";
@@ -16645,6 +16910,7 @@ var ts;
                 var checker = service && service.getProgram().getTypeChecker();
                 var blocksInfo = blocksInfoOp(apis, runtimeOps.bannedCategories);
                 var blocksById = blocksInfo.blocksById;
+                // TODO: move out of getSnippet for general reuse
                 function getParameterDefault(param) {
                     var typeNode = param.type;
                     if (!typeNode)
@@ -16660,18 +16926,18 @@ var ts;
                     }
                     function getDefaultValueOfType(type) {
                         // TODO: generalize this to handle more types
-                        if (type.symbol && type.symbol.flags & ts.SymbolFlags.Enum) {
+                        if (type.symbol && type.symbol.flags & ts_2.SymbolFlags.Enum) {
                             return getDefaultEnumValue(type, python);
                         }
                         if (pxtc.isObjectType(type)) {
-                            var typeSymbol = apis.byQName[checker.getFullyQualifiedName(type.symbol)];
+                            var typeSymbol = getPxtSymbolFromTsSymbol(type.symbol, apis, checker);
                             var snip = typeSymbol && typeSymbol.attributes && (python ? typeSymbol.attributes.pySnippet : typeSymbol.attributes.snippet);
                             if (snip)
                                 return snip;
                             if (type.objectFlags & ts.ObjectFlags.Anonymous) {
                                 var sigs = checker.getSignaturesOfType(type, ts.SignatureKind.Call);
                                 if (sigs && sigs.length) {
-                                    return getFunctionString(sigs[0]);
+                                    return getFunctionString(sigs[0], false);
                                 }
                                 return emitFn(name);
                             }
@@ -16684,6 +16950,16 @@ var ts;
                     function getShadowSymbol(paramName) {
                         // TODO: generalize and unify this with getCompletions code
                         var shadowBlock = (attrs._shadowOverrides || {})[paramName];
+                        if (!shadowBlock) {
+                            var comp = pxt.blocks.compileInfo(fn);
+                            for (var _i = 0, _a = comp.parameters; _i < _a.length; _i++) {
+                                var param_3 = _a[_i];
+                                if (param_3.actualName === paramName) {
+                                    shadowBlock = param_3.shadowBlockId;
+                                    break;
+                                }
+                            }
+                        }
                         if (!shadowBlock)
                             return null;
                         var sym = blocksById[shadowBlock];
@@ -16699,7 +16975,7 @@ var ts;
                     // check if there's a shadow override defined
                     var shadowSymbol = getShadowSymbol(name);
                     if (shadowSymbol) {
-                        var tsSymbol = getTsSymbolFromPxtSymbol(shadowSymbol, param, ts.SymbolFlags.Enum);
+                        var tsSymbol = getTsSymbolFromPxtSymbol(shadowSymbol, param, ts_2.SymbolFlags.Enum);
                         if (tsSymbol) {
                             var shadowType = checker.getTypeOfSymbolAtLocation(tsSymbol, param);
                             if (shadowType) {
@@ -16708,6 +16984,12 @@ var ts;
                                     return shadowDef;
                                 }
                             }
+                        }
+                        // 3 is completely arbitrarily chosen here
+                        if (recursionDepth < 3 && lastApiInfo.decls[shadowSymbol.qName]) {
+                            var snippet_1 = getSnippet(apis, takenNames, runtimeOps, shadowSymbol, lastApiInfo.decls[shadowSymbol.qName], python, recursionDepth + 1);
+                            if (snippet_1)
+                                return snippet_1;
                         }
                     }
                     // simple types we can determine defaults for
@@ -16726,7 +17008,7 @@ var ts;
                             var tn = typeNode;
                             var functionSignature = checker ? checker.getSignatureFromDeclaration(tn) : undefined;
                             if (functionSignature) {
-                                return getFunctionString(functionSignature);
+                                return getFunctionString(functionSignature, true);
                             }
                             return emitFn(name);
                     }
@@ -16740,9 +17022,9 @@ var ts;
                     // lastly, null or none
                     return python ? "None" : "null";
                 }
-                var args = decl.parameters ? decl.parameters
-                    .filter(function (param) { return !param.initializer && !param.questionToken; })
-                    .map(getParameterDefault) : [];
+                var includedParameters = decl.parameters ? decl.parameters
+                    .filter(function (param) { return !param.initializer && !param.questionToken; }) : [];
+                var args = includedParameters.map(getParameterDefault);
                 var snippetPrefix = fn.namespace;
                 var isInstance = false;
                 var addNamespace = false;
@@ -16846,7 +17128,7 @@ var ts;
                     var i = s.indexOf('.');
                     return i < 0 ? s : s.substring(0, i);
                 }
-                function getFunctionString(functionSignature) {
+                function getFunctionString(functionSignature, isArgument) {
                     var returnValue = "";
                     var returnType = checker.getReturnTypeOfSignature(functionSignature);
                     if (returnType.flags & ts.TypeFlags.NumberLike)
@@ -16864,6 +17146,20 @@ var ts;
                         var n = fnName || "fn";
                         if (functionCount++ > 0)
                             n += functionCount;
+                        if (isArgument && !/^on/i.test(n)) // forever -> on_forever
+                            n = "on" + pxt.Util.capitalize(n);
+                        // This is replicating the name hint behavior in the pydecompiler. We put the default
+                        // enum value at the end of the function name
+                        var enumParams = includedParameters.filter(function (p) {
+                            var t = checker && checker.getTypeAtLocation(p);
+                            return !!(t && t.symbol && t.symbol.flags & ts_2.SymbolFlags.Enum);
+                        }).map(function (p) {
+                            var str = getParameterDefault(p).toLowerCase();
+                            var index = str.lastIndexOf(".");
+                            return index !== -1 ? str.substr(index + 1) : str;
+                        }).join("_");
+                        if (enumParams)
+                            n += "_" + enumParams;
                         n = pxtc.snakify(n);
                         n = getUniqueName(n);
                         preStmt += "def " + n + functionArgument + ":\n" + PY_INDENT + (returnValue || "pass") + "\n";
@@ -16894,6 +17190,56 @@ var ts;
                 }
             }
             service_1.getSnippet = getSnippet;
+            function tsSymbolToPxtSymbolKind(ts) {
+                if (ts.flags & ts_2.SymbolFlags.Variable)
+                    return 4 /* Variable */;
+                if (ts.flags & ts_2.SymbolFlags.Class)
+                    return 8 /* Class */;
+                if (ts.flags & ts_2.SymbolFlags.Enum)
+                    return 6 /* Enum */;
+                if (ts.flags & ts_2.SymbolFlags.EnumMember)
+                    return 7 /* EnumMember */;
+                if (ts.flags & ts_2.SymbolFlags.Method)
+                    return 1 /* Method */;
+                if (ts.flags & ts_2.SymbolFlags.Module)
+                    return 5 /* Module */;
+                if (ts.flags & ts_2.SymbolFlags.Property)
+                    return 2 /* Property */;
+                return 0 /* None */;
+            }
+            function makePxtSymbolFromTsSymbol(tsSym, tsType) {
+                var _a, _b;
+                // TODO: get proper filename, fill out parameter info, handle qualified names
+                //      none of these are needed for JS auto-complete which is the primary
+                //      use case for this.
+                var qname = tsSym.getName();
+                var match = /(.*)\.(.*)/.exec(qname);
+                var name = match ? match[2] : qname;
+                var ns = match ? match[1] : "";
+                var typeName = (_b = (_a = tsType.getSymbol()) === null || _a === void 0 ? void 0 : _a.getName(), (_b !== null && _b !== void 0 ? _b : "any"));
+                var sym = {
+                    kind: tsSymbolToPxtSymbolKind(tsSym),
+                    name: name,
+                    pyName: name,
+                    qName: qname,
+                    pyQName: qname,
+                    namespace: ns,
+                    attributes: {
+                        callingConvention: 0 /* Plain */,
+                        paramDefl: {},
+                    },
+                    fileName: "main.ts",
+                    parameters: [],
+                    retType: typeName,
+                };
+                return sym;
+            }
+            function getPxtSymbolFromTsSymbol(tsSym, apiInfo, tc) {
+                if (tsSym) {
+                    return apiInfo.byQName[tc.getFullyQualifiedName(tsSym)];
+                }
+                return undefined;
+            }
             function getTsSymbolFromPxtSymbol(pxtSym, location, meaning) {
                 var checker = service && service.getProgram().getTypeChecker();
                 if (!checker)
@@ -16970,7 +17316,8 @@ var ts;
                 if (node) {
                     var symbol = checker.getSymbolAtLocation(node);
                     if (symbol) {
-                        return [node, apiInfo.byQName[checker.getFullyQualifiedName(symbol)]];
+                        var pxtSym = getPxtSymbolFromTsSymbol(symbol, apiInfo, checker);
+                        return [node, pxtSym];
                     }
                 }
                 return null;
@@ -16978,6 +17325,8 @@ var ts;
             function findInnerMostNodeAtPosition(n, position) {
                 for (var _i = 0, _a = n.getChildren(); _i < _a.length; _i++) {
                     var child = _a[_i];
+                    if (child.kind >= ts.SyntaxKind.FirstPunctuation && child.kind <= ts.SyntaxKind.LastPunctuation)
+                        continue;
                     var s = child.getStart();
                     var e = child.getEnd();
                     if (s <= position && position < e)
@@ -16985,16 +17334,30 @@ var ts;
                 }
                 return (n && n.kind === pxtc.SK.SourceFile) ? null : n;
             }
+            function getNameOfWidenedType(t, tc) {
+                if (t.flags & ts_2.TypeFlags.NumberLiteral) {
+                    return "number";
+                }
+                else if (t.flags & ts_2.TypeFlags.StringLiteral) {
+                    return "String";
+                }
+                else if (t.flags & ts_2.TypeFlags.BooleanLiteral) {
+                    return "boolean";
+                }
+                return tc.typeToString(t);
+            }
+            function filenameWithExtension(filename, extension) {
+                if (extension.charAt(0) === ".")
+                    extension = extension.substr(1);
+                return filename.substr(0, filename.lastIndexOf(".") + 1) + extension;
+            }
         })(service = pxtc.service || (pxtc.service = {}));
-    })(pxtc = ts.pxtc || (ts.pxtc = {}));
+    })(pxtc = ts_2.pxtc || (ts_2.pxtc = {}));
 })(ts || (ts = {}));
 // TODO: enable reference so we don't need to use: (pxt as any).py
 //      the issue is that this creates a circular dependency. This
 //      is easily handled if we used proper TS modules.
 //// <reference path="../../built/pxtpy.d.ts"/>
-// This code centralizes transpiling between typescript and python
-// so that we can cache results for better performance and user
-// experience (since compile -> decompile round-trips are lossy)
 var ts;
 (function (ts) {
     var pxtc;
@@ -17002,94 +17365,14 @@ var ts;
         var transpile;
         (function (transpile) {
             var mainName = function (l) { return "main." + l; };
-            // a circular buffer of size MAX_CODE_EQUIVS that stores
-            // sets of equivalent code files so that when we translate
-            // from ts -> py -> ts we get back the same ts.
-            var codeEquivalences = [];
-            var MAX_CODE_EQUIVS = 10;
-            function toComparable(code) {
-                // Note that whitespace is semantic for Python
-                return code;
-            }
-            function resetCache() {
-                codeEquivalences = [];
-            }
-            transpile.resetCache = resetCache;
-            function tryGetCachedTranspile(lang, txt) {
-                var txtComp = toComparable(txt);
-                for (var _i = 0, codeEquivalences_1 = codeEquivalences; _i < codeEquivalences_1.length; _i++) {
-                    var eq = codeEquivalences_1[_i];
-                    if (eq.comparable[lang] === txtComp) {
-                        return eq;
-                    }
-                }
-                return undefined;
-            }
-            function cacheTranspile(lang1, lang1Txt, lang2, lang2Txt, sourceMap) {
-                var equiv = {
-                    comparable: {
-                        "ts": undefined,
-                        "blocks": undefined,
-                        "py": undefined
-                    },
-                    outfiles: {},
-                    sourceMap: sourceMap
-                };
-                equiv.outfiles[mainName(lang1)] = lang1Txt;
-                equiv.comparable[lang1] = toComparable(lang1Txt);
-                equiv.outfiles[mainName(lang2)] = lang2Txt;
-                equiv.comparable[lang2] = toComparable(lang2Txt);
-                codeEquivalences.unshift(equiv);
-                if (codeEquivalences.length > MAX_CODE_EQUIVS) {
-                    codeEquivalences.pop();
-                }
-            }
-            function makeSuccess(equiv) {
-                return {
-                    diagnostics: [],
-                    success: true,
-                    outfiles: equiv.outfiles,
-                    sourceMap: equiv.sourceMap,
-                    globalNames: equiv.globalNames,
-                    syntaxInfo: equiv.syntaxInfo
-                };
-            }
-            // @param force: forces a live transpile, and does not cache the result
-            function transpileInternal(from, fromTxt, to, doRealTranspile, force) {
-                var equiv = tryGetCachedTranspile(from, fromTxt);
-                if (equiv && equiv.outfiles[mainName(to)] && !force) {
-                    // return from cache
-                    var res_6 = makeSuccess(equiv);
-                    return res_6;
-                }
-                // not found in cache, do the compile
-                var res = doRealTranspile();
-                if (res.success && !force) {
-                    // store the result
-                    var toTxt = res.outfiles[mainName(to)] || "";
-                    cacheTranspile(from, fromTxt, to, toTxt, res.sourceMap);
-                }
-                return res;
-            }
             function pyToTs(options, filename) {
                 if (filename === void 0) { filename = mainName("py"); }
-                var doRealTranspile = function () {
-                    return pxt.py.py2ts(options);
-                };
-                var fromTxt = options.fileSystem[filename];
-                pxtc.U.assert(fromTxt !== undefined && fromTxt !== null, "Missing file \"" + filename + "\" when converting from py->ts");
-                return transpileInternal("py", fromTxt, "ts", doRealTranspile, !!options.syntaxInfo);
+                return pxt.py.py2ts(options);
             }
             transpile.pyToTs = pyToTs;
             function tsToPy(program, filename) {
                 if (filename === void 0) { filename = mainName("ts"); }
-                var doRealTranspile = function () {
-                    return pxt.py.decompileToPython(program, filename);
-                };
-                var tsSrc = program.getSourceFile(filename);
-                pxtc.U.assert(tsSrc !== undefined && tsSrc !== null, "Missing file \"" + filename + "\" when converting from ts->py");
-                var fromTxt = tsSrc.getText();
-                return transpileInternal("ts", fromTxt, "py", doRealTranspile);
+                return pxt.py.decompileToPython(program, filename);
             }
             transpile.tsToPy = tsToPy;
         })(transpile = pxtc.transpile || (pxtc.transpile = {}));

@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1706,10 +1737,10 @@
 <h2 id="step-2-check-your-firmware-version">Step 2: Check your firmware version</h2><p>It’s possible that the firmware version on the micro:bit needs an update. Let’s check:</p>
 <ol>
 <li>Go to the <strong>MICROBIT</strong> drive.</li>
-<li>Open the <strong>DETAILS.TXT</strong> file.<br/>
-<img class="ui image" src="/static/mb/device/mb-drive-contents.jpg" alt="" loading="lazy"><br/></li>
+<li>Open the <strong>DETAILS.TXT</strong> file.<br />
+<img class="ui image" src="/static/mb/device/mb-drive-contents.jpg" alt="" loading="lazy"><br /></li>
 <li>Look for a line in the file that says the version number. It should say <strong>Version: ...</strong>
-<img class="ui image" src="/static/mb/device/details-txt.jpg" alt="" loading="lazy"><br/></li>
+<img class="ui image" src="/static/mb/device/details-txt.jpg" alt="" loading="lazy"><br /></li>
 </ol>
 <p>If the version is <strong>0234</strong>, you <strong>NEED</strong> to update the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/device/firmware.html">firmware</a> on your micro:bit. Go to <strong>Step 3</strong> and follow the upgrade instructions.</p>
 <p>If the version is <strong>0241</strong>, <strong>0243</strong> or higher, <strong>you have the right firmware</strong>. You can create a <a target="_blank" rel="nofollow noopener" href="https://support.microbit.org/support/tickets/new">support ticket</a> to notify the Micro:bit Foundation of the problem. <strong>Skip the rest of these steps</strong>.</p>
@@ -1771,7 +1802,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

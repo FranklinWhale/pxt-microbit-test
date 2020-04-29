@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1692,38 +1723,98 @@
   &quot;largeImageUrl&quot;: &quot;/docs/static/mb/projects/flashing-heart/sim.gif&quot;,
   &quot;cardType&quot;: &quot;tutorial&quot;,
   &quot;label&quot;: &quot;New? Start Here!&quot;,
-  &quot;labelClass&quot;: &quot;purple ribbon large&quot;
+  &quot;labelClass&quot;: &quot;purple ribbon large&quot;,
+  &quot;youTubeId&quot;: &quot;NvEOKZ8wh9s&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/flashing-heart&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/flashing-heart&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Name Tag&quot;,
   &quot;description&quot;: &quot;Scroll your name on the screen&quot;,
   &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/name-tag.png&quot;,
   &quot;url&quot;: &quot;/projects/name-tag&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;xpRI5jjQ31E&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/name-tag&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/name-tag&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Smiley Buttons&quot;,
   &quot;url&quot;:&quot;/projects/smiley-buttons&quot;,
   &quot;description&quot;: &quot;Show different smiley images by pressing the buttons.&quot;,
   &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/a2-buttons.png&quot;,
   &quot;largeImageUrl&quot;: &quot;/docs/static/mb/projects/smiley-buttons/sim.gif&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;BgDxz3M7JIM&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/smiley-buttons&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/smiley-buttons&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Dice&quot;,
   &quot;url&quot;:&quot;/projects/dice&quot;,
   &quot;description&quot;: &quot;Shake the dice and see what number comes up!&quot;,
   &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/dice.png&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;OmrmjtOm_sQ&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/dice&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/dice&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Love Meter&quot;,
   &quot;url&quot;:&quot;/projects/love-meter&quot;,
   &quot;description&quot;: &quot;Is the micro:bit is feeling the love, see how much!&quot;,
   &quot;imageUrl&quot;:&quot;/docs/static/mb/projects/a3-pins.png&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;1IYsy0_9n8g&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/love-meter&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/love-meter&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }, {
   &quot;name&quot;: &quot;Micro Chat&quot;,
   &quot;url&quot;:&quot;/projects/micro-chat&quot;,
   &quot;description&quot;: &quot;Build your own social network made of micro:bits.&quot;,
   &quot;imageUrl&quot;: &quot;/docs/static/mb/projects/a9-radio.png&quot;,
-  &quot;cardType&quot;: &quot;tutorial&quot;
+  &quot;cardType&quot;: &quot;tutorial&quot;,
+  &quot;youTubeId&quot;: &quot;5XqsGROG2fI&quot;,
+  &quot;otherActions&quot;: [{
+    &quot;url&quot;: &quot;/projects/spy/micro-chat&quot;,
+    &quot;editor&quot;: &quot;py&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }, {
+    &quot;url&quot;: &quot;/projects/spy/micro-chat&quot;,
+    &quot;editor&quot;: &quot;js&quot;,
+    &quot;cardType&quot;: &quot;tutorial&quot;
+  }]
 }]</code></pre>
 
     </div>
@@ -1763,7 +1854,7 @@
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

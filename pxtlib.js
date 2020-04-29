@@ -521,6 +521,14 @@ var pxtc = ts.pxtc;
                 localStorage.setItem("editorlangpref", lang);
             }
             Util.setEditorLanguagePref = setEditorLanguagePref;
+            function getToolboxAnimation() {
+                return localStorage.getItem("toolboxanimation");
+            }
+            Util.getToolboxAnimation = getToolboxAnimation;
+            function setToolboxAnimation() {
+                localStorage.setItem("toolboxanimation", "1");
+            }
+            Util.setToolboxAnimation = setToolboxAnimation;
             // small deep equals for primitives, objects, arrays. returns error message
             function deq(a, b) {
                 if (a === b)
@@ -1504,10 +1512,15 @@ var ts;
             Util.downloadLiveTranslationsAsync = downloadLiveTranslationsAsync;
             Util.pxtLangCookieId = "PXT_LANG";
             Util.langCookieExpirationDays = 30;
+            // "lang-code": { englishName: "", localizedName: ""},
+            // Crowdin code: https://support.crowdin.com/api/language-codes/
+            // English name and localized name: https://en.wikipedia.org/wiki/List_of_language_names
             Util.allLanguages = {
                 "af": { englishName: "Afrikaans", localizedName: "Afrikaans" },
                 "ar": { englishName: "Arabic", localizedName: "العربية" },
+                "az": { englishName: "Azerbaijani", localizedName: "آذربایجان دیلی" },
                 "bg": { englishName: "Bulgarian", localizedName: "български" },
+                "bn": { englishName: "Bengali", localizedName: "বাংলা" },
                 "ca": { englishName: "Catalan", localizedName: "Català" },
                 "cs": { englishName: "Czech", localizedName: "Čeština" },
                 "da": { englishName: "Danish", localizedName: "Dansk" },
@@ -1516,9 +1529,13 @@ var ts;
                 "en": { englishName: "English", localizedName: "English" },
                 "es-ES": { englishName: "Spanish (Spain)", localizedName: "Español (España)" },
                 "es-MX": { englishName: "Spanish (Mexico)", localizedName: "Español (México)" },
+                "et": { englishName: "Estonian", localizedName: "Eesti" },
+                "eu": { englishName: "Basque", localizedName: "Euskara" },
+                "fa": { englishName: "Persian", localizedName: "فارسی" },
                 "fi": { englishName: "Finnish", localizedName: "Suomi" },
                 "fr": { englishName: "French", localizedName: "Français" },
                 "fr-CA": { englishName: "French (Canada)", localizedName: "Français (Canada)" },
+                "gu-IN": { englishName: "Gujarati", localizedName: "ગુજરાતી" },
                 "he": { englishName: "Hebrew", localizedName: "עברית" },
                 "hr": { englishName: "Croatian", localizedName: "Hrvatski" },
                 "hu": { englishName: "Hungarian", localizedName: "Magyar" },
@@ -1527,11 +1544,19 @@ var ts;
                 "is": { englishName: "Icelandic", localizedName: "Íslenska" },
                 "it": { englishName: "Italian", localizedName: "Italiano" },
                 "ja": { englishName: "Japanese", localizedName: "日本語" },
+                "kab": { englishName: "Kabyle", localizedName: "شئعم" },
                 "ko": { englishName: "Korean", localizedName: "한국어" },
+                "kmr": { englishName: "Kurmanji (Kurdish)", localizedName: "کورمانجی‎" },
+                "kn": { englishName: "Kannada", localizedName: "ಕನ್ನಡ" },
                 "lt": { englishName: "Lithuanian", localizedName: "Lietuvių" },
+                "lv": { englishName: "Latvian", localizedName: "Latviešu" },
+                "ml-IN": { englishName: "Malayalam", localizedName: "മലയാളം" },
+                "mr": { englishName: "Marathi", localizedName: "मराठी" },
                 "nl": { englishName: "Dutch", localizedName: "Nederlands" },
                 "no": { englishName: "Norwegian", localizedName: "Norsk" },
                 "nb": { englishName: "Norwegian Bokmal", localizedName: "Norsk bokmål" },
+                "nn-NO": { englishName: "Norwegian Nynorsk", localizedName: "Norsk nynorsk" },
+                "pa-IN": { englishName: "Punjabi", localizedName: "ਪੰਜਾਬੀ" },
                 "pl": { englishName: "Polish", localizedName: "Polski" },
                 "pt-BR": { englishName: "Portuguese (Brazil)", localizedName: "Português (Brasil)" },
                 "pt-PT": { englishName: "Portuguese (Portugal)", localizedName: "Português (Portugal)" },
@@ -1541,10 +1566,16 @@ var ts;
                 "sk": { englishName: "Slovak", localizedName: "Slovenčina" },
                 "sl": { englishName: "Slovenian", localizedName: "Slovenski" },
                 "sr": { englishName: "Serbian", localizedName: "Srpski" },
+                "su": { englishName: "Sundanese", localizedName: "ᮘᮞ ᮞᮥᮔ᮪ᮓ" },
                 "sv-SE": { englishName: "Swedish (Sweden)", localizedName: "Svenska (Sverige)" },
                 "ta": { englishName: "Tamil", localizedName: "தமிழ்" },
+                "te": { englishName: "Telugu", localizedName: "తెలుగు" },
+                "th": { englishName: "Thai", localizedName: "ภาษาไทย" },
+                "tl": { englishName: "Tagalog", localizedName: "ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔" },
                 "tr": { englishName: "Turkish", localizedName: "Türkçe" },
                 "uk": { englishName: "Ukrainian", localizedName: "Українська" },
+                "ur-IN": { englishName: "Urdu (India)", localizedName: "اردو (ہندوستان)" },
+                "ur-PK": { englishName: "Urdu (Pakistan)", localizedName: "اردو (پاکستان)" },
                 "vi": { englishName: "Vietnamese", localizedName: "Tiếng việt" },
                 "zh-CN": { englishName: "Chinese (Simplified)", localizedName: "简体中文" },
                 "zh-TW": { englishName: "Chinese (Traditional)", localizedName: "繁体中文" },
@@ -2277,6 +2308,7 @@ var pxt;
             workerjs: "/worker.js",
             monacoworkerjs: "/monacoworker.js",
             gifworkerjs: "/gifjs/gif.worker.js",
+            serviceworkerjs: "/serviceworker.js",
             pxtVersion: "local",
             pxtRelId: "",
             pxtCdnUrl: "/cdn/",
@@ -2288,6 +2320,8 @@ var pxt;
             targetRelId: "",
             targetId: pxt.appTarget ? pxt.appTarget.id : "",
             simUrl: "/sim/simulator.html",
+            simserviceworkerUrl: "/simulatorserviceworker.js",
+            simworkerconfigUrl: "/sim/workerConfig.js",
             partsUrl: "/sim/siminstructions.html"
         };
         return r;
@@ -2499,6 +2533,16 @@ var pxt;
             }
         }
         blocks.compileInfo = compileInfo;
+        function hasHandler(fn) {
+            return fn.parameters && fn.parameters.some(function (p) {
+                var _a, _b;
+                return (p.type == "() => void" ||
+                    p.type == "Action" ||
+                    !!((_a = p.properties) === null || _a === void 0 ? void 0 : _a.length) ||
+                    !!((_b = p.handlerParameters) === null || _b === void 0 ? void 0 : _b.length));
+            });
+        }
+        blocks.hasHandler = hasHandler;
         /**
          * Returns which Blockly block type to use for an argument reporter based
          * on the specified TypeScript type.
@@ -2932,6 +2976,16 @@ var pxt;
                         PROCEDURES_CALLNORETURN_TITLE: pxt.Util.lf("call function")
                     }
                 },
+                'function_return': {
+                    name: pxt.Util.lf("return a value from within a function"),
+                    tooltip: pxt.Util.lf("Return a value from within a user-defined function."),
+                    url: 'types/function/return',
+                    category: 'functions',
+                    block: {
+                        message_with_value: pxt.Util.lf("return %1"),
+                        message_no_value: pxt.Util.lf("return")
+                    }
+                },
                 'function_definition': {
                     name: pxt.Util.lf("define the function"),
                     tooltip: pxt.Util.lf("Create a function."),
@@ -2949,6 +3003,13 @@ var pxt;
                     block: {
                         FUNCTIONS_CALL_TITLE: pxt.Util.lf("call")
                     }
+                },
+                'function_call_output': {
+                    name: pxt.Util.lf("call the function with a return value"),
+                    tooltip: pxt.Util.lf("Call the user-defined function with a return value."),
+                    url: 'types/function/call',
+                    category: 'functions',
+                    block: {}
                 }
             };
             _blockDefinitions[pxtc.ON_START_TYPE] = {
@@ -3135,12 +3196,13 @@ var pxt;
             return isPxtElectron() || isIpcRenderer();
         }
         BrowserUtils.isElectron = isElectron;
-        function isLocalHost() {
+        function isLocalHost(ignoreFlags) {
+            var _a, _b;
             try {
                 return typeof window !== "undefined"
                     && /^http:\/\/(localhost|127\.0\.0\.1):\d+\//.test(window.location.href)
-                    && !/nolocalhost=1/.test(window.location.href)
-                    && !(pxt.webConfig && pxt.webConfig.isStatic);
+                    && (ignoreFlags || !/nolocalhost=1/.test(window.location.href))
+                    && !((_b = (_a = pxt) === null || _a === void 0 ? void 0 : _a.webConfig) === null || _b === void 0 ? void 0 : _b.isStatic);
             }
             catch (e) {
                 return false;
@@ -4099,6 +4161,8 @@ var pxt;
         commands.patchCompileResultAsync = undefined;
         commands.browserDownloadAsync = undefined;
         commands.saveOnlyAsync = undefined;
+        commands.renderBrowserDownloadInstructions = undefined;
+        commands.renderUsbPairDialog = undefined;
         commands.showUploadInstructionsAsync = undefined;
         commands.saveProjectAsync = undefined;
         commands.electronDeployAsync = undefined; // A pointer to the Electron deploy function, so that targets can access it in their extension.ts
@@ -4271,18 +4335,34 @@ var pxt;
             };
             var constsName = "dal.d.ts";
             var sourcePath = "/source/";
-            var mainDeps = mainPkg.sortedDeps(true);
-            for (var _i = 0, mainDeps_1 = mainDeps; _i < mainDeps_1.length; _i++) {
-                var pkg = mainDeps_1[_i];
+            var disabledDeps = "";
+            var mainDeps = [];
+            for (var _i = 0, _a = mainPkg.sortedDeps(true); _i < _a.length; _i++) {
+                var pkg = _a[_i];
+                if (pkg.disablesVariant(pxt.appTargetVariant) ||
+                    pkg.resolvedDependencies().some(function (d) { return d.disablesVariant(pxt.appTargetVariant); })) {
+                    if (pkg.id != "this") {
+                        if (disabledDeps)
+                            disabledDeps += ", ";
+                        disabledDeps += pkg.id;
+                    }
+                    pxt.debug("disable variant " + pxt.appTargetVariant + " due to " + pkg.id);
+                    continue;
+                }
+                mainDeps.push(pkg);
                 pkg.addSnapshot(pkgSnapshot, [constsName, ".h", ".cpp"]);
             }
             var key = JSON.stringify(pkgSnapshot);
-            if (prevExtInfos[key]) {
+            var prevInfo = prevExtInfos[key];
+            if (prevInfo) {
                 pxt.debug("Using cached extinfo");
-                return prevExtInfos[key];
+                var r = U.flatClone(prevInfo);
+                r.disabledDeps = disabledDeps;
+                return r;
             }
             pxt.debug("Generating new extinfo");
             var res = pxtc.emptyExtInfo();
+            res.disabledDeps = disabledDeps;
             var compileService = pxt.appTarget.compileService;
             if (!compileService)
                 compileService = {
@@ -4333,8 +4413,8 @@ var pxt;
                 return name.trim().replace(/[\_\*]$/, "");
             }
             var makefile = "";
-            for (var _a = 0, mainDeps_2 = mainDeps; _a < mainDeps_2.length; _a++) {
-                var pkg = mainDeps_2[_a];
+            for (var _b = 0, mainDeps_1 = mainDeps; _b < mainDeps_1.length; _b++) {
+                var pkg = mainDeps_1[_b];
                 if (pkg.getFiles().indexOf(constsName) >= 0) {
                     var src = pkg.host().readFile(pkg, constsName);
                     pxt.Util.assert(!!src, constsName + " not found in " + pkg.id);
@@ -4926,9 +5006,8 @@ var pxt;
                             if (src == null)
                                 U.userError(lf("C++ file {0} is missing in extension {1}.", fn, pkg.config.name));
                             fileName = fullName;
-                            // parseCpp() will remove doc comments, to prevent excessive recompilation
-                            // pxt.debug("Parse C++: " + fullName)
                             parseCpp(src, isHeader);
+                            src = src.replace(/^[ \t]*/mg, ""); // shrink the files
                             res.extensionFiles[sourcePath + fullName] = src;
                             if (pkg.level == 0)
                                 res.onlyPublic = false;
@@ -4944,8 +5023,8 @@ var pxt;
                         allErrors += lf("Extension {0}:\n", pkg.id) + thisErrors;
                     }
                 };
-                for (var _b = 0, mainDeps_3 = mainDeps; _b < mainDeps_3.length; _b++) {
-                    var pkg = mainDeps_3[_b];
+                for (var _c = 0, mainDeps_2 = mainDeps; _c < mainDeps_2.length; _c++) {
+                    var pkg = mainDeps_2[_c];
                     _loop_1(pkg);
                 }
             }
@@ -5028,8 +5107,8 @@ var pxt;
                 res.generatedFiles["/module.json"] = JSON.stringify(moduleJson, null, 4) + "\n";
                 pxt.debug("module.json: " + res.generatedFiles["/module.json"]);
             }
-            for (var _c = 0, _d = Object.keys(cpp_options); _c < _d.length; _c++) {
-                var k = _d[_c];
+            for (var _d = 0, _e = Object.keys(cpp_options); _d < _e.length; _d++) {
+                var k = _e[_d];
                 pxtConfig += "#define " + k + " " + cpp_options[k] + "\n";
             }
             if (compile.uf2Family)
@@ -5681,23 +5760,23 @@ var pxt;
             }
             function handleResponseAsync(resp) {
                 var code = resp.statusCode;
-                var data = pxt.Util.jsonTryParse(resp.text) || {};
+                var errorData = pxt.Util.jsonTryParse(resp.text) || {};
                 pxt.debug("upload result: " + code);
-                if (code == 404 && data.error && data.error.code == 8) {
+                if (code == 404 && errorData.error && errorData.error.code == 8) {
                     pxt.log("create new translation file: " + filename);
                     return uploadAsync("add-file", {});
                 }
-                else if (code == 404 && data.error && data.error.code == 17) {
+                else if (code == 404 && errorData.error && errorData.error.code == 17) {
                     return createDirectoryAsync(branch, prj, key, filename.replace(/\/[^\/]+$/, ""), incr)
                         .then(function () { return startAsync(); });
                 }
-                else if (!data.success && data.error && data.error.code == 53) {
+                else if (!errorData.success && errorData.error && errorData.error.code == 53) {
                     // file is being updated
                     pxt.log(filename + " being updated, waiting 5s and retry...");
                     return Promise.delay(5000) // wait 5s and try again
                         .then(function () { return uploadTranslationAsync(branch, prj, key, filename, data); });
                 }
-                else if (code == 200 || data.success) {
+                else if (code == 200 || errorData.success) {
                     // something crowdin reports 500 with success=true
                     return Promise.resolve();
                 }
@@ -6493,6 +6572,7 @@ var pxt;
     })(discourse = pxt.discourse || (pxt.discourse = {}));
 })(pxt || (pxt = {}));
 /// <reference path='../localtypings/pxtarget.d.ts' />
+/// <reference path='../localtypings/dompurify.d.ts' />
 /// <reference path="commonutil.ts"/>
 var pxt;
 (function (pxt) {
@@ -6563,6 +6643,13 @@ var pxt;
             if (typeof require === "undefined")
                 return undefined;
             return require("marked");
+        };
+        docs.requireDOMSanitizer = function () {
+            if (typeof DOMPurify !== "undefined")
+                return DOMPurify.sanitize;
+            if (typeof require === "undefined")
+                return undefined;
+            return require("DOMPurify").sanitize;
         };
         function parseHtmlAttrs(s) {
             var attrs = {};
@@ -6926,6 +7013,7 @@ var pxt;
                 var html = linkRenderer.call(renderer, href, title, text);
                 return html.replace(/^<a /, "<a " + (target ? "target=\"" + target + "\"" : '') + " rel=\"nofollow noopener\" ");
             };
+            var sanitizer = docs.requireDOMSanitizer();
             markedInstance.setOptions({
                 renderer: renderer,
                 gfm: true,
@@ -6933,6 +7021,7 @@ var pxt;
                 breaks: false,
                 pedantic: false,
                 sanitize: true,
+                sanitizer: sanitizer,
                 smartLists: true,
                 smartypants: true
             });
@@ -7244,13 +7333,15 @@ var pxt;
             if (!summaryMD)
                 return null;
             var markedInstance = pxt.docs.requireMarked();
+            var sanitizer = docs.requireDOMSanitizer();
             var options = {
                 renderer: new markedInstance.Renderer(),
                 gfm: true,
                 tables: false,
                 breaks: false,
                 pedantic: false,
-                sanitize: false,
+                sanitize: true,
+                sanitizer: sanitizer,
                 smartLists: false,
                 smartypants: false
             };
@@ -7440,7 +7531,7 @@ var pxt;
             var _a;
             if (!md)
                 return undefined;
-            var m = /```(blocks?|typescript|python|spy)\s+((.|\s)+?)\s*```/i.exec(md);
+            var m = /```(blocks?|typescript|python|spy|sim)\s+((.|\s)+?)\s*```/i.exec(md);
             if (!m)
                 return undefined;
             var dependencies = parsePackagesFromMarkdown(md);
@@ -7520,11 +7611,6 @@ var pxt;
                 .then(function (md) { return parseGalleryMardown(md); });
         }
         gallery_1.loadGalleryAsync = loadGalleryAsync;
-        function loadExampleAsync(name, path) {
-            return pxt.Cloud.markdownAsync(path)
-                .then(function (md) { return parseExampleMarkdown(name, md); });
-        }
-        gallery_1.loadExampleAsync = loadExampleAsync;
     })(gallery = pxt.gallery || (pxt.gallery = {}));
 })(pxt || (pxt = {}));
 var pxt;
@@ -7772,18 +7858,23 @@ var pxt;
     (function (github) {
         github.token = null;
         github.forceProxy = false;
-        function useProxy() {
+        function hasProxy() {
+            var _a, _b, _c;
             if (github.forceProxy)
                 return true;
             if (pxt.U.isNodeJS)
                 return false; // bypass proxy for CLI
-            if (github.token)
-                return false;
-            if (pxt.appTarget && pxt.appTarget.cloud && pxt.appTarget.cloud.noGithubProxy)
+            if ((_c = (_b = (_a = pxt) === null || _a === void 0 ? void 0 : _a.appTarget) === null || _b === void 0 ? void 0 : _b.cloud) === null || _c === void 0 ? void 0 : _c.noGithubProxy)
                 return false; // target requests no proxy
             return true;
         }
-        github.useProxy = useProxy;
+        function useProxy() {
+            if (github.forceProxy)
+                return true;
+            if (github.token)
+                return false;
+            return hasProxy();
+        }
         var isPrivateRepoCache = {};
         function ghRequestAsync(opts) {
             if (github.token) {
@@ -7800,13 +7891,25 @@ var pxt;
                     opts.headers['Authorization'] = "token " + github.token;
                 }
             }
-            return pxt.U.requestAsync(opts);
+            return pxt.U.requestAsync(opts)
+                .catch(function (e) {
+                if (github.handleGithubNetworkError) {
+                    var retry = github.handleGithubNetworkError(e);
+                    if (retry)
+                        return pxt.U.requestAsync(opts);
+                }
+                throw e;
+            });
         }
         function ghGetJsonAsync(url) {
             return ghRequestAsync({ url: url }).then(function (resp) { return resp.json; });
         }
         function ghProxyJsonAsync(path) {
             return pxt.Cloud.apiRequestWithCdnAsync({ url: "gh/" + path }).then(function (r) { return r.json; });
+        }
+        function ghProxyHandleException(e) {
+            pxt.log("github proxy error: " + e.message);
+            pxt.debug(e);
         }
         var MemoryGithubDb = /** @class */ (function () {
             function MemoryGithubDb() {
@@ -7826,37 +7929,73 @@ var pxt;
                 return ghProxyJsonAsync(repopath + "/" + tag + "/text")
                     .then(function (v) { return _this.packages[key] = { files: v }; });
             };
+            MemoryGithubDb.prototype.cacheConfig = function (key, v) {
+                var cfg = pxt.Package.parseAndValidConfig(v);
+                this.configs[key] = cfg;
+                return pxt.U.clone(cfg);
+            };
             MemoryGithubDb.prototype.loadConfigAsync = function (repopath, tag) {
-                var _this = this;
-                if (!tag)
-                    tag = "master";
-                // cache lookup
-                var key = repopath + "/" + tag;
-                var res = this.configs[key];
-                if (res) {
-                    pxt.debug("github cache " + repopath + "/" + tag + "/config");
-                    return Promise.resolve(pxt.U.clone(res));
-                }
-                var cacheConfig = function (v) {
-                    var cfg = JSON.parse(v);
-                    _this.configs[key] = cfg;
-                    return pxt.U.clone(cfg);
-                };
-                // download and cache
-                if (useProxy()) {
-                    // this is a bit wasteful, we just need pxt.json and download everything
-                    return this.proxyLoadPackageAsync(repopath, tag)
-                        .then(function (v) { return cacheConfig(v.files[pxt.CONFIG_NAME]); });
-                }
-                return downloadTextAsync(repopath, tag, pxt.CONFIG_NAME)
-                    .then(function (cfg) { return cacheConfig(cfg); });
+                return __awaiter(this, void 0, void 0, function () {
+                    var key, res, gpkg, e_1, cfg;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!tag)
+                                    tag = "master";
+                                key = repopath + "/" + tag;
+                                res = this.configs[key];
+                                if (res) {
+                                    pxt.debug("github cache " + repopath + "/" + tag + "/config");
+                                    return [2 /*return*/, pxt.U.clone(res)];
+                                }
+                                if (!hasProxy()) return [3 /*break*/, 4];
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, this.proxyLoadPackageAsync(repopath, tag)];
+                            case 2:
+                                gpkg = _a.sent();
+                                return [2 /*return*/, this.cacheConfig(key, gpkg.files[pxt.CONFIG_NAME])];
+                            case 3:
+                                e_1 = _a.sent();
+                                ghProxyHandleException(e_1);
+                                return [3 /*break*/, 4];
+                            case 4: return [4 /*yield*/, downloadTextAsync(repopath, tag, pxt.CONFIG_NAME)];
+                            case 5:
+                                cfg = _a.sent();
+                                return [2 /*return*/, this.cacheConfig(key, cfg)];
+                        }
+                    });
+                });
             };
             MemoryGithubDb.prototype.loadPackageAsync = function (repopath, tag) {
+                return __awaiter(this, void 0, void 0, function () {
+                    var e_2;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!tag)
+                                    tag = "master";
+                                if (!hasProxy()) return [3 /*break*/, 4];
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, this.proxyLoadPackageAsync(repopath, tag).then(function (v) { return pxt.U.clone(v); })];
+                            case 2: return [2 /*return*/, _a.sent()];
+                            case 3:
+                                e_2 = _a.sent();
+                                ghProxyHandleException(e_2);
+                                return [3 /*break*/, 4];
+                            case 4: return [4 /*yield*/, this.githubLoadPackageAsync(repopath, tag)];
+                            case 5: 
+                            // try using github apis
+                            return [2 /*return*/, _a.sent()];
+                        }
+                    });
+                });
+            };
+            MemoryGithubDb.prototype.githubLoadPackageAsync = function (repopath, tag) {
                 var _this = this;
-                if (!tag)
-                    tag = "master";
-                if (useProxy())
-                    return this.proxyLoadPackageAsync(repopath, tag).then(function (v) { return pxt.U.clone(v); });
                 return tagToShaAsync(repopath, tag)
                     .then(function (sha) {
                     // cache lookup
@@ -8280,7 +8419,7 @@ var pxt;
                 node.default_branch = node.defaultBranchRef.name;
                 var pxtJson = pxt.Package.parseAndValidConfig(node.pxtjson && node.pxtjson.text);
                 var readme = node.readme && node.readme.text;
-                // needs to have a valid pxt.json file                    
+                // needs to have a valid pxt.json file
                 if (!pxtJson)
                     return false;
                 // new style of supported annontation
@@ -8306,7 +8445,7 @@ var pxt;
         github.createRepoAsync = createRepoAsync;
         function enablePagesAsync(repo) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, status_1, e_1, r, rep;
+                var url, status_1, e_3, r, rep, e_4;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -8322,7 +8461,7 @@ var pxt;
                                 url = status_1.html_url;
                             return [3 /*break*/, 4];
                         case 3:
-                            e_1 = _a.sent();
+                            e_3 = _a.sent();
                             return [3 /*break*/, 4];
                         case 4:
                             if (!!url) return [3 /*break*/, 6];
@@ -8339,18 +8478,24 @@ var pxt;
                             url = r.html_url;
                             _a.label = 6;
                         case 6:
-                            if (!url) return [3 /*break*/, 9];
+                            if (!url) return [3 /*break*/, 11];
                             return [4 /*yield*/, ghGetJsonAsync("https://api.github.com/repos/" + repo)];
                         case 7:
                             rep = _a.sent();
-                            if (!(rep && !rep.homepage)) return [3 /*break*/, 9];
-                            return [4 /*yield*/, ghPostAsync("https://api.github.com/repos/" + repo, {
-                                    "homepage": url
-                                }, undefined, "PATCH")];
+                            if (!(rep && !rep.homepage)) return [3 /*break*/, 11];
+                            _a.label = 8;
                         case 8:
+                            _a.trys.push([8, 10, , 11]);
+                            return [4 /*yield*/, ghPostAsync("https://api.github.com/repos/" + repo, { "homepage": url }, undefined, "PATCH")];
+                        case 9:
                             _a.sent();
-                            _a.label = 9;
-                        case 9: return [2 /*return*/];
+                            return [3 /*break*/, 11];
+                        case 10:
+                            e_4 = _a.sent();
+                            // just ignore if fail to update the homepage
+                            pxt.tickEvent("github.homepage.error");
+                            return [3 /*break*/, 11];
+                        case 11: return [2 /*return*/];
                     }
                 });
             });
@@ -8432,13 +8577,37 @@ var pxt;
             return false;
         }
         function repoAsync(id, config) {
-            var rid = parseRepoId(id);
-            var status = repoStatus(rid, config);
-            if (status == GitRepoStatus.Banned)
-                return Promise.resolve(undefined);
-            if (!useProxy())
-                return ghGetJsonAsync("https://api.github.com/repos/" + rid.fullName)
-                    .then(function (r) { return mkRepo(r, config, rid.tag); });
+            return __awaiter(this, void 0, void 0, function () {
+                var rid, status, e_5, r;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            rid = parseRepoId(id);
+                            if (!rid)
+                                return [2 /*return*/, undefined];
+                            status = repoStatus(rid, config);
+                            if (status == GitRepoStatus.Banned)
+                                return [2 /*return*/, undefined];
+                            if (!hasProxy()) return [3 /*break*/, 4];
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, proxyRepoAsync(rid, status)];
+                        case 2: return [2 /*return*/, _a.sent()];
+                        case 3:
+                            e_5 = _a.sent();
+                            ghProxyHandleException(e_5);
+                            return [3 /*break*/, 4];
+                        case 4: return [4 /*yield*/, ghGetJsonAsync("https://api.github.com/repos/" + rid.fullName)];
+                        case 5:
+                            r = _a.sent();
+                            return [2 /*return*/, mkRepo(r, config, rid.tag)];
+                    }
+                });
+            });
+        }
+        github.repoAsync = repoAsync;
+        function proxyRepoAsync(rid, status) {
             // always use proxy
             return ghProxyJsonAsync("" + rid.fullName)
                 .then(function (meta) {
@@ -8459,7 +8628,6 @@ var pxt;
                 return undefined;
             });
         }
-        github.repoAsync = repoAsync;
         function searchAsync(query, config) {
             if (!config)
                 return Promise.resolve([]);
@@ -8467,11 +8635,8 @@ var pxt;
             if (repos.length > 0)
                 return Promise.all(repos.map(function (id) { return repoAsync(id.path, config); }))
                     .then(function (rs) { return rs.filter(function (r) { return r && r.status != GitRepoStatus.Banned; }); }); // allow deep links to github repos
-            var fetch = function () { return useProxy()
-                ? pxt.U.httpGetJsonAsync(pxt.Cloud.apiRoot + "ghsearch/" + pxt.appTarget.id + "/" + (pxt.appTarget.platformid || pxt.appTarget.id) + "?q="
-                    + encodeURIComponent(query))
-                : ghGetJsonAsync("https://api.github.com/search/repositories?q="
-                    + encodeURIComponent(query + (" in:name,description,readme \"for PXT/" + (pxt.appTarget.platformid || pxt.appTarget.id) + "\""))); };
+            var fetch = function () { return pxt.U.httpGetJsonAsync(pxt.Cloud.apiRoot + "ghsearch/" + pxt.appTarget.id + "/" + (pxt.appTarget.platformid || pxt.appTarget.id) + "?q="
+                + encodeURIComponent(query)); };
             return fetch()
                 .then(function (rs) {
                 return rs.items.map(function (item) { return mkRepo(item, config); })
@@ -8485,46 +8650,42 @@ var pxt;
         function parseRepoUrl(url) {
             if (!url)
                 return undefined;
-            var m = /^((https:\/\/)?github.com\/)?([^/]+\/[^/#]+)\/?(#(\w+))?$/i.exec(url.trim());
-            if (!m)
-                return undefined;
-            var r = {
-                repo: m ? m[3].toLowerCase() : null,
-                tag: m ? m[5] : null
-            };
-            r.path = r.repo + (r.tag ? '#' + r.tag : '');
-            return r;
+            url = url.trim();
+            // match github.com urls
+            var m = /^((https:\/\/)?github.com\/)?([^/]+\/[^/#]+)\/?(#(\w+))?$/i.exec(url);
+            if (m) {
+                var r = {
+                    repo: m ? m[3].toLowerCase() : null,
+                    tag: m ? m[5] : null
+                };
+                r.path = r.repo + (r.tag ? '#' + r.tag : '');
+                return r;
+            }
+            return undefined;
         }
-        github.parseRepoUrl = parseRepoUrl;
         // parse https://github.com/[company]/[project](/filepath)(#tag)
         function parseRepoId(repo) {
             if (!repo)
                 return undefined;
+            repo = repo.trim();
+            // convert github pages into github repo
+            var mgh = /^https:\/\/([^./#]+)\.github\.io\/([^/#]+)\/?$/i.exec(repo);
+            if (mgh)
+                repo = "github:" + mgh[1] + "/" + mgh[2];
             repo = repo.replace(/^github:/i, "");
             repo = repo.replace(/^https:\/\/github\.com\//i, "");
             repo = repo.replace(/\.git\b/i, "");
-            var m = /([^#]+)(#(.*))?/.exec(repo);
-            var nameAndFile = m ? m[1] : null;
-            var tag = m ? m[3] : null;
-            var owner;
-            var project;
-            var fullName;
-            var fileName;
-            if (m) {
-                var parts = nameAndFile.split('/');
-                owner = parts[0];
-                project = parts[1];
-                fullName = owner + "/" + project;
-                if (parts.length > 2)
-                    fileName = parts.slice(2).join('/');
-            }
-            else {
-                fullName = repo.toLowerCase();
-            }
+            var m = /^([^#\/:]+)\/([^#\/:]+)(\/([^#]+))?(#([^\/:]*))?$/.exec(repo);
+            if (!m)
+                return undefined;
+            var owner = m[1];
+            var project = m[2];
+            var fileName = m[4];
+            var tag = m[6];
             return {
                 owner: owner,
                 project: project,
-                fullName: fullName,
+                fullName: owner + "/" + project,
                 tag: tag,
                 fileName: fileName
             };
@@ -8549,6 +8710,8 @@ var pxt;
         github.stringifyRepo = stringifyRepo;
         function normalizeRepoId(id) {
             var gid = parseRepoId(id);
+            if (!gid)
+                return undefined;
             gid.tag = gid.tag || "master";
             return stringifyRepo(gid);
         }
@@ -8571,7 +8734,7 @@ var pxt;
                     if (targetVersion && config.releases && config.releases["v" + targetVersion.major]) {
                         var release_1 = config.releases["v" + targetVersion.major]
                             .map(function (repo) { return pxt.github.parseRepoId(repo); })
-                            .filter(function (repo) { return repo.fullName.toLowerCase() == parsed.fullName.toLowerCase(); })[0];
+                            .filter(function (repo) { return repo && repo.fullName.toLowerCase() == parsed.fullName.toLowerCase(); })[0];
                         if (release_1) {
                             // this repo is frozen to a particular tag for this target
                             if (tags.some(function (t) { return t == release_1.tag; })) { // tag still exists!!!
@@ -8809,15 +8972,21 @@ var pxt;
                 this.io = io;
                 this.cmdSeq = pxt.U.randomUint32();
                 this.lock = new pxt.U.PromiseQueue();
+                this.flashing = false;
                 this.rawMode = false;
                 this.maxMsgSize = 63; // when running in forwarding mode, we do not really know
                 this.bootloaderMode = false;
                 this.reconnectTries = 0;
                 this.autoReconnect = false;
+                this.icon = "usb";
                 this.msgs = new pxt.U.PromiseBuffer();
                 this.eventHandlers = {};
                 this.onSerial = function (buf, isStderr) { };
                 var frames = [];
+                io.onDeviceConnectionChanged = function (connect) {
+                    return _this.disconnectAsync()
+                        .then(function () { return connect && _this.reconnectAsync(); });
+                };
                 io.onSerial = function (b, e) { return _this.onSerial(b, e); };
                 io.onData = function (buf) {
                     var tp = buf[0] & HF2.HF2_FLAG_MASK;
@@ -8895,12 +9064,9 @@ var pxt;
                 pxt.U.assert(!!(id & HF2.HF2_EV_MASK));
                 this.eventHandlers[id + ""] = f;
             };
-            Wrapper.prototype.reconnectAsync = function (first) {
+            Wrapper.prototype.reconnectAsync = function () {
                 var _this = this;
-                if (first === void 0) { first = false; }
                 this.resetState();
-                if (first)
-                    return this.initAsync();
                 log("reconnect raw=" + this.rawMode);
                 return this.io.reconnectAsync()
                     .then(function () { return _this.initAsync(); })
@@ -9035,12 +9201,20 @@ var pxt;
                         _this.error("cannot switch into bootloader mode");
                 });
             };
-            Wrapper.prototype.reflashAsync = function (blocks) {
+            Wrapper.prototype.isFlashing = function () {
+                return !!this.flashing;
+            };
+            Wrapper.prototype.reflashAsync = function (resp) {
                 var _this = this;
                 log("reflash");
-                return this.flashAsync(blocks)
+                pxt.U.assert(pxt.appTarget.compile.useUF2);
+                var f = resp.outfiles[pxtc.BINARY_UF2];
+                var blocks = pxtc.UF2.parseFile(pxt.Util.stringToUint8Array(atob(f)));
+                this.flashing = true;
+                return this.io.reconnectAsync()
+                    .then(function () { return _this.flashAsync(blocks); })
                     .then(function () { return Promise.delay(100); })
-                    .then(function () { return _this.reconnectAsync(); });
+                    .finally(function () { return _this.flashing = false; });
             };
             Wrapper.prototype.writeWordsAsync = function (addr, words) {
                 pxt.U.assert(words.length <= 64); // just sanity check
@@ -9159,6 +9333,11 @@ var pxt;
             return Wrapper;
         }());
         HF2.Wrapper = Wrapper;
+        function mkPacketIOWrapper(io) {
+            pxt.log("packetio: wrapper hf2");
+            return new Wrapper(io);
+        }
+        HF2.mkPacketIOWrapper = mkPacketIOWrapper;
         function readChecksumBlockAsync(readWordsAsync) {
             if (!pxt.appTarget.compile.flashChecksumAddr)
                 return Promise.resolve(null);
@@ -9512,8 +9691,8 @@ var pxt;
                 var f = lastCompileResult.outfiles[pxtc.BINARY_UF2];
                 var blockBuf = U.stringToUint8Array(atob(f));
                 lastFlash = pxtc.UF2.toBin(blockBuf);
-                var blocks = pxtc.UF2.parseFile(blockBuf);
-                return hid.reflashAsync(blocks); // this will reset into app at the end
+                return hid.reflashAsync(lastCompileResult)
+                    .then(function () { return hid.reconnectAsync(); }); // this will reset into app at the end
             })
                 .then(function () { return hid.talkAsync(HF2_DBG_RESTART).catch(function (e) { }); })
                 .then(function () { return Promise.delay(200); })
@@ -9734,10 +9913,10 @@ var pxt;
             var files = {
                 "tsconfig.json": template.TS_CONFIG,
                 "test.ts": "// " + lf("tests go here; this will not be compiled when this package is used as an extension.") + "\n",
-                "_config.yml": "makecode:\n  target: @TARGET@\n  platform: @PLATFORM@\n  home_url: @HOMEURL@\ntheme: jekyll-theme-slate\ninclude: assets\n",
+                "_config.yml": "makecode:\n  target: @TARGET@\n  platform: @PLATFORM@\n  home_url: @HOMEURL@\ntheme: jekyll-theme-slate\ninclude:\n  - assets\n  - README.md\n",
                 "Makefile": "all: deploy\n\nbuild:\n\tpxt build\n\ndeploy:\n\tpxt deploy\n\ntest:\n\tpxt test\n",
                 "Gemfile": "source 'https://rubygems.org'\ngem 'github-pages', group: :jekyll_plugins",
-                "README.md": "> " + lf("Open this page at {0}", "[https://@REPOOWNER@.github.io/@REPONAME@/](https://@REPOOWNER@.github.io/@REPONAME@/)") + "\n\n## " + lf("Use this extension") + "\n\n" + lf("This repository can be added as an **extension** in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **New Project**") + "\n* " + lf("click on **Extensions** under the gearwheel menu") + "\n* " + lf("search for **https://github.com/@REPO@** and import") + "\n\n## " + lf("Edit this extension") + " ![" + lf("Build status badge") + "](https://github.com/@REPO@/workflows/MakeCode/badge.svg)\n\n" + lf("To edit this repository in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **Import** then click on **Import URL**") + "\n* " + lf("paste **https://github.com/@REPO@** and click import") + "\n\n## " + lf("Blocks preview") + "\n\n" + lf("This image shows the blocks code from the last commit in master.") + "\n" + lf("This image may take a few minutes to refresh.") + "\n\n![" + lf("A rendered view of the blocks") + "](https://github.com/@REPO@/raw/master/.github/makecode/blocks.png)\n\n#### " + lf("Metadata (used for search, rendering)") + "\n\n* for PXT/@TARGET@\n<script src=\"https://makecode.com/gh-pages-embed.js\"></script><script>makeCodeRender(\"{{ site.makecode.home_url }}\", \"{{ site.github.owner_name }}/{{ site.github.repository_name }}\");</script>\n",
+                "README.md": "\n> " + lf("Open this page at {0}", "[https://@REPOOWNER@.github.io/@REPONAME@/](https://@REPOOWNER@.github.io/@REPONAME@/)") + "\n\n## " + lf("Use as Extension") + "\n\n" + lf("This repository can be added as an **extension** in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **New Project**") + "\n* " + lf("click on **Extensions** under the gearwheel menu") + "\n* " + lf("search for **https://github.com/@REPO@** and import") + "\n\n## " + lf("Edit this project") + " ![" + lf("Build status badge") + "](https://github.com/@REPO@/workflows/MakeCode/badge.svg)\n\n" + lf("To edit this repository in MakeCode.") + "\n\n* " + lf("open [@HOMEURL@](@HOMEURL@)") + "\n* " + lf("click on **Import** then click on **Import URL**") + "\n* " + lf("paste **https://github.com/@REPO@** and click import") + "\n\n## " + lf("Blocks preview") + "\n\n" + lf("This image shows the blocks code from the last commit in master.") + "\n" + lf("This image may take a few minutes to refresh.") + "\n\n![" + lf("A rendered view of the blocks") + "](https://github.com/@REPO@/raw/master/.github/makecode/blocks.png)\n\n#### " + lf("Metadata (used for search, rendering)") + "\n\n* for PXT/@TARGET@\n<script src=\"https://makecode.com/gh-pages-embed.js\"></script><script>makeCodeRender(\"{{ site.makecode.home_url }}\", \"{{ site.github.owner_name }}/{{ site.github.repository_name }}\");</script>\n",
                 ".gitignore": "built\nnode_modules\nyotta_modules\nyotta_targets\npxt_modules\n_site\n*.db\n*.tgz\n.header.json\n",
                 ".vscode/settings.json": "{\n    \"editor.formatOnType\": true,\n    \"files.autoSave\": \"afterDelay\",\n    \"files.watcherExclude\": {\n        \"**/.git/objects/**\": true,\n        \"**/built/**\": true,\n        \"**/node_modules/**\": true,\n        \"**/yotta_modules/**\": true,\n        \"**/yotta_targets\": true,\n        \"**/pxt_modules/**\": true\n    },\n    \"files.associations\": {\n        \"*.blocks\": \"html\",\n        \"*.jres\": \"json\"\n    },\n    \"search.exclude\": {\n        \"**/built\": true,\n        \"**/node_modules\": true,\n        \"**/yotta_modules\": true,\n        \"**/yotta_targets\": true,\n        \"**/pxt_modules\": true\n    }\n}",
                 ".github/workflows/makecode.yml": "name: MakeCode\n\non: [push]\n\njobs:\n  build:\n\n    runs-on: ubuntu-latest\n\n    strategy:\n      matrix:\n        node-version: [8.x]\n\n    steps:\n      - uses: actions/checkout@v1\n      - name: Use Node.js ${{ matrix.node-version }}\n        uses: actions/setup-node@v1\n        with:\n          node-version: ${{ matrix.node-version }}\n      - name: npm install\n        run: |\n          npm install -g pxt\n          pxt target @TARGET@\n      - name: build\n        run: |\n          pxt install\n          pxt build --cloud\n        env:\n          CI: true\n",
@@ -10350,6 +10529,9 @@ var pxt;
             return Object.keys(pkgs).map(function (id) { return JSON.parse(pkgs[id][pxt.CONFIG_NAME]); })
                 .filter(function (cfg) { return !!cfg; });
         };
+        Package.prototype.disablesVariant = function (v) {
+            return this.config && this.config.disablesVariants && this.config.disablesVariants.indexOf(v) >= 0;
+        };
         Package.prototype.invalid = function () {
             return /^invalid:/.test(this.version());
         };
@@ -10748,6 +10930,10 @@ var pxt;
                 });
             }
         };
+        Package.prototype.resolvedDependencies = function () {
+            var _this = this;
+            return Object.keys(this.dependencies()).map(function (n) { return _this.resolveDep(n); });
+        };
         Package.prototype.dependencies = function (includeCpp) {
             if (includeCpp === void 0) { includeCpp = false; }
             if (!this.config)
@@ -10772,7 +10958,7 @@ var pxt;
             if (this.isLoaded)
                 return Promise.resolve();
             var initPromise = Promise.resolve();
-            if (this.level == 0)
+            if (this.level == 0 && !pxt.appTarget.multiVariants)
                 pxt.setAppTargetVariant(null);
             this.isLoaded = true;
             var str = this.readFile(pxt.CONFIG_NAME);
@@ -10935,7 +11121,7 @@ var pxt;
         Package.prototype.packageLocalizationStringsAsync = function (lang) {
             var _this = this;
             var targetId = pxt.appTarget.id;
-            var filenames = [this.id + "-jsdoc", this.id];
+            var filenames = [this.config.name + "-jsdoc", this.config.name];
             var r = {};
             var theme = pxt.appTarget.appTheme || {};
             if (this.config.skipLocalization)
@@ -11103,7 +11289,7 @@ var pxt;
         MainPackage.prototype.getCompileOptionsAsync = function (target) {
             if (target === void 0) { target = this.getTargetOptions(); }
             return __awaiter(this, void 0, void 0, function () {
-                var opts, generateFile, fillExtInfoAsync, variants, ext, _i, variants_1, v, curr, noFileEmbed, files, headerString, programText, buf, _a, _b, pkg, _c, _d, f, sn, functionOpts;
+                var opts, generateFile, fillExtInfoAsync, variants, ext, _i, variants_1, v, etarget, einfo, noFileEmbed, files, headerString, programText, buf, _a, _b, pkg, _c, _d, f, sn, functionOpts;
                 var _this = this;
                 return __generator(this, function (_e) {
                     switch (_e.label) {
@@ -11124,24 +11310,28 @@ var pxt;
                                 }
                             };
                             fillExtInfoAsync = function (variant) { return __awaiter(_this, void 0, void 0, function () {
-                                var ext, inf, _a;
+                                var res, einfo, inf, _a;
                                 return __generator(this, function (_b) {
                                     switch (_b.label) {
                                         case 0:
+                                            res = {
+                                                extinfo: null,
+                                                target: null
+                                            };
                                             if (variant)
                                                 pxt.setAppTargetVariant(variant, { temporary: true });
                                             _b.label = 1;
                                         case 1:
                                             _b.trys.push([1, , 5, 6]);
-                                            ext = pxt.cpp.getExtensionInfo(this);
+                                            einfo = pxt.cpp.getExtensionInfo(this);
                                             if (!variant) {
-                                                if (ext.shimsDTS)
-                                                    generateFile("shims.d.ts", ext.shimsDTS);
-                                                if (ext.enumsDTS)
-                                                    generateFile("enums.d.ts", ext.enumsDTS);
+                                                if (einfo.shimsDTS)
+                                                    generateFile("shims.d.ts", einfo.shimsDTS);
+                                                if (einfo.enumsDTS)
+                                                    generateFile("enums.d.ts", einfo.enumsDTS);
                                             }
                                             if (!target.isNative) return [3 /*break*/, 3];
-                                            return [4 /*yield*/, this.host().getHexInfoAsync(ext)];
+                                            return [4 /*yield*/, this.host().getHexInfoAsync(einfo)];
                                         case 2:
                                             _a = _b.sent();
                                             return [3 /*break*/, 4];
@@ -11150,19 +11340,21 @@ var pxt;
                                             _b.label = 4;
                                         case 4:
                                             inf = _a;
-                                            ext = pxt.U.flatClone(ext);
+                                            einfo = pxt.U.flatClone(einfo);
                                             if (!target.keepCppFiles) {
-                                                delete ext.compileData;
-                                                delete ext.generatedFiles;
-                                                delete ext.extensionFiles;
+                                                delete einfo.compileData;
+                                                delete einfo.generatedFiles;
+                                                delete einfo.extensionFiles;
                                             }
-                                            ext.hexinfo = inf;
+                                            einfo.hexinfo = inf;
+                                            res.extinfo = einfo;
+                                            res.target = pxt.appTarget.compile;
                                             return [3 /*break*/, 6];
                                         case 5:
                                             if (variant)
                                                 pxt.setAppTargetVariant(null, { temporary: true });
                                             return [7 /*endfinally*/];
-                                        case 6: return [2 /*return*/, ext];
+                                        case 6: return [2 /*return*/, res];
                                     }
                                 });
                             }); };
@@ -11173,7 +11365,7 @@ var pxt;
                             opts.target.preferredEditor = this.getPreferredEditor();
                             pxt.debug("building: " + this.sortedDeps().map(function (p) { return p.config.name; }).join(", "));
                             variants = pxt.appTarget.multiVariants;
-                            if (!variants || pxt.appTargetVariant) {
+                            if (!variants || pxt.appTargetVariant || (!pxt.appTarget.alwaysMultiVariant && !pxt.appTarget.compile.switches.multiVariant)) {
                                 variants = [pxt.appTargetVariant || ""];
                             }
                             ext = null;
@@ -11186,15 +11378,16 @@ var pxt;
                                 pxt.debug("building for " + v);
                             return [4 /*yield*/, fillExtInfoAsync(ext ? v : null)];
                         case 3:
-                            curr = _e.sent();
-                            curr.appVariant = v;
-                            curr.outputPrefix = variants.length == 1 || !v ? "" : v + "-";
+                            etarget = _e.sent();
+                            einfo = etarget.extinfo;
+                            einfo.appVariant = v;
+                            einfo.outputPrefix = variants.length == 1 || !v ? "" : v + "-";
                             if (ext) {
-                                ext.otherMultiVariants.push(curr);
+                                opts.otherMultiVariants.push(etarget);
                             }
                             else {
-                                ext = curr;
-                                ext.otherMultiVariants = [];
+                                ext = einfo;
+                                opts.otherMultiVariants = [];
                             }
                             _e.label = 4;
                         case 4:
@@ -11366,6 +11559,93 @@ var pxt;
         return cfg && /\bbeta\b/.test(cfg.description);
     }
     pxt.isPkgBeta = isPkgBeta;
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var packetio;
+    (function (packetio) {
+        var wrapper;
+        var initPromise;
+        var onConnectionChangedHandler = function () { };
+        var onSerialHandler;
+        /**
+         * A DAP wrapper is active
+         */
+        function isActive() {
+            return !!wrapper;
+        }
+        packetio.isActive = isActive;
+        /**
+         * The DAP wrapper is active and the device is connected
+         */
+        function isConnected() {
+            return !!wrapper && wrapper.io.isConnected();
+        }
+        packetio.isConnected = isConnected;
+        function isConnecting() {
+            return !!wrapper && wrapper.io.isConnecting();
+        }
+        packetio.isConnecting = isConnecting;
+        function icon() {
+            return !!wrapper && (wrapper.icon || "usb");
+        }
+        packetio.icon = icon;
+        function disconnectAsync() {
+            pxt.log('disconnect');
+            var p = Promise.resolve();
+            if (wrapper) {
+                p = p.then(function () { return wrapper.disconnectAsync(); })
+                    .then(function () { return wrapper.io.disposeAsync(); })
+                    .catch(function (e) {
+                    // swallow execeptions
+                    pxt.reportException(e);
+                })
+                    .finally(function () {
+                    initPromise = undefined; // dubious
+                    wrapper = undefined;
+                });
+            }
+            if (onConnectionChangedHandler)
+                p = p.then(function () { return onConnectionChangedHandler(); });
+            return p;
+        }
+        packetio.disconnectAsync = disconnectAsync;
+        function configureEvents(onConnectionChanged, onSerial) {
+            onConnectionChangedHandler = onConnectionChanged;
+            onSerialHandler = onSerial;
+            if (wrapper) {
+                wrapper.io.onConnectionChanged = onConnectionChangedHandler;
+                wrapper.onSerial = onSerialHandler;
+            }
+        }
+        packetio.configureEvents = configureEvents;
+        function wrapperAsync() {
+            if (wrapper)
+                return Promise.resolve(wrapper);
+            pxt.log("packetio: new wrapper");
+            return packetio.mkPacketIOAsync()
+                .then(function (io) {
+                io.onConnectionChanged = onConnectionChangedHandler;
+                wrapper = packetio.mkPacketIOWrapper(io);
+                if (onSerialHandler)
+                    wrapper.onSerial = onSerialHandler;
+                return wrapper;
+            });
+        }
+        function initAsync(force) {
+            if (force === void 0) { force = false; }
+            pxt.log("packetio: init " + (force ? "(force)" : ""));
+            if (!initPromise) {
+                var p = Promise.resolve();
+                if (force)
+                    p = p.then(function () { return disconnectAsync(); });
+                initPromise = p.then(function () { return wrapperAsync(); })
+                    .finally(function () { initPromise = undefined; });
+            }
+            return initPromise;
+        }
+        packetio.initAsync = initAsync;
+    })(packetio = pxt.packetio || (pxt.packetio = {}));
 })(pxt || (pxt = {}));
 var pxt;
 (function (pxt) {
@@ -11624,6 +11904,7 @@ var ts;
         pxtc.TS_BREAK_TYPE = "break_keyword";
         pxtc.TS_CONTINUE_TYPE = "continue_keyword";
         pxtc.TS_OUTPUT_TYPE = "typescript_expression";
+        pxtc.TS_RETURN_STATEMENT_TYPE = "function_return";
         pxtc.PAUSE_UNTIL_TYPE = "pxt_pause_until";
         pxtc.COLLAPSED_BLOCK = "pxt_collapsed_block";
         pxtc.FUNCTION_DEFINITION_TYPE = "function_definition";
@@ -13155,9 +13436,9 @@ var pxt;
             generateIcons(syms);
             return syms.map(function (sym) {
                 var splitTags = (sym.attributes.tags || "")
-                    .toLowerCase()
                     .split(" ")
-                    .filter(function (el) { return !!el; });
+                    .filter(function (el) { return !!el; })
+                    .map(function (tag) { return pxt.Util.startsWith(tag, "category-") ? tag : tag.toLowerCase(); });
                 return {
                     qName: sym.qName,
                     src: sym.attributes.iconURL,
@@ -14500,9 +14781,14 @@ var pxt;
                 return undefined; // error parsing steps
             // collect code and infer editor
             var _c = computeBodyMetadata(body), code = _c.code, templateCode = _c.templateCode, editor = _c.editor, language = _c.language;
-            if (!metadata.noDiffs
-                && (editor != pxt.BLOCKS_PROJECT_NAME || pxt.appTarget.appTheme.tutorialBlocksDiff))
+            // noDiffs legacy
+            if (metadata.diffs === true // enabled in tutorial
+                || (metadata.diffs !== false && metadata.noDiffs !== true // not disabled
+                    && ((editor == pxt.BLOCKS_PROJECT_NAME && pxt.appTarget.appTheme.tutorialBlocksDiff) //blocks enabled always
+                        || (editor != pxt.BLOCKS_PROJECT_NAME && pxt.appTarget.appTheme.tutorialTextDiff) // text enabled always
+                    ))) {
                 diffify(steps, activities);
+            }
             // strip hidden snippets
             steps.forEach(function (step) {
                 step.contentMd = stripHiddenSnippets(step.contentMd);
@@ -14524,7 +14810,7 @@ var pxt;
         function computeBodyMetadata(body) {
             // collect code and infer editor
             var editor = undefined;
-            var regex = /```(sim|block|blocks|filterblocks|spy|ghost|typescript|ts|js|javascript|template|python)?\s*\n([\s\S]*?)\n```/gmi;
+            var regex = /``` *(sim|block|blocks|filterblocks|spy|ghost|typescript|ts|js|javascript|template|python)?\s*\n([\s\S]*?)\n```/gmi;
             var code = '';
             var templateCode;
             var language;
@@ -15725,7 +16011,6 @@ var pxt;
         }
         webBluetooth.pairAsync = pairAsync;
         function flashAsync(resp, d) {
-            if (d === void 0) { d = {}; }
             pxt.tickEvent("webble.flash");
             var hex = resp.outfiles[ts.pxtc.BINARY_HEX];
             return connectAsync()
@@ -15772,40 +16057,66 @@ var pxt;
         ;
         ;
         ;
-        var HID = /** @class */ (function () {
-            function HID(dev) {
-                var _this = this;
-                this.dev = dev;
+        var WebUSBHID = /** @class */ (function () {
+            function WebUSBHID() {
                 this.ready = false;
+                this.connecting = false;
                 this.readLoopStarted = false;
+                this.onDeviceConnectionChanged = function (connect) { };
+                this.onConnectionChanged = function () { };
                 this.onData = function (v) { };
                 this.onError = function (e) { };
                 this.onEvent = function (v) { };
-                navigator.usb.addEventListener('disconnect', function (event) {
-                    if (event.device == _this.dev) {
-                        _this.log("Device disconnected");
-                        _this.clearDev();
-                    }
-                });
+                this.handleUSBConnected = this.handleUSBConnected.bind(this);
+                this.handleUSBDisconnected = this.handleUSBDisconnected.bind(this);
+                navigator.usb.addEventListener('disconnect', this.handleUSBDisconnected, false);
+                navigator.usb.addEventListener('connect', this.handleUSBConnected, false);
+                this.log("registered webusb events");
             }
-            HID.prototype.clearDev = function () {
-                this.dev = null;
-                this.epIn = null;
-                this.epOut = null;
+            WebUSBHID.prototype.disposeAsync = function () {
+                navigator.usb.removeEventListener('disconnect', this.handleUSBDisconnected);
+                navigator.usb.removeEventListener('connect', this.handleUSBConnected);
+                this.log("unregistered webusb events");
+                return Promise.resolve();
             };
-            HID.prototype.error = function (msg) {
+            WebUSBHID.prototype.handleUSBDisconnected = function (event) {
+                this.log("device disconnected");
+                if (event.device == this.dev) {
+                    this.log("clear device");
+                    this.clearDev();
+                    if (this.onDeviceConnectionChanged)
+                        this.onDeviceConnectionChanged(false);
+                }
+            };
+            WebUSBHID.prototype.handleUSBConnected = function (event) {
+                var newdev = event.device;
+                this.log("device connected " + newdev.serialNumber);
+                if (!this.dev) {
+                    this.log("attach device");
+                    if (this.onDeviceConnectionChanged)
+                        this.onDeviceConnectionChanged(true);
+                }
+            };
+            WebUSBHID.prototype.clearDev = function () {
+                if (this.dev) {
+                    this.dev = null;
+                    this.epIn = null;
+                    this.epOut = null;
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
+                }
+            };
+            WebUSBHID.prototype.error = function (msg) {
                 throw new USBError(pxt.U.lf("USB error on device {0} ({1})", this.dev.productName, msg));
             };
-            HID.prototype.log = function (msg) {
-                msg = "WebUSB: " + msg;
-                pxt.log(msg);
-                //pxt.debug(msg)
+            WebUSBHID.prototype.log = function (msg) {
+                pxt.log("webusb: " + msg);
             };
-            HID.prototype.disconnectAsync = function () {
+            WebUSBHID.prototype.disconnectAsync = function () {
                 var _this = this;
+                this.ready = false;
                 if (!this.dev)
                     return Promise.resolve();
-                this.ready = false;
                 this.log("close device");
                 return this.dev.close()
                     .catch(function (e) {
@@ -15816,18 +16127,37 @@ var pxt;
                     return Promise.delay(500);
                 });
             };
-            HID.prototype.reconnectAsync = function () {
+            WebUSBHID.prototype.reconnectAsync = function () {
                 var _this = this;
                 this.log("reconnect");
+                this.setConnecting(true);
                 return this.disconnectAsync()
                     .then(getDeviceAsync)
-                    .then(function (dev) {
-                    _this.log("got device: " + dev.manufacturerName + " " + dev.productName);
-                    _this.dev = dev;
-                    return _this.initAsync();
-                });
+                    .then(function (dev) { return _this.connectAsync(dev); })
+                    .finally(function () { return _this.setConnecting(false); });
             };
-            HID.prototype.sendPacketAsync = function (pkt) {
+            WebUSBHID.prototype.setConnecting = function (v) {
+                if (v != this.connecting) {
+                    this.connecting = v;
+                    if (this.onConnectionChanged)
+                        this.onConnectionChanged();
+                }
+            };
+            WebUSBHID.prototype.isConnecting = function () {
+                return this.connecting;
+            };
+            WebUSBHID.prototype.isConnected = function () {
+                return !!this.dev && this.ready;
+            };
+            WebUSBHID.prototype.connectAsync = function (dev) {
+                var _this = this;
+                this.setConnecting(true);
+                this.log("connect device: " + dev.manufacturerName + " " + dev.productName);
+                this.dev = dev;
+                return this.initAsync()
+                    .finally(function () { return _this.setConnecting(false); });
+            };
+            WebUSBHID.prototype.sendPacketAsync = function (pkt) {
                 var _this = this;
                 if (!this.dev)
                     return Promise.reject(new Error("Disconnected"));
@@ -15852,7 +16182,7 @@ var pxt;
                         _this.error("USB OUT transfer failed");
                 });
             };
-            HID.prototype.recvOne = function () {
+            WebUSBHID.prototype.recvOne = function () {
                 var _this = this;
                 this.recvPacketAsync()
                     .then(function (buf) {
@@ -15861,7 +16191,7 @@ var pxt;
                     _this.onError(err);
                 });
             };
-            HID.prototype.readLoop = function () {
+            WebUSBHID.prototype.readLoop = function () {
                 var _this = this;
                 if (this.readLoopStarted)
                     return;
@@ -15890,7 +16220,7 @@ var pxt;
                 };
                 loop();
             };
-            HID.prototype.recvPacketAsync = function () {
+            WebUSBHID.prototype.recvPacketAsync = function () {
                 var _this = this;
                 var final = function (res) {
                     if (res.status != "ok")
@@ -15914,7 +16244,7 @@ var pxt;
                 return this.dev.transferIn(this.epIn.endpointNumber, 64)
                     .then(final);
             };
-            HID.prototype.initAsync = function () {
+            WebUSBHID.prototype.initAsync = function () {
                 var _this = this;
                 if (!this.dev)
                     return Promise.reject(new Error("Disconnected"));
@@ -15965,57 +16295,48 @@ var pxt;
                     _this.ready = true;
                     if (_this.epIn || isHF2)
                         _this.readLoop();
+                    if (_this.onConnectionChanged)
+                        _this.onConnectionChanged();
                 });
             };
-            return HID;
+            return WebUSBHID;
         }());
         function pairAsync() {
             return navigator.usb.requestDevice({
                 filters: usb.filters
-            }).then(function (dev) {
-                // try connecting to it
-                return mkPacketIOAsync();
-            }).then(function (io) { return io.reconnectAsync(); });
-        }
-        usb.pairAsync = pairAsync;
-        function isPairedAsync() {
-            if (!usb.isEnabled)
-                return Promise.resolve(false);
-            return getDeviceAsync()
-                .then(function (dev) {
-                return true;
             })
-                .catch(function () {
-                return false;
+                .then(function (dev) { return !!dev; })
+                .catch(function (e) {
+                // user cancelled
+                if (e.name == "NotFoundError")
+                    return undefined;
+                throw e;
             });
         }
-        usb.isPairedAsync = isPairedAsync;
-        function getDeviceAsync() {
+        usb.pairAsync = pairAsync;
+        function tryGetDeviceAsync() {
+            pxt.log("webusb: get devices");
             return navigator.usb.getDevices()
-                .then(function (devs) {
-                if (!devs || !devs.length) {
+                .then(function (devs) { return devs && devs[0]; });
+        }
+        usb.tryGetDeviceAsync = tryGetDeviceAsync;
+        function getDeviceAsync() {
+            return tryGetDeviceAsync()
+                .then(function (dev) {
+                if (!dev) {
                     var err = new Error(pxt.U.lf("No USB device selected or connected; try pairing!"));
-                    err.isUserError = true;
                     err.type = "devicenotfound";
                     throw err;
                 }
-                return devs[0];
+                return dev;
             });
         }
-        var getDevPromise;
+        var _hid;
         function mkPacketIOAsync() {
-            if (!getDevPromise)
-                getDevPromise = getDeviceAsync()
-                    .then(function (dev) {
-                    var h = new HID(dev);
-                    return h.initAsync()
-                        .then(function () { return h; });
-                })
-                    .catch(function (e) {
-                    getDevPromise = null;
-                    return Promise.reject(e);
-                });
-            return getDevPromise;
+            pxt.log("packetio: mk webusb io");
+            if (!_hid)
+                _hid = new WebUSBHID();
+            return Promise.resolve(_hid);
         }
         usb.mkPacketIOAsync = mkPacketIOAsync;
         usb.isEnabled = false;
@@ -16026,6 +16347,8 @@ var pxt;
         }
         usb.setEnabled = setEnabled;
         function isAvailable() {
+            if (pxt.BrowserUtils.isElectron())
+                return false;
             if (!!navigator.usb) {
                 // Windows versions:
                 // 5.1 - XP, 6.0 - Vista, 6.1 - Win7, 6.2 - Win8, 6.3 - Win8.1, 10.0 - Win10
@@ -16142,6 +16465,84 @@ var pxt;
         }
         worker_1.makeWebSocket = makeWebSocket;
     })(worker = pxt.worker || (pxt.worker = {}));
+})(pxt || (pxt = {}));
+var pxt;
+(function (pxt) {
+    var youtube;
+    (function (youtube) {
+        youtube.apiKey = undefined;
+        function checkKey() {
+            if (!youtube.apiKey)
+                pxt.U.userError("YouTube API key missing");
+        }
+        function resolveThumbnail(thumbnails) {
+            var url = (thumbnails.medium || thumbnails.high || thumbnails.standard || thumbnails.default).url;
+            return url;
+        }
+        function resolveDescription(d) {
+            // grab first paragraph.
+            return d.split(/\n\s+/, 1)[0].trim();
+        }
+        function playlistItemToCodeCard(video) {
+            return {
+                "name": video.snippet.title.replace(/[^-]*-/, '').trim(),
+                "description": resolveDescription(video.snippet.description),
+                "youTubeId": video.snippet.resourceId.videoId,
+                "youTubePlaylistId": video.snippet.playlistId,
+                "imageUrl": resolveThumbnail(video.snippet.thumbnails)
+            };
+        }
+        youtube.playlistItemToCodeCard = playlistItemToCodeCard;
+        function playlistInfoAsync(playlistId) {
+            checkKey();
+            var url = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=" + playlistId + "&key=" + youtube.apiKey;
+            return pxt.Util.httpGetJsonAsync(url)
+                .then(function (res) { return res.items[0]; });
+        }
+        youtube.playlistInfoAsync = playlistInfoAsync;
+        function listPlaylistVideosAsync(playlistId) {
+            return __awaiter(this, void 0, void 0, function () {
+                var items, pageToken, url, videos;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            checkKey();
+                            items = [];
+                            pageToken = undefined;
+                            _a.label = 1;
+                        case 1:
+                            url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + playlistId + "&key=" + youtube.apiKey;
+                            if (pageToken)
+                                url += "&pageToken=" + pageToken;
+                            return [4 /*yield*/, pxt.Util.httpGetJsonAsync(url)];
+                        case 2:
+                            videos = _a.sent();
+                            items = items.concat(videos.items);
+                            pageToken = videos.nextPageToken;
+                            _a.label = 3;
+                        case 3:
+                            if (pageToken) return [3 /*break*/, 1];
+                            _a.label = 4;
+                        case 4: return [2 /*return*/, items];
+                    }
+                });
+            });
+        }
+        youtube.listPlaylistVideosAsync = listPlaylistVideosAsync;
+        function watchUrl(videoId, playlistId) {
+            var url = undefined;
+            if (videoId) {
+                url = "https://www.youtube.com/watch?v=" + videoId;
+                if (playlistId)
+                    url += "&list=" + playlistId;
+            }
+            else if (playlistId) {
+                url = "https://www.youtube.com/playlist?list=" + playlistId;
+            }
+            return url;
+        }
+        youtube.watchUrl = watchUrl;
+    })(youtube = pxt.youtube || (pxt.youtube = {}));
 })(pxt || (pxt = {}));
 /* tslint:disable:no-conditional-assignment */
 // TODO: add a macro facility to make 8-bit assembly easier?

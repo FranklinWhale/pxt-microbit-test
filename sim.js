@@ -12,6 +12,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 /// <reference path="../node_modules/pxt-core/built/pxtsim.d.ts"/>
+/// <reference path="../libs/core/dal.d.ts"/>
+/// <reference path="../libs/core/enums.d.ts"/>
 var pxsim;
 (function (pxsim) {
     var DalBoard = /** @class */ (function (_super) {
@@ -19,62 +21,63 @@ var pxsim;
         function DalBoard() {
             var _this = _super.call(this) || this;
             // components
+            _this.lightState = {};
             _this.fileSystem = new pxsim.FileSystemState();
             _this.builtinParts["ledmatrix"] = _this.ledMatrixState = new pxsim.LedMatrixState(pxsim.runtime);
             _this.builtinParts["buttonpair"] = _this.buttonPairState = new pxsim.ButtonPairState({
                 ID_BUTTON_A: 1 /* MICROBIT_ID_BUTTON_A */,
                 ID_BUTTON_B: 2 /* MICROBIT_ID_BUTTON_B */,
-                ID_BUTTON_AB: 26 /* MICROBIT_ID_BUTTON_AB */,
+                ID_BUTTON_AB: 3 /* MICROBIT_ID_BUTTON_AB */,
                 BUTTON_EVT_UP: 2 /* MICROBIT_BUTTON_EVT_UP */,
                 BUTTON_EVT_CLICK: 3 /* MICROBIT_BUTTON_EVT_CLICK */
             });
             _this.builtinParts["edgeconnector"] = _this.edgeConnectorState = new pxsim.EdgeConnectorState({
                 pins: [
-                    7 /* MICROBIT_ID_IO_P0 */,
-                    8 /* MICROBIT_ID_IO_P1 */,
-                    9 /* MICROBIT_ID_IO_P2 */,
-                    10 /* MICROBIT_ID_IO_P3 */,
-                    11 /* MICROBIT_ID_IO_P4 */,
-                    12 /* MICROBIT_ID_IO_P5 */,
-                    13 /* MICROBIT_ID_IO_P6 */,
-                    14 /* MICROBIT_ID_IO_P7 */,
-                    15 /* MICROBIT_ID_IO_P8 */,
-                    16 /* MICROBIT_ID_IO_P9 */,
-                    17 /* MICROBIT_ID_IO_P10 */,
-                    18 /* MICROBIT_ID_IO_P11 */,
-                    19 /* MICROBIT_ID_IO_P12 */,
-                    20 /* MICROBIT_ID_IO_P13 */,
-                    21 /* MICROBIT_ID_IO_P14 */,
-                    22 /* MICROBIT_ID_IO_P15 */,
-                    23 /* MICROBIT_ID_IO_P16 */,
+                    100 /* MICROBIT_ID_IO_P0 */,
+                    101 /* MICROBIT_ID_IO_P1 */,
+                    102 /* MICROBIT_ID_IO_P2 */,
+                    103 /* MICROBIT_ID_IO_P3 */,
+                    104 /* MICROBIT_ID_IO_P4 */,
+                    105 /* MICROBIT_ID_IO_P5 */,
+                    106 /* MICROBIT_ID_IO_P6 */,
+                    107 /* MICROBIT_ID_IO_P7 */,
+                    108 /* MICROBIT_ID_IO_P8 */,
+                    109 /* MICROBIT_ID_IO_P9 */,
+                    110 /* MICROBIT_ID_IO_P10 */,
+                    111 /* MICROBIT_ID_IO_P11 */,
+                    112 /* MICROBIT_ID_IO_P12 */,
+                    113 /* MICROBIT_ID_IO_P13 */,
+                    114 /* MICROBIT_ID_IO_P14 */,
+                    115 /* MICROBIT_ID_IO_P15 */,
+                    116 /* MICROBIT_ID_IO_P16 */,
                     0,
                     0,
-                    24 /* MICROBIT_ID_IO_P19 */,
-                    25 /* MICROBIT_ID_IO_P20 */
+                    119 /* MICROBIT_ID_IO_P19 */,
+                    120 /* MICROBIT_ID_IO_P20 */
                 ],
                 servos: {
-                    "P0": 7 /* MICROBIT_ID_IO_P0 */,
-                    "P1": 8 /* MICROBIT_ID_IO_P1 */,
-                    "P2": 9 /* MICROBIT_ID_IO_P2 */,
-                    "P3": 10 /* MICROBIT_ID_IO_P3 */,
-                    "P4": 11 /* MICROBIT_ID_IO_P4 */,
-                    "P5": 12 /* MICROBIT_ID_IO_P5 */,
-                    "P6": 13 /* MICROBIT_ID_IO_P6 */,
-                    "P7": 14 /* MICROBIT_ID_IO_P7 */,
-                    "P8": 15 /* MICROBIT_ID_IO_P8 */,
-                    "P9": 16 /* MICROBIT_ID_IO_P9 */,
-                    "P10": 17 /* MICROBIT_ID_IO_P10 */,
-                    "P11": 18 /* MICROBIT_ID_IO_P11 */,
-                    "P12": 19 /* MICROBIT_ID_IO_P12 */,
-                    "P13": 20 /* MICROBIT_ID_IO_P13 */,
-                    "P14": 21 /* MICROBIT_ID_IO_P14 */,
-                    "P15": 22 /* MICROBIT_ID_IO_P15 */,
-                    "P16": 23 /* MICROBIT_ID_IO_P16 */,
-                    "P19": 24 /* MICROBIT_ID_IO_P19 */
+                    "P0": 100 /* MICROBIT_ID_IO_P0 */,
+                    "P1": 101 /* MICROBIT_ID_IO_P1 */,
+                    "P2": 102 /* MICROBIT_ID_IO_P2 */,
+                    "P3": 103 /* MICROBIT_ID_IO_P3 */,
+                    "P4": 104 /* MICROBIT_ID_IO_P4 */,
+                    "P5": 105 /* MICROBIT_ID_IO_P5 */,
+                    "P6": 106 /* MICROBIT_ID_IO_P6 */,
+                    "P7": 107 /* MICROBIT_ID_IO_P7 */,
+                    "P8": 108 /* MICROBIT_ID_IO_P8 */,
+                    "P9": 109 /* MICROBIT_ID_IO_P9 */,
+                    "P10": 110 /* MICROBIT_ID_IO_P10 */,
+                    "P11": 111 /* MICROBIT_ID_IO_P11 */,
+                    "P12": 112 /* MICROBIT_ID_IO_P12 */,
+                    "P13": 113 /* MICROBIT_ID_IO_P13 */,
+                    "P14": 114 /* MICROBIT_ID_IO_P14 */,
+                    "P15": 115 /* MICROBIT_ID_IO_P15 */,
+                    "P16": 116 /* MICROBIT_ID_IO_P16 */,
+                    "P19": 119 /* MICROBIT_ID_IO_P19 */
                 }
             });
             _this.builtinParts["radio"] = _this.radioState = new pxsim.RadioState(pxsim.runtime, {
-                ID_RADIO: 29 /* MICROBIT_ID_RADIO */,
+                ID_RADIO: 9 /* MICROBIT_ID_RADIO */,
                 RADIO_EVT_DATAGRAM: 1 /* MICROBIT_RADIO_EVT_DATAGRAM */
             });
             _this.builtinParts["accelerometer"] = _this.accelerometerState = new pxsim.AccelerometerState(pxsim.runtime);
@@ -82,15 +85,15 @@ var pxsim;
             _this.builtinParts["thermometer"] = _this.thermometerState = new pxsim.ThermometerState();
             _this.builtinParts["lightsensor"] = _this.lightSensorState = new pxsim.LightSensorState();
             _this.builtinParts["compass"] = _this.compassState = new pxsim.CompassState();
-            _this.builtinParts["neopixel"] = _this.neopixelState = new pxsim.NeoPixelState();
             _this.builtinParts["microservo"] = _this.edgeConnectorState;
             _this.builtinVisuals["buttonpair"] = function () { return new pxsim.visuals.ButtonPairView(); };
             _this.builtinVisuals["ledmatrix"] = function () { return new pxsim.visuals.LedMatrixView(); };
-            _this.builtinVisuals["neopixel"] = function () { return new pxsim.visuals.NeoPixelView(); };
             _this.builtinVisuals["microservo"] = function () { return new pxsim.visuals.MicroServoView(); };
+            _this.builtinParts["neopixel"] = function (pin) { return _this.neopixelState(pin.id); };
+            _this.builtinVisuals["neopixel"] = function () { return new pxsim.visuals.NeoPixelView(pxsim.parsePinString); };
+            _this.builtinPartVisuals["neopixel"] = function (xy) { return pxsim.visuals.mkNeoPixelPart(xy); };
             _this.builtinPartVisuals["buttonpair"] = function (xy) { return pxsim.visuals.mkBtnSvg(xy); };
             _this.builtinPartVisuals["ledmatrix"] = function (xy) { return pxsim.visuals.mkLedMatrixSvg(xy, 8, 8); };
-            _this.builtinPartVisuals["neopixel"] = function (xy) { return pxsim.visuals.mkNeoPixelPart(xy); };
             _this.builtinPartVisuals["microservo"] = function (xy) { return pxsim.visuals.mkMicroServoPart(xy); };
             return _this;
         }
@@ -137,6 +140,18 @@ var pxsim;
             document.body.appendChild(this.view = this.viewHost.getView());
             return Promise.resolve();
         };
+        DalBoard.prototype.tryGetNeopixelState = function (pinId) {
+            return this.lightState[pinId];
+        };
+        DalBoard.prototype.neopixelState = function (pinId) {
+            if (pinId === undefined) {
+                pinId = 100 /* MICROBIT_ID_IO_P0 */;
+            }
+            var state = this.lightState[pinId];
+            if (!state)
+                state = this.lightState[pinId] = new pxsim.CommonNeoPixelState();
+            return state;
+        };
         DalBoard.prototype.screenshotAsync = function (width) {
             return this.viewHost.screenshotAsync(width);
         };
@@ -175,6 +190,16 @@ var pxsim;
         return pxsim.runtime.board;
     }
     pxsim.board = board;
+    function parsePinString(gpioPin) {
+        if (gpioPin == "*")
+            return board().edgeConnectorState.getPin(100 /* MICROBIT_ID_IO_P0 */);
+        var m = /^(Analog|Digital)Pin\.P(\d)+/.exec(gpioPin);
+        if (!m)
+            return undefined;
+        var pinNum = parseInt(m[2]);
+        return board().edgeConnectorState.pins[pinNum];
+    }
+    pxsim.parsePinString = parsePinString;
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {
@@ -191,11 +216,12 @@ var pxsim;
         }
         function onGesture(gesture, handler) {
             var b = accForGesture(gesture);
-            pxsim.pxtcore.registerWithDal(27 /* MICROBIT_ID_GESTURE */, gesture, handler);
+            pxsim.pxtcore.registerWithDal(13 /* MICROBIT_ID_GESTURE */, gesture, handler);
         }
         input.onGesture = onGesture;
         function isGesture(gesture) {
             var b = accForGesture(gesture);
+            b.accelerometer.activate();
             return b.accelerometer.getGesture() == gesture;
         }
         input.isGesture = isGesture;
@@ -213,30 +239,25 @@ var pxsim;
                     acc.activate(pxsim.AccelerometerFlag.Z);
                     return acc.getZ();
                 default:
-                    acc.activate();
-                    return Math.floor(Math.sqrt(acc.instantaneousAccelerationSquared()));
+                    acc.activate(pxsim.AccelerometerFlag.Strength);
+                    return acc.getStrength();
             }
         }
         input.acceleration = acceleration;
         function rotation(kind) {
             var b = pxsim.board().accelerometerState;
             var acc = b.accelerometer;
-            acc.activate();
-            var x = acc.getX(pxsim.MicroBitCoordinateSystem.NORTH_EAST_DOWN);
-            var y = acc.getY(pxsim.MicroBitCoordinateSystem.NORTH_EAST_DOWN);
-            var z = acc.getZ(pxsim.MicroBitCoordinateSystem.NORTH_EAST_DOWN);
-            var roll = Math.atan2(y, z);
-            var pitch = Math.atan(-x / (y * Math.sin(roll) + z * Math.cos(roll)));
-            var r = 0;
             switch (kind) {
-                case 0:
-                    r = pitch;
-                    break;
-                case 1:
-                    r = roll;
-                    break;
+                case 0: {
+                    acc.activate(pxsim.AccelerometerFlag.Pitch);
+                    return acc.getPitch();
+                }
+                case 1: {
+                    acc.activate(pxsim.AccelerometerFlag.Roll);
+                    return acc.getRoll();
+                }
+                default: return 0;
             }
-            return Math.floor(r / Math.PI * 180);
         }
         input.rotation = rotation;
         function setAccelerometerRange(range) {
@@ -288,6 +309,9 @@ var pxsim;
         AccelerometerFlag[AccelerometerFlag["X"] = 1] = "X";
         AccelerometerFlag[AccelerometerFlag["Y"] = 2] = "Y";
         AccelerometerFlag[AccelerometerFlag["Z"] = 4] = "Z";
+        AccelerometerFlag[AccelerometerFlag["Strength"] = 8] = "Strength";
+        AccelerometerFlag[AccelerometerFlag["Pitch"] = 16] = "Pitch";
+        AccelerometerFlag[AccelerometerFlag["Roll"] = 32] = "Roll";
     })(AccelerometerFlag = pxsim.AccelerometerFlag || (pxsim.AccelerometerFlag = {}));
     var Accelerometer = /** @class */ (function () {
         function Accelerometer(runtime) {
@@ -300,7 +324,7 @@ var pxsim;
             this.isActive = false;
             this.sampleRange = 2;
             this.flags = 0;
-            this.id = 4 /* MICROBIT_ID_ACCELEROMETER */;
+            this.id = 5 /* MICROBIT_ID_ACCELEROMETER */;
         }
         Accelerometer.prototype.setSampleRange = function (range) {
             this.activate();
@@ -311,7 +335,7 @@ var pxsim;
                 this.isActive = true;
                 this.runtime.queueDisplayUpdate();
             }
-            if (flags)
+            if (!!flags)
                 this.flags |= flags;
         };
         /**
@@ -327,6 +351,26 @@ var pxsim;
             this.updateGesture();
             // Indicate that a new sample is available
             pxsim.board().bus.queue(this.id, 1 /* MICROBIT_ACCELEROMETER_EVT_DATA_UPDATE */);
+        };
+        Accelerometer.prototype.getStrength = function () {
+            return Math.floor(Math.sqrt(this.instantaneousAccelerationSquared()));
+        };
+        Accelerometer.prototype.updateEnvironmentGlobals = function () {
+            // update debugger
+            if (this.isActive) {
+                if (this.flags & AccelerometerFlag.X)
+                    this.runtime.environmentGlobals[pxsim.localization.lf("acceleration.x")] = this.sample.x;
+                if (this.flags & AccelerometerFlag.Y)
+                    this.runtime.environmentGlobals[pxsim.localization.lf("acceleration.y")] = this.sample.y;
+                if (this.flags & AccelerometerFlag.Z)
+                    this.runtime.environmentGlobals[pxsim.localization.lf("acceleration.z")] = this.sample.z;
+                if (this.flags & AccelerometerFlag.Strength)
+                    this.runtime.environmentGlobals[pxsim.localization.lf("acceleration.strength")] = Math.sqrt(this.instantaneousAccelerationSquared());
+                if (this.flags & AccelerometerFlag.Pitch)
+                    this.runtime.environmentGlobals[pxsim.localization.lf("acceleration.pitch")] = this.getPitch();
+                if (this.flags & AccelerometerFlag.Roll)
+                    this.runtime.environmentGlobals[pxsim.localization.lf("acceleration.roll")] = this.getRoll();
+            }
         };
         Accelerometer.prototype.instantaneousAccelerationSquared = function () {
             // Use pythagoras theorem to determine the combined force acting on the device.
@@ -415,7 +459,7 @@ var pxsim;
         };
         Accelerometer.prototype.enqueueCurrentGesture = function () {
             this.lastGesture = this.currentGesture;
-            pxsim.board().bus.queue(27 /* MICROBIT_ID_GESTURE */, this.lastGesture);
+            pxsim.board().bus.queue(13 /* MICROBIT_ID_GESTURE */, this.lastGesture);
         };
         /**
           * Reads the X axis value of the latest update from the accelerometer.
@@ -430,7 +474,6 @@ var pxsim;
           */
         Accelerometer.prototype.getX = function (system) {
             if (system === void 0) { system = MicroBitCoordinateSystem.SIMPLE_CARTESIAN; }
-            this.activate();
             switch (system) {
                 case MicroBitCoordinateSystem.SIMPLE_CARTESIAN:
                     return -this.sample.x;
@@ -454,7 +497,6 @@ var pxsim;
           */
         Accelerometer.prototype.getY = function (system) {
             if (system === void 0) { system = MicroBitCoordinateSystem.SIMPLE_CARTESIAN; }
-            this.activate();
             switch (system) {
                 case MicroBitCoordinateSystem.SIMPLE_CARTESIAN:
                     return -this.sample.y;
@@ -478,7 +520,6 @@ var pxsim;
           */
         Accelerometer.prototype.getZ = function (system) {
             if (system === void 0) { system = MicroBitCoordinateSystem.SIMPLE_CARTESIAN; }
-            this.activate();
             switch (system) {
                 case MicroBitCoordinateSystem.NORTH_EAST_DOWN:
                     return -this.sample.z;
@@ -498,7 +539,6 @@ var pxsim;
           * @endcode
           */
         Accelerometer.prototype.getPitch = function () {
-            this.activate();
             return Math.floor((360 * this.getPitchRadians()) / (2 * Math.PI));
         };
         Accelerometer.prototype.getPitchRadians = function () {
@@ -515,7 +555,6 @@ var pxsim;
           * @endcode
           */
         Accelerometer.prototype.getRoll = function () {
-            this.activate();
             return Math.floor((360 * this.getRollRadians()) / (2 * Math.PI));
         };
         Accelerometer.prototype.getRollRadians = function () {
@@ -804,7 +843,7 @@ var pxsim;
             var pin = pxsim.getPin(pinId);
             if (!pin)
                 return;
-            pin.pull = pull;
+            pin.setPull(pull);
         }
         pins_1.setPull = setPull;
         function analogReadPin(pinId) {
@@ -820,7 +859,7 @@ var pxsim;
             if (!pin)
                 return;
             pin.mode = pxsim.PinFlags.Analog | pxsim.PinFlags.Output;
-            pin.value = value ? 1 : 0;
+            pin.value = value | 0;
             pxsim.runtime.queueDisplayUpdate();
         }
         pins_1.analogWritePin = analogWritePin;
@@ -863,22 +902,36 @@ var pxsim;
             pin.pitch = true;
         }
         pins_1.analogSetPitchPin = analogSetPitchPin;
+        function analogSetPitchVolume(volume) {
+            var ec = pxsim.board().edgeConnectorState;
+            ec.pitchVolume = Math.max(0, Math.min(0xff, volume | 0));
+        }
+        pins_1.analogSetPitchVolume = analogSetPitchVolume;
+        function analogPitchVolume() {
+            var ec = pxsim.board().edgeConnectorState;
+            return ec.pitchVolume;
+        }
+        pins_1.analogPitchVolume = analogPitchVolume;
         function analogPitch(frequency, ms) {
             // update analog output
-            var pins = pxsim.board().edgeConnectorState.pins;
+            var ec = pxsim.board().edgeConnectorState;
+            var pins = ec.pins;
             var pin = pins.filter(function (pin) { return !!pin && pin.pitch; })[0] || pins[0];
+            var pitchVolume = ec.pitchVolume | 0;
             pin.mode = pxsim.PinFlags.Analog | pxsim.PinFlags.Output;
-            if (frequency <= 0) {
+            if (frequency <= 0 || pitchVolume <= 0) {
                 pin.value = 0;
                 pin.period = 0;
             }
             else {
-                pin.value = 512;
+                var v_1 = 1 << (pitchVolume >> 5);
+                pin.value = v_1;
                 pin.period = 1000000 / frequency;
             }
             pxsim.runtime.queueDisplayUpdate();
             var cb = pxsim.getResume();
-            pxsim.AudioContextManager.tone(frequency, 1);
+            var v = pitchVolume / 0xff;
+            pxsim.AudioContextManager.tone(frequency, v);
             if (ms <= 0)
                 cb();
             else {
@@ -929,6 +982,17 @@ var pxsim;
         };
         Pin.prototype.setPull = function (pull) {
             this.pull = pull;
+            switch (pull) {
+                case 0 /* PullDown */:
+                    this.value = 0;
+                    break;
+                case 1 /* PullUp */:
+                    this.value = 1023;
+                    break;
+                default:
+                    this.value = pxsim.Math_.randomRange(0, 1023);
+                    break;
+            }
         };
         Pin.prototype.analogReadPin = function () {
             this.mode = PinFlags.Analog | PinFlags.Input;
@@ -969,6 +1033,7 @@ var pxsim;
         function EdgeConnectorState(props) {
             this.props = props;
             this.pins = props.pins.map(function (id) { return id != undefined ? new Pin(id) : null; });
+            this.pitchVolume = 64;
         }
         EdgeConnectorState.prototype.getPin = function (id) {
             return this.pins.filter(function (p) { return p && p.id == id; })[0] || null;
@@ -1034,53 +1099,53 @@ var pxsim;
             var _this = _super.call(this) || this;
             _this.width = width;
             _this.data = data;
+            _this.height = (_this.data.length / _this.width) | 0;
             return _this;
         }
         Image.prototype.print = function () {
-            console.debug("Image id:" + this.id + " size:" + this.width + "x" + Image.height);
+            console.debug("Image id:" + this.id + " size:" + this.width + "x" + this.height);
         };
         Image.prototype.get = function (x, y) {
-            x = x >> 0;
-            y = y >> 0;
-            if (x < 0 || x >= this.width || y < 0 || y >= 5)
+            x = x | 0;
+            y = y | 0;
+            if (x < 0 || x >= this.width || y < 0 || y >= this.height)
                 return 0;
             return this.data[y * this.width + x];
         };
         Image.prototype.set = function (x, y, v) {
-            x = x >> 0;
-            y = y >> 0;
-            if (x < 0 || x >= this.width || y < 0 || y >= 5)
+            x = x | 0;
+            y = y | 0;
+            if (x < 0 || x >= this.width || y < 0 || y >= this.height)
                 return;
             this.data[y * this.width + x] = Math.max(0, Math.min(255, v));
         };
         Image.prototype.copyTo = function (xSrcIndex, length, target, xTargetIndex) {
-            xSrcIndex = xSrcIndex >> 0;
-            length = length >> 0;
-            xTargetIndex = xTargetIndex >> 0;
+            xSrcIndex = xSrcIndex | 0;
+            length = length | 0;
+            xTargetIndex = xTargetIndex | 0;
             for (var x = 0; x < length; x++) {
-                for (var y = 0; y < 5; y++) {
+                for (var y = 0; y < this.height; y++) {
                     var value = this.get(xSrcIndex + x, y);
                     target.set(xTargetIndex + x, y, value);
                 }
             }
         };
         Image.prototype.shiftLeft = function (cols) {
-            cols = cols >> 0;
+            cols = cols | 0;
             for (var x = 0; x < this.width; ++x)
-                for (var y = 0; y < 5; ++y)
+                for (var y = 0; y < this.height; ++y)
                     this.set(x, y, x < this.width - cols ? this.get(x + cols, y) : 0);
         };
         Image.prototype.shiftRight = function (cols) {
             cols = cols >> 0;
             for (var x = this.width - 1; x >= 0; --x)
-                for (var y = 0; y < 5; ++y)
+                for (var y = 0; y < this.height; ++y)
                     this.set(x, y, x >= cols ? this.get(x - cols, y) : 0);
         };
         Image.prototype.clear = function () {
             for (var i = 0; i < this.data.length; ++i)
                 this.data[i] = 0;
         };
-        Image.height = 5;
         return Image;
     }(pxsim.RefObject));
     pxsim.Image = Image;
@@ -1096,7 +1161,7 @@ var pxsim;
     }
     pxsim.createImage = createImage;
     function createImageFromBuffer(data) {
-        return new Image(data.length / 5, data);
+        return new Image((data.length / 5) | 0, data);
     }
     pxsim.createImageFromBuffer = createImageFromBuffer;
     function createImageFromString(text) {
@@ -1190,7 +1255,7 @@ var pxsim;
         ImageMethods.plotImage = plotImage;
         function height(leds) {
             pxsim.pxtrt.nullCheck(leds);
-            return pxsim.Image.height;
+            return leds.height;
         }
         ImageMethods.height = height;
         function width(leds) {
@@ -1199,11 +1264,11 @@ var pxsim;
         }
         ImageMethods.width = width;
         function plotFrame(leds, frame) {
-            ImageMethods.plotImage(leds, frame * pxsim.Image.height);
+            ImageMethods.plotImage(leds, frame * leds.height);
         }
         ImageMethods.plotFrame = plotFrame;
         function showFrame(leds, frame, interval) {
-            ImageMethods.showImage(leds, frame * pxsim.Image.height, interval);
+            ImageMethods.showImage(leds, frame * leds.height, interval);
         }
         ImageMethods.showFrame = showFrame;
         function pixel(leds, x, y) {
@@ -1352,10 +1417,10 @@ var pxsim;
             pxsim.runtime.queueDisplayUpdate();
         }
         led.unplot = unplot;
-        function point(x, y) {
-            return !!pxsim.board().ledMatrixState.image.get(x, y);
+        function pointBrightness(x, y) {
+            return pxsim.board().ledMatrixState.image.get(x | 0, y | 0);
         }
-        led.point = point;
+        led.pointBrightness = pointBrightness;
         function brightness() {
             return pxsim.board().ledMatrixState.brigthness;
         }
@@ -1543,6 +1608,11 @@ var pxsim;
             // TODO
         }
         control.waitMicros = waitMicros;
+        function waitForEvent(id, evid) {
+            var cb = pxsim.getResume();
+            pxsim.board().bus.wait(id, evid, cb);
+        }
+        control.waitForEvent = waitForEvent;
         function millis() {
             return pxsim.runtime.runningTime();
         }
@@ -1566,7 +1636,7 @@ var pxsim;
         }
         control.deviceSerialNumber = deviceSerialNumber;
         function onEvent(id, evid, handler) {
-            if (id == 26 /* MICROBIT_ID_BUTTON_AB */) {
+            if (id == 3 /* MICROBIT_ID_BUTTON_AB */) {
                 var b = pxsim.board().buttonPairState;
                 if (!b.usesButtonAB) {
                     b.usesButtonAB = true;
@@ -1768,21 +1838,6 @@ var pxsim;
 })(pxsim || (pxsim = {}));
 var pxsim;
 (function (pxsim) {
-    function sendBufferAsm(buffer, pin) {
-        var b = pxsim.board();
-        if (b) {
-            var np = b.neopixelState;
-            if (np) {
-                var buf = buffer.data;
-                np.updateBuffer(buf, pin); // TODO this is wrong
-                pxsim.runtime.queueDisplayUpdate();
-            }
-        }
-    }
-    pxsim.sendBufferAsm = sendBufferAsm;
-})(pxsim || (pxsim = {}));
-var pxsim;
-(function (pxsim) {
     var SERIAL_BUFFER_LENGTH = 16;
     var SerialState = /** @class */ (function () {
         function SerialState() {
@@ -1842,7 +1897,7 @@ var pxsim;
         serial.readString = readString;
         function onDataReceived(delimiters, handler) {
             var b = pxsim.board();
-            b.bus.listen(32 /* MICROBIT_ID_SERIAL */, 1 /* MICROBIT_SERIAL_EVT_DELIM_MATCH */, handler);
+            b.bus.listen(12 /* MICROBIT_ID_SERIAL */, 1 /* MICROBIT_SERIAL_EVT_DELIM_MATCH */, handler);
         }
         serial.onDataReceived = onDataReceived;
         function redirect(tx, rx, rate) {
@@ -2199,7 +2254,7 @@ var pxsim;
                 this.updateTemperature();
                 this.updateButtonAB();
                 this.updateGestures();
-                if (!pxsim.runtime || pxsim.runtime.dead)
+                if (!this.props.runtime || this.props.runtime.dead)
                     pxsim.U.addClass(this.element, "grayscale");
                 else
                     pxsim.U.removeClass(this.element, "grayscale");
@@ -2299,6 +2354,8 @@ var pxsim;
                         fill: "url(#" + gid + ")"
                     });
                     this.thermometerText = pxsim.svg.child(this.g, "text", { class: 'sim-text', x: 58, y: 130 });
+                    if (this.props.runtime)
+                        this.props.runtime.environmentGlobals[pxsim.localization.lf("temperature")] = state.thermometerState.temperature;
                     this.updateTheme();
                     var pt_1 = this.element.createSVGPoint();
                     pxsim.svg.buttonEvents(this.thermometer, 
@@ -2372,6 +2429,8 @@ var pxsim;
                 if (txt != this.headText.textContent) {
                     pxsim.svg.rotateElement(this.head, xc, yc, state.compassState.heading + 180);
                     this.headText.textContent = txt;
+                    if (this.props.runtime)
+                        this.props.runtime.environmentGlobals[pxsim.localization.lf("heading")] = state.compassState.heading;
                 }
             };
             MicrobitBoardSvg.prototype.flashSystemLed = function () {
@@ -2454,6 +2513,8 @@ var pxsim;
                         }
                     });
                     this.lightLevelText = pxsim.svg.child(this.g, "text", { x: 85, y: cy_1 + r_1 - 5, text: '', class: 'sim-text' });
+                    if (this.props.runtime)
+                        this.props.runtime.environmentGlobals[pxsim.localization.lf("lightLevel")] = state.lightSensorState.lightLevel;
                     this.updateTheme();
                     pxsim.accessibility.makeFocusable(this.lightLevelButton);
                     pxsim.accessibility.setAria(this.lightLevelButton, "slider", "Light level");
@@ -2488,6 +2549,7 @@ var pxsim;
                 var z = acc.getZ();
                 var af = 8 / 1023;
                 var s = 1 - Math.min(0.1, Math.pow(Math.max(Math.abs(x), Math.abs(y)) / 1023, 2) / 35);
+                acc.updateEnvironmentGlobals();
                 // fix top parent and apply style to it
                 var el = this.findParentElement();
                 el.style.transform = "perspective(30em) rotateX(" + y * af + "deg) rotateY(" + x * af + "deg) scale(" + s + ", " + s + ")";
@@ -2868,10 +2930,81 @@ var pxsim;
         visuals.MicrobitBoardSvg = MicrobitBoardSvg;
     })(visuals = pxsim.visuals || (pxsim.visuals = {}));
 })(pxsim || (pxsim = {}));
-/// <reference path="../../node_modules/pxt-core/built/pxtsim.d.ts"/>
-/// <reference path="../../libs/core/dal.d.ts"/>
-/// <reference path="../../libs/core/enums.d.ts"/>
 var pxsim;
+(function (pxsim) {
+    var NeoPixelMode;
+    (function (NeoPixelMode) {
+        NeoPixelMode[NeoPixelMode["RGB"] = 1] = "RGB";
+        NeoPixelMode[NeoPixelMode["RGBW"] = 2] = "RGBW";
+        NeoPixelMode[NeoPixelMode["RGB_RGB"] = 3] = "RGB_RGB";
+        NeoPixelMode[NeoPixelMode["DotStar"] = 4] = "DotStar";
+    })(NeoPixelMode = pxsim.NeoPixelMode || (pxsim.NeoPixelMode = {}));
+    var CommonNeoPixelState = /** @class */ (function () {
+        function CommonNeoPixelState() {
+            this.mode = NeoPixelMode.RGB; // GRB
+        }
+        Object.defineProperty(CommonNeoPixelState.prototype, "length", {
+            get: function () {
+                return this.buffer ? (this.buffer.length / this.stride) | 0 : 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CommonNeoPixelState.prototype, "stride", {
+            get: function () {
+                return this.mode == NeoPixelMode.RGBW || this.mode == NeoPixelMode.DotStar ? 4 : 3;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        CommonNeoPixelState.prototype.pixelColor = function (pixel) {
+            var offset = pixel * this.stride;
+            // RBG
+            switch (this.mode) {
+                case NeoPixelMode.RGBW:
+                    return [this.buffer[offset + 1], this.buffer[offset], this.buffer[offset + 2], this.buffer[offset + 3]];
+                case NeoPixelMode.RGB_RGB:
+                    return [this.buffer[offset], this.buffer[offset + 1], this.buffer[offset + 2]];
+                case NeoPixelMode.DotStar:
+                    return [this.buffer[offset + 3], this.buffer[offset + 2], this.buffer[offset + 1]];
+                default:
+                    return [this.buffer[offset + 1], this.buffer[offset + 0], this.buffer[offset + 2]];
+            }
+        };
+        return CommonNeoPixelState;
+    }());
+    pxsim.CommonNeoPixelState = CommonNeoPixelState;
+    function neopixelState(pinId) {
+        return pxsim.board().neopixelState(pinId);
+    }
+    pxsim.neopixelState = neopixelState;
+    function sendBufferAsm(buffer, pin) {
+        var b = pxsim.board();
+        if (!b)
+            return;
+        var p = b.edgeConnectorState.getPin(pin);
+        if (!p)
+            return;
+        var mode = NeoPixelMode.RGB_RGB; // RGB_RGB
+        pxsim.light.sendBuffer(p, undefined, mode, buffer);
+    }
+    pxsim.sendBufferAsm = sendBufferAsm;
+})(pxsim || (pxsim = {}));
+(function (pxsim) {
+    var light;
+    (function (light) {
+        // Currently only modifies the builtin pixels
+        function sendBuffer(pin, clk, mode, b) {
+            var state = pxsim.neopixelState(pin.id);
+            if (!state)
+                return;
+            state.mode = mode & 0xff; // TODO RGBW support
+            state.buffer = b.data;
+            pxsim.runtime.queueDisplayUpdate();
+        }
+        light.sendBuffer = sendBuffer;
+    })(light = pxsim.light || (pxsim.light = {}));
+})(pxsim || (pxsim = {}));
 (function (pxsim) {
     var visuals;
     (function (visuals) {
@@ -2960,7 +3093,7 @@ var pxsim;
                         this.canvas.appendChild(pixel.el);
                     }
                     var color = colors[i];
-                    pixel.setRgb([color[0], color[1], color[2]]);
+                    pixel.setRgb(color);
                 }
                 //show the canvas if it's hidden
                 pxsim.U.removeClass(this.background, "hidden");
@@ -2983,43 +3116,23 @@ var pxsim;
         }());
         visuals.NeoPixelCanvas = NeoPixelCanvas;
         ;
-        function digitalPinToPinNumber(gpioPin) {
-            var MICROBIT_ID_IO_P0 = 7; //TODO: don't hardcode this, import enums.d.ts
-            if (gpioPin == "*") {
-                return MICROBIT_ID_IO_P0;
-            }
-            var pinSplit = gpioPin.split("DigitalPin.P");
-            pxsim.U.assert(pinSplit.length === 2, "Unknown format for pin (for NeoPixel): " + gpioPin);
-            var pinNumStr = pinSplit[1];
-            var pinNum = Number(pinNumStr) + MICROBIT_ID_IO_P0;
-            return pinNum;
-        }
-        function parseNeoPixelMode(modeStr) {
-            var modeMap = {
-                "NeoPixelMode.RGB": pxsim.NeoPixelMode.RGB,
-                "NeoPixelMode.RGBW": pxsim.NeoPixelMode.RGBW
-            };
-            return modeMap[modeStr] || pxsim.NeoPixelMode.RGB;
-        }
         var NeoPixelView = /** @class */ (function () {
-            function NeoPixelView() {
+            function NeoPixelView(parsePinString) {
+                this.parsePinString = parsePinString;
                 this.style = "\n            .sim-neopixel-canvas {\n            }\n            .sim-neopixel-canvas-parent:hover {\n                transform-origin: center;\n                transform: scale(4) translateY(-60px);\n                -moz-transform: scale(4) translateY(-220px);\n            }\n            .sim-neopixel-canvas .hidden {\n                visibility:hidden;\n            }\n            .sim-neopixel-background {\n                fill: rgba(255,255,255,0.9);\n            }\n            .sim-neopixel-strip {\n            }\n        ";
             }
             NeoPixelView.prototype.init = function (bus, state, svgEl, otherParams) {
-                pxsim.U.assert(!!otherParams["mode"], "NeoPixels assumes a RGB vs RGBW mode is passed to it");
-                pxsim.U.assert(!!otherParams["pin"], "NeoPixels assumes a pin is passed to it");
-                var modeStr = otherParams["mode"];
-                this.mode = parseNeoPixelMode(modeStr);
-                this.state = state;
                 this.stripGroup = pxsim.svg.elt("g");
                 this.element = this.stripGroup;
-                var pinStr = otherParams["pin"];
-                this.pin = digitalPinToPinNumber(pinStr);
+                this.pin = this.parsePinString(otherParams["dataPin"] || otherParams["pin"])
+                    || this.parsePinString("pins.NEOPIXEL")
+                    || this.parsePinString("pins.MOSI");
                 this.lastLocation = [0, 0];
+                this.state = state(this.pin);
                 var part = mkNeoPixelPart();
                 this.part = part;
                 this.stripGroup.appendChild(part.el);
-                var canvas = new NeoPixelCanvas(this.pin);
+                var canvas = new NeoPixelCanvas(this.pin.id);
                 this.canvas = canvas;
                 var canvasG = pxsim.svg.elt("g", { class: "sim-neopixel-canvas-parent" });
                 this.overElement = canvasG;
@@ -3039,7 +3152,10 @@ var pxsim;
                 pxsim.svg.hydrate(this.part.el, { transform: "translate(" + x + " " + y + ")" }); //TODO: update part's l,h, etc.
             };
             NeoPixelView.prototype.updateState = function () {
-                var colors = this.state.getColors(this.pin, this.mode);
+                var colors = [];
+                for (var i = 0; i < this.state.length; i++) {
+                    colors.push(this.state.pixelColor(i));
+                }
                 this.canvas.update(colors);
             };
             NeoPixelView.prototype.updateTheme = function () { };

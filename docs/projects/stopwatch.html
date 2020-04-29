@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,55 +1714,35 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="stopwatch">Stopwatch</h1><p><img class="ui image" src="/static/mb/projects/stopwatch.png" alt="A micro:bit stopwatch toon image" loading="lazy"></p>
-<p>This project turns the micro:bit into a simple stopwatch. Pressing <strong>A</strong> will start the timer. Pressing <strong>A</strong> again will show the amount of elapsed time and reset the timer. Let’s get started.</p>
-
-    <div class="ui info message">
-        <div class="content">
-            <p>If you built a watch in the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/projects/watch/make.html">make</a> portion of the of the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/projects/watch.html">Watch</a> project, you can use the code from this project with it too.</p>
-
-        </div>
-    </div>
-<h2 id="program-state">Program state</h2><p>When coding we often use the idea of <em>state</em> to decide what action needs to happen next. The state of the program is the condition or situation of the program depending on what events it’s concerned about. It may decide to remain in its current state or take an action to change the state.</p>
-<p>We do this in real life too. For example, if you feel hungry, your present state is <strong>hunger</strong>. Eating a meal will change your state from <strong>hunger</strong> to <strong>satisfied</strong>. Also, if you’re thirsty, drinking enough water might change your state from <strong>thirst</strong> to <strong>satisfied</strong>. But, if you wait too long to eat or drink, you’re state could change back to <strong>hunger</strong> or <strong>thirst</strong>.</p>
-<p>The stopwatch has two states: it is either <strong>(1) stopped</strong> or <strong>(2) measuring time</strong>. Let’s create a new variable <code>start_time</code> to track the state:</p>
-<ul>
-<li>if <code>start_time</code> is equal to <code>0</code>, the watch is stopped - <strong>state 1</strong></li>
-<li>if <code>start_time</code> is <strong>not</strong> equal to <code>0</code>, the watch is running and the value of <code>start_time</code> is the time recorded when started - <strong>state 2</strong></li>
-</ul>
-<h2 id="pseudo-code">Pseudo code</h2><p>This is the <em>rough</em> outline of the code:</p>
-<blockquote>
-<p>When a user presses <strong>A</strong>, we start by determining which state we’re in.</p>
-</blockquote>
-<blockquote>
-<p>If the watch is stopped, (<code>start_time</code> is <code>0</code> and this means we’re in <strong>state 1</strong>), we start the counter and store the current time. The watch now goes from <strong>state 1</strong> to <strong>state 2</strong>.</p>
-</blockquote>
-<blockquote>
-<p>If the watch is running (<code>start_time</code> is not <code>0</code> and this means we’re in <strong>state 2</strong>), we calculate the time duration and reset <code>start_time</code> to <code>0</code>. The watch goes back from <strong>state 2</strong> to <strong>state 1</strong>.</p>
-</blockquote>
-<p>The <code>||input:running time||</code> block returns the number of <strong>milli</strong>-seconds elapsed since the micro:bit was turned on. To compute the duration in seconds, we use the following formula:</p>
-<pre><code>duration in seconds = (current time - start time) / 1000.0</code></pre><p>In pseudo code, it could look like this:</p>
-<pre><code>on button pressed
-    if start time is 0
-        store current time into start time      
-    else
-        show duration
-        reset start time</code></pre><h2 id="real-code">Real code</h2><p>If you translate the pseudo-code line by line into blocks, it might end up like this.</p>
-<pre><code class="lang-blocks">let start_time = 0
+        <h1 id="stopwatch">Stopwatch</h1><h2 id="introduction-unplugged">Introduction </h2><p><img class="ui image" src="/static/mb/projects/stopwatch.png" alt="A micro:bit stopwatch toon image" loading="lazy"></p>
+<p>This project turns the micro:bit into a simple stopwatch. Pressing <strong>A</strong> starts the timer. Pressing <strong>B</strong> displays the elapsed seconds.</p>
+<h2 id="step-1">Step 1</h2><p>Add an event to run code when <code>||input:button A is pressed||</code>.</p>
+<pre><code class="lang-blocks">input.onButtonPressed(Button.A, function () {
+})</code></pre>
+<h2 id="step-2">Step 2</h2><p>Add code to store the current <code>||input:running time||</code>
+in a variable <code>||variables:start||</code>. This is the start time.</p>
+<pre><code class="lang-blocks">let start = 0
 input.onButtonPressed(Button.A, function () {
-    // is the watch running?
-    if (start_time == 0) {
-        // store current time
-        start_time = input.runningTime()
-        basic.showIcon(IconNames.Butterfly)
-    } else {
-        // compute duration and display it
-        basic.showNumber(Math.idiv(input.runningTime() - start_time, 1000))
-        // reset watch state
-        start_time = 0
-    }
-})
-start_time = 0</code></pre>
+    start = input.runningTime()
+})</code></pre>
+<h2 id="step-3">Step 3</h2><p>Add an event to run code when <code>||input:button B is pressed||</code>.</p>
+<pre><code class="lang-blocks">input.onButtonPressed(Button.B, function () {
+})</code></pre>
+<h2 id="step-4">Step 4</h2><p>Add code to compute the difference between the <code>||input:running time||</code> 
+and <code>||variables:value||</code> time. This is the elapsed millisecond since pressing button A.</p>
+<pre><code class="lang-blocks">let start = 0;
+input.onButtonPressed(Button.B, function () {
+    let elapsed = input.runningTime() - start;
+})</code></pre>
+<h2 id="step-5">Step 5</h2><p>Add code to <code>||basic:show||</code> the number of milliseconds <code>||variables:elapsed||</code>. 
+Use <code>||Math:integer division||</code> to divide <code>||variables:elapsed||</code> by <code>1000</code> and get seconds.</p>
+<pre><code class="lang-blocks">let start = 0;
+input.onButtonPressed(Button.B, function () {
+    let elapsed = input.runningTime() - start;
+    basic.showNumber(Math.idiv(elapsed, 1000))
+})</code></pre>
+<h2 id="step-6">Step 6</h2><p>Try your program in the simulator. Press <strong>A</strong> to start the stopwatch and press <strong>B</strong> to get the current elapsed time. You can press <strong>B</strong> multiple times.</p>
+<h2 id="step-7">Step 7</h2><p>If you have a micro:bit connected, click <code>|Download|</code> to transfer your code!</p>
 
     </div>
 
@@ -1770,7 +1781,7 @@ start_time = 0</code></pre>
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

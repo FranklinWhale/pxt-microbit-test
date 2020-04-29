@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1683,15 +1714,8 @@
 					</button>
 					
     <div class="ui text">
-        <h1 id="raspberry-pi-and-raspbian">Raspberry Pi and Raspbian</h1><p>It is possible to run the web editor or <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/cli.html">command line interface</a> from Raspbian on Raspberry Pi 2 or 3 
-with <a target="_blank" rel="nofollow noopener" href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian Jessie with Pixel</a>.</p>
-<h2 id="web-editor">Web editor</h2><p>Starting with <strong>Raspbian Pixel</strong>, Raspbian comes with Chromium. Simply open <a target="_blank" rel="nofollow noopener" href="https://makecode.microbit.org/">https://makecode.microbit.org/</a>.</p>
-<h2 id="command-line">Command line</h2><p>The command line also works on Raspbian and allows to run a local server and/or edit programs from any text editor.</p>
-<ul>
-<li>Node.JS 6.0 needs installed</li>
-</ul>
-<p>To install all the tools, </p>
-<pre><code>curl -s https://raw.githubusercontent.com/Microsoft/pxt-rpi/master/install.sh | sh -</code></pre>
+        <h1 id="raspberry-pi-and-raspbian">Raspberry Pi and Raspbian</h1><p>Starting with <strong>Raspbian Pixel</strong>, Raspbian comes with Chromium. Simply open <a target="_blank" rel="nofollow noopener" href="https://makecode.microbit.org/">https://makecode.microbit.org/</a>.</p>
+
     </div>
 
 					<div class="hideprint"></div>
@@ -1729,7 +1753,7 @@ with <a target="_blank" rel="nofollow noopener" href="https://www.raspberrypi.or
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

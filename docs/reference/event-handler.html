@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1684,8 +1715,8 @@
 					
     <div class="ui text">
         <h1 id="event-handler">event handler</h1><p>Event handlers - how they work.</p>
-<p>An event handler is code that is associated with a particular event, such as “button A pressed”. You create (or register) the association between an event and an event handler by calling a function named “on &lt;event&gt;“.  After registering an event handler with an event, then whenever that event occurs, the event handler code executes.</p>
-<h2 id="registering-an-event-handler">Registering an event handler</h2><p>Functions named “on &lt;event&gt;“ create an association between an event and the event handler code.  For example, the following code registers the event handler (the code between the <code>do</code> and <code>end</code> keywords) with the event of a press of button A:</p>
+<p>An event handler is code that is associated with a particular event, such as “button A pressed”. You create (or register) the association between an event and an event handler by calling a function named “on “.  After registering an event handler with an event, then whenever that event occurs, the event handler code executes.</p>
+<h2 id="registering-an-event-handler">Registering an event handler</h2><p>Functions named “on “ create an association between an event and the event handler code.  For example, the following code registers the event handler (the code between the <code>do</code> and <code>end</code> keywords) with the event of a press of button A:</p>
 <pre><code class="lang-blocks">input.onButtonPressed(Button.A, () =&gt; {
     basic.showString(&quot;hello&quot;, 150)
 })</code></pre>
@@ -1746,7 +1777,7 @@ input.onButtonPressed(Button.A, () =&gt; {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1685,40 +1716,38 @@
     <div class="ui text">
         <h1 id="snap-the-dot">Snap the Dot</h1><h2 id="introduction-unplugged">Introduction </h2><p>Snap the dot is a game of skill where the player has to press <strong>A</strong> exactly when the dot reaches the center of the screen.</p>
 <p>This tutorial shows how to use the game engine.</p>
-<h2 id="create-a-sprite-fullscreen">Create a sprite </h2><p>Drag a <code>||game:create sprite||</code> block onto the workspace. A sprite is a single pixel that can move on the screen. It has an <code>x</code> and <code>y</code> position along with a direction of motion.</p>
-<pre><code class="lang-blocks">let sprite: game.LedSprite = null
-sprite = game.createSprite(2, 2)</code></pre>
-<h2 id="move-the-dot-fullscreen">Move the dot </h2><p>The sprite starts in the center facing right. Put a <code>||game:move||</code> block into the <code>||basic:forever||</code> to make it move. Notice how it moves to the right but does not bounce back.</p>
-<pre><code class="lang-blocks">let sprite: game.LedSprite = null
-sprite = game.createSprite(2, 2)
+<h2 id="make-a-sprite-variable">Make a sprite variable</h2><p>Create a new variable called <code>sprite</code>. Drag a <code>||variables:set sprite to||</code> into the <code>||basic:on start||</code> on the workspace. </p>
+<pre><code class="lang-blocks">let sprite = 0</code></pre>
+<h2 id="create-a-sprite">Create a sprite</h2><p>Pull out a <code>||game:create sprite||</code> block and put it in <code>||variables:set sprite to||</code> replacing the <code>0</code>. A sprite is a single pixel that can move on the screen. It has an <code>x</code> and <code>y</code> position along with a direction of motion.</p>
+<pre><code class="lang-blocks">let sprite = game.createSprite(2, 2)</code></pre>
+<h2 id="move-the-dot">Move the dot</h2><p>The sprite starts in the center facing right. Put a <code>||game:move||</code> block into the <code>||basic:forever||</code> to make it move. Notice how it moves to the right but does not bounce back.</p>
+<pre><code class="lang-blocks">let sprite = game.createSprite(2, 2)
 basic.forever(function () {
     sprite.move(1)
 })</code></pre>
-<h2 id="bounce-fullscreen">Bounce </h2><p>Grab a <code>||game:if on edge, bounce||</code> block to make the sprite bounce on the side of the screen. Also, add a <code>||basic:pause||</code> block to slow down the sprite.</p>
-<pre><code class="lang-blocks">let sprite: game.LedSprite = null
-sprite = game.createSprite(2, 2)
+<h2 id="bounce">Bounce</h2><p>Grab a <code>||game:if on edge, bounce||</code> block to make the sprite bounce on the side of the screen. Also, add a <code>||basic:pause||</code> block to slow down the sprite.</p>
+<pre><code class="lang-blocks">let sprite = game.createSprite(2, 2)
 basic.forever(function () {
     sprite.move(1)
     sprite.ifOnEdgeBounce()
     basic.pause(100)
 })</code></pre>
 <h2 id="test-and-download">Test and download</h2><p>Use the simulator to find the best speed. If you have a micro:bit, press <code>|Download|</code> to try it out on the device.</p>
-<h2 id="button-handling-fullscreen">Button handling </h2><p>When <strong>A</strong> is pressed, we test if the sprite is in the center or not.</p>
+<h2 id="button-handling">Button handling</h2><p>When <strong>A</strong> is pressed, we test if the sprite is in the center or not.</p>
 <p>Use a <code>||input:on button pressed||</code> block to handle the <strong>A</strong> button. Put in a <code>||logic:if||</code> block and test if <code>||game:x||</code> is equal to <code>2</code>.</p>
-<pre><code class="lang-blocks">let sprite: game.LedSprite = null
+<pre><code class="lang-blocks">let sprite = game.createSprite(2, 2)
 input.onButtonPressed(Button.A, function () {
     if (sprite.get(LedSpriteProperty.X) == 2) {
     } else {
     }
 })
-sprite = game.createSprite(2, 2)
 basic.forever(function () {
     sprite.move(1)
     basic.pause(100)
     sprite.ifOnEdgeBounce()
 })</code></pre>
 <h2 id="score-and-game-over">Score and game over</h2><p>Finally, pull out an <code>||game:add score||</code> and a <code>||game:game over||</code> block to handle both success (sprite in the center) and failure (sprite not in the center).</p>
-<pre><code class="lang-blocks">let sprite: game.LedSprite = null
+<pre><code class="lang-blocks">let sprite = game.createSprite(2, 2)
 input.onButtonPressed(Button.A, function () {
     if (sprite.get(LedSpriteProperty.X) == 2) {
         game.addScore(1)
@@ -1726,7 +1755,6 @@ input.onButtonPressed(Button.A, function () {
         game.gameOver()
     }
 })
-sprite = game.createSprite(2, 2)
 basic.forever(function () {
     sprite.move(1)
     basic.pause(100)
@@ -1771,7 +1799,7 @@ basic.forever(function () {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

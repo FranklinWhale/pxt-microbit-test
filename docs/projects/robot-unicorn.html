@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1709,7 +1740,7 @@
             </div>
         </div>
     </div>
-<p><br/></p>
+<p><br /></p>
 <p><strong>2. Add in the electronics!</strong> Put on the wheels, then wire up the servos and the battery and the first micro:bit. Just watch my video to see how. </p>
 
     <div class="ui grid">
@@ -1719,7 +1750,7 @@
             </div>
         </div>
     </div>
-<p><br/></p>
+<p><br /></p>
 <p><strong>3. Code it!</strong> I’ve supplied my code below, but I’d recommend that you watch the videos I’ve made so that you understand what is going on. The first video gets you started with one micro:bit, and the second helps you take the next step: gesture controlling your robot unicorn with two micro:bits. <strong>Pro tip</strong>: there are lots of ways to get the same results using different code, so it’s totaslly fine if your code works but doesn’t match mine. </p>
 <p><strong>Getting started with micro:bit</strong></p>
 
@@ -1730,7 +1761,7 @@
             </div>
         </div>
     </div>
-<p><br/></p>
+<p><br /></p>
 <p><strong>Using gesture control and radio to control your Robot Unicorn with micro:bit</strong></p>
 
     <div class="ui grid">
@@ -1740,7 +1771,7 @@
             </div>
         </div>
     </div>
-<p><br/></p>
+<p><br /></p>
 <p><strong>4. Play!</strong> Make an obstacle course! Make another one and have a race or a dance off with a friend! Once you’ve mastered the basics of making your unicorn move around you might want to think about how to make improvements.</p>
 <p><strong>5. Tell me about it!</strong> It brings me joy to know other people make my silly inventions. You can say hi <a target="_blank" rel="nofollow noopener" href="https://twitter.com/helenleigh">on Twitter</a>, follow me <a target="_blank" rel="nofollow noopener" href="https://www.instagram.com/helenleigh_makes/">on Insta</a> or <a target="_blank" rel="nofollow noopener" href="https://youtube.com/c/HelenLeigh">subscribe to my channel on YouTube</a>.</p>
 <h2 id="code">Code</h2><p><strong>MakeCode blocks for the body of the Robot Unicorn</strong></p>
@@ -1911,7 +1942,7 @@ basic.showLeds(`
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>

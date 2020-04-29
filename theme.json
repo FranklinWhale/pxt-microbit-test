@@ -19,6 +19,7 @@
     "termsOfUseUrl": "https://makecode.com/termsofuse",
     "githubUrl": "https://github.com/Microsoft/pxt-microbit",
     "boardName": "micro:bit",
+    "boardNickname": "micro:bit",
     "driveDisplayName": "MICROBIT",
     "appStoreID": "1092687276",
     "mobileSafariDownloadProtocol": "microbithex://?data",
@@ -28,14 +29,16 @@
     "enableTrace": true,
     "ignoreDocsErrors": true,
     "experiments": [
+        "autoWebUSBDownload",
         "allowPackageExtensions",
         "instructions",
-        "debugger",
+        "accessibleBlocks",
         "debugExtensionCode",
         "bluetoothUartConsole",
         "bluetoothPartialFlashing",
         "simScreenshot",
-        "simGif"
+        "simGif",
+        "errorList"
     ],
     "bluetoothUartFilters": [
         {
@@ -124,10 +127,17 @@
             "path": "/static/mb/device/usb-windows-sendto.jpg"
         }
     ],
+    "hideHomeDetailsVideo": true,
     "invertedMenu": true,
     "coloredToolbox": true,
     "monacoToolbox": true,
     "hasAudio": true,
+    "socialOptions": {
+        "orgTwitterHandle": "MSMakeCode",
+        "hashtags": "MakeCode",
+        "discourse": "https://forum.makecode.com/",
+        "discourseCategory": "micro:bit"
+    },
     "blocklyOptions": {
         "grid": {
             "spacing": 45,
@@ -146,6 +156,7 @@
         "functions": "#3455DB",
         "arrays": "#E65722"
     },
+    "blocksCollapsing": true,
     "highContrast": true,
     "greenScreen": true,
     "print": true,
@@ -167,6 +178,7 @@
         "ko",
         "nl",
         "nb",
+        "nn-NO",
         "pl",
         "pt-BR",
         "pt-PT",
@@ -191,14 +203,18 @@
     },
     "showProjectSettings": true,
     "scriptManager": true,
+    "debugger": true,
     "simGifTransparent": "rgba(0,0,0,0)",
     "simGifMaxFrames": 44,
     "simScreenshotMaxUriLength": 300000,
     "qrCode": true,
     "importExtensionFiles": true,
+    "nameProjectFirst": true,
     "githubEditor": true,
+    "chooseLanguageRestrictionOnNewProject": true,
     "openProjectNewTab": true,
     "python": true,
+    "appFlashingTroubleshoot": "/device/windows-app/troubleshoot",
     "TOC": [
         {
             "name": "About",
@@ -1738,6 +1754,47 @@
                 {
                     "name": "Custom blocks",
                     "path": "/blocks/custom",
+                    "subitems": []
+                }
+            ]
+        },
+        {
+            "name": "Python",
+            "path": "/python",
+            "subitems": [
+                {
+                    "name": "Calling",
+                    "path": "/python/call",
+                    "subitems": []
+                },
+                {
+                    "name": "Sequencing",
+                    "path": "/python/sequence",
+                    "subitems": []
+                },
+                {
+                    "name": "Variables",
+                    "path": "/python/variables",
+                    "subitems": []
+                },
+                {
+                    "name": "Operators",
+                    "path": "/python/operators",
+                    "subitems": []
+                },
+                {
+                    "name": "Statements",
+                    "path": "/python/statements",
+                    "subitems": []
+                },
+                {
+                    "name": "Functions",
+                    "path": "/python/functions",
+                    "subitems": []
+                },
+                {
+                    "name": "Classes",
+                    "path": "/python/classes",
                     "subitems": []
                 }
             ]

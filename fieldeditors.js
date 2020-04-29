@@ -47,9 +47,8 @@ var FieldGestures = /** @class */ (function (_super) {
         _this.columns_ = parseInt(options.columns) || 4;
         _this.width_ = parseInt(options.width) || 350;
         _this.addLabel_ = true;
-        _this.setText = Blockly.FieldDropdown.prototype.setText;
+        _this.renderSelectedImage_ = Blockly.FieldDropdown.prototype.renderSelectedText_;
         _this.updateSize_ = Blockly.Field.prototype.updateSize_;
-        _this.updateTextNode_ = Blockly.Field.prototype.updateTextNode_;
         return _this;
     }
     FieldGestures.prototype.trimOptions_ = function () {

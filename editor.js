@@ -3039,215 +3039,159 @@ exports.FlashProgram = FlashProgram;
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var React = require("react");
+function renderUsbPairDialog(firmwareUrl, failedOnce) {
+    var boardName = pxt.appTarget.appTheme.boardName || "???";
+    var helpUrl = pxt.appTarget.appTheme.usbDocs;
+    firmwareUrl = failedOnce && helpUrl + "/webusb/troubleshoot"; // todo mo
+    var instructions = React.createElement("div", { className: "ui grid" },
+        React.createElement("div", { className: "row" },
+            React.createElement("div", { className: "column" },
+                React.createElement("div", { className: "ui two column grid padded" },
+                    React.createElement("div", { className: "column" },
+                        React.createElement("div", { className: "ui" },
+                            React.createElement("div", { className: "image" },
+                                React.createElement("img", { alt: lf("Comic connecting micro:bit to computer"), className: "ui medium rounded image", src: "./static/download/connect.png" })),
+                            React.createElement("div", { className: "content" },
+                                React.createElement("div", { className: "description" },
+                                    React.createElement("span", { className: "ui purple circular label" }, "1"),
+                                    React.createElement("strong", null, lf("Connect the {0} to your computer with a USB cable", boardName)),
+                                    React.createElement("br", null),
+                                    React.createElement("span", { className: "ui small" }, lf("Use the microUSB port on the top of the {0}", boardName)))))),
+                    React.createElement("div", { className: "column" },
+                        React.createElement("div", { className: "ui" },
+                            React.createElement("div", { className: "image" },
+                                React.createElement("img", { alt: lf("Comic of successful micro:bit connection"), className: "ui medium rounded image", src: "./static/download/pair.png" })),
+                            React.createElement("div", { className: "content" },
+                                React.createElement("div", { className: "description" },
+                                    React.createElement("span", { className: "ui purple circular label" }, "2"),
+                                    React.createElement("strong", null, lf("Pair your {0}", boardName)),
+                                    React.createElement("br", null),
+                                    React.createElement("span", { className: "ui small" }, lf("Click 'Pair device' below and select BBC micro:bit CMSIS-DAP or DAPLink CMSIS-DAP from the list"))))))))));
+    if (!firmwareUrl)
+        return instructions;
+    return React.createElement("div", { className: "ui grid stackable" },
+        React.createElement("div", { className: "column five wide firmware orange" },
+            React.createElement("div", { className: "ui header inverted" }, lf("Update Firmware")),
+            React.createElement("strong", { className: "ui small" }, lf("You must have version 0249 or above of the firmware")),
+            React.createElement("div", { className: "image" },
+                React.createElement("img", { alt: lf("Comic rainbow updating micro:bit firmware"), className: "ui image", src: "./static/download/firmware.png" })),
+            React.createElement("a", { className: "ui button", role: "button", href: firmwareUrl, target: "_blank" }, lf("Check Firmware"))),
+        React.createElement("div", { className: "column eleven wide instructions" }, instructions));
+}
+exports.renderUsbPairDialog = renderUsbPairDialog;
+function renderBrowserDownloadInstructions() {
+    var boardName = pxt.appTarget.appTheme.boardName || lf("device");
+    var boardDriveName = pxt.appTarget.appTheme.driveDisplayName || pxt.appTarget.compile.driveName || "???";
+    return React.createElement("div", { className: "ui grid stackable upload" },
+        React.createElement("div", { className: "column sixteen wide instructions" },
+            React.createElement("div", { className: "ui grid" },
+                React.createElement("div", { className: "row" },
+                    React.createElement("div", { className: "column" },
+                        React.createElement("div", { className: "ui two column grid padded" },
+                            React.createElement("div", { className: "column" },
+                                React.createElement("div", { className: "ui" },
+                                    React.createElement("div", { className: "image" },
+                                        React.createElement("img", { alt: lf("Comic connecting micro:bit to computer"), className: "ui medium rounded image", src: "./static/download/connect.png" })),
+                                    React.createElement("div", { className: "content" },
+                                        React.createElement("div", { className: "description" },
+                                            React.createElement("span", { className: "ui purple circular label" }, "1"),
+                                            React.createElement("strong", null, lf("Connect the {0} to your computer with a USB cable", boardName)),
+                                            React.createElement("br", null),
+                                            React.createElement("span", { className: "ui small" }, lf("Use the microUSB port on the top of the {0}", boardName)))))),
+                            React.createElement("div", { className: "column" },
+                                React.createElement("div", { className: "ui" },
+                                    React.createElement("div", { className: "image" },
+                                        React.createElement("img", { alt: lf("Comic moving hex file to micro:bit"), className: "ui medium rounded image", src: "./static/download/transfer.png" })),
+                                    React.createElement("div", { className: "content" },
+                                        React.createElement("div", { className: "description" },
+                                            React.createElement("span", { className: "ui purple circular label" }, "2"),
+                                            React.createElement("strong", null, lf("Move the .hex file to the {0}", boardName)),
+                                            React.createElement("br", null),
+                                            React.createElement("span", { className: "ui small" }, lf("Locate the downloaded .hex file and drag it to the {0} drive", boardDriveName))))))))))));
+}
+exports.renderBrowserDownloadInstructions = renderBrowserDownloadInstructions;
+function cantImportAsync(project) {
+    // this feature is support in v0 only
+    return project.showModalDialogAsync({
+        header: lf("Can't import microbit.co.uk scripts..."),
+        body: lf("Importing microbit.co.uk programs is not supported in this editor anymore. Please open this script in the https://makecode.microbit.org/v0 editor."),
+        buttons: [
+            {
+                label: lf("Go to the old editor"),
+                url: "https://makecode.microbit.org/v0"
+            }
+        ]
+    }).then(function () { return project.openHome(); });
+}
+exports.cantImportAsync = cantImportAsync;
+
+},{"react":10}],2:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="../node_modules/pxt-core/localtypings/pxtarget.d.ts" />
 /// <reference path="../node_modules/pxt-core/built/pxtblocks.d.ts" />
 /// <reference path="../node_modules/pxt-core/built/pxtcompiler.d.ts" />
 /// <reference path="../node_modules/pxt-core/built/pxtlib.d.ts" />
 /// <reference path="../node_modules/pxt-core/built/pxteditor.d.ts" />
 /// <reference path="dapjs.d.ts" />
-var React = require("react");
+var dialogs = require("./dialogs");
+var flash = require("./flash");
+var patch = require("./patch");
+pxt.editor.initExtensionsAsync = function (opts) {
+    pxt.debug('loading microbit target extensions...');
+    var manyAny = Math;
+    if (!manyAny.imul)
+        manyAny.imul = function (a, b) {
+            var ah = (a >>> 16) & 0xffff;
+            var al = a & 0xffff;
+            var bh = (b >>> 16) & 0xffff;
+            var bl = b & 0xffff;
+            // the shift by 0 fixes the sign on the high part
+            // the final |0 converts the unsigned value into a signed value
+            return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
+        };
+    var res = {
+        hexFileImporters: [{
+                id: "blockly",
+                canImport: function (data) { return data.meta.cloudId == "microbit.co.uk" && data.meta.editor == "blockly"; },
+                importAsync: function (project, data) {
+                    pxt.tickEvent('import.legacyblocks.redirect');
+                    return dialogs.cantImportAsync(project);
+                }
+            }, {
+                id: "td",
+                canImport: function (data) { return data.meta.cloudId == "microbit.co.uk" && data.meta.editor == "touchdevelop"; },
+                importAsync: function (project, data) {
+                    pxt.tickEvent('import.legacytd.redirect');
+                    return dialogs.cantImportAsync(project);
+                }
+            }]
+    };
+    pxt.usb.setFilters([{
+            vendorId: 0x0D28,
+            productId: 0x0204,
+            classCode: 0xff,
+            subclassCode: 0x03
+        }]);
+    res.mkPacketIOWrapper = flash.mkPacketIOWrapper;
+    res.blocklyPatch = patch.patchBlocks;
+    res.renderBrowserDownloadInstructions = dialogs.renderBrowserDownloadInstructions;
+    res.renderUsbPairDialog = dialogs.renderUsbPairDialog;
+    return Promise.resolve(res);
+};
+
+},{"./dialogs":1,"./flash":3,"./patch":4}],3:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var imul = Math.imul;
 var pageSize = 1024;
 var numPages = 256;
 var timeoutMessage = "timeout";
-function murmur3_core(data) {
-    var h0 = 0x2F9BE6CC;
-    var h1 = 0x1EC3A6C8;
-    for (var i = 0; i < data.length; i += 4) {
-        var k = pxt.HF2.read32(data, i) >>> 0;
-        k = imul(k, 0xcc9e2d51);
-        k = (k << 15) | (k >>> 17);
-        k = imul(k, 0x1b873593);
-        h0 ^= k;
-        h1 ^= k;
-        h0 = (h0 << 13) | (h0 >>> 19);
-        h1 = (h1 << 13) | (h1 >>> 19);
-        h0 = (imul(h0, 5) + 0xe6546b64) >>> 0;
-        h1 = (imul(h1, 5) + 0xe6546b64) >>> 0;
-    }
-    return [h0, h1];
-}
-var DAPWrapper = /** @class */ (function () {
-    function DAPWrapper(h) {
-        var _this = this;
-        this.flashing = true;
-        this.pbuf = new pxt.U.PromiseBuffer();
-        this.useSerial = true;
-        this.packetIo = h;
-        h.onData = function (buf) {
-            // console.log("RD: " + pxt.Util.toHex(buf))
-            _this.pbuf.push(buf);
-        };
-        this.allocDAP();
-        var readSerial = function () {
-            if (!_this.useSerial) {
-                return;
-            }
-            if (_this.flashing) {
-                setTimeout(readSerial, 300);
-                return;
-            }
-            _this.cmsisdap.cmdNums(0x83, [])
-                .then(function (r) {
-                var len = r[1];
-                var str = "";
-                for (var i = 2; i < len + 2; ++i) {
-                    str += String.fromCharCode(r[i]);
-                }
-                if (str.length > 0) {
-                    pxt.U.nextTick(readSerial);
-                    window.postMessage({
-                        type: 'serial',
-                        id: 'n/a',
-                        data: str
-                    }, "*");
-                    // console.log("SERIAL: " + str)
-                }
-                else
-                    setTimeout(readSerial, 50);
-            }, function (err) {
-                setTimeout(readSerial, 1000);
-            });
-        };
-        readSerial();
-    }
-    DAPWrapper.prototype.allocDAP = function () {
-        /*
-        let sendMany = (cmds: Uint8Array[]) => {
-            return h.talksAsync(cmds.map(c => ({ cmd: 0, data: c })));
-        }
-
-        if (!h.talksAsync)
-            sendMany = null;
-        */
-        var dev = new DapJS.DAP({
-            write: writeAsync,
-            close: this.disconnectAsync,
-            read: readAsync,
-        });
-        this.cmsisdap = dev.dap;
-        this.cortexM = new DapJS.CortexM(dev);
-        var h = this.packetIo;
-        var pbuf = this.pbuf;
-        function writeAsync(data) {
-            // console.log("WR: " + pxt.Util.toHex(new Uint8Array(data)));
-            return h.sendPacketAsync(new Uint8Array(data));
-        }
-        function readAsync() {
-            return pbuf.shiftAsync();
-        }
-    };
-    DAPWrapper.prototype.reconnectAsync = function (first) {
-        var _this = this;
-        // configure serial at 115200
-        var p = Promise.resolve();
-        if (!first) {
-            p = this.packetIo.reconnectAsync()
-                .then(function () { return _this.allocDAP(); });
-        }
-        return p
-            .then(function () { return _this.cortexM.init(); })
-            .then(function () {
-            return _this.cmsisdap.cmdNums(0x82, [0x00, 0xC2, 0x01, 0x00])
-                .then(function () { _this.useSerial = true; }, function (err) { _this.useSerial = false; });
-        });
-    };
-    DAPWrapper.prototype.disconnectAsync = function () {
-        return this.packetIo.disconnectAsync();
-    };
-    return DAPWrapper;
-}());
-var packetIoPromise;
-function initPacketIOAsync() {
-    if (!packetIoPromise) {
-        packetIoPromise = pxt.HF2.mkPacketIOAsync()
-            .catch(function (err) {
-            packetIoPromise = null;
-            return Promise.reject(err);
-        });
-        return packetIoPromise;
-    }
-    else {
-        var packetIo_1;
-        return packetIoPromise
-            .then(function (io) {
-            packetIo_1 = io;
-            return io.reconnectAsync();
-        })
-            .then(function () { return packetIo_1; });
-    }
-}
-var previousDapWrapper;
-function dapAsync() {
-    if (previousDapWrapper)
-        return previousDapWrapper.reconnectAsync(false) // Always fully reconnect to handle device unplugged mid-session
-            .then(function () { return previousDapWrapper; });
-    return Promise.resolve()
-        .then(function () {
-        if (previousDapWrapper) {
-            return previousDapWrapper.disconnectAsync()
-                .finally(function () {
-                previousDapWrapper = null;
-            });
-        }
-        return Promise.resolve();
-    })
-        .then(function () { return initPacketIOAsync(); })
-        .then(function (h) {
-        var w = new DAPWrapper(h);
-        previousDapWrapper = w;
-        return w.reconnectAsync(true)
-            .then(function () {
-            return w;
-        });
-    });
-}
-function canHID() {
-    var r = false;
-    if (pxt.usb.isEnabled) {
-        r = true;
-    }
-    else if (pxt.U.isNodeJS) {
-        r = true;
-    }
-    else {
-        var forceHexDownload = /forceHexDownload/i.test(window.location.href);
-        var isUwp = !!window.Windows;
-        if (pxt.BrowserUtils.isLocalHost() && pxt.Cloud.localToken && !forceHexDownload || isUwp)
-            r = true;
-    }
-    return r;
-}
-function initAsync() {
-    if (canHID()) {
-        return dapAsync();
-    }
-    else {
-        return Promise.reject(new Error("no HID"));
-    }
-}
-function pageAlignBlocks(blocks, pageSize) {
-    pxt.U.assert(pageSize % 256 == 0);
-    var res = [];
-    for (var i = 0; i < blocks.length;) {
-        var b0 = blocks[i];
-        var newbuf = new Uint8Array(pageSize);
-        var startPad = b0.targetAddr & (pageSize - 1);
-        var newAddr = b0.targetAddr - startPad;
-        for (; i < blocks.length; ++i) {
-            var b = blocks[i];
-            if (b.targetAddr + b.payloadSize > newAddr + pageSize)
-                break;
-            pxt.U.memcpy(newbuf, b.targetAddr - newAddr, b.data, 0, b.payloadSize);
-        }
-        var bb = pxt.U.flatClone(b0);
-        bb.data = newbuf;
-        bb.targetAddr = newAddr;
-        bb.payloadSize = pageSize;
-        res.push(bb);
-    }
-    return res;
-}
+var membase = 0x20000000;
+var loadAddr = membase;
+var dataAddr = 0x20002000;
+var stackAddr = 0x20001000;
 var flashPageBINquick = new Uint32Array([
     0xbe00be00,
     0x2480b5f0, 0x00e42300, 0x58cd58c2, 0xd10342aa, 0x42a33304, 0xbdf0d1f8,
@@ -3284,277 +3228,327 @@ function log(msg) {
         startTime = now;
     now -= startTime;
     var ts = ("00000" + now).slice(-5);
-    pxt.log("HID " + ts + ": " + msg);
+    pxt.log("dap " + ts + ": " + msg);
 }
-var membase = 0x20000000;
-var loadAddr = membase;
-var dataAddr = 0x20002000;
-var stackAddr = 0x20001000;
-exports.bufferConcat = function (bufs) {
-    var len = 0;
-    for (var _i = 0, bufs_1 = bufs; _i < bufs_1.length; _i++) {
-        var b = bufs_1[_i];
-        len += b.length;
+function murmur3_core(data) {
+    var h0 = 0x2F9BE6CC;
+    var h1 = 0x1EC3A6C8;
+    for (var i = 0; i < data.length; i += 4) {
+        var k = pxt.HF2.read32(data, i) >>> 0;
+        k = imul(k, 0xcc9e2d51);
+        k = (k << 15) | (k >>> 17);
+        k = imul(k, 0x1b873593);
+        h0 ^= k;
+        h1 ^= k;
+        h0 = (h0 << 13) | (h0 >>> 19);
+        h1 = (h1 << 13) | (h1 >>> 19);
+        h0 = (imul(h0, 5) + 0xe6546b64) >>> 0;
+        h1 = (imul(h1, 5) + 0xe6546b64) >>> 0;
     }
-    var r = new Uint8Array(len);
-    len = 0;
-    for (var _a = 0, bufs_2 = bufs; _a < bufs_2.length; _a++) {
-        var b = bufs_2[_a];
-        r.set(b, len);
-        len += b.length;
+    return [h0, h1];
+}
+var DAPWrapper = /** @class */ (function () {
+    function DAPWrapper(io) {
+        var _this = this;
+        this.io = io;
+        this.flashing = false;
+        this.readSerialId = 0;
+        this.pbuf = new pxt.U.PromiseBuffer();
+        this.icon = "usb";
+        this.familyID = 0x0D28; // this is the microbit vendor id, not quite UF2 family id
+        this.io.onDeviceConnectionChanged = function (connect) {
+            return _this.disconnectAsync()
+                .then(function () { return connect && _this.reconnectAsync(); });
+        };
+        this.io.onData = function (buf) {
+            // console.log("RD: " + pxt.Util.toHex(buf))
+            _this.pbuf.push(buf);
+        };
+        this.allocDAP();
     }
-    return r;
-};
-function fullVendorCommandFlashAsync(resp, wrap) {
-    var chunkSize = 62;
-    var aborted = false;
-    return Promise.resolve()
-        .then(function () {
-        return wrap.cmsisdap.cmdNums(0x8A /* DAPLinkFlash.OPEN */, [1]);
-    })
-        .then(function (res) {
-        var hexUint8 = pxt.U.stringToUint8Array(resp.outfiles[pxtc.BINARY_HEX]);
-        var hexArray = Array.prototype.slice.call(hexUint8);
-        var sendPages = function (offset) {
-            if (offset === void 0) { offset = 0; }
-            var end = Math.min(hexArray.length, offset + chunkSize);
-            var nextPage = hexArray.slice(offset, end);
-            nextPage.unshift(nextPage.length);
-            return wrap.cmsisdap.cmdNums(0x8C /* DAPLinkFlash.WRITE */, nextPage)
-                .then(function () {
-                if (!aborted && end < hexArray.length) {
-                    return sendPages(end);
+    DAPWrapper.prototype.startReadSerial = function () {
+        var _this = this;
+        log("start read serial");
+        var rid = this.readSerialId;
+        var readSerial = function () {
+            if (rid != _this.readSerialId) {
+                log("stopped read serial " + rid);
+                return;
+            }
+            if (_this.flashing) {
+                setTimeout(readSerial, 500);
+                return;
+            }
+            // done
+            _this.cmsisdap.cmdNums(0x83, [])
+                .then(function (r) {
+                var len = r[1];
+                var str = "";
+                for (var i = 2; i < len + 2; ++i) {
+                    str += String.fromCharCode(r[i]);
                 }
-                return Promise.resolve();
+                if (str.length > 0) {
+                    pxt.U.nextTick(readSerial);
+                    if (_this.onSerial) {
+                        var utf8Str = pxt.U.toUTF8(str);
+                        _this.onSerial(pxt.U.stringToUint8Array(utf8Str), false);
+                    }
+                }
+                else
+                    setTimeout(readSerial, 50);
+            }, function (err) {
+                log("read error: " + err.message);
+                _this.disconnectAsync(); // force disconnect
             });
         };
-        return sendPages();
-    })
-        .then(function (res) {
-        return wrap.cmsisdap.cmdNums(0x8B /* DAPLinkFlash.CLOSE */, []);
-    })
-        .timeout(60000, timeoutMessage)
-        .catch(function (e) {
-        aborted = true;
-        return wrap.cmsisdap.cmdNums(0x89 /* DAPLinkFlash.RESET */, [])
-            .catch(function (e2) {
-            // Best effort reset, no-op if there's an error
-        })
-            .then(function () {
-            return Promise.reject(e);
+        readSerial();
+    };
+    DAPWrapper.prototype.stopSerialAsync = function () {
+        log("stopping serial reader");
+        this.readSerialId++;
+        return Promise.delay(200);
+    };
+    DAPWrapper.prototype.allocDAP = function () {
+        log("alloc dap");
+        this.dap = new DapJS.DAP({
+            write: writeAsync,
+            close: this.disconnectAsync,
+            read: readAsync,
         });
-    });
-}
-function quickHidFlashAsync(resp, wrap) {
-    var logV = function (msg) { };
-    //let logV = log
-    var aborted = false;
-    var runFlash = function (b, dataAddr) {
-        var cmd = wrap.cortexM.prepareCommand();
-        cmd.halt();
-        cmd.writeCoreRegister(15 /* PC */, loadAddr + 4 + 1);
-        cmd.writeCoreRegister(14 /* LR */, loadAddr + 1);
-        cmd.writeCoreRegister(13 /* SP */, stackAddr);
-        cmd.writeCoreRegister(0, b.targetAddr);
-        cmd.writeCoreRegister(1, dataAddr);
+        this.cmsisdap = this.dap.dap;
+        this.cortexM = new DapJS.CortexM(this.dap);
+        var h = this.io;
+        var pbuf = this.pbuf;
+        function writeAsync(data) {
+            // console.log("WR: " + pxt.Util.toHex(new Uint8Array(data)));
+            return h.sendPacketAsync(new Uint8Array(data));
+        }
+        function readAsync() {
+            return pbuf.shiftAsync();
+        }
+    };
+    DAPWrapper.prototype.reconnectAsync = function () {
+        var _this = this;
+        log("reconnect");
+        // configure serial at 115200
+        return this.stopSerialAsync()
+            .then(function () { return _this.io.reconnectAsync(); })
+            .then(function () { return _this.cortexM.init(); })
+            .then(function () { return _this.cmsisdap.cmdNums(0x82, [0x00, 0xC2, 0x01, 0x00]); })
+            .then(function () { return _this.startReadSerial(); });
+    };
+    DAPWrapper.prototype.disconnectAsync = function () {
+        var _this = this;
+        log("disconnect");
+        return this.stopSerialAsync()
+            .then(function () { return _this.io.disconnectAsync(); });
+    };
+    DAPWrapper.prototype.reflashAsync = function (resp) {
+        var _this = this;
+        log("reflash");
+        startTime = 0;
+        pxt.tickEvent("hid.flash.start");
+        this.flashing = true;
+        return (this.io.isConnected() ? Promise.resolve() : this.io.reconnectAsync())
+            .then(function () { return _this.cortexM.init(); })
+            .then(function () { return _this.cortexM.reset(true); })
+            .then(function () { return _this.cortexM.memory.readBlock(0x10001014, 1, pageSize); })
+            .then(function (v) {
+            if (pxt.HF2.read32(v, 0) != 0x3C000) {
+                pxt.tickEvent("hid.flash.uicrfail");
+                return _this.fullVendorCommandFlashAsync(resp);
+            }
+            return _this.quickHidFlashAsync(resp);
+        })
+            .finally(function () { _this.flashing = false; })
+            .then(function () { return Promise.delay(100); })
+            .then(function () { return _this.disconnectAsync(); });
+    };
+    DAPWrapper.prototype.fullVendorCommandFlashAsync = function (resp) {
+        var _this = this;
+        log("full flash");
+        var chunkSize = 62;
+        var aborted = false;
         return Promise.resolve()
             .then(function () {
-            logV("setregs");
-            return cmd.go();
+            return _this.cmsisdap.cmdNums(0x8A /* DAPLinkFlash.OPEN */, [1]);
         })
-            .then(function () {
-            logV("dbg en");
-            // starts the program
-            return wrap.cortexM.debug.enable();
+            .then(function (res) {
+            var hexUint8 = pxt.U.stringToUint8Array(resp.outfiles[pxtc.BINARY_HEX]);
+            var hexArray = Array.prototype.slice.call(hexUint8);
+            var sendPages = function (offset) {
+                if (offset === void 0) { offset = 0; }
+                var end = Math.min(hexArray.length, offset + chunkSize);
+                var nextPage = hexArray.slice(offset, end);
+                nextPage.unshift(nextPage.length);
+                return _this.cmsisdap.cmdNums(0x8C /* DAPLinkFlash.WRITE */, nextPage)
+                    .then(function () {
+                    if (!aborted && end < hexArray.length) {
+                        return sendPages(end);
+                    }
+                    return Promise.resolve();
+                });
+            };
+            return sendPages();
+        })
+            .then(function (res) {
+            return _this.cmsisdap.cmdNums(0x8B /* DAPLinkFlash.CLOSE */, []);
+        })
+            .timeout(60000, timeoutMessage)
+            .catch(function (e) {
+            aborted = true;
+            return _this.cmsisdap.cmdNums(0x89 /* DAPLinkFlash.RESET */, [])
+                .catch(function (e2) {
+                // Best effort reset, no-op if there's an error
+            })
+                .then(function () {
+                return Promise.reject(e);
+            });
         });
     };
-    var checksums;
-    return getFlashChecksumsAsync(wrap)
-        .then(function (buf) {
-        checksums = buf;
-        log("write code");
-        return wrap.cortexM.memory.writeBlock(loadAddr, flashPageBIN);
-    })
-        .then(function () {
-        log("convert");
-        // TODO this is seriously inefficient (130ms on a fast machine)
-        var uf2 = ts.pxtc.UF2.newBlockFile();
-        ts.pxtc.UF2.writeHex(uf2, resp.outfiles[pxtc.BINARY_HEX].split(/\r?\n/));
-        var bytes = pxt.U.stringToUint8Array(ts.pxtc.UF2.serializeFile(uf2));
-        var parsed = ts.pxtc.UF2.parseFile(bytes);
-        var aligned = pageAlignBlocks(parsed, pageSize);
-        log("initial: " + aligned.length + " pages");
-        aligned = onlyChanged(aligned, checksums);
-        log("incremental: " + aligned.length + " pages");
-        return Promise.mapSeries(pxt.U.range(aligned.length), function (i) {
-            if (aborted)
-                return Promise.resolve();
-            var b = aligned[i];
-            if (b.targetAddr >= 0x10000000)
-                return Promise.resolve();
-            logV("about to write at 0x" + b.targetAddr.toString(16));
-            var writeBl = Promise.resolve();
-            var thisAddr = (i & 1) ? dataAddr : dataAddr + pageSize;
-            var nextAddr = (i & 1) ? dataAddr + pageSize : dataAddr;
-            if (i == 0) {
-                var u32data = new Uint32Array(b.data.length / 4);
-                for (var i_1 = 0; i_1 < b.data.length; i_1 += 4)
-                    u32data[i_1 >> 2] = pxt.HF2.read32(b.data, i_1);
-                writeBl = wrap.cortexM.memory.writeBlock(thisAddr, u32data);
-            }
-            return writeBl
-                .then(function () { return runFlash(b, thisAddr); })
+    DAPWrapper.prototype.quickHidFlashAsync = function (resp) {
+        var _this = this;
+        log("quick flash");
+        var logV = function (msg) { };
+        //let logV = log
+        var aborted = false;
+        var runFlash = function (b, dataAddr) {
+            var cmd = _this.cortexM.prepareCommand();
+            cmd.halt();
+            cmd.writeCoreRegister(15 /* PC */, loadAddr + 4 + 1);
+            cmd.writeCoreRegister(14 /* LR */, loadAddr + 1);
+            cmd.writeCoreRegister(13 /* SP */, stackAddr);
+            cmd.writeCoreRegister(0, b.targetAddr);
+            cmd.writeCoreRegister(1, dataAddr);
+            return Promise.resolve()
                 .then(function () {
-                var next = aligned[i + 1];
-                if (!next)
-                    return Promise.resolve();
-                logV("write next");
-                var buf = new Uint32Array(next.data.buffer);
-                return wrap.cortexM.memory.writeBlock(nextAddr, buf);
+                logV("setregs");
+                return cmd.go();
             })
                 .then(function () {
-                logV("wait");
-                return wrap.cortexM.waitForHalt(500);
-            })
-                .then(function () {
-                logV("done block");
+                logV("dbg en");
+                // starts the program
+                return _this.cortexM.debug.enable();
             });
+        };
+        var checksums;
+        return this.getFlashChecksumsAsync()
+            .then(function (buf) {
+            checksums = buf;
+            log("write code");
+            return _this.cortexM.memory.writeBlock(loadAddr, flashPageBIN);
         })
             .then(function () {
-            log("flash done");
-            pxt.tickEvent("hid.flash.done");
-            return wrap.cortexM.reset(false);
-        })
-            .then(function () {
-            wrap.flashing = false;
-        });
-    })
-        .timeout(25000, timeoutMessage)
-        .catch(function (e) {
-        aborted = true;
-        return Promise.reject(e);
-    });
-}
-function flashAsync(resp, d) {
-    if (d === void 0) { d = {}; }
-    startTime = 0;
-    var wrap;
-    log("init");
-    d.showNotification(pxt.U.lf("Downloading..."));
-    pxt.tickEvent("hid.flash.start");
-    return Promise.resolve()
-        .then(function () {
-        if (previousDapWrapper) {
-            previousDapWrapper.flashing = true;
-            return Promise.delay(100);
-        }
-        return Promise.resolve();
-    })
-        .then(initAsync)
-        .then(function (w) {
-        wrap = w;
-        log("reset");
-        return wrap.cortexM.init()
-            .then(function () { return wrap.cortexM.reset(true); })
-            .catch(function (e) {
-            log("trying re-connect");
-            return wrap.reconnectAsync(false)
-                .then(function () { return wrap.cortexM.reset(true); });
-        });
-    })
-        .then(function () { return wrap.cortexM.memory.readBlock(0x10001014, 1, pageSize); })
-        .then(function (v) {
-        if (pxt.HF2.read32(v, 0) != 0x3C000) {
-            pxt.tickEvent("hid.flash.uicrfail");
-            return fullVendorCommandFlashAsync(resp, wrap);
-        }
-        return quickHidFlashAsync(resp, wrap);
-    })
-        .catch(function (e) {
-        pxt.log("flash error: " + e.type);
-        if (e.type === "devicenotfound" && d.reportDeviceNotFoundAsync) {
-            pxt.tickEvent("hid.flash.devicenotfound");
-            return d.reportDeviceNotFoundAsync("/device/windows-app/troubleshoot", resp);
-        }
-        else if (e.message === timeoutMessage) {
-            pxt.tickEvent("hid.flash.timeout");
-            return previousDapWrapper.reconnectAsync(true)
-                .catch(function (e) { })
-                .then(function () {
-                // Best effort disconnect; at this point we don't even know the state of the device
-                pxt.reportException(e);
-                return resp.confirmAsync({
-                    header: lf("Something went wrong..."),
-                    body: lf("One-click download took too long. Please disconnect your {0} from your computer and reconnect it, then manually download your program using drag and drop.", pxt.appTarget.appTheme.boardName || lf("device")),
-                    agreeLbl: lf("Ok"),
-                    hideCancel: true
+            log("convert");
+            // TODO this is seriously inefficient (130ms on a fast machine)
+            var uf2 = ts.pxtc.UF2.newBlockFile();
+            ts.pxtc.UF2.writeHex(uf2, resp.outfiles[pxtc.BINARY_HEX].split(/\r?\n/));
+            var bytes = pxt.U.stringToUint8Array(ts.pxtc.UF2.serializeFile(uf2));
+            var parsed = ts.pxtc.UF2.parseFile(bytes);
+            var aligned = DAPWrapper.pageAlignBlocks(parsed, pageSize);
+            log("initial: " + aligned.length + " pages");
+            aligned = DAPWrapper.onlyChanged(aligned, checksums);
+            log("incremental: " + aligned.length + " pages");
+            return Promise.mapSeries(pxt.U.range(aligned.length), function (i) {
+                if (aborted)
+                    return Promise.resolve();
+                var b = aligned[i];
+                if (b.targetAddr >= 0x10000000)
+                    return Promise.resolve();
+                logV("about to write at 0x" + b.targetAddr.toString(16));
+                var writeBl = Promise.resolve();
+                var thisAddr = (i & 1) ? dataAddr : dataAddr + pageSize;
+                var nextAddr = (i & 1) ? dataAddr + pageSize : dataAddr;
+                if (i == 0) {
+                    var u32data = new Uint32Array(b.data.length / 4);
+                    for (var i_1 = 0; i_1 < b.data.length; i_1 += 4)
+                        u32data[i_1 >> 2] = pxt.HF2.read32(b.data, i_1);
+                    writeBl = _this.cortexM.memory.writeBlock(thisAddr, u32data);
+                }
+                return writeBl
+                    .then(function () { return runFlash(b, thisAddr); })
+                    .then(function () {
+                    var next = aligned[i + 1];
+                    if (!next)
+                        return Promise.resolve();
+                    logV("write next");
+                    var buf = new Uint32Array(next.data.buffer);
+                    return _this.cortexM.memory.writeBlock(nextAddr, buf);
+                })
+                    .then(function () {
+                    logV("wait");
+                    return _this.cortexM.waitForHalt(500);
+                })
+                    .then(function () {
+                    logV("done block");
                 });
             })
                 .then(function () {
-                return pxt.commands.saveOnlyAsync(resp);
+                log("flash done");
+                pxt.tickEvent("hid.flash.done");
+                return _this.cortexM.reset(false);
             });
+        })
+            .timeout(25000, timeoutMessage)
+            .catch(function (e) {
+            aborted = true;
+            return Promise.reject(e);
+        });
+    };
+    DAPWrapper.prototype.getFlashChecksumsAsync = function () {
+        var _this = this;
+        log("flash checksums");
+        var pages = numPages;
+        return this.cortexM.runCode(computeChecksums2, loadAddr, loadAddr + 1, 0xffffffff, stackAddr, true, dataAddr, 0, pageSize, pages)
+            .then(function () { return _this.cortexM.memory.readBlock(dataAddr, pages * 2, pageSize); });
+    };
+    DAPWrapper.onlyChanged = function (blocks, checksums) {
+        return blocks.filter(function (b) {
+            var idx = b.targetAddr / pageSize;
+            pxt.U.assert((idx | 0) == idx);
+            pxt.U.assert(b.data.length == pageSize);
+            if (idx * 8 + 8 > checksums.length)
+                return true; // out of range?
+            var c0 = pxt.HF2.read32(checksums, idx * 8);
+            var c1 = pxt.HF2.read32(checksums, idx * 8 + 4);
+            var ch = murmur3_core(b.data);
+            if (c0 == ch[0] && c1 == ch[1])
+                return false;
+            return true;
+        });
+    };
+    DAPWrapper.pageAlignBlocks = function (blocks, pageSize) {
+        pxt.U.assert(pageSize % 256 == 0);
+        var res = [];
+        for (var i = 0; i < blocks.length;) {
+            var b0 = blocks[i];
+            var newbuf = new Uint8Array(pageSize);
+            var startPad = b0.targetAddr & (pageSize - 1);
+            var newAddr = b0.targetAddr - startPad;
+            for (; i < blocks.length; ++i) {
+                var b = blocks[i];
+                if (b.targetAddr + b.payloadSize > newAddr + pageSize)
+                    break;
+                pxt.U.memcpy(newbuf, b.targetAddr - newAddr, b.data, 0, b.payloadSize);
+            }
+            var bb = pxt.U.flatClone(b0);
+            bb.data = newbuf;
+            bb.targetAddr = newAddr;
+            bb.payloadSize = pageSize;
+            res.push(bb);
         }
-        else if (e.isUserError) {
-            d.reportError(e.message);
-            return Promise.resolve();
-        }
-        else {
-            pxt.tickEvent("hid.flash.unknownerror");
-            pxt.reportException(e);
-            return resp.confirmAsync({
-                header: pxt.U.lf("Something went wrong..."),
-                body: pxt.U.lf("Please manually download your program to your device using drag and drop. One-click download might work afterwards."),
-                agreeLbl: lf("Ok"),
-                hideCancel: true
-            })
-                .then(function () {
-                return pxt.commands.saveOnlyAsync(resp);
-            });
-        }
-    });
+        return res;
+    };
+    return DAPWrapper;
+}());
+function mkPacketIOWrapper(io) {
+    pxt.log("packetio: mk wrapper dap");
+    return new DAPWrapper(io);
 }
-function getFlashChecksumsAsync(wrap) {
-    log("getting existing flash checksums");
-    var pages = numPages;
-    return wrap.cortexM.runCode(computeChecksums2, loadAddr, loadAddr + 1, 0xffffffff, stackAddr, true, dataAddr, 0, pageSize, pages)
-        .then(function () { return wrap.cortexM.memory.readBlock(dataAddr, pages * 2, pageSize); });
-}
-function onlyChanged(blocks, checksums) {
-    return blocks.filter(function (b) {
-        var idx = b.targetAddr / pageSize;
-        pxt.U.assert((idx | 0) == idx);
-        pxt.U.assert(b.data.length == pageSize);
-        if (idx * 8 + 8 > checksums.length)
-            return true; // out of range?
-        var c0 = pxt.HF2.read32(checksums, idx * 8);
-        var c1 = pxt.HF2.read32(checksums, idx * 8 + 4);
-        var ch = murmur3_core(b.data);
-        if (c0 == ch[0] && c1 == ch[1])
-            return false;
-        return true;
-    });
-}
-function uwpDeployCoreAsync(resp, d) {
-    if (d === void 0) { d = {}; }
-    // Go straight to flashing
-    return flashAsync(resp, d);
-}
-function deployCoreAsync(resp, d) {
-    if (d === void 0) { d = {}; }
-    return pxt.usb.isPairedAsync()
-        .then(function (isPaired) {
-        if (isPaired) {
-            // Already paired from earlier in the session or from previous session
-            return flashAsync(resp, d);
-        }
-        // try bluetooth if device is paired
-        if (pxt.webBluetooth.isPaired())
-            return pxt.webBluetooth.flashAsync(resp, d)
-                .catch(function (e) { return pxt.commands.saveOnlyAsync(resp); });
-        // No device paired, prompt user
-        return pxt.commands.saveOnlyAsync(resp);
-    });
-}
+exports.mkPacketIOWrapper = mkPacketIOWrapper;
+
+},{}],4:[function(require,module,exports){
+"use strict";
 /**
  *       <block type="device_show_leds">
     <field name="LED00">FALSE</field>
@@ -3583,7 +3577,7 @@ function deployCoreAsync(resp, d) {
     <field name="LED34">FALSE</field>
     <field name="LED44">FALSE</field>
   </block>
-
+ 
   to
 <block type="device_show_leds">
     <field name="LEDS">`
@@ -3596,6 +3590,7 @@ function deployCoreAsync(resp, d) {
     </field>
   </block>
  */
+Object.defineProperty(exports, "__esModule", { value: true });
 function patchBlocks(pkgTargetVersion, dom) {
     // is this a old script?
     if (pxt.semver.majorCmp(pkgTargetVersion || "0.0.0", "1.0.0") >= 0)
@@ -3644,9 +3639,9 @@ function patchBlocks(pkgTargetVersion, dom) {
 <mutation callbackproperties="receivedString" renamemap="{}"></mutation>
 <field name="receivedString">receivedString</field>
 </block>
-
+ 
 converts to
-
+ 
 <block type="radio_on_number" x="196" y="208">
 <field name="HANDLER_receivedNumber" id="DCy(W;1)*jLWQUpoy4Mm" variabletype="">receivedNumber</field>
 </block>
@@ -3765,6 +3760,7 @@ converts to
     renameField(dom, "math_number_minmax", "NUM", "SLIDER");
     renameField(dom, "device_note", "note", "name");
 }
+exports.patchBlocks = patchBlocks;
 function renameField(dom, blockType, oldName, newName) {
     pxt.U.toArray(dom.querySelectorAll("block[type=" + blockType + "]"))
         .concat(pxt.U.toArray(dom.querySelectorAll("shadow[type=" + blockType + "]")))
@@ -3775,65 +3771,6 @@ function renameField(dom, blockType, oldName, newName) {
         }
     });
 }
-pxt.editor.initExtensionsAsync = function (opts) {
-    pxt.debug('loading microbit target extensions...');
-    function cantImportAsync(project) {
-        // this feature is support in v0 only
-        return project.showModalDialogAsync({
-            header: lf("Can't import microbit.co.uk scripts..."),
-            body: lf("Importing microbit.co.uk programs is not supported in this editor anymore. Please open this script in the https://makecode.microbit.org/v0 editor."),
-            buttons: [
-                {
-                    label: lf("Go to the old editor"),
-                    url: "https://makecode.microbit.org/v0"
-                }
-            ]
-        }).then(function () { return project.openHome(); });
-    }
-    var manyAny = Math;
-    if (!manyAny.imul)
-        manyAny.imul = function (a, b) {
-            var ah = (a >>> 16) & 0xffff;
-            var al = a & 0xffff;
-            var bh = (b >>> 16) & 0xffff;
-            var bl = b & 0xffff;
-            // the shift by 0 fixes the sign on the high part
-            // the final |0 converts the unsigned value into a signed value
-            return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
-        };
-    var res = {
-        hexFileImporters: [{
-                id: "blockly",
-                canImport: function (data) { return data.meta.cloudId == "microbit.co.uk" && data.meta.editor == "blockly"; },
-                importAsync: function (project, data) {
-                    pxt.tickEvent('import.legacyblocks.redirect');
-                    return cantImportAsync(project);
-                }
-            }, {
-                id: "td",
-                canImport: function (data) { return data.meta.cloudId == "microbit.co.uk" && data.meta.editor == "touchdevelop"; },
-                importAsync: function (project, data) {
-                    pxt.tickEvent('import.legacytd.redirect');
-                    return cantImportAsync(project);
-                }
-            }]
-    };
-    pxt.usb.setFilters([{
-            vendorId: 0x0D28,
-            productId: 0x0204,
-            classCode: 0xff,
-            subclassCode: 0x03
-        }]);
-    var isUwp = !!window.Windows;
-    if (isUwp)
-        pxt.commands.deployCoreAsync = uwpDeployCoreAsync;
-    else if ((canHID() || pxt.webBluetooth.hasPartialFlash()) && !pxt.BrowserUtils.isPxtElectron())
-        pxt.commands.deployCoreAsync = deployCoreAsync;
-    res.blocklyPatch = patchBlocks;
-    res.showUploadInstructionsAsync = showUploadInstructionsAsync;
-    res.webUsbPairDialogAsync = webUsbPairDialogAsync;
-    return Promise.resolve(res);
-};
 function getField(parent, name) {
     return getFieldOrValue(parent, name, true);
 }
@@ -3859,132 +3796,8 @@ function addNumberShadow(valueNode) {
     s.appendChild(f);
     valueNode.appendChild(s);
 }
-function webUsbPairDialogAsync(confirmAsync) {
-    var boardName = pxt.appTarget.appTheme.boardName || "???";
-    var docUrl = pxt.appTarget.appTheme.usbDocs;
-    var jsx = React.createElement("div", { className: "ui grid stackable" },
-        React.createElement("div", { className: "column five wide firmware" },
-            React.createElement("div", { className: "ui header" }, lf("First time here?")),
-            React.createElement("strong", { className: "ui small" }, lf("You must have version 0249 or above of the firmware")),
-            React.createElement("div", { className: "image" },
-                React.createElement("img", { alt: lf("Comic rainbow updating micro:bit firmware"), className: "ui image", src: "./static/download/firmware.png" })),
-            React.createElement("a", { href: docUrl + "/webusb/troubleshoot", target: "_blank" }, lf("Check your firmware version here and update if needed"))),
-        React.createElement("div", { className: "column eleven wide instructions" },
-            React.createElement("div", { className: "ui grid" },
-                React.createElement("div", { className: "row" },
-                    React.createElement("div", { className: "column" },
-                        React.createElement("div", { className: "ui two column grid padded" },
-                            React.createElement("div", { className: "column" },
-                                React.createElement("div", { className: "ui" },
-                                    React.createElement("div", { className: "image" },
-                                        React.createElement("img", { alt: lf("Comic connecting micro:bit to computer"), className: "ui medium rounded image", src: "./static/download/connect.png" })),
-                                    React.createElement("div", { className: "content" },
-                                        React.createElement("div", { className: "description" },
-                                            React.createElement("span", { className: "ui purple circular label" }, "1"),
-                                            React.createElement("strong", null, lf("Connect the {0} to your computer with a USB cable", boardName)),
-                                            React.createElement("br", null),
-                                            React.createElement("span", { className: "ui small" }, lf("Use the microUSB port on the top of the {0}", boardName)))))),
-                            React.createElement("div", { className: "column" },
-                                React.createElement("div", { className: "ui" },
-                                    React.createElement("div", { className: "image" },
-                                        React.createElement("img", { alt: lf("Comic of successful micro:bit connection"), className: "ui medium rounded image", src: "./static/download/pair.png" })),
-                                    React.createElement("div", { className: "content" },
-                                        React.createElement("div", { className: "description" },
-                                            React.createElement("span", { className: "ui purple circular label" }, "2"),
-                                            React.createElement("strong", null, lf("Pair your {0}", boardName)),
-                                            React.createElement("br", null),
-                                            React.createElement("span", { className: "ui small" }, lf("Click 'Pair device' below and select BBC micro:bit CMSIS-DAP or DAPLink CMSIS-DAP from the list"))))))))))));
-    var buttons = [];
-    if (docUrl) {
-        buttons.push({
-            label: lf("Help"),
-            icon: "help",
-            className: "lightgrey",
-            url: docUrl + "/webusb"
-        });
-    }
-    return confirmAsync({
-        header: lf("Pair device for one-click downloads"),
-        jsx: jsx,
-        hasCloseIcon: true,
-        agreeLbl: lf("Pair device"),
-        agreeIcon: "usb",
-        hideCancel: true,
-        className: 'downloaddialog',
-        buttons: buttons
-    });
-}
-function showUploadInstructionsAsync(fn, url, confirmAsync) {
-    var boardName = pxt.appTarget.appTheme.boardName || "???";
-    var boardDriveName = pxt.appTarget.appTheme.driveDisplayName || pxt.appTarget.compile.driveName || "???";
-    // https://msdn.microsoft.com/en-us/library/cc848897.aspx
-    // "For security reasons, data URIs are restricted to downloaded resources.
-    // Data URIs cannot be used for navigation, for scripting, or to populate frame or iframe elements"
-    var userDownload = pxt.BrowserUtils.isBrowserDownloadWithinUserContext();
-    var downloadAgain = !pxt.BrowserUtils.isIE() && !pxt.BrowserUtils.isEdge();
-    var docUrl = pxt.appTarget.appTheme.usbDocs;
-    var body = userDownload
-        ? lf("Click 'Download' to open the {0} app.", pxt.appTarget.appTheme.boardName || "")
-        : undefined;
-    var jsx = !userDownload ?
-        React.createElement("div", { className: "ui grid stackable upload" },
-            React.createElement("div", { className: "column sixteen wide instructions" },
-                React.createElement("div", { className: "ui grid" },
-                    React.createElement("div", { className: "row" },
-                        React.createElement("div", { className: "column" },
-                            React.createElement("div", { className: "ui two column grid padded" },
-                                React.createElement("div", { className: "column" },
-                                    React.createElement("div", { className: "ui" },
-                                        React.createElement("div", { className: "image" },
-                                            React.createElement("img", { alt: lf("Comic connecting micro:bit to computer"), className: "ui medium rounded image", src: "./static/download/connect.png" })),
-                                        React.createElement("div", { className: "content" },
-                                            React.createElement("div", { className: "description" },
-                                                React.createElement("span", { className: "ui purple circular label" }, "1"),
-                                                React.createElement("strong", null, lf("Connect the {0} to your computer with a USB cable", boardName)),
-                                                React.createElement("br", null),
-                                                React.createElement("span", { className: "ui small" }, lf("Use the microUSB port on the top of the {0}", boardName)))))),
-                                React.createElement("div", { className: "column" },
-                                    React.createElement("div", { className: "ui" },
-                                        React.createElement("div", { className: "image" },
-                                            React.createElement("img", { alt: lf("Comic moving hex file to micro:bit"), className: "ui medium rounded image", src: "./static/download/transfer.png" })),
-                                        React.createElement("div", { className: "content" },
-                                            React.createElement("div", { className: "description" },
-                                                React.createElement("span", { className: "ui purple circular label" }, "2"),
-                                                React.createElement("strong", null, lf("Move the .hex file to the {0}", boardName)),
-                                                React.createElement("br", null),
-                                                React.createElement("span", { className: "ui small" }, lf("Locate the downloaded .hex file and drag it to the {0} drive", boardDriveName)))))))))))) : undefined;
-    var buttons = [];
-    if (downloadAgain) {
-        buttons.push({
-            label: userDownload ? lf("Download") : fn,
-            icon: "download",
-            class: "" + (userDownload ? "primary" : "lightgrey"),
-            url: url,
-            fileName: fn
-        });
-    }
-    if (docUrl) {
-        buttons.push({
-            label: lf("Help"),
-            icon: "help",
-            className: "lightgrey",
-            url: docUrl
-        });
-    }
-    return confirmAsync({
-        header: lf("Download to your {0}", pxt.appTarget.appTheme.boardName),
-        body: body,
-        jsx: jsx,
-        hasCloseIcon: true,
-        hideCancel: true,
-        hideAgree: true,
-        className: 'downloaddialog',
-        buttons: buttons
-        //timeout: 20000
-    }).then(function () { });
-}
 
-},{"react":7}],2:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -4076,7 +3889,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -4182,7 +3995,7 @@ checkPropTypes.resetWarningCache = function() {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":4,"_process":8}],4:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":7,"_process":11}],7:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -4196,7 +4009,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (process){
 /** @license React v16.8.3
  * react.development.js
@@ -6101,7 +5914,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":8,"object-assign":2,"prop-types/checkPropTypes":3}],6:[function(require,module,exports){
+},{"_process":11,"object-assign":5,"prop-types/checkPropTypes":6}],9:[function(require,module,exports){
 /** @license React v16.8.3
  * react.production.min.js
  *
@@ -6128,7 +5941,7 @@ b,d){return W().useImperativeHandle(a,b,d)},useDebugValue:function(){},useLayout
 b){void 0!==b.ref&&(h=b.ref,f=J.current);void 0!==b.key&&(g=""+b.key);var l=void 0;a.type&&a.type.defaultProps&&(l=a.type.defaultProps);for(c in b)K.call(b,c)&&!L.hasOwnProperty(c)&&(e[c]=void 0===b[c]&&void 0!==l?l[c]:b[c])}c=arguments.length-2;if(1===c)e.children=d;else if(1<c){l=Array(c);for(var m=0;m<c;m++)l[m]=arguments[m+2];e.children=l}return{$$typeof:p,type:a.type,key:g,ref:h,props:e,_owner:f}},createFactory:function(a){var b=M.bind(null,a);b.type=a;return b},isValidElement:N,version:"16.8.3",
 unstable_ConcurrentMode:x,unstable_Profiler:u,__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentDispatcher:I,ReactCurrentOwner:J,assign:k}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":2}],7:[function(require,module,exports){
+},{"object-assign":5}],10:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -6139,7 +5952,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":5,"./cjs/react.production.min.js":6,"_process":8}],8:[function(require,module,exports){
+},{"./cjs/react.development.js":8,"./cjs/react.production.min.js":9,"_process":11}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -6325,4 +6138,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[1]);
+},{}]},{},[1,2,3,4]);

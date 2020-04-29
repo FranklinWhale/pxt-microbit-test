@@ -9,6 +9,11 @@
         "largeImageUrl": "/docs/static/mb/projects/flashing-heart/sim.gif"
     },
     {
+        "name": "Live Coding",
+        "url": "/live-coding",
+        "imageUrl": "/docs/static/live-coding/live.png"
+    },
+    {
         "name": "Games",
         "url": "/projects/games",
         "imageUrl": "/docs/static/mb/projects/a4-motion.png"
@@ -41,7 +46,7 @@
     {
         "name": "Tools",
         "url": "/projects/tools",
-        "imageUrl": "/docs/static/mb/projects/plot-acceleration.png"
+        "imageUrl": "/docs/static/mb/projects/stopwatch.png"
     },
     {
         "name": "Turtle",
@@ -79,6 +84,7 @@
 ## See Also
 
 [Tutorials](/tutorials),
+[Live Coding](/live-coding),
 [Games](/projects/games),
 [Radio Games](/projects/radio-games),
 [Fashion](/projects/fashion),

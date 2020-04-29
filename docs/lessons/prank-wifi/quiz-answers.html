@@ -78,7 +78,7 @@
 
 	
 <!-- include tocheader.html -->
-<div class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
+<div id="top-bar" class="ui fixed accent borderless inverted main menu hideprint docs" role="menubar">
     <div>
         
             <a id="togglesidebar" class="launch icon item" tabindex="0" title="Side menu" aria-label="Side menu" role="menuitem" aria-expanded="false">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<div class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
+<div id="side-menu" class="ui vertical accent inverted sidebar menu left hideprint docs" role="menubar">
     <!-- TOC Menu (tocheader.html) -->
     <div class="menuContainer" role="menu">
         
@@ -1312,6 +1312,37 @@
     <div class="ui  accordion item visible" role="tree" title="">
         <div class=" title">
             <i class="right chevron icon"></i>
+            <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/python.html">Python</a>
+        </div>
+        <div class=" content">
+            
+    <a class="item " href="/pxt-microbit-test/docs/python/call.html" role="menuitem">Calling</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/sequence.html" role="menuitem">Sequencing</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/variables.html" role="menuitem">Variables</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/operators.html" role="menuitem">Operators</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/statements.html" role="menuitem">Statements</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/functions.html" role="menuitem">Functions</a>
+
+
+    <a class="item " href="/pxt-microbit-test/docs/python/classes.html" role="menuitem">Classes</a>
+
+        </div>
+    </div>
+
+
+    <div class="ui  accordion item visible" role="tree" title="">
+        <div class=" title">
+            <i class="right chevron icon"></i>
             <a class="header" role="treeitem" aria-expanded="false" href="/pxt-microbit-test/docs/javascript.html">JavaScript</a>
         </div>
         <div class=" content">
@@ -1686,19 +1717,19 @@
         <h1 id="prank-wifi-quiz-answers">prank wifi quiz answers</h1><p>create a fake wifi app to trick your friends.</p>
 <h2 id="name">Name</h2><h2 id="directions">Directions</h2><p>Use this activity document to guide your work in the <a  rel="nofollow noopener" href="/pxt-microbit-test/docs/lessons/prank-wifi/activity.html">prank WiFi activity</a></p>
 <p>Answer the questions while completing the tutorial. Pay attention to the dialogues!</p>
-<h2 id="1-write-the-lines-of-code-that-takes-the-absolute-value-of-the-accelerations-with-respect-to-the-x-y-and-z-axis-and-stores-the-values-as-local-variables">1. Write the lines of code that takes the absolute value of the accelerations with respect to the x, y and z axis and stores the values as Local Variables</h2><p><br/></p>
+<h2 id="1-write-the-lines-of-code-that-takes-the-absolute-value-of-the-accelerations-with-respect-to-the-x-y-and-z-axis-and-stores-the-values-as-local-variables">1. Write the lines of code that takes the absolute value of the accelerations with respect to the x, y and z axis and stores the values as Local Variables</h2><p><br /></p>
 <pre><code class="lang-blocks">let xAccel = Math.abs(input.acceleration(Dimension.X))
 let yAccel = Math.abs(input.acceleration(Dimension.Y))
 let zAccel = Math.abs(input.acceleration(Dimension.Z))</code></pre>
-<p><br/></p>
-<h2 id="2-write-the-lines-of-code-that-add-all-the-accelerations-together-to-get-the-total-acceleration-and-stores-the-value-as-a-local-variable-called-sum-">2. Write the lines of code that add all the accelerations together to get the total acceleration and stores the value as a Local Variable called “sum”</h2><p><br/></p>
-<p><br/></p>
+<p><br /></p>
+<h2 id="2-write-the-lines-of-code-that-add-all-the-accelerations-together-to-get-the-total-acceleration-and-stores-the-value-as-a-local-variable-called-sum-">2. Write the lines of code that add all the accelerations together to get the total acceleration and stores the value as a Local Variable called “sum”</h2><p><br /></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let xAccel = Math.abs(input.acceleration(Dimension.X))
 let yAccel = Math.abs(input.acceleration(Dimension.Y))
 let zAccel = Math.abs(input.acceleration(Dimension.Z))
 let sum = xAccel + yAccel + zAccel</code></pre>
-<p><br/></p>
-<h2 id="3-write-the-if-statement-used-if-the-sum-of-the-acceleration-value-is-less-than-1400-milli-gravitys-then-write-the-code-that-will-plot-an-image-of-the-fake-amount-of-wifi-if-the-acceleration-in-this-if-statement-">3. Write the ‘If statement’ used if the sum of the acceleration value is less than 1400 milli-gravitys. Then write the code that will plot an image of the fake amount of WiFi if the acceleration in this ‘If statement’</h2><p><br/></p>
+<p><br /></p>
+<h2 id="3-write-the-if-statement-used-if-the-sum-of-the-acceleration-value-is-less-than-1400-milli-gravitys-then-write-the-code-that-will-plot-an-image-of-the-fake-amount-of-wifi-if-the-acceleration-in-this-if-statement-">3. Write the ‘If statement’ used if the sum of the acceleration value is less than 1400 milli-gravitys. Then write the code that will plot an image of the fake amount of WiFi if the acceleration in this ‘If statement’</h2><p><br /></p>
 <pre><code class="lang-blocks">let xAccel = Math.abs(input.acceleration(Dimension.X))
 let yAccel = Math.abs(input.acceleration(Dimension.Y))
 let zAccel = Math.abs(input.acceleration(Dimension.Z))
@@ -1712,9 +1743,9 @@ if (sum &lt; 1400) {
 # # # . .
 `)
 }</code></pre>
-<p><br/></p>
-<h2 id="4-write-tje-if-statement-used-if-the-sum-of-the-acceleration-value-is-greater-than-1400-milli-gravitys-but-less-than-1680-milli-gravitys-then-write-the-code-that-will-plot-an-image-of-the-fake-amount-of-wifi-inside-this-if-statement-">4. Write tje ‘If statement’ used if the sum of the acceleration value is greater than 1400 milli-gravitys but less than 1680 milli-gravitys. Then write the code that will plot an image of the fake amount of WiFi inside this ‘If statement’</h2><p><br/></p>
-<p><br/></p>
+<p><br /></p>
+<h2 id="4-write-tje-if-statement-used-if-the-sum-of-the-acceleration-value-is-greater-than-1400-milli-gravitys-but-less-than-1680-milli-gravitys-then-write-the-code-that-will-plot-an-image-of-the-fake-amount-of-wifi-inside-this-if-statement-">4. Write tje ‘If statement’ used if the sum of the acceleration value is greater than 1400 milli-gravitys but less than 1680 milli-gravitys. Then write the code that will plot an image of the fake amount of WiFi inside this ‘If statement’</h2><p><br /></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let xAccel = Math.abs(input.acceleration(Dimension.X))
 let yAccel = Math.abs(input.acceleration(Dimension.Y))
 let zAccel = Math.abs(input.acceleration(Dimension.Z))
@@ -1729,8 +1760,8 @@ if (sum &gt;= 1400 &amp;&amp; sum &lt; 1680) {
 `)
 }</code></pre>
 <h2 id="5-write-the-code-to-display-this-specific-image-on-the-device">5. Write the code to display this specific image on the device</h2><p><img class="ui image" src="/static/mb/lessons/prank-wifi-0.png" alt="" loading="lazy"></p>
-<p><br/></p>
-<p><br/></p>
+<p><br /></p>
+<p><br /></p>
 <pre><code class="lang-blocks">let xAccel = Math.abs(input.acceleration(Dimension.X))
 let yAccel = Math.abs(input.acceleration(Dimension.Y))
 let zAccel = Math.abs(input.acceleration(Dimension.Z))
@@ -1782,7 +1813,7 @@ if (sum &gt;= 1680) {
             <a class="item" href="https://makecode.com/privacy" target="_blank" rel="noopener">Privacy &amp; Cookies</a>
             <a class="item" href="https://makecode.com/termsofuse" target="_blank" rel="noopener">Terms Of Use</a>
             <a class="item" href="https://makecode.com/trademarks" target="_blank" rel="noopener">Trademarks</a>
-            <span class="item">© 2019 Microsoft</span>
+            <span class="item">© 2020 Microsoft</span>
         </div>
         <div class="ui container horizontal small link list poweredBy">
             <span class="item">Powered by</span>
